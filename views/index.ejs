@@ -131,12 +131,10 @@
 <div class="login-form">
   <form action="/login" method="post">
     <h1>Login</h1>
-    <% if(errorMessage) { %>
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <li><%= errorMessage %></li>
-        </div>
-    <% } %>
-    <div class="error"> 
+    <div class="error">
+      <% if (typeof errorMessage !== 'undefined') { %>
+        <p style="color: red;"><%= errorMessage %></p>
+        <% } %>
     </div>
     <div class="content">
       <div class="input-field">
