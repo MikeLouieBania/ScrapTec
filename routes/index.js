@@ -5,8 +5,14 @@ const app = express();
 app.use(express.json());
 const bcrypt = require('bcrypt');
 
-const {PrismaClient, Prisma} = require("@prisma/client")
+const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient();
+
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: false,
+}));
 
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
@@ -28,7 +34,7 @@ router.post('/login', async (req, res) => {
       const match = await bcrypt.compare(password, user.password);
       if (match) {
         const userId = user.id;
-        session.userId = userId;
+        req.session.userId = userId;
         res.redirect('/user');
       } else {
         res.render('index', { errorMessage: `Incorrect Password. ` });
@@ -42,19 +48,12 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', async (req, res) => {  
   try {
-    const userId = null;
-    delete session.userId;
+    req.session.destroy();
     res.redirect('/index');
   } catch (err) {
-    console.log(userId);
+    console.log(err);
     res.status(500).send('Internal server error');
   }
 });
-
-app.use(session({
-  secret: 'secret-key',
-  resave: false,
-  saveUninitialized: false,
-}));
 
 module.exports = router;
