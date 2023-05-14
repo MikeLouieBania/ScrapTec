@@ -65,21 +65,22 @@
         </thead>
         <tbody id="data">
           <!-- Loop through the records retrieved from MongoDB -->
-          <tr>
-            <% users.forEach(function(user) { %>
+          <% users.forEach(function(user) {
+              if(user.usertype !== 'admin' && user.usertype !== 'manager') { %>
                 <tr>
                   <td><%= user.email %></td>
                   <td><%= user.password %></td>
                   <td><%= user.usertype %></td>
-            <td colspan="3">
-              <div class="btn-group">
-                <a href="#" class="btn view-btn">View</a>
-                <a href="#" class="btn update-btn">Edit</a>
-              </div>
-            </td>
-            <% }); %>
-          </tr>
-          <!-- Repeat this row for each record -->
+                  <td colspan="3">
+                    <div class="btn-group">
+                      <a href="#" class="btn view-btn">View</a>
+                      <a href="#" class="btn update-btn">Edit</a>
+                    </div>
+                  </td>
+                </tr>
+              <% }
+            });
+          %>
         </tbody>
       </table>
     </div>
