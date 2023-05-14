@@ -66,4 +66,6 @@ router.get('/logout', async (req, res) => {
   }
 });
 
-module.exports = router;
+app.use('/', router);
+
+module.exports = app;
