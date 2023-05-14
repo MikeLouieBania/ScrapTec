@@ -41,6 +41,9 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
+    if (req.session.userId) {
+    return res.redirect('/user');
+  }
   res.render('error');
 });
 
