@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {PrismaClient} = require("@prisma/client")
-var prisma = new PrismaClient
+const prisma = new PrismaClient
 
 /* GET home page. */
 router.get('/admin', async function(req, res, next) {
