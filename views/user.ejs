@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Table with Action Buttons</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+      /* Style the table */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th, td {
+        text-align: center;
+        padding: 8px;
+      }
+
+      .action-th {
+        text-align: center;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      /* Style the action buttons */
+      .view-btn {
+        background-color: #007bff;
+        color: white;
+        margin-right: 8px;
+      }
+
+      .update-btn {
+        background-color: #ffc107;
+        color: white;
+        margin-right: 8px;
+      }
+
+      .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        margin-right: 8px;
+      }
+
+      .btn-group {
+        float: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Table with Action Buttons</h1>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th>Email</th>
+            <th>Password</th>
+            <th>User Type</th>
+            <th class="action-th">Action</th>
+          </tr>
+        </thead>
+        <tbody id="data">
+          <!-- Loop through the records retrieved from MongoDB -->
+          <tr>
+            <% users.forEach(function(user) { %>
+                <tr>
+                  <td><%= user.email %></td>
+                  <td><%= user.password %></td>
+                  <td><%= user.usertype %></td>
+            <td colspan="3">
+              <div class="btn-group">
+                <a href="#" class="btn view-btn">View</a>
+                <a href="#" class="btn update-btn">Edit</a>
+                <a href="#" class="btn delete-btn">Delete</a>
+              </div>
+            </td>
+            <% }); %>
+          </tr>
+          <!-- Repeat this row for each record -->
+        </tbody>
+      </table>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
