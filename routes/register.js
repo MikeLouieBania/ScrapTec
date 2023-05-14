@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const validator = require('email-validator');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient();
@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
   const { email, password, usertype } = req.body;
 
   if (!validator.validate(email)) {
-    return res.render('register', { errorMessage: 'Invalid email address' });
+    return res.render('register', { message: 'Invalid email address' });
   }
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
@@ -24,21 +24,18 @@ router.post('/register', async (req, res) => {
     return res.render('register', { message: 'Password must be: 8 characters minimum, at least one number, one lowercase letter, one uppercase letter, and one special character' });
   }
 
-  const salt = crypto.randomBytes(16).toString('hex'); // generate a random salt
-  const hash = crypto.createHash('sha256'); // create a new hash object
-  hash.update(password + salt); // update the hash with the password and salt
-  const hashedPassword = hash.digest('hex'); // get the digest (hashed value) as a hex string
-
+  const saltRounds = 12; // increase number of rounds for better security
+  const salt = await bcrypt.genSalt(saltRounds); // generate a random salt
+  const hashedPassword = await bcrypt.hash(password, salt);
   const user = await prisma.user.findUnique({ where: { email } });
   
   if (user) {
-    return res.render('register', { errorMessage: `Email already exists`});
+    return res.render('register', { errorMessage: `Email already exists, please choose a different one`});
   } else {
     await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        salt,
         usertype
       }
     });
