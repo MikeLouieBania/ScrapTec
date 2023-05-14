@@ -35,6 +35,7 @@ router.post('/login', async (req, res) => {
       if (match) {
         const userId = user.id;
         req.session.userId = userId;
+        console.log(req.session.userId);
         res.redirect('/user');
       } else {
         res.render('index', { errorMessage: `Incorrect Password. ` });
@@ -42,7 +43,8 @@ router.post('/login', async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.render('index', { errorMessage: `Something went wrong.` });
+    console.log(req.session.userId);
+    res.render('index', { errorMessage: `Something went wrong: ${err.message}` });
   }
 });
 
