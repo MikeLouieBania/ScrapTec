@@ -20,6 +20,9 @@ app.use(session({
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
   var users = await prisma.User.findMany()
+    if (req.session.userId) {
+    return res.redirect('/user');
+  }
   res.render('index', { title: 'Express', users: users });
 });
 
