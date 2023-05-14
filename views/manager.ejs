@@ -66,7 +66,7 @@
         <tbody id="data">
           <!-- Loop through the records retrieved from MongoDB -->
           <% users.forEach(function(user) {
-              if(user.usertype !== 'admin' && user.usertype !== 'manager') { %>
+              if(user.usertype !== 'Admin' && user.usertype !== 'Manager') { %>
                 <tr>
                   <td><%= user.email %></td>
                   <td><%= user.password %></td>
