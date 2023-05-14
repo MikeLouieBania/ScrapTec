@@ -4,25 +4,26 @@ const session = require('express-session');
 const app = express();
 app.use(express.json());
 
-const {PrismaClient} = require("@prisma/client")
-const prisma = new PrismaClient
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-app.use(session({
-  secret: 'secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 86400000 // 24 hours
-  }
-}));
-
+app.use(
+  session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 86400000 // 24 hours
+    }
+  })
+);
 
 /* GET users listing. */
 router.get('/user', async function(req, res, next) {
-  var users = await prisma.User.findMany()
-    if (req.session.userId) {
-      return res.redirect('/user');
-    }
+  if (req.session.userId) {
+    return res.redirect('/user');
+  }
+  const users = await prisma.user.findMany();
   res.render('user', { title: 'Users', users: users });
 });
 
