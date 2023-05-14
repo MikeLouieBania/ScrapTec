@@ -18,6 +18,9 @@ app.use(session({
 /* GET users listing. */
 router.get('/user', async function(req, res, next) {
   var users = await prisma.User.findMany()
+    if (req.session.userId) {
+      return res.redirect('/user');
+    }
   res.render('user', { title: 'Users', users: users });
 });
 
