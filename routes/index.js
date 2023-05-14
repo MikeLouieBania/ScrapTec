@@ -12,6 +12,9 @@ app.use(session({
   secret: 'secret-key',
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    maxAge: 86400000 // 24 hours
+  }
 }));
 
 /* GET home page. */
