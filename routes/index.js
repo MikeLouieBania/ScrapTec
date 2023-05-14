@@ -47,7 +47,15 @@ router.post('/login', async (req, res) => {
         const userId = user.id;
         req.session.userId = userId;
         console.log(req.session.userId);
-        res.redirect('/user');
+        
+        // check user role and redirect to appropriate page
+        if (user.role === 'admin') {
+          res.redirect('/admin');
+        } else if (user.role === 'manager') {
+          res.redirect('/manager');
+        } else {
+          res.redirect('/user');
+        }
       } else {
         res.render('index', { errorMessage: `Incorrect Password. ` });
       }
@@ -66,6 +74,54 @@ router.get('/logout', async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send('Internal server error');
+  }
+});
+
+// admin page
+router.get('/admin', async (req, res) => {
+  if (req.session.userId) {
+    const user = await prisma.User.findUnique({
+      where: { id: req.session.userId },
+    });
+    if (user.role === 'admin') {
+      res.render('admin');
+    } else {
+      res.redirect('/user');
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+
+// manager page
+router.get('/manager', async (req, res) => {
+  if (req.session.userId) {
+    const user = await prisma.User.findUnique({
+      where: { id: req.session.userId },
+    });
+    if (user.role === 'manager') {
+      res.render('manager');
+    } else {
+      res.redirect('/user');
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+
+// user page
+router.get('/user', async (req, res) => {
+  if (req.session.userId) {
+    const user = await prisma.User.findUnique({
+      where: { id: req.session.userId },
+    });
+    if (user.role === 'user') {
+      res.render('user');
+    } else {
+      res.redirect('/admin');
+    }
+  } else {
+    res.redirect('/login');
   }
 });
 
