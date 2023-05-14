@@ -12,6 +12,15 @@ var userRouter = require('./routes/userhome');
 
 var app = express();
 
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 86400000 // 24 hours
+  }
+}));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
