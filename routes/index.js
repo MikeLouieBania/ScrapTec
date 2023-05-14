@@ -26,6 +26,11 @@ router.get('/login', async function(req, res, next) {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  // check if user already has an active session
+  if (req.session.userId) {
+    return res.redirect('/user');
+  }
+
   try {
     const user = await prisma.User.findUnique({
       where: { email: email },
