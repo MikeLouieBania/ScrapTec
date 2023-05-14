@@ -49,7 +49,7 @@ router.post('/login', async (req, res) => {
 router.get('/logout', async (req, res) => {  
   try {
     req.session.destroy();
-    res.redirect('/index');
+    res.redirect('/login');
   } catch (err) {
     console.log(err);
     res.status(500).send('Internal server error');
