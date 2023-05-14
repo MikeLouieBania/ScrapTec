@@ -49,9 +49,9 @@ router.post('/login', async (req, res) => {
         console.log(req.session.userId);
         
         // check user role and redirect to appropriate page
-        if (user.role === 'Admin') {
+        if (user.usertype === 'Admin') {
           res.redirect('/admin');
-        } else if (user.role === 'Manager') {
+        } else if (user.usertype === 'Manager') {
           res.redirect('/manager');
         } else {
           res.redirect('/user');
