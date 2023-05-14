@@ -10,7 +10,7 @@ router.get('/admin', async function(req, res, next) {
         if (!req.session.userId) {
             return res.redirect('/login');
         }
-  res.render('admin', { title: 'Express', users: users });
+  res.render('admin', { title: 'Admin', users: users });
 });
 
 
