@@ -83,7 +83,7 @@ router.get('/admin', async (req, res) => {
     const user = await prisma.User.findUnique({
       where: { id: req.session.userId },
     });
-    if (user.role === 'admin') {
+    if (user.usertype === 'Admin') {
       res.render('admin');
     } else {
       res.redirect('/user');
@@ -99,7 +99,7 @@ router.get('/manager', async (req, res) => {
     const user = await prisma.User.findUnique({
       where: { id: req.session.userId },
     });
-    if (user.role === 'manager') {
+    if (user.usertype === 'Manager') {
       res.render('manager');
     } else {
       res.redirect('/user');
