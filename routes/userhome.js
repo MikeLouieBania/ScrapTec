@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 const {PrismaClient} = require("@prisma/client")
-var prisma = new PrismaClient
+const prisma = new PrismaClient
 
 app.use(session({
   secret: 'secret-key',
