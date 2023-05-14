@@ -13,5 +13,4 @@ router.get('/manager', async function(req, res, next) {
   res.render('manager', { title: 'Manager', users: users });
 });
 
-
 module.exports = router;
