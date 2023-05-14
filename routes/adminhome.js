@@ -9,8 +9,6 @@ router.get('/admin', async function(req, res, next) {
   var users = await prisma.User.findMany()
         if (!req.session.userId) {
             return res.redirect('/login');
-        } else {
-            return res.redirect('/admin');
         }
   res.render('admin', { title: 'Admin', users: users });
 });
