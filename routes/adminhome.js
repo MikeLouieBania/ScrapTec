@@ -8,10 +8,9 @@ const prisma = new PrismaClient
 router.get('/admin', async function(req, res, next) {
   var users = await prisma.User.findMany()
         if (!req.session.userId) {
-            return res.redirect('/login');
+          return res.redirect('/login');
         }
   res.render('admin', { title: 'Admin', users: users });
 });
-
 
 module.exports = router;
