@@ -20,10 +20,10 @@ app.use(
 
 /* GET users listing. */
 router.get('/user', async function(req, res, next) {
+  const users = await prisma.user.findMany();
   if (req.session.userId) {
     return res.redirect('/user');
   }
-  const users = await prisma.user.findMany();
   res.render('user', { title: 'Users', users: users });
 });
 
