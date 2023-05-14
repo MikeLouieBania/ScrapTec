@@ -77,54 +77,6 @@ router.get('/logout', async (req, res) => {
   }
 });
 
-// admin page
-router.get('/admin', async (req, res) => {
-  if (req.session.userId) {
-    const user = await prisma.User.findUnique({
-      where: { id: req.session.userId },
-    });
-    if (user.usertype === 'Admin') {
-      res.render('admin');
-    } else {
-      res.redirect('/user');
-    }
-  } else {
-    res.redirect('/login');
-  }
-});
-
-// manager page
-router.get('/manager', async (req, res) => {
-  if (req.session.userId) {
-    const user = await prisma.User.findUnique({
-      where: { id: req.session.userId },
-    });
-    if (user.usertype === 'Manager') {
-      res.render('manager');
-    } else {
-      res.redirect('/user');
-    }
-  } else {
-    res.redirect('/login');
-  }
-});
-
-// user page
-router.get('/user', async (req, res) => {
-  if (req.session.userId) {
-    const user = await prisma.User.findUnique({
-      where: { id: req.session.userId },
-    });
-    if (user.role === 'user') {
-      res.render('user');
-    } else {
-      res.redirect('/admin');
-    }
-  } else {
-    res.redirect('/login');
-  }
-});
-
 app.use('/', router);
 
 module.exports = app;
