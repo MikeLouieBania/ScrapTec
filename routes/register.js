@@ -16,12 +16,12 @@ router.post('/register', async (req, res) => {
   const { email, password, usertype } = req.body;
 
   if (!validator.validate(email)) {
-    return res.render('register', { message: 'Invalid email address' });
+    return res.render('register', { errorMessage: 'Invalid email address' });
   }
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
   if (!passwordRegex.test(password)) {
-    return res.render('register', { message: 'Password must be: 8 characters minimum, at least one number, one lowercase letter, one uppercase letter, and one special character' });
+    return res.render('register', { errorMessage: 'Password must be: 8 characters minimum, at least one number, one lowercase letter, one uppercase letter, and one special character' });
   }
 
   const saltRounds = 12; // increase number of rounds for better security
