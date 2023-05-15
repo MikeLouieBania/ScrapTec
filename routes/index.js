@@ -31,7 +31,13 @@ router.post('/login', async (req, res) => {
 
   // check if user already has an active session
   if (req.session.userId) {
-    return res.redirect('/user');
+    if (user.usertype === 'Admin') {
+          res.redirect('/admin');
+        } else if (user.usertype === 'Manager') {
+          res.redirect('/manager');
+        } else {
+          res.redirect('/user');
+        }
   }
 
   try {
