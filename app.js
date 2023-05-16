@@ -7,13 +7,8 @@ var logger = require('morgan');
 
 var loginRouter = require('./routes/index');
 var registerRouter = require('./routes/register');
-
-var adminRouter = require('./routes/adminhome');
-var managerRouter = require('./routes/managerhome');
 var userRouter = require('./routes/userhome');
-var studentInfoRouter = require('./routes/studentinfo'); // New route for student information
-
-var userRouter = require('./routes/userhome'); 
+var studentInfoRouter = require('./routes/studentinfo');
 
 
 var app = express();
@@ -40,14 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', loginRouter);
 app.use('/', registerRouter);
-app.use('/', adminRouter);
-app.use('/', managerRouter);
 app.use('/', userRouter);
-app.use('/', studentInfoRouter); // Mount the student information router
-
-app.use('/', loginRouter); 
-app.use('/', registerRouter);
-app.use('/', userRouter);  
+app.use('/', studentInfoRouter);
 
 
 // catch 404 and forward to error handler
