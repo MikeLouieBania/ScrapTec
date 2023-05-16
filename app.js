@@ -10,7 +10,6 @@ var registerRouter = require('./routes/register');
 var userRouter = require('./routes/userhome');
 var studentInfoRouter = require('./routes/studentinfo');
 
-
 var app = express();
 
 app.use(session({
@@ -37,7 +36,6 @@ app.use('/', loginRouter);
 app.use('/', registerRouter);
 app.use('/', userRouter);
 app.use('/', studentInfoRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
