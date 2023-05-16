@@ -114,7 +114,7 @@ router.post('/login', async (req, res) => {
       res.render('index', { errorMessage: 'Something went wrong: ${err.message}' });
     }
   }
-});
+);
 
 router.get('/logout', async (req, res) => {  
   try {

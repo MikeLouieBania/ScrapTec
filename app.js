@@ -11,6 +11,7 @@ var adminRouter = require('./routes/adminhome');
 var managerRouter = require('./routes/managerhome'); 
 var userRouter = require('./routes/userhome'); 
 
+
 var app = express();
 
 app.use(session({
