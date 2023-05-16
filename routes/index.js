@@ -1,19 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
 const app = express();
 app.use(express.json());
 const bcrypt = require('bcrypt');
-const { PrismaClient } = require("@prisma/client");
+
+const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient();
-const redis = require('redis');
-
-// Create a Redis client
-const redisClient = redis.createClient();
-
-// Configure RedisStore for session management
-const sessionStore = new RedisStore({ client: redisClient });
 
 app.use(session({
   secret: 'secret-key',
@@ -21,12 +14,11 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 86400000 // 24 hours
-  },
-  store: sessionStore, // Use RedisStore for session storage
+  }
 }));
 
 // Middleware to check if user is authenticated
-async function authenticate(req, res, next) {
+function authenticate(req, res, next) {
   if (!req.session.userId) {
     res.redirect('/login');
   } else {
@@ -38,7 +30,7 @@ async function authenticate(req, res, next) {
 async function restrictAccess(userType, req, res, next) {
   if (req.session.userId) {
     try {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.User.findUnique({
         where: { id: req.session.userId },
       });
 
@@ -58,56 +50,74 @@ async function restrictAccess(userType, req, res, next) {
       res.status(500).send('Internal server error');
     }
   } else {
-    // It seems you forgot to define `user` in this block, so I'm removing it for now
-    res.redirect('/login');
+    if (user.usertype === 'Admin') {
+      res.redirect('/admin');
+    } else if (user.usertype === 'Manager') {
+      res.redirect('/manager');
+    } else {
+      res.redirect('/user');
+    }
   }
 }
 
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
+  var users = await prisma.User.findMany()
   if (req.session.userId) {
-    return res.redirect('/user');
-  }
-
-  try {
-    const users = await prisma.user.findMany();
-  } catch (err) {
-    console.log(err);
-    res.status(500).send('Internal server error');
+    res.redirect('/user');
+  } else {
+    res.render('index', { title: 'Express', users: users });
   }
 });
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email: email },
+  // check if user already has an active session
+  if (req.session.userId) {
+    const user = await prisma.User.findUnique({
+      where: { id: req.session.userId },
     });
 
-    if (!user) {
-      res.render('index', { errorMessage: 'Incorrect Email / Password.' });
+    if (user.usertype === 'Admin') {
+      res.redirect('/admin');
+    } else if (user.usertype === 'Manager') {
+      res.redirect('/manager');
     } else {
-      const match = await bcrypt.compare(password, user.password);
-      if (match) {
-        const userId = user.id;
-        req.session.userId = userId;
-
-        // check user role and redirect to appropriate page
-        if (user.usertype === 'Admin') {
-          res.redirect('/admin');
-        } else if (user.usertype === 'Manager') {
-          res.redirect('/manager');
-        } else {
-          res.redirect('/user');
-        }
-      } else {
-        res.render('index', { errorMessage: 'Incorrect Password.' });
-      }
+      res.redirect('/user');
     }
-  } catch (err) {
-    console.log(err);
-    res.render('index', { errorMessage: `Something went wrong: ${err.message}` });
+  } else {
+    try {
+      const user = await prisma.User.findUnique({
+        where: { email: email },
+      });
+
+      if (!user) {
+        res.render('index', { errorMessage: 'Incorrect Email / Password.' });
+      } else {
+        const match = await bcrypt.compare(password, user.password);
+        if (match) {
+          const userId = user.id;
+          req.session.userId = userId;
+          console.log(req.session.userId);
+
+          // check user role and redirect to appropriate page
+          if (user.usertype === 'Admin') {
+            res.redirect('/admin');
+          } else if (user.usertype === 'Manager') {
+            res.redirect('/manager');
+          } else {
+            res.redirect('/user');
+          }
+        } else {
+          res.render('index', { errorMessage: 'Incorrect Password.' });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      console.log(req.session.userId);
+      res.render('index', { errorMessage: 'Something went wrong: ${err.message}' });
+    }
   }
 });
 
