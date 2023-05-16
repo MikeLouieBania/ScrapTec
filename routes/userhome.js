@@ -16,4 +16,3 @@ router.get('/user', async function(req, res, next) {
 });
 
 module.exports = router;
-s
