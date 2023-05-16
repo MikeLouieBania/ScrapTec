@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 const app = express();
 app.use(express.json());
 const bcrypt = require('bcrypt');
+const prisma = require('./prisma');
+const redisClient = require('redis').createClient();
 
-const { PrismaClient } = require("@prisma/client")
-const prisma = new PrismaClient();
+const sessionStore = new RedisStore({
+  client: redisClient,
+});
 
 app.use(session({
   secret: 'secret-key',
@@ -14,11 +18,12 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 86400000 // 24 hours
-  }
+  },
+  store: sessionStore, // Use RedisStore for session storage
 }));
 
 // Middleware to check if user is authenticated
-function authenticate(req, res, next) {
+async function authenticate(req, res, next) {
   if (!req.session.userId) {
     res.redirect('/login');
   } else {
@@ -30,7 +35,7 @@ function authenticate(req, res, next) {
 async function restrictAccess(userType, req, res, next) {
   if (req.session.userId) {
     try {
-      const user = await prisma.User.findUnique({
+      const user = await prisma.user.findUnique({
         where: { id: req.session.userId },
       });
 
@@ -50,69 +55,57 @@ async function restrictAccess(userType, req, res, next) {
       res.status(500).send('Internal server error');
     }
   } else {
-    if (user.usertype === 'Admin') {
-      res.redirect('/admin');
-    } else if (user.usertype === 'Manager') {
-      res.redirect('/manager');
-    } else {
-      res.redirect('/user');
-    }
+    // It seems you forgot to define `user` in this block, so I'm removing it for now
+    res.redirect('/login');
   }
 }
 
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
-  var users = await prisma.User.findMany()
-    if (req.session.userId) {
+  if (req.session.userId) {
     return res.redirect('/user');
+  }
+
+  try {
+    const users = await prisma.user.findMany();
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal server error');
   }
 });
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  // check if user already has an active session
-  if (req.session.userId) {
-    if (user.usertype === 'Admin') {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email: email },
+    });
+
+    if (!user) {
+      res.render('index', { errorMessage: 'Incorrect Email / Password.' });
+    } else {
+      const match = await bcrypt.compare(password, user.password);
+      if (match) {
+        const userId = user.id;
+        req.session.userId = userId;
+
+        // check user role and redirect to appropriate page
+        if (user.usertype === 'Admin') {
           res.redirect('/admin');
         } else if (user.usertype === 'Manager') {
           res.redirect('/manager');
         } else {
           res.redirect('/user');
         }
-  }
-
-  try {
-    const user = await prisma.User.findUnique({
-      where: { email: email },
-    });
-
-      if (!user) {
-        res.render('index', { errorMessage: 'Incorrect Email / Password.' });
       } else {
-        const match = await bcrypt.compare(password, user.password);
-        if (match) {
-          const userId = user.id;
-          req.session.userId = userId;
-          console.log(req.session.userId);
-
-          // check user role and redirect to appropriate page
-          if (user.usertype === 'Admin') {
-            res.redirect('/admin');
-          } else if (user.usertype === 'Manager') {
-            res.redirect('/manager');
-          } else {
-            res.redirect('/user');
-          }
-        } else {
-          res.render('index', { errorMessage: 'Incorrect Password.' });
-        }
+        res.render('index', { errorMessage: 'Incorrect Password.' });
       }
-    } catch (err) {
-      console.log(err);
-      console.log(req.session.userId);
-      res.render('index', { errorMessage: 'Something went wrong: ${err.message}' });
     }
+  } catch (err) {
+    console.log(err);
+    res.render('index', { errorMessage: `Something went wrong: ${err.message}` });
+  }
 });
 
 router.get('/logout', async (req, res) => {  
