@@ -100,8 +100,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn
--primary" id="confirmDeleteBtn">Confirm</button>
+        <button type="button" class="btn btn-primary" id="confirmDeleteBtn">
+Confirm</button>
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 </div>
 </div>
@@ -118,18 +118,32 @@
     // Set the email to delete when the delete button is clicked
     $('.delete-btn').click(function() {
       deleteEmail = $(this).data('email');
-      $('#passwordModal').modal('show');
+      // Store the email in session
+      $.ajax({
+        url: '/setDeleteEmail',
+        method: 'POST',
+        data: {
+          email: deleteEmail
+        },
+        success: function(response) {
+          // Open the password modal
+          $('#passwordModal').modal('show');
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
     });
 
     // Handle the delete confirmation
     $('#confirmDeleteBtn').click(function() {
       var password = $('#passwordInput').val();
-      // Make an AJAX request to verify the password
+
+      // Make an AJAX request to delete the user
       $.ajax({
         url: '/deleteUser',
         method: 'POST',
         data: {
-          email: deleteEmail,
           password: password
         },
         success: function(response) {

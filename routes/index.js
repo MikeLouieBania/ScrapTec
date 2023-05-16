@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 const bcrypt = require('bcrypt');
 
-const { PrismaClient } = require("@prisma/client")
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 app.use(session({
@@ -62,7 +62,7 @@ async function restrictAccess(userType, req, res, next) {
 
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
-  var users = await prisma.User.findMany()
+  var users = await prisma.User.findMany();
   if (req.session.userId) {
     res.redirect('/user');
   } else {
@@ -116,58 +116,104 @@ router.post('/login', async (req, res) => {
     } catch (err) {
       console.log(err);
       console.log(req.session.userId);
-      res.render('index', { errorMessage: 'Something went wrong: ${err.message}' });
+      res.render('index', { errorMessage: `Something went wrong: ${err.message}` });
     }
   }
-});
-
-router.get('/logout', async (req, res) => {  
+  });
+  
+  router.get('/logout', async (req, res) => {
   try {
-    req.session.destroy();
-    res.redirect('/login');
+  req.session.destroy();
+  res.redirect('/login');
   } catch (err) {
-    console.log(err);
-    res.status(500).send('Internal server error');
+  console.log(err);
+  res.status(500).send('Internal server error');
   }
-});
-
-// Protected routes
-router.get('/admin', authenticate, async (req, res, next) => {
+  });
+  
+  // Protected routes
+  router.get('/admin', authenticate, async (req, res, next) => {
   await restrictAccess('Admin', req, res, next);
-}, async (req, res) => {
+  }, async (req, res) => {
   try {
-    const users = await prisma.User.findMany();
-    res.render('admin', { title: 'Admin Page', users: users });
+  const users = await prisma.User.findMany();
+  res.render('admin', { title: 'Admin Page', users: users });
   } catch (err) {
-    console.log(err);
-    res.status(500).send('Internal server error');
+  console.log(err);
+  res.status(500).send('Internal server error');
   }
-});
-
-router.get('/manager', authenticate, async (req, res, next) => {
+  });
+  
+  router.get('/manager', authenticate, async (req, res, next) => {
   await restrictAccess('Manager', req, res, next);
-}, async (req, res) => {
+  }, async (req, res) => {
   try {
-    const users = await prisma.User.findMany();
-    res.render('manager', { title: 'Manager Page', users: users });
+  const users = await prisma.User.findMany();
+  res.render('manager', { title: 'Manager Page', users: users });
   } catch (err) {
-    console.log(err);
-    res.status(500).send('Internal server error');
+  console.log(err);
+  res.status(500).send('Internal server error');
   }
-});
-
-router.get('/user', authenticate, async (req, res, next) => {
+  });
+  
+  router.get('/user', authenticate, async (req, res, next) => {
   await restrictAccess('User', req, res, next);
-}, async (req, res) => {
+  }, async (req, res) => {
   try {
-    const users = await prisma.User.findMany();
-    res.render('user', { title: 'User Page', users: users });
+  const users = await prisma.User.findMany();
+  res.render('user', { title: 'User Page', users: users });
   } catch (err) {
-    console.log(err);
-    res.status(500).send('Internal server error');
+  console.log(err);
+  res.status(500).send('Internal server error');
   }
-});
+  });
 
-app.use('/', router);
-
-module.exports = app;
+  router.post('/setDeleteEmail', (req, res) => {
+    const { email } = req.body;
+    req.session.deleteEmail = email;
+    return res.sendStatus(200);
+  });
+  
+  router.post('/deleteUser', async (req, res) => {
+    const { password } = req.body;
+    const deleteEmail = req.session.deleteEmail;
+  
+    try {
+      const loggedInUserId = req.session.userId;
+      const loggedInUser = await prisma.User.findUnique({
+        where: { id: loggedInUserId },
+      });
+  
+      if (!loggedInUser) {
+        return res.json({ success: false, message: 'User not found.' });
+      }
+  
+      // Compare the password of the logged-in admin user with the provided password
+      const match = await bcrypt.compare(password, loggedInUser.password);
+      if (!match) {
+        return res.json({ success: false, message: 'Incorrect password.' });
+      }
+  
+      const userToDelete = await prisma.User.findUnique({
+        where: { email: deleteEmail.toLowerCase() },
+      });
+  
+      if (!userToDelete) {
+        return res.json({ success: false, message: 'User not found.' });
+      }
+  
+      // Delete the user from the database
+      await prisma.User.delete({
+        where: { email: deleteEmail.toLowerCase() },
+      });
+  
+      return res.json({ success: true });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ success: false, message: 'Internal server error.' });
+    }
+  });
+  
+  app.use('/', router);
+  
+  module.exports = app;
