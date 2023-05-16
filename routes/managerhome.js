@@ -1,16 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const {PrismaClient, Prisma} = require("@prisma/client")
-const prisma = new PrismaClient
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 /* GET home page. */
 router.get('/manager', async function(req, res, next) {
-  var users = await prisma.User.findMany()
-        if (!req.session.userId) {
-            return res.redirect('/login');
-        }
-  res.render('manager', { title: 'Manager', users: users });
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+
+  const users = await prisma.user.findMany();
+
+  res.render('manager', { title: 'Manager', users });
 });
 
 module.exports = router;

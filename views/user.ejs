@@ -64,23 +64,20 @@
           </tr>
         </thead>
         <tbody id="data">
-          <!-- Loop through the records retrieved from MongoDB -->
-          <tr>
-            <% users.forEach(function(user) { %>
-                <tr>
-                  <td><%= user.email %></td>
-                  <td><%= user.password %></td>
-                  <td><%= user.usertype %></td>
-            <td colspan="3">
-              <div class="btn-group">
-                <a href="#" class="btn view-btn">View</a>
-                <a href="#" class="btn update-btn">Edit</a>
-                <a href="#" class="btn delete-btn">Delete</a>
-              </div>
-            </td>
-            <% }); %>
-          </tr>
-          <!-- Repeat this row for each record -->
+          <% users.forEach(function(user) { %>
+            <tr>
+              <td><%= user.email %></td>
+              <td><%= user.password %></td>
+              <td><%= user.usertype %></td>
+              <td colspan="3">
+                <div class="btn-group">
+                  <a href="#" class="btn view-btn">View</a>
+                  <a href="#" class="btn update-btn">Edit</a>
+                  <a href="#" class="btn delete-btn">Delete</a>
+                </div>
+              </td>
+            </tr>
+          <% }); %>
         </tbody>
       </table>
     </div>

@@ -19,8 +19,8 @@ app.use(session({
 
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
-  var users = await prisma.User.findMany()
-    if (req.session.userId) {
+  var users = await prisma.User.findMany();
+  if (req.session.userId) {
     return res.redirect('/user');
   }
   res.render('index', { title: 'Express', users: users });
@@ -31,13 +31,19 @@ router.post('/login', async (req, res) => {
 
   // check if user already has an active session
   if (req.session.userId) {
-    if (user.usertype === 'Admin') {
-          res.redirect('/admin');
-        } else if (user.usertype === 'Manager') {
-          res.redirect('/manager');
-        } else {
-          res.redirect('/user');
-        }
+    const user = await prisma.User.findUnique({
+      where: { id: req.session.userId },
+    });
+
+    if (user) {
+      if (user.usertype === 'Admin') {
+        return res.redirect('/admin');
+      } else if (user.usertype === 'Manager') {
+        return res.redirect('/manager');
+      } else {
+        return res.redirect('/user');
+      }
+    }
   }
 
   try {

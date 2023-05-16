@@ -6,10 +6,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var loginRouter = require('./routes/index');
-var registerRouter = require('./routes/register'); 
-var adminRouter = require('./routes/adminhome'); 
-var managerRouter = require('./routes/managerhome'); 
-var userRouter = require('./routes/userhome'); 
+var registerRouter = require('./routes/register');
+var adminRouter = require('./routes/adminhome');
+var managerRouter = require('./routes/managerhome');
+var userRouter = require('./routes/userhome');
+var studentInfoRouter = require('./routes/studentinfo'); // New route for student information
 
 var app = express();
 
@@ -32,11 +33,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', loginRouter); 
-app.use('/', registerRouter);  
-app.use('/', adminRouter);  
-app.use('/', managerRouter);  
-app.use('/', userRouter);  
+app.use('/', loginRouter);
+app.use('/', registerRouter);
+app.use('/', adminRouter);
+app.use('/', managerRouter);
+app.use('/', userRouter);
+app.use('/', studentInfoRouter); // Mount the student information router
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -51,7 +53,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-    if (req.session.userId) {
+  if (req.session.userId) {
     return res.redirect('/user');
   }
   res.render('error');
