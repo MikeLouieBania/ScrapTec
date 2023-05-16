@@ -74,7 +74,7 @@
         <div class="btn-group">
           <a href="#" class="btn view-btn">View</a>
           <a href="#" class="btn update-btn">Edit</a>
-          <a href="#" class="btn delete-btn">Delete</a>
+          <a href="#" class="btn delete-btn" data-email="<%= user.email %>">Delete</a>
         </div>
       </td>
     </tr>
@@ -83,9 +83,69 @@
   </table>
 </div>
 
+<!-- Modal for password input -->
+<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="passwordModalLabel">Confirm Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="passwordInput">Password:</label>
+          <input type="password" class="form-control" id="passwordInput">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn
+-primary" id="confirmDeleteBtn">Confirm</button>
+<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+</div>
+</div>
+
+  </div>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var deleteEmail;
 
-  </body>
+    // Set the email to delete when the delete button is clicked
+    $('.delete-btn').click(function() {
+      deleteEmail = $(this).data('email');
+      $('#passwordModal').modal('show');
+    });
+
+    // Handle the delete confirmation
+    $('#confirmDeleteBtn').click(function() {
+      var password = $('#passwordInput').val();
+      // Make an AJAX request to verify the password
+      $.ajax({
+        url: '/deleteUser',
+        method: 'POST',
+        data: {
+          email: deleteEmail,
+          password: password
+        },
+        success: function(response) {
+          if (response.success) {
+            // Refresh the page to reflect the changes
+            window.location.reload();
+          } else {
+            alert(response.message);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>
+</body>
 </html>
