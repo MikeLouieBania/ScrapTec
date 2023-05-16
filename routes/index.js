@@ -5,12 +5,15 @@ const RedisStore = require('connect-redis')(session);
 const app = express();
 app.use(express.json());
 const bcrypt = require('bcrypt');
-const prisma = require('./prisma');
-const redisClient = require('redis').createClient();
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const redis = require('redis');
 
-const sessionStore = new RedisStore({
-  client: redisClient,
-});
+// Create a Redis client
+const redisClient = redis.createClient();
+
+// Configure RedisStore for session management
+const sessionStore = new RedisStore({ client: redisClient });
 
 app.use(session({
   secret: 'secret-key',
