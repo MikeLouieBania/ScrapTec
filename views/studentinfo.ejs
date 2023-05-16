@@ -3,6 +3,387 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Student Information</title>
-  Make sure you have a running Redis server, and adjust the Redis configuration (e.g., host, port, password) if necessary. Also, ensure that you properly handle any errors that may occur during the Redis connection.
-</html>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <style>
+      html, body {
+      min-height: 100%;
+      background-color: #6aa5c9;
+      }
+      body, div, form, input, select, p { 
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 14px;
+      color: #666;
+      line-height: 22px;
+      }
+      h1 {
+      position: absolute;
+      margin: 0;
+      font-size: 36px;
+      color: #fff;
+      z-index: 2;
+      }
+      span.required {
+      color: red;
+      }
+      .testbox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: inherit;
+      padding: 20px;
+      }
+      form {
+      width: 50%;
+      padding: 20px;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 0 30px 0 #095484; 
+      }
+      .banner {
+      position: relative;
+      height: 180px;
+      background-image: url("https://www.tutorialkart.com/sample_image.jpg");  
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      }
+      .banner::after {
+      content: "";
+      background-color: rgba(0, 0, 0, 0.4); 
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      }
+      p.top-info {
+      margin: 10px 0;
+      }
+      input, select {
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      }
+      input {
+      width: calc(100% - 10px);
+      padding: 5px;
+      }
+      select {
+      width: 100%;
+      padding: 7px 0;
+      background: transparent;
+      }
+      .error {
+        text-align: center;
+      }
+      .item:hover p, .question:hover p, .question label:hover, input:hover::placeholder {
+      color: #095484;
+      }
+      .item input:hover, .item select:hover {
+      border: 1px solid transparent;
+      box-shadow: 0 0 5px 0 #095484;
+      color: #095484;
+      }
+      .item {
+      position: relative;
+      margin: 10px 0;
+      }
+      input[type=checkbox]  {
+      display: none;
+      }
+      label.checkbox {
+      position: relative;
+      display: inline-block;
+      margin: 5px 20px 15px 0;
+      cursor: pointer;
+      }
+      .question span {
+      margin-left: 30px;
+      }
+      label.checkbox:before{
+      content: "";
+      position: absolute;     
+      left: 0;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      }
+      label.checkbox:before{ border-radius: 5px}
+      input[type=checkbox]:checked + label:before, label.chekbox:hover:before {
+      border: 2px solid #3e3f43;
+      }
+      label.checkbox:after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 5px;
+      width: 8px;
+      height: 4px;
+      border: 3px solid #3e3f43;
+      border-top: none;
+      border-right: none;
+      transform: rotate(-45deg);
+      opacity: 0;
+      }
+      input[type=checkbox]:checked + label:after {
+        opacity: 1;
+      }
+      .question input {
+      width: auto;
+      margin: 0;
+      border-radius: 50%;
+      }
+      .question input, .question span {
+      vertical-align: middle;
+      }
+      .question label {
+      display: inline-block;
+      margin: 5px 20px 15px 0;
+      }
+      .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+      }
+      .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff; 
+        border-bottom: 1px solid #d4d4d4; 
+      }
+      .autocomplete-items div:hover {
+        background-color: #e9e9e9; 
+      }
+      .autocomplete-active {
+        background-color: DodgerBlue !important; 
+        color: #ffffff; 
+      }
+      .btn-block {
+      margin-top: 10px;
+      text-align: center;
+      }
+      button {
+      width: 150px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px; 
+      background: #095484;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      }
+      button:hover {
+      background: #0666a3;
+      }
+      @media (min-width: 568px) {
+      .name-item, .city-item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      }
+      .name-item input, .city-item input {
+      width: calc(50% - 20px);
+      }
+      .city-item select {
+      width: calc(50% - 8px);
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="testbox">
+      <form action="/home" method="post" name="home">
+        <div class="banner">
+          <h1>User Validation Form</h1>
+        </div>
+        <p class="top-info">Every contents of this form is within the guidelines of Data Privacy Act of 2012. Every data will be hanlded with utmost care and confidence.</p>
+        <div class="item">
+          <p>Name<span class="required"></span></p>
+          <div class="name-item">
+            <input type="text" id="firstname" name="firstname" placeholder="Firstname" onkeydown="return /[a-zA-Z]/i.test(event.key)" required/>
+            <input type="text" id="middlename" name="middlename" placeholder="Middlename" onkeydown="return /[a-zA-Z]/i.test(event.key)" required/>
+          </div>
+          <div class="name-item">
+            <input type="text" id="lastname" name="lastname" placeholder="Lastname" onkeydown="return /[a-zA-Z]/i.test(event.key)" required/>
+          </div>
+        </div>
+
+        <div class="question">
+          <p>Gender<span class="required"></span></p>
+          <div class="question-answer">
+            <label><input type="radio" id="male" value="male" name="gender"/> <span>Male</span></label>
+            <label><input type="radio" id="female" value="female" name="gender"/> <span>Female</span></label>
+            <label><input type="radio" id="preferNotToSay" value="prefer not to say" name="gender"/> <span>Prefer not to say</span></label>
+          </div>
+        </div>
+
+        <div class="item">
+          <p>Birthdate<span class="required"></span></p>
+          <input type="date" name="birthdate" required/>
+        </div>
+
+        <div class="question">
+          <p>Hobby</p>
+          <div class="question-answer">
+            <div>
+              <input type="checkbox" value="sports" id="sports" name="hobby[]"/>
+              <label for="sports" class="checkbox"><span>Sports</span></label>
+              <input type="checkbox" value="reading" id="reading" name="hobby[]"/>
+              <label for="reading" class="checkbox"><span>Reading</span></label>
+              <input type="checkbox" value="cooking" id="cooking" name="hobby[]"/>
+              <label for="cooking" class="checkbox"><span>Cooking</span></label>
+              <input type="checkbox" value="gardening" id="gardening" name="hobby[]"/>
+              <label for="gardening" class="checkbox"><span>Gardening</span></label>
+              <input type="checkbox" value="other" id="other" name="hobby[]"/>
+              <label for="other" class="checkbox"><span>Other</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <p>Civil Status<span class="required"></span></p>
+            <select name="status">
+              <option value=""></option>
+              <option value="single">Single</option>
+              <option value="married">Married</option>
+              <option value="divorced">Divorced</option>
+              <option value="widowed">Widowed</option>
+            </select>
+          </div>
+
+          <div class="item">
+            <p>Home Address<span class="required"></span></p>
+            <input type="text" name="address" placeholder="Street address" required/>
+            <input type="text" maxlength="4" name="zip" placeholder="Postal / Zip code" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required/>
+            <div class="city-item">
+              <input id="cityInput" type="text" name="city" placeholder="City" required>
+              <input id="regionInput" type="text" name="region" placeholder="Region" required/>
+            </div>
+          </div>
+
+        <div class="btn-block">
+          <button>Apply</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+              /*check if the item starts with the same letters as the text field value:*/
+              if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                /*create a DIV element for each matching element:*/
+                b = document.createElement("DIV");
+                /*make the matching letters bold:*/
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                /*insert a input field that will hold the current array item's value:*/
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                /*execute a function when someone clicks on the item value (DIV element):*/
+                b.addEventListener("click", function(e) {
+                    /*insert the value for the autocomplete text field:*/
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    /*close the list of autocompleted values,
+                    (or any other open lists of autocompleted values:*/
+                    closeAllLists();
+                });
+                a.appendChild(b);
+              }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+              /*If the arrow DOWN key is pressed,
+              increase the currentFocus variable:*/
+              currentFocus++;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 38) { //up
+              /*If the arrow UP key is pressed,
+              decrease the currentFocus variable:*/
+              currentFocus--;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 13) {
+              /*If the ENTER key is pressed, prevent the form from being submitted,*/
+              e.preventDefault();
+              if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+              }
+            }
+        });
+        function addActive(x) {
+          /*a function to classify an item as "active":*/
+          if (!x) return false;
+          /*start by removing the "active" class on all items:*/
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = (x.length - 1);
+          /*add class "autocomplete-active":*/
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+          /*a function to remove the "active" class from all autocomplete items:*/
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+        function closeAllLists(elmnt) {
+          /*close all autocomplete lists in the document,
+          except the one passed as an argument:*/
+          var x = document.getElementsByClassName("autocomplete-items");
+          for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+              x[i].parentNode.removeChild(x[i]);
+            }
+          }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+            closeAllLists(e.target);
+        });
+      }
+      
+      /*An array containing all the cities names in the Philippines:*/
+      var cities = ["Alaminos","Antipolo","Bacoor","Bago","Bais","Balanga","Batac","Batangas City","Bayawan","Baybay","Bayugan","Biñan","Bislig","Bogo","Borongan","Butuan","Cabadbaran","Cabanatuan","Cabuyao","Cadiz","Cagayan de Oro","Calamba","Calapan","Calbayog","Caloocan","Candon","Canlaon","Carcar","Catbalogan","Cauayan","Cavite City","Cebu City","Cotabato City","Dagupan","Danao","Dapitan","Dasmariñas","Davao City","Digos","Dipolog","Dumaguete","El Salvador","Escalante","Gapan","General Santos","General Trias","Gingoog","Guihulngan","Himamaylan","Ilagan","Iligan","Iloilo City","Imus","Iriga","Isabela","Kabankalan","Kidapawan","Koronadal","La Carlota","Lamitan","Laoag","Lapu-Lapu","Las Piñas","	Legazpi","Ligao","Lipa","Lucena","Maasin","Mabalacat","Makati","Malabon","Malaybalay","Malolos","Mandaluyong","Mandaue","Manila","Marawi","Marikina","Masbate City","Mati","Meycauayan","Muñoz","Muntinlupa","Naga","Naga Cebu","Navotas","Olongapo","Ormoc","Oroquieta","Ozamiz","Pagadian","Palayan","Panabo","Parañaque","Pasay","Pasig","Passi","Puerto Princesa","Quezon City","Roxas","Sagay","Samal","San Carlos","San Carlos Pangasinan","San Fernando","San Fernando Pampanga","San Jose","San Jose del Monte","San Juan","San Pablo","San Pedro","Santa Rosa","Santiago","Silay","Sipalay","Sorsogon City","Surigao City","Tabaco","Tabuk","Tacloban","Tacurong","Tagaytay","Tagbilaran","Taguig","Tagum","Talisay","Talisay","Tanauan","Tandag","Tangub","Tanjay","Tarlac City","Tayabas","Toledo","Trece Martires","Tuguegarao","Urdaneta","Valencia","Valenzuela","Victorias","Vigan","Zamboanga City"];
+      
+      /*An array containing all the regions in the Philippines:*/
+      var regions = ["1", "2", "3", "4-A", "4-B", "5", "6", "7", "8", "9", "10", "11", "12", "16", "NCR", "ARMM", "CAR"];
+      
+      /*initiate the autocomplete function on the "myInput" element, and pass along the cities array as possible autocomplete values:*/
+      autocomplete(document.getElementById("cityInput"), cities);
+      autocomplete(document.getElementById("regionInput"), regions);
+      </script>
+  </body>
+  </html>
