@@ -17,3 +17,19 @@ model User {
   usertype       String ?
 }
 
+model Student_Info {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId 
+  userId        String ?
+  lastname      String ?
+  firstname     String ?
+  middlename    String ?
+  address       String ?
+  city          String ?
+  region        String ? 
+  country       String ?
+  zipcode       Int 
+  birthdate     DateTime @map("birthdate")
+  gender        String ?
+  civil_status  String ?
+  hobby         String ?
+}

@@ -63,10 +63,8 @@ async function restrictAccess(userType, req, res, next) {
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
   var users = await prisma.User.findMany()
-  if (req.session.userId) {
-    res.redirect('/user');
-  } else {
-    res.render('index', { title: 'Express', users: users });
+    if (req.session.userId) {
+    return res.redirect('/user');
   }
 });
 
@@ -75,22 +73,19 @@ router.post('/login', async (req, res) => {
 
   // check if user already has an active session
   if (req.session.userId) {
-    const user = await prisma.User.findUnique({
-      where: { id: req.session.userId },
-    });
-
     if (user.usertype === 'Admin') {
-      res.redirect('/admin');
-    } else if (user.usertype === 'Manager') {
-      res.redirect('/manager');
-    } else {
-      res.redirect('/user');
-    }
-  } else {
-    try {
-      const user = await prisma.User.findUnique({
-        where: { email: email },
-      });
+          res.redirect('/admin');
+        } else if (user.usertype === 'Manager') {
+          res.redirect('/manager');
+        } else {
+          res.redirect('/user');
+        }
+  }
+
+  try {
+    const user = await prisma.User.findUnique({
+      where: { email: email },
+    });
 
       if (!user) {
         res.render('index', { errorMessage: 'Incorrect Email / Password.' });

@@ -129,27 +129,28 @@
 <body>
 
 <div class="login-form">
-  <form action="/login" method="post">
-    <h1>Login</h1>
-    <div class="error">
-      <% if (typeof errorMessage !== 'undefined') { %>
-        <p style="color: red;"><%= errorMessage %></p>
+  <div class="login-form">
+    <form action="/login" method="post">
+      <h1>Login</h1>
+      <div class="error">
+        <% if (typeof errorMessage !== 'undefined') { %>
+          <p style="color: red;"><%= errorMessage %></p>
         <% } %>
-    </div>
-    <div class="content">
-      <div class="input-field">
-        <input type="email" placeholder="Email" id="email" name="email">
       </div>
-      <div class="input-field">
-        <input type="password" placeholder="Password" id="password" name="password">
+      <div class="content">
+        <div class="input-field">
+          <input type="email" placeholder="Email" id="email" name="email">
+        </div>
+        <div class="input-field">
+          <input type="password" placeholder="Password" id="password" name="password">
+        </div>
+        <a href="#" class="link">Forgot Your Password?</a>
       </div>
-      <a href="#" class="link">Forgot Your Password?</a>
-    </div>
-    <div class="action">
-      <button type="button" onclick="location.href='/register'">Register</button>
-      <button>Sign In</button>
-    </div>
-  </form>
-</div>
+      <div class="action">
+        <button type="button" onclick="location.href='/register'">Register</button>
+        <button>Sign In</button>
+      </div>
+    </form>
+  </div>
 </body>
 </html>
