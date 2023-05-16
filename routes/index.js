@@ -113,8 +113,12 @@ router.post('/login', async (req, res) => {
       console.log(req.session.userId);
       res.render('index', { errorMessage: 'Something went wrong: ${err.message}' });
     }
+<<<<<<< HEAD
   }
 );
+=======
+});
+>>>>>>> 0dbe77c52b74861ba85a346ae9cb37deacd57c5c
 
 router.get('/logout', async (req, res) => {  
   try {
