@@ -133,39 +133,39 @@ router.post('/login', async (req, res) => {
   
   // Protected routes
   router.get('/admin', authenticate, async (req, res, next) => {
-  await restrictAccess('Admin', req, res, next);
+    await restrictAccess('Admin', req, res, next);
   }, async (req, res) => {
-  try {
-  const users = await prisma.User.findMany();
-  res.render('admin', { title: 'Admin Page', users: users });
-  } catch (err) {
-  console.log(err);
-  res.status(500).send('Internal server error');
-  }
+    try {
+      const users = await prisma.User.findMany();
+      res.render('admin', { title: 'Admin Page', users: users });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Internal server error');
+    }
   });
   
   router.get('/manager', authenticate, async (req, res, next) => {
-  await restrictAccess('Manager', req, res, next);
+    await restrictAccess('Manager', req, res, next);
   }, async (req, res) => {
-  try {
-  const users = await prisma.User.findMany();
-  res.render('manager', { title: 'Manager Page', users: users });
-  } catch (err) {
-  console.log(err);
-  res.status(500).send('Internal server error');
-  }
+    try {
+      const users = await prisma.User.findMany();
+      res.render('manager', { title: 'Manager Page', users: users });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Internal server error');
+    }
   });
   
   router.get('/studentinfo', authenticate, async (req, res, next) => {
-  await restrictAccess('User', req, res, next);
+    await restrictAccess('User', req, res, next);
   }, async (req, res) => {
-  try {
-  const users = await prisma.User.findMany();
-  res.render('user', { title: 'User Page', users: users });
-  } catch (err) {
-  console.log(err);
-  res.status(500).send('Internal server error');
-  }
+    try {
+      const users = await prisma.User.findMany();
+      res.render('studentinfo', { title: 'User Page', users: users });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Internal server error');
+    }
   });
 
   router.post('/setDeleteEmail', (req, res) => {

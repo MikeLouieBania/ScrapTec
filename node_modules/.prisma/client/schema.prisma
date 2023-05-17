@@ -26,8 +26,7 @@ model Student_Info {
   address       String ?
   city          String ?
   region        String ? 
-  country       String ?
-  zipcode       Int 
+  zipcode       String ? 
   birthdate     DateTime @map("birthdate")
   gender        String ?
   civil_status  String ?
