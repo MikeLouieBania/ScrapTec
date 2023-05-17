@@ -8,7 +8,7 @@ var logger = require('morgan');
 var loginRouter = require('./routes/index');
 var registerRouter = require('./routes/register');
 var studentInfoRouter = require('./routes/studentinfo');
-
+var userinfoRouter = require('./routes/userinfo');
 var app = express();
 
 app.use(session({
@@ -33,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', loginRouter);
 app.use('/', registerRouter);
 app.use('/', studentInfoRouter);
+app.use('/', userinfoRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,9 +48,11 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
+
   if (req.session.userId) {
     return res.redirect('/');
   }
+
   res.render('error');
 });
 
