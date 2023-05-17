@@ -237,15 +237,15 @@
           <p>Hobby</p>
           <div class="question-answer">
             <div>
-              <input type="checkbox" value="sports" id="sports" name="hobby[]"/>
+              <input type="checkbox" value="sports" id="sports" name="hobby"/>
               <label for="sports" class="checkbox"><span>Sports</span></label>
-              <input type="checkbox" value="reading" id="reading" name="hobby[]"/>
+              <input type="checkbox" value="reading" id="reading" name="hobby"/>
               <label for="reading" class="checkbox"><span>Reading</span></label>
-              <input type="checkbox" value="cooking" id="cooking" name="hobby[]"/>
+              <input type="checkbox" value="cooking" id="cooking" name="hobby"/>
               <label for="cooking" class="checkbox"><span>Cooking</span></label>
-              <input type="checkbox" value="gardening" id="gardening" name="hobby[]"/>
+              <input type="checkbox" value="gardening" id="gardening" name="hobby"/>
               <label for="gardening" class="checkbox"><span>Gardening</span></label>
-              <input type="checkbox" value="other" id="other" name="hobby[]"/>
+              <input type="checkbox" value="other" id="other" name="hobby"/>
               <label for="other" class="checkbox"><span>Other</span></label>
             </div>
           </div>
@@ -253,7 +253,7 @@
 
         <div class="item">
           <p>Civil Status<span class="required"></span></p>
-            <select name="status">
+            <select name="civil_status">
               <option value=""></option>
               <option value="single">Single</option>
               <option value="married">Married</option>
@@ -265,7 +265,7 @@
           <div class="item">
             <p>Home Address<span class="required"></span></p>
             <input type="text" name="address" placeholder="Street address" required/>
-            <input type="text" maxlength="4" name="zip" placeholder="Postal / Zip code" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required/>
+            <input type="text" maxlength="4" name="zipcode" placeholder="Postal / Zip code" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required/>
             <div class="city-item">
               <input id="cityInput" type="text" name="city" placeholder="City" required>
               <input id="regionInput" type="text" name="region" placeholder="Region" required/>

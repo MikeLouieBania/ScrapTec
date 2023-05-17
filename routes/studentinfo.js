@@ -27,8 +27,7 @@ router.post('/studentinfo', async function(req, res) {
         address: req.body.address,
         city: req.body.city,
         region: req.body.region,
-        country: req.body.country,
-        zipcode: parseInt(req.body.zipcode),
+        zipcode:req.body.zipcode,
         birthdate: new Date(req.body.birthdate),
         gender: req.body.gender,
         civil_status: req.body.civil_status,
@@ -36,7 +35,7 @@ router.post('/studentinfo', async function(req, res) {
       }
     });
 
-    res.redirect('/studentinfo/view');
+    res.redirect('/studentinfo');
   } catch (error) {
     console.error(error);
     res.render('studentinfo', { title: 'Student Information', error: error.message });
@@ -44,7 +43,7 @@ router.post('/studentinfo', async function(req, res) {
 });
 
 // GET route for viewing the student information
-router.get('/studentinfo/view', async function(req, res) {
+router.get('/studentinfo', async function(req, res) {
   try {
     // Check if the user is logged in
     if (!req.session.userId) {
@@ -66,7 +65,7 @@ router.get('/studentinfo/view', async function(req, res) {
 });
 
 // POST route for editing the student info form
-router.post('/studentinfo/edit', async function(req, res, next) {
+router.post('/studentinfo', async function(req, res, next) {
   try {
     const userId = req.session.userId;
     const { lastname, firstname, middlename, address, city, region, country, zipcode, birthdate, gender, civil_status, hobby } = req.body;
@@ -90,7 +89,7 @@ router.post('/studentinfo/edit', async function(req, res, next) {
     });
 
     console.log(studentInfo);
-    res.redirect('/studentinfo/view');
+    res.redirect('/studentinfo');
   } catch (err) {
     console.log(err);
     res.render('error', { errorMessage: 'Error updating student information.' });
