@@ -52,12 +52,12 @@ router.get('/studentinfo/view', async function(req, res) {
     }
 
     // Fetch the student info for the logged-in user
-    const studentInfo = await prisma.student_Info.findUnique({
+    const studentInfo = await prisma.studentInfo.findUnique({
       where: {
         userId: req.session.userId
       }
     });
-
+    
     res.render('viewinfo', { title: 'View/Edit Student Information', studentInfo });
   } catch (error) {
     console.error(error);
@@ -72,7 +72,7 @@ router.post('/studentinfo/edit', async function(req, res, next) {
     const { lastname, firstname, middlename, address, city, region, country, zipcode, birthdate, gender, civil_status, hobby } = req.body;
 
     // Update the student info record
-    const studentInfo = await prisma.student_Info.update({
+    const studentInfo = await prisma.studentInfo.update({
       where: { userId },
       data: {
         lastname,
@@ -81,12 +81,11 @@ router.post('/studentinfo/edit', async function(req, res, next) {
         address,
         city,
         region,
-        country,
-        zipcode: parseInt(zipcode),
+        zipcode,
         birthdate: new Date(birthdate),
         gender,
-        civil_status,
-        hobby
+        civilStatus: civil_status,
+        hobby: hobby ? hobby : []
       }
     });
 

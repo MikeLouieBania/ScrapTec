@@ -43,16 +43,7 @@ router.post('/register', async (req, res) => {
       }
     });
 
-    switch (newUser.usertype) {
-      case 'admin':
-        return res.redirect('/admin');
-      case 'manager':
-        return res.redirect('/manager');
-      case 'user':
-        return res.redirect('/user');
-      default:
-        return res.redirect('/');
-    }
+    res.redirect('/login');
   }
 });
 

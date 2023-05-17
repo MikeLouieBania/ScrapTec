@@ -31,5 +31,5 @@ model Student_Info {
   birthdate     DateTime @map("birthdate")
   gender        String ?
   civil_status  String ?
-  hobby         String ?
+  hobby         String []
 }
