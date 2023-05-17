@@ -168,12 +168,12 @@ router.post('/login', async (req, res) => {
     }
   });
 
-  router.get('/userinfo', authenticate, async (req, res, next) => {
-    await restrictAccess('Admin', req, res, next);
+  router.get('/studentDashboard', authenticate, async (req, res, next) => {
+    await restrictAccess('User', req, res, next);
   }, async (req, res) => {
     try {
       const users = await prisma.User.findMany();
-      res.render('userinfo', { title: 'User Page', users: users });
+      res.render('studentDashboard', { title: 'User Page', users: users });
     } catch (err) {
       console.log(err);
       res.status(500).send('Internal server error');
