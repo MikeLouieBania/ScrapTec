@@ -119,8 +119,8 @@
             <td><%= user.usertype %></td>
             <td colspan="3">
               <div class="btn-group">
-                <a href="#" class="btn view-btn">View</a>
-                <a href="#" class="btn update-btn">Edit</a>
+                <a href="/view?id=<%= user.id %>" class="btn view-btn">View</a>
+                <a href="/edit?id=<%= user.id %>" class="btn update-btn">Edit</a>
                 <a href="#" class="btn delete-btn" data-email="<%= user.email %>">Delete</a>
               </div>
             </td>
