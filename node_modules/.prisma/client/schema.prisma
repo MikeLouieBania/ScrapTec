@@ -11,24 +11,26 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId 
-  email          String   @unique 
-  password       String ?
-  usertype       String ?
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId 
+  email     String        @unique
+  password  String?
+  usertype  String?
+  student   Student_Info?
 }
 
 model Student_Info {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId 
-  userId        String ?
-  lastname      String ?
-  firstname     String ?
-  middlename    String ?
-  address       String ?
-  city          String ?
-  region        String ? 
-  zipcode       String ? 
-  birthdate     DateTime @map("birthdate")
-  gender        String ?
-  civil_status  String ?
-  hobby         String []
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId 
+  userId        String?    @unique
+  lastname      String?
+  firstname     String?
+  middlename    String?
+  address       String?
+  city          String?
+  region        String? 
+  zipcode       String? 
+  birthdate     DateTime   @map("birthdate")
+  gender        String?
+  civil_status  String?
+  hobby         String[]
+  user          User?      @relation(fields: [userId], references: [id])
 }

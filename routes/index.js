@@ -180,7 +180,7 @@ router.post('/login', async (req, res) => {
   
     try {
       const loggedInUserId = req.session.userId;
-      const loggedInUser = await prisma.User.findUnique({
+      const loggedInUser = await prisma.user.findUnique({
         where: { id: loggedInUserId },
       });
   
@@ -194,16 +194,24 @@ router.post('/login', async (req, res) => {
         return res.json({ success: false, message: 'Incorrect password.' });
       }
   
-      const userToDelete = await prisma.User.findUnique({
+      const userToDelete = await prisma.user.findUnique({
         where: { email: deleteEmail.toLowerCase() },
+        include: { student: true }, // Include the associated student info
       });
   
       if (!userToDelete) {
         return res.json({ success: false, message: 'User not found.' });
       }
   
+      // Delete the associated student info
+      if (userToDelete.student) {
+        await prisma.student_Info.delete({
+          where: { id: userToDelete.student.id },
+        });
+      }
+  
       // Delete the user from the database
-      await prisma.User.delete({
+      await prisma.user.delete({
         where: { email: deleteEmail.toLowerCase() },
       });
   
