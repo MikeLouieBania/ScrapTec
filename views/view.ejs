@@ -1,1 +1,36 @@
-view
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Student Info</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Student Information</h1>
+    <div class="student-info">
+      <p><strong>ID:</strong> <%= student.id %></p>
+      <p><strong>Last Name:</strong> <%= student.lastname %></p>
+      <p><strong>First Name:</strong> <%= student.firstname %></p>
+      <p><strong>Middle Name:</strong> <%= student.middlename %></p>
+      <p><strong>Address:</strong> <%= student.address %></p>
+      <p><strong>City:</strong> <%= student.city %></p>
+      <p><strong>Region:</strong> <%= student.region %></p>
+      <p><strong>Zip Code:</strong> <%= student.zipcode %></p>
+      <p><strong>Birthdate:</strong> <%= student.birthdate.toISOString().substring(0, 10) %></p>
+      <p><strong>Gender:</strong> <%= student.gender %></p>
+      <p><strong>Civil Status:</strong> <%= student.civil_status %></p>
+      <p><strong>Hobbies:</strong></p>
+      <ul>
+        <% student.hobby.forEach(function(hobby) { %>
+          <li><%= hobby %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <a class="btn btn-primary" href="/userinfo">Go Back</a>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
