@@ -26,9 +26,9 @@ async function fetchStudentInfo(req, res, next) {
   }
 }
 
-router.get('/userinfo', async (req, res) => {
+router.get('/adminUserTable', async (req, res) => {
   const users = await prisma.user.findMany();
-  res.render('userinfo', { title: 'User Info', users });
+  res.render('adminUserTable', { title: 'User Info', users });
 });
 
 // Route handler for /view
@@ -63,7 +63,7 @@ router.post('/edit/:id', (req, res) => {
   })
   .then(updatedStudent => {
     // Redirect to a success page 
-    res.redirect('/userinfo');
+    res.redirect('/adminUserTable');
   })
   .catch(error => {
     // Handle the error

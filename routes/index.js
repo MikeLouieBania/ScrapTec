@@ -36,9 +36,9 @@ async function restrictAccess(userType, req, res, next) {
 
       if (user.usertype !== userType) {
         if (user.usertype === 'Admin') {
-          res.redirect('/admin');
+          res.redirect('/adminDashboard');
         } else if (user.usertype === 'Manager') {
-          res.redirect('/manager');
+          res.redirect('/managerDashboard');
         } else {
           res.redirect('/studentinfo');
         }
@@ -51,9 +51,9 @@ async function restrictAccess(userType, req, res, next) {
     }
   } else {
     if (user.usertype === 'Admin') {
-      res.redirect('/admin');
+      res.redirect('/adminDashboard');
     } else if (user.usertype === 'Manager') {
-      res.redirect('/manager');
+      res.redirect('/managerDashboard');
     } else {
       res.redirect('/studentinfo');
     }
@@ -80,9 +80,9 @@ router.post('/login', async (req, res) => {
     });
 
     if (user.usertype === 'Admin') {
-      res.redirect('/admin');
+      res.redirect('/adminDashboard');
     } else if (user.usertype === 'Manager') {
-      res.redirect('/manager');
+      res.redirect('/managerDashboard');
     } else {
       res.redirect('/studentinfo');
     }
@@ -103,9 +103,9 @@ router.post('/login', async (req, res) => {
 
           // check user role and redirect to appropriate page
           if (user.usertype === 'Admin') {
-            res.redirect('/admin');
+            res.redirect('/adminDashboard');
           } else if (user.usertype === 'Manager') {
-            res.redirect('/manager');
+            res.redirect('/managerDashboard');
           } else {
             res.redirect('/studentinfo');
           }
@@ -132,36 +132,48 @@ router.post('/login', async (req, res) => {
   });
   
   // Protected routes
-  router.get('/admin', authenticate, async (req, res, next) => {
+  router.get('/adminDashboard', authenticate, async (req, res, next) => {
     await restrictAccess('Admin', req, res, next);
   }, async (req, res) => {
     try {
       const users = await prisma.User.findMany();
-      res.render('admin', { title: 'Admin Page', users: users });
+      res.render('adminDashboard', { title: 'Admin Page', users: users });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Internal server error');
+    }
+  });
+
+  router.get('/adminUserTable', authenticate, async (req, res, next) => {
+    await restrictAccess('Admin', req, res, next);
+  }, async (req, res) => {
+    try {
+      const users = await prisma.User.findMany();
+      res.render('adminUserTable', { title: 'Admin Page', users: users });
     } catch (err) {
       console.log(err);
       res.status(500).send('Internal server error');
     }
   });
   
-  router.get('/manager', authenticate, async (req, res, next) => {
+  router.get('/managerDashboard', authenticate, async (req, res, next) => {
     await restrictAccess('Manager', req, res, next);
   }, async (req, res) => {
     try {
       const users = await prisma.User.findMany();
-      res.render('manager', { title: 'Manager Page', users: users });
+      res.render('managerDashboard', { title: 'Manager Page', users: users });
     } catch (err) {
       console.log(err);
       res.status(500).send('Internal server error');
     }
   });
-  
-  router.get('/studentinfo', authenticate, async (req, res, next) => {
-    await restrictAccess('User', req, res, next);
+
+  router.get('/managerUserTable', authenticate, async (req, res, next) => {
+    await restrictAccess('Manager', req, res, next);
   }, async (req, res) => {
     try {
       const users = await prisma.User.findMany();
-      res.render('studentinfo', { title: 'User Page', users: users });
+      res.render('managerUserTable', { title: 'Manager Page', users: users });
     } catch (err) {
       console.log(err);
       res.status(500).send('Internal server error');
