@@ -14,14 +14,14 @@ async function fetchStudentInfo(req, res, next) {
 
     if (!studentInfo) {
       // Handle the case where student information is not found
-      return res.status(404).send('Student information not found');
+      return res.status(404).send('Information not found');
     }
 
     // Attach the retrieved studentInfo to the request object for use in subsequent middleware or route handlers
     req.studentInfo = studentInfo;
     next();
   } catch (error) {
-    console.error('Error retrieving student information:', error);
+    console.error('Error retrieving information:', error);
     res.status(500).send('Internal Server Error');
   }
 }
@@ -40,7 +40,7 @@ router.get('/view', fetchStudentInfo, (req, res) => {
 // Route handler for /edit
 router.get('/edit', fetchStudentInfo, (req, res) => {
   // Render the "edit" page using the retrieved studentInfo data
-  res.render('edit', { title: 'Edit Student Info', student: req.studentInfo });
+  res.render('edit', { title: 'Edit Info', student: req.studentInfo });
 });
 
 router.post('/edit/:id', (req, res) => {
@@ -67,8 +67,8 @@ router.post('/edit/:id', (req, res) => {
   })
   .catch(error => {
     // Handle the error
-    console.error('Error updating student information:', error);
-    res.status(500).json({ error: 'An error occurred while updating the student information' });
+    console.error('Error updating information:', error);
+    res.status(500).json({ error: 'An error occurred while updating the information' });
   });
 });
 
