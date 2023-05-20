@@ -40,7 +40,7 @@ async function restrictAccess(userType, req, res, next) {
         } else if (user.usertype === 'Manager') {
           res.redirect('/managerDashboard');
         } else {
-          res.redirect('/studentinfo');
+          res.redirect('/studentDashboard');
         }
       } else {
         next();
@@ -55,7 +55,7 @@ async function restrictAccess(userType, req, res, next) {
     } else if (user.usertype === 'Manager') {
       res.redirect('/managerDashboard');
     } else {
-      res.redirect('/studentinfo');
+      res.redirect('/studentDashboard');
     }
   }
 }
@@ -84,7 +84,8 @@ router.post('/login', async (req, res) => {
     } else if (user.usertype === 'Manager') {
       res.redirect('/managerDashboard');
     } else {
-      res.redirect('/studentinfo');
+      res.redirect('/studentDashboard');
+      
     }
   } else {
     try {
@@ -107,7 +108,7 @@ router.post('/login', async (req, res) => {
           } else if (user.usertype === 'Manager') {
             res.redirect('/managerDashboard');
           } else {
-            res.redirect('/studentinfo');
+            res.redirect('/studentDashboard');
           }
         } else {
           res.render('index', { errorMessage: 'Incorrect Password.' });
@@ -168,18 +169,8 @@ router.post('/login', async (req, res) => {
     }
   });
 
-  router.get('/managerUserTable', authenticate, async (req, res, next) => {
-    await restrictAccess('Manager', req, res, next);
-  }, async (req, res) => {
-    try {
-      const users = await prisma.User.findMany();
-      res.render('managerUserTable', { title: 'Manager Page', users: users });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send('Internal server error');
-    }
-  });
 
+  
   router.get('/studentDashboard', authenticate, async (req, res, next) => {
     await restrictAccess('User', req, res, next);
   }, async (req, res) => {
