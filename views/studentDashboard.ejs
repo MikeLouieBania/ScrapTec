@@ -113,23 +113,17 @@
           </tr>
         </thead>
         <tbody id="data">
-          <!-- Loop through the records retrieved from MongoDB -->
-          <% users.forEach(function(user) {
-              if(user.usertype !== 'Admin' && user.usertype !== 'Manager') { %>
-                <tr>
-                  <td><%= user.email %></td>
-                  <td><%= user.password %></td>
-                  <td><%= user.usertype %></td>
-                  <td colspan="3">
-                    <div class="btn-group">
-                      <a href="/view?id=<%= user.id %>" class="btn view-btn">View</a>
-                      <a href="/edit?id=<%= user.id %>" class="btn update-btn">Edit</a>
-                    </div>
-                  </td>
-                </tr>
-              <% }
-            });
-          %>
+          <!-- Display the user's own data with view button -->
+          <tr>
+            <td><%= user.email %></td>
+            <td><%= user.password %></td>
+            <td><%= user.usertype %></td>
+            <td>
+              <div class="btn-group">
+                <a href="/view?id=<%= user.id %>" class="btn view-btn">View</a>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

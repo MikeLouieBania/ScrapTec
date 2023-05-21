@@ -50,23 +50,22 @@ async function restrictAccess(userType, req, res, next) {
       res.status(500).send('Internal server error');
     }
   } else {
-    if (user.usertype === 'Admin') {
-      res.redirect('/adminDashboard');
-    } else if (user.usertype === 'Manager') {
-      res.redirect('/managerDashboard');
-    } else {
-      res.redirect('/studentDashboard');
-    }
+    res.redirect('/login');
   }
 }
 
 /* GET home page. */
 router.get('/login', async function(req, res, next) {
-  var users = await prisma.User.findMany();
   if (req.session.userId) {
     res.redirect('/studentinfo');
   } else {
-    res.render('index', { title: 'Express', users: users });
+    try {
+      const users = await prisma.User.findMany();
+      res.render('index', { title: 'Express', users: users });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Internal server error');
+    }
   }
 });
 
@@ -75,18 +74,7 @@ router.post('/login', async (req, res) => {
 
   // check if user already has an active session
   if (req.session.userId) {
-    const user = await prisma.User.findUnique({
-      where: { id: req.session.userId },
-    });
-
-    if (user.usertype === 'Admin') {
-      res.redirect('/adminDashboard');
-    } else if (user.usertype === 'Manager') {
-      res.redirect('/managerDashboard');
-    } else {
-      res.redirect('/studentDashboard');
-      
-    }
+    res.redirect('/dashboard');
   } else {
     try {
       const user = await prisma.User.findUnique({
@@ -102,14 +90,7 @@ router.post('/login', async (req, res) => {
           req.session.userId = userId;
           console.log(req.session.userId);
 
-          // check user role and redirect to appropriate page
-          if (user.usertype === 'Admin') {
-            res.redirect('/adminDashboard');
-          } else if (user.usertype === 'Manager') {
-            res.redirect('/managerDashboard');
-          } else {
-            res.redirect('/studentDashboard');
-          }
+          res.redirect('/dashboard');
         } else {
           res.render('index', { errorMessage: 'Incorrect Password.' });
         }
@@ -120,123 +101,74 @@ router.post('/login', async (req, res) => {
       res.render('index', { errorMessage: `Something went wrong: ${err.message}` });
     }
   }
-  });
-  
-  router.get('/logout', async (req, res) => {
+});
+
+router.get('/logout', async (req, res) => {
   try {
-  req.session.destroy();
-  res.redirect('/login');
+    req.session.destroy();
+    res.redirect('/login');
   } catch (err) {
-  console.log(err);
-  res.status(500).send('Internal server error');
+    console.log(err);
+    res.status(500).send('Internal server error');
   }
-  });
-  
-  // Protected routes
-  router.get('/adminDashboard', authenticate, async (req, res, next) => {
-    await restrictAccess('Admin', req, res, next);
-  }, async (req, res) => {
-    try {
-      const users = await prisma.User.findMany();
-      res.render('adminDashboard', { title: 'Admin Page', users: users });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send('Internal server error');
-    }
-  });
+});
 
-  router.get('/adminUserTable', authenticate, async (req, res, next) => {
-    await restrictAccess('Admin', req, res, next);
-  }, async (req, res) => {
-    try {
-      const users = await prisma.User.findMany();
-      res.render('adminUserTable', { title: 'Admin Page', users: users });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send('Internal server error');
-    }
-  });
-  
-  router.get('/managerDashboard', authenticate, async (req, res, next) => {
-    await restrictAccess('Manager', req, res, next);
-  }, async (req, res) => {
-    try {
-      const users = await prisma.User.findMany();
-      res.render('managerDashboard', { title: 'Manager Page', users: users });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send('Internal server error');
-    }
-  });
+// Protected routes
+router.get('/dashboard', authenticate, async (req, res, next) => {
+  await restrictAccess('User', req, res, next);
+}, async (req, res) => {
+  try {
+    const user = await prisma.User.findUnique({
+      where: { id: req.session.userId },
+    });
 
-
-  
-  router.get('/studentDashboard', authenticate, async (req, res, next) => {
-    await restrictAccess('User', req, res, next);
-  }, async (req, res) => {
-    try {
-      const users = await prisma.User.findMany();
-      res.render('studentDashboard', { title: 'User Page', users: users });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send('Internal server error');
+    if (!user) {
+      res.status(404).send('User not found');
+    } else {
+      // Check if the user is an admin
+      if (user.usertype === 'Admin') {
+        res.render('adminDashboard', { title: 'Admin Page', user: user });
+      } else if (user.usertype === 'Manager') {
+        res.render('managerDashboard', { title: 'Manager Page', user: user });
+      } else {
+        res.render('studentDashboard', { title: 'User Page', user: user });
+      }
     }
-  });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal server error');
+  }
+});
 
-  router.post('/setDeleteEmail', (req, res) => {
-    const { email } = req.body;
-    req.session.deleteEmail = email;
-    return res.sendStatus(200);
-  });
-  
-  router.post('/deleteUser', async (req, res) => {
-    const { password } = req.body;
-    const deleteEmail = req.session.deleteEmail;
-  
-    try {
-      const loggedInUserId = req.session.userId;
-      const loggedInUser = await prisma.user.findUnique({
-        where: { id: loggedInUserId },
+router.get('/viewData', authenticate, async (req, res, next) => {
+  await restrictAccess('User', req, res, next);
+}, async (req, res) => {
+  try {
+    const user = await prisma.User.findUnique({
+      where: { id: req.session.userId },
+    });
+
+    if (!user) {
+      res.status(404).send('User not found');
+    } else {
+      // Retrieve and render the data specific to the user
+      const userData = await prisma.User.findUnique({
+        where: { id: req.session.userId },
+        include: { data: true },
       });
-  
-      if (!loggedInUser) {
-        return res.json({ success: false, message: 'User not found.' });
+
+      if (!userData) {
+        res.status(404).send('User data not found');
+      } else {
+        res.render('viewData', { title: 'View Data', userData: userData });
       }
-  
-      // Compare the password of the logged-in admin user with the provided password
-      const match = await bcrypt.compare(password, loggedInUser.password);
-      if (!match) {
-        return res.json({ success: false, message: 'Incorrect password.' });
-      }
-  
-      const userToDelete = await prisma.user.findUnique({
-        where: { email: deleteEmail.toLowerCase() },
-        include: { student: true }, // Include the associated student info
-      });
-  
-      if (!userToDelete) {
-        return res.json({ success: false, message: 'User not found.' });
-      }
-  
-      // Delete the associated student info
-      if (userToDelete.student) {
-        await prisma.student_Info.delete({
-          where: { id: userToDelete.student.id },
-        });
-      }
-  
-      // Delete the user from the database
-      await prisma.user.delete({
-        where: { email: deleteEmail.toLowerCase() },
-      });
-  
-      return res.json({ success: true });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ success: false, message: 'Internal server error.' });
     }
-  });
-  
-  app.use('/', router);
-  
-  module.exports = app;
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal server error');
+  }
+});
+
+app.use('/', router);
+
+module.exports = app;
