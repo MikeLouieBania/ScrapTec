@@ -71,5 +71,4 @@ router.post('/edit/:id', (req, res) => {
     res.status(500).json({ error: 'An error occurred while updating the information' });
   });
 });
-
 module.exports = router;

@@ -34,3 +34,10 @@ model Student_Info {
   hobby         String[]
   user          User?      @relation(fields: [userId], references: [id])
 }
+
+model Log {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  action     String
+  email      String
+  timestamp  DateTime @default(now())
+}
