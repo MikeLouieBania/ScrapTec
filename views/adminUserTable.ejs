@@ -85,10 +85,10 @@
             <a class="nav-link" href="/admin">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/userinfo">Users</a>
+            <a class="nav-link" href="/adminUserTable">Users</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Logs</a>
+            <a class="nav-link" href="/logs">Logs</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/studentinfo">Form</a>
@@ -164,7 +164,7 @@
       <script>
         $(document).ready(function() {
           var deleteEmail;
-      
+        
           // Set the email to delete when the delete button is clicked
           $('.delete-btn').click(function() {
             deleteEmail = $(this).data('email');
@@ -184,11 +184,11 @@
               }
             });
           });
-      
+        
           // Handle the delete confirmation
           $('#confirmDeleteBtn').click(function() {
             var password = $('#passwordInput').val();
-      
+        
             // Make an AJAX request to delete the user
             $.ajax({
               url: '/deleteUser',
@@ -198,8 +198,24 @@
               },
               success: function(response) {
                 if (response.success) {
-                  // Refresh the page to reflect the changes
-                  window.location.reload();
+                  // Log the delete action
+                  $.ajax({
+                    url: '/logAction',
+                    method: 'POST',
+                    data: {
+                      action: 'Delete',
+                      email: deleteEmail
+                    },
+                    success: function(logResponse) {
+                      // Reload the page to reflect the changes
+                      location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                      console.error(error);
+                      // Reload the page to reflect the changes
+                      location.reload();
+                    }
+                  });
                 } else {
                   alert(response.message);
                 }
@@ -210,6 +226,6 @@
             });
           });
         });
-      </script>
+      </script>      
 </body>
 </html>
