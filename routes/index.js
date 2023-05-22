@@ -40,7 +40,7 @@ async function restrictAccess(userType, req, res, next) {
         } else if (user.usertype === 'Manager') {
           res.redirect('/managerDashboard');
         } else {
-          res.redirect('/studentinfo');
+          res.redirect('/studentDashboard');
         }
       } else {
         next();
@@ -58,7 +58,7 @@ async function restrictAccess(userType, req, res, next) {
 router.get('/login', async function(req, res, next) {
   var users = await prisma.User.findMany();
   if (req.session.userId) {
-    res.redirect('/studentinfo');
+    res.redirect('/studentDashboard');
   } else {
     res.render('index', { title: 'Express', users: users });
   }
@@ -78,7 +78,7 @@ router.post('/login', async (req, res) => {
     } else if (user.usertype === 'Manager') {
       res.redirect('/managerDashboard');
     } else {
-      res.redirect('/studentinfo');
+      res.redirect('/studentDashboard');
     }
   } else {
     try {
@@ -101,7 +101,7 @@ router.post('/login', async (req, res) => {
           } else if (user.usertype === 'Manager') {
             res.redirect('/managerDashboard');
           } else {
-            res.redirect('/studentinfo');
+            res.redirect('/studentDashboard');
           }
         } else {
           res.render('index', { errorMessage: 'Incorrect Password.' });
@@ -173,8 +173,16 @@ router.get('/managerUserTable', async (req, res) => {
 router.use('/studentDashboard', authenticate, restrictAccess.bind(null, 'User'));
 router.get('/studentDashboard', async (req, res) => {
   try {
-    const users = await prisma.User.findMany();
-    res.render('studentDashboard', { title: 'User Page', users: users });
+    const userId = req.session.userId;
+    const user = await prisma.User.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    res.render('studentDashboard', { title: 'User Page', user: user });
   } catch (err) {
     console.log(err);
     res.status(500).send('Internal server error');
@@ -265,7 +273,7 @@ router.post('/deleteUser', async (req, res) => {
     await prisma.user.delete({
       where: { email: deleteEmail.toLowerCase() },
     });
-    
+
     return res.json({ success: true });
   } catch (err) {
     console.error(err);
