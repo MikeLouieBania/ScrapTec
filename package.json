@@ -21,6 +21,6 @@
     "redis": "^4.6.6"
   },
   "devDependencies": {
-    "prisma": "^4.14.0"
+    "prisma": "^4.14.1"
   }
 }
