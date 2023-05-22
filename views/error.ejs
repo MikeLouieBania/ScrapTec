@@ -10,87 +10,97 @@
 
 
 	<style>
-		body {
-			background: linear-gradient(to bottom, #005ca9, #00a8ff);
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 0;
-			overflow-x: hidden;
-		}
+	body {
+		background: linear-gradient(to bottom, #88d7f7, #6ab3d8, #4e8fa7);
+		font-family: Arial, sans-serif;
+		margin: 0;
+		padding: 0;
+		overflow-x: hidden;
+	}
 
-		.navbar {
-			background: linear-gradient(to bottom, #005ca9, #00a8ff);
-		}
+	.navbar {
+		background: transparent;
+	}
 
-		.navbar-brand {
-			font-weight: bold;
-			color: #fff;
-		}
+	.navbar-brand {
+		font-weight: bold;
+		color: #0878c2;
+	}
 
-		.navbar-nav .nav-link {
-			color: #fff;
-		}
+	.navbar-nav .nav-link {
+		color: #003d66;
+	}
 
-		.feature-box {
-			padding: 30px;
-			border-radius: 5px;
-			background: linear-gradient(to bottom, #003d66, #0496ff);
-			color: #fff;
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-			text-align: center;
-			margin-bottom: 30px;
-		}
+	.jumbotron {
+		padding: 100px 0;
+		text-align: center;
+		background: linear-gradient(to bottom, #88d7f7, #6ab3d8, #4e8fa7);
+	}
 
-		.feature-box i {
-			font-size: 40px;
-			color: #fff;
-			margin-bottom: 20px;
-		}
+	.jumbotron h1 {
+		font-size: 48px;
+		font-weight: bold;
+		margin-bottom: 30px;
+	}
 
-		.feature-box h3 {
-			font-size: 24px;
-			font-weight: bold;
-			margin-bottom: 15px;
-		}
+	.jumbotron p {
+		font-size: 20px;
+		color: #fff;
+		margin-bottom: 30px;
+	}
 
-		.feature-box p {
-			font-size: 16px;
-			color: #fff;
-		}
+	.btn-primary {
+		background-color: #003d66;
+		border-color: #003d66;
+		font-weight: bold;
+	}
 
-		.jumbotron {
-			padding: 100px 0;
-			text-align: center;
-			background: linear-gradient(to bottom, #003d66, #0496ff);
-			color: #fff;
-		}
+	.btn-primary:hover {
+		background-color: #00213f;
+		border-color: #00213f;
+	}
 
-		.jumbotron h1 {
-			font-size: 48px;
-			font-weight: bold;
-			margin-bottom: 30px;
-		}
+	.feature-box {
+		padding: 30px;
+		border-radius: 5px;
+		background: linear-gradient(to bottom, #00556d, #003d66);
+		color: #fff;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		text-align: center;
+		margin-bottom: 71px;
+	}
+	.feature-box i {
+		font-size: 40px;
+		color: #fff;
+		margin-bottom: 20px;
+	}
 
-		.jumbotron p {
-			font-size: 20px;
-			color: #fff;
-			margin-bottom: 30px;
-		}
+	.feature-box h3 {
+		font-size: 24px;
+		font-weight: bold;
+		margin-bottom: 15px;
+	}
 
-		.btn-primary {
-			background-color: #003d66;
-			border-color: #003d66;
-		}
+	.feature-box p {
+		font-size: 16px;
+		color: #fff;
+	}
 
-		.btn-primary:hover {
-			background-color: #00213f;
-			border-color: #00213f;
-		}
+	.custom-btn {
+	background-color: #3498db;
+	color: #fff;
+	transition: background-color 0.3s ease;
+	}
+
+	.custom-btn:hover {
+	background-color: #2980b9;
+	}
+
 	</style>
 </head>
 <body>
 	<!-- Navigation Bar -->
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to bottom, #00556d, #003d66);">
 		<div class="container">
 			<a class="navbar-brand" href="#">My Web App</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,8 +134,8 @@
 <div class="jumbotron jumbotron-fluid">
 	<div class="container">
 		<h1 class="display-4">Welcome to My Web App</h1>
-		<p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.</p>
-		<a href="/login" class="btn btn-primary btn-lg">Login Now</a>
+		<p class="lead">Experience a secure and seamless web browsing experience.</p>
+		<a href="/login" class="btn btn-primary btn-lg custom-btn">Login Now</a>
 	</div>
 </div>
 <!-- End Jumbotron -->
@@ -138,21 +148,21 @@
 				<div class="feature-box">
 					<i class="fas fa-pencil-ruler"></i>
 					<h3>Easy to Use</h3>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.</p>
+					<p>Experience a user-friendly interface that simplifies complex tasks and enhances productivity.</p>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="feature-box">
 					<i class="fas fa-mobile-alt"></i>
 					<h3>Mobile-Friendly</h3>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.</p>
+					<p>Seamlessly access our platform on any device, providing a consistent and optimized experience on the go.</p>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="feature-box">
 					<i class="fas fa-lock"></i>
 					<h3>Secure</h3>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.</p>
+					<p>Rest assured that your data and privacy are protected with state-of-the-art security measures in place.</p>
 				</div>
 			</div>
 		</div>
