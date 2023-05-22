@@ -208,12 +208,12 @@
                     },
                     success: function(logResponse) {
                       // Reload the page to reflect the changes
-                      location.reload();
+                      window.location.reload();
                     },
                     error: function(xhr, status, error) {
                       console.error(error);
                       // Reload the page to reflect the changes
-                      location.reload();
+                      window.location.reload();
                     }
                   });
                 } else {
