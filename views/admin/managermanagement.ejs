@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Manager Management</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+      /* Additional custom styles for the page */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Sidebar styles */
+      .sidebar {
+        height: 100%;
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #f0f0f0;
+        padding-top: 20px;
+      }
+
+      .sidebar a {
+        display: block;
+        padding: 10px 20px;
+        color: #333;
+        text-decoration: none;
+      }
+
+      .sidebar a:hover {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/droppointmanagement">Drop Point Management</a> 
+      <a href="/admin/managermanagement">Manager Management</a>
+      <a href="/admin/usermanagement">User Management</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content ml-200">
+      <!-- Nav with Bootstrap classes for styling -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+          </li> 
+        </ul>
+        <form class="form-inline my-2 my-lg-0" method="post" action="/logout">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+        </form>
+      </nav>
+ 
+      <div class="container">
+        <!-- Add the content of the admin dashboard here -->
+        <h1>Manager Management</h1> 
+      
+        <!-- Button to open the drop point creation modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registerManagerModal">
+          Register a Manager
+        </button>
+        <!-- Table to display registererd managers -->
+        <table class="table mt-4">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Contact Number</th>
+              <th>Address</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Populate table rows with drop point data -->
+            <% let counter = 1; %>
+            <% managers.forEach(manager => { %>
+            <tr>
+              <td><%= counter++ %></td>
+              <td><%= manager.firstName %> <%= manager.firstName %></td>
+              <td><%= manager.email %></td> 
+              <td><%= manager.phoneNumber %></td>
+              <td><%= manager.address %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div> 
+    </div>
+
+    <!-- Modal for creating drop points -->
+    <div class="modal fade" id="registerManagerModal" tabindex="-1" role="dialog" aria-labelledby="registerManagerModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="registerManagerModalLabel">Register a Manager</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>Manager Registration</h4>
+            <form action="/admin/managermanagement" method="post">
+              <div class="form-group">
+                <label for="managerFirstName">First Name</label>
+                <input type="text" name="firstName" class="form-control" id="managerFirstName" placeholder="Enter manager's first name">
+              </div>
+              <div class="form-group">
+                <label for="managerLastName">Last Name</label>
+                <input type="text" name="lastName" class="form-control" id="managerLastName" placeholder="Enter manager's last name">
+              </div>
+              <div class="form-group">
+                <label for="managerEmail">Email</label>
+                <input type="email" name="email" class="form-control" id="managerEmail" placeholder="Enter manager's email">
+              </div>
+              <div class="form-group">
+                <label for="managerPhone">Phone Number</label>
+                <input type="tel" name="phoneNumber" class="form-control" id="managerPhone" placeholder="Enter manager's phone number">
+              </div>
+              <div class="form-group">
+                <label for="managerAddress">Address</label>
+                <input type="text" name="address" class="form-control" id="managerAddress" placeholder="Enter manager's address">
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="registerManagerButton">Register Manager</button>
+              </div>
+            </form>
+          </div> 
+        </div>
+      </div>
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

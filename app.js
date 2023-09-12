@@ -1,24 +1,26 @@
 var createError = require('http-errors');
 var express = require('express');
-const session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
+var { PrismaClient } = require('@prisma/client');
 
-var loginRouter = require('./routes/index');
-var registerRouter = require('./routes/register');
-var studentInfoRouter = require('./routes/studentinfo');
-var userinfoRouter = require('./routes/userinfo');
+
+// Initialize Prisma client
+const prisma = new PrismaClient(); 
+
+// Middleware for handling session data
+const authMiddlewareUser = require('./controllers/authMiddlewareUser');
+const authMiddlewareManager = require('./controllers/authMiddlewareManager'); 
+
+// Configure routes
+var indexRoutes = require('./routes/index'); 
+var userRoutes = require('./routes/user');
+var managerRoutes = require('./routes/manager');
+var adminRoutes = require('./routes/admin');
+
 var app = express();
-
-app.use(session({
-  secret: 'secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 86400000 // 24 hours
-  }
-}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,10 +32,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', loginRouter);
-app.use('/', registerRouter);
-app.use('/', studentInfoRouter);
-app.use('/', userinfoRouter);
+
+app.use(session({
+  secret: 'randomkeyheehehehe', // Replace with a secret key for session data encryption
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use('/', indexRoutes); 
+app.use('/user', authMiddlewareUser.requireLogin, userRoutes); 
+app.use('/manager', managerRoutes);
+app.use('/admin', adminRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -48,11 +57,6 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-
-  if (req.session.userId) {
-    return res.redirect('/');
-  }
-
   res.render('error');
 });
 

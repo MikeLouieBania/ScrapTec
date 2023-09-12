@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Marketplace</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />  
+    <style>
+      /* Additional custom styles for the page */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Style for the advertisements */
+      .advertisements {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        background-color: #f0f0f0;
+        margin-bottom: 20px;
+      }
+
+      /* Style for the category navigation */
+      .category-nav {
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .category-nav a {
+        display: block;
+        padding: 5px;
+        text-decoration: none;
+        color: #333;
+      }
+
+      .category-nav a:hover {
+        background-color: #ddd;
+      }
+
+      /* Style for the marketplace products */
+      .product {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .product h3 {
+        margin-top: 0;
+      }
+
+      .product p {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/user/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto"> 
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/marketplace">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/userdonations">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/useraccount">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/user/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+      <h1>Marketplace</h1>
+      <!-- Advertisements -->
+      <div class="advertisements">
+        <!-- Add your advertisements content here -->
+        Advertisement 1
+      </div>
+
+      <div class="row">
+        <!-- Category Navigation -->
+        <div class="col-md-3">
+            <h4>Marketplace</h4>
+            <button class="btn btn-primary mt-3" type="button">Create New Listing</button> <br>
+            <br>
+            <ul class="list-group">
+                <li class="list-group-item">
+                  <a href="#">Search Marketplace</a>
+                  <!-- Add your search field here -->
+                  <input type="text" class="form-control mt-2" placeholder="Search">
+                  <!-- Add Inbox, Buying, and Selling links below the search field -->
+                  <a href="#">Inbox</a><br>
+                  <a href="#">Buying</a><br>
+                  <a href="#">Selling</a>
+                </li>
+            </ul>
+            <!-- Filters Section -->
+            <h4 class="mt-3">Filters</h4>
+            <ul class="list-group">
+                <li class="list-group-item" data-toggle="collapse" data-target="#sortByCollapse">
+                    <a href="#">Sort By</a>
+                    <div id="sortByCollapse" class="collapse">
+                    <!-- Add your Sort By options here -->
+                    <a href="#">Price: Lowest First</a><br>
+                    <a href="#">Price: Highest First</a>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <a href="#">Price</a> <br>
+                    <!-- Add your Price input fields here -->
+                    Min: <input type="text" class="form-control mt-2" placeholder="Min Price">
+                    Max: <input type="text" class="form-control mt-2" placeholder="Max Price">
+                </li>
+                <li class="list-group-item" data-toggle="collapse" data-target="#conditionCollapse">
+                    <a href="#">Condition</a>
+                    <div id="conditionCollapse" class="collapse">
+                    <!-- Add your Condition options here -->
+                    <a href="#">New</a><br>
+                    <a href="#">Good</a><br>
+                    <a href="#">Fair</a>
+                    </div>
+                </li>
+                <li class="list-group-item" data-toggle="collapse" data-target="#dateListedCollapse">
+                    <a href="#">Date Listed</a>
+                    <div id="dateListedCollapse" class="collapse">
+                    <!-- Add your Date Listed options here -->
+                    <a href="#">All</a><br>
+                    <a href="#">Last 24 Hours</a><br>
+                    <a href="#">Last 7 Days</a><br>
+                    <a href="#">Last 30 Days</a>
+                    </div>
+                </li> 
+            </ul>
+            
+            <h4 class="mt-3">Categories</h4>
+            <ul class="list-group">
+                <!-- Add your Categories options here -->
+                <li class="list-group-item"><a href="#">Category 1</a></li>
+                <li class="list-group-item"><a href="#">Category 2</a></li>
+                <li class="list-group-item"><a href="#">Category 3</a></li>
+            </ul>
+        </div>
+
+        <!-- Marketplace Products -->
+        <div class="col-md-9">
+          <div class="product">
+            <h3>Product 1</h3>
+            <p>Price: ₱10</p>
+            <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+
+          <div class="product">
+            <h3>Product 2</h3>
+            <p>Price: ₱20</p>
+            <p>Description: Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+
+          <div class="product">
+            <h3>Product 3</h3>
+            <p>Price: ₱15</p>
+            <p>Description: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+          </div>
+          <!-- Add more products as needed -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

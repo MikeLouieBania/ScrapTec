@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Address-to-Address</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.0.6/dist/geosearch.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-geosearch@3.0.6/dist/geosearch.umd.js"></script>
+    <style>
+        #map { width: 600px; height: 400px; }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+    var map = L.map('map').setView([51.505, -0.09], 13); // Default view
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+    const provider = new GeoSearch.OpenStreetMapProvider();
+
+    async function addAddressToMap(address, popupText) {
+        const results = await provider.search({ query: address });
+        if (results && results.length > 0) {
+            const latlng = results[0].bounds[0];
+            L.marker(latlng).addTo(map).bindPopup(popupText).openPopup();
+        }
+    }
+
+    addAddressToMap('1600 Amphitheatre Pkwy, Mountain View, CA 94043', 'First Address');
+    addAddressToMap('1 Infinite Loop, Cupertino, CA 95014', 'Second Address');
+
+</script>
+
+</body>
+</html>

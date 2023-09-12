@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+     <!-- Link to Mapbox GL JS -->
+     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
+  
+    <style>
+      /* Style for the chatbot window */
+      .chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 300px;
+        height: 400px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Style for the chatbot messages area */
+      .chatbot-messages {
+        height: 80%;
+        overflow-y: scroll;
+      }
+
+      /* Style for the user input area */
+      .chatbot-input {
+        display: flex;
+      }
+
+      .chatbot-input input {
+        flex: 1;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+
+      .chatbot-input button {
+        margin-left: 5px;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      /* Style for the list layout */
+      .drop-points-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+
+      .drop-point {
+        width: 48%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+      }
+
+      .drop-point h3 {
+        margin-top: 0;
+      }
+
+      .drop-point p {
+        margin-bottom: 0;
+      }
+
+      /* Style for the map */
+      .map-container {
+        /* Adjust the width and height based on your preference */
+        width: 300px;
+        height: 200px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .map {
+        width: 100%;
+        height: 100%;
+        background-color: #f0f0f0;
+      } 
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/user/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/marketplace">Marketplace</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/userdonations">My Donations</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/useraccount">My Account</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0" method="post" action="/user/logout">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+      </form>
+    </nav>
+    
+    <div class="container mt-3"> 
+      <!-- User's Information -->
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Welcome, <%= user.firstName %>!</h2> 
+        </div>
+      </div>
+      <br>
+
+       <!-- Drop Points and Descriptions -->
+       <div class="row">
+        <!-- Drop Point 1 -->
+        <div class="col-md-6">
+          <div class="drop-point">
+            <h3>Drop Point 1</h3>
+            <p>Address: 123 Main St, City A</p>
+            <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> 
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="map-container" id="map1"></div> <br>
+        </div>
+
+        <!-- Drop Point 2 -->
+        <div class="col-md-6">
+          <div class="drop-point">
+            <h3>Drop Point 2</h3>
+            <p>Address: 456 Park Ave, City B</p>
+            <p>Description: Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="map-container" id="map2"></div> <br>
+        </div>
+ 
+        <!-- Drop Point 3 -->
+        <div class="col-md-6">
+          <div class="drop-point">
+            <h3>Drop Point 3</h3>
+            <p>Address: 789 Oak St, City C</p>
+            <p>Description: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="map-container" id="map3"></div> <br>
+        </div>
+      </div>
+      
+      <!-- Chatbot Container -->
+      <div class="chatbot-container">
+        <div class="chatbot-messages">
+          <!-- Chatbot messages will be displayed here -->
+        </div>
+        <div class="chatbot-input">
+          <input type="text" placeholder="Type your message">
+          <button>Send</button>
+        </div>
+      </div>
+
+    </div> 
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Load Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+ 
+
+    <!-- Initialize Mapbox GL JS for each map container -->
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1Ijoid2hlemJvbyIsImEiOiJjbGo5b3NkdDgxMXdsM2RzMXFmczJhc2VpIn0.reBiZecFSTjHSeSeLUsCTg';
+
+      const dropPoints = [
+        {
+          name: 'Drop Point 1',
+          address: '123 Main St, City A',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          coordinates: [120.9842, 14.5995], // Longitude, Latitude for Drop Point 1
+        },
+        {
+          name: 'Drop Point 2',
+          address: '456 Park Ave, City B',
+          description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          coordinates: [121.0322, 14.5824], // Longitude, Latitude for Drop Point 2
+        },
+        {
+          name: 'Drop Point 3',
+          address: '789 Oak St, City C',
+          description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+          coordinates: [120.9822, 14.6229], // Longitude, Latitude for Drop Point 3
+        },
+      ];
+
+      // Initialize maps for each drop point
+      dropPoints.forEach((dropPoint, index) => {
+        const mapContainer = document.getElementById(`map${index + 1}`);
+        const map = new mapboxgl.Map({
+          container: mapContainer,
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: dropPoint.coordinates,
+          zoom: 12,
+        });
+
+        // Add marker to the map
+        new mapboxgl.Marker().setLngLat(dropPoint.coordinates).addTo(map);
+        
+        // Add full-screen control to each map
+        map.addControl(new mapboxgl.FullscreenControl());
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify OTP</title>
+  <!-- Link to Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+  <style>
+    /* Additional custom styles for the page */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Add a Bootstrap container for better layout -->
+  <div class="container">
+    <h1>Verify OTP</h1>
+    <% if (typeof message !== 'undefined') { %>
+      <p><%= message %></p>
+    <% } %>
+    <form action="/verify-otp" method="POST">
+      <div class="form-group">
+        <label for="otp">Enter OTP:</label>
+        <input type="text" class="form-control" id="otp" name="otp" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Verify OTP</button>
+    </form>
+  </div>
+
+  <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

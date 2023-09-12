@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geolocation and Map Search</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
+</head>
+<body>
+  <h1>Geolocation and Map Search</h1>
+  
+  <div>
+    <label for="search">Search Location:</label>
+    <input type="text" id="search" placeholder="Enter a location">
+    <button id="searchButton">Search</button>
+  </div>
+  
+  <div id="map" style="height: 400px; width: 600px;"></div>
+  
+  <div id="coordinates">Latitude: 0.0000, Longitude: 0.0000</div>
+  
+  <script>
+    var map = L.map('map').setView([0, 0], 2); // Default view at (0, 0) with zoom level 2
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(map);
+    
+    var searchButton = document.getElementById('searchButton');
+    var searchInput = document.getElementById('search');
+    
+    var marker = null; // To store the marker
+
+    map.on('click', function(e) {
+      if (marker) {
+        map.removeLayer(marker); // Remove existing marker
+      }
+      
+      marker = L.marker(e.latlng).addTo(map);
+      marker.bindPopup('Selected Location');
+      
+      var lat = e.latlng.lat;
+      var lon = e.latlng.lng;
+
+      document.getElementById('coordinates').textContent = `Latitude: ${lat.toFixed(4)}, Longitude: ${lon.toFixed(4)}`;
+      
+      // You can also reverse geocode the clicked location and display its address
+      reverseGeocode(lat, lon);
+    });
+    
+    
+    searchButton.addEventListener('click', function() {
+      var query = searchInput.value;
+      if (query !== '') {
+        searchLocation(query);
+      }
+    });
+    
+    function searchLocation(query) {
+      fetch('https://nominatim.openstreetmap.org/search?q=' + query + '&format=json')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          if (data.length > 0) {
+            var result = data[0];
+            var lat = parseFloat(result.lat);
+            var lon = parseFloat(result.lon);
+            
+            map.setView([lat, lon], 15); // Update map view to the search result location
+            
+            L.marker([lat, lon]).addTo(map)
+              .bindPopup(result.display_name)
+              .openPopup();
+          }
+        })
+        .catch(function(error) {
+          console.log('Error:', error);
+        });
+    }
+    
+    function reverseGeocode(lat, lon) {
+      fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          if (data.display_name) {
+            marker.bindPopup(data.display_name).openPopup();
+          }
+        })
+        .catch(function(error) {
+          console.log('Error:', error);
+        });
+    }
+  </script>
+</body>
+</html>

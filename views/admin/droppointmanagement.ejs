@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drop Point Management</title>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">  
+  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+
+
+  <!-- Link to Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+  <style>
+    /* Additional custom styles for the page */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+      height: 100%;
+      width: 200px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #f0f0f0;
+      padding-top: 20px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 10px 20px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      background-color: #ddd;
+    }
+
+    /* Custom CSS to avoid style conflicts with Leaflet */
+    .leaflet-map-pane,
+    .leaflet-tile,
+    .leaflet-marker-icon,
+    .leaflet-popup-pane {
+      z-index: 1000 !important;
+    }
+    .leaflet-control-fullscreen {
+        z-index: 1001 !important; 
+    }
+
+    #map {
+      z-index: 400 !important; 
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/droppointmanagement">Drop Point Management</a> 
+    <a href="/admin/managermanagement">Manager Management</a>
+    <a href="/admin/usermanagement">User Management</a>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content ml-200">
+    <!-- Nav with Bootstrap classes for styling -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+        </li> 
+      </ul>
+      <form class="form-inline my-2 my-lg-0" method="post" action="/logout">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+      </form>
+    </nav>
+
+    <div class="container">
+      <!-- Add the content of the admin dashboard here -->
+      <h1>Drop Point Management</h1> 
+      
+      <!-- Button to open the drop point creation modal -->
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDropPointModal">
+        Create Drop Point
+      </button>
+      <!-- Table to display created drop points -->
+      <table class="table mt-4">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Operating Hours</th>
+            <th>Description</th>
+            <th>Assigned Manager</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Populate table rows with drop point data -->
+          <% let counter = 1; %>
+          <% dropPoints.forEach(dropPoint => { %>
+          <tr>
+            <td><%= counter++ %></td>
+            <td><%= dropPoint.name %></td>
+            <td><%= dropPoint.location %></td> 
+            <td><%= dropPoint.openingTime %> - <%= dropPoint.closingTime %></td>
+            <td><%= dropPoint.description %></td> 
+            <td>
+              <% if(dropPoint.manager) { %>  <!-- Check if manager data is available -->
+                <%= dropPoint.manager.firstName %> <%= dropPoint.manager.lastName %>  <!-- Display the manager's name -->
+              <% } else { %>
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
+              <% } %>
+            </td>                       
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal for creating drop points -->
+  <div class="modal fade" id="createDropPointModal" tabindex="-1" role="dialog" aria-labelledby="createDropPointModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createDropPointModalLabel">Create Drop Point</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+          <div class="row">
+            <div class="col-md-6">
+              <!-- Add the drop point creation form here -->
+              <form action="/admin/droppointmanagement" method="post">
+                <!-- Form fields for drop point information -->
+                <div class="form-group">
+                  <label for="dropPointName">Name</label>
+                  <input type="text" name="name" class="form-control" id="dropPointName" placeholder="Enter drop point name">
+                </div>
+                <div class="form-group">
+                  <label for="dropPointLocation">Location</label>
+                  <input type="text" name="location" class="form-control" id="dropPointLocation" placeholder="Location details will be shown here." readonly> 
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="dropPointOpeningTime">Opening Time</label>
+                    <input type="time" name="openingTime" class="form-control" id="dropPointOpeningTime" placeholder="Enter opening time">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="dropPointClosingTime">Closing Time</label>
+                    <input type="time" name="closingTime" class="form-control" id="dropPointClosingTime" placeholder="Enter closing time">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="dropPointDescription">Description</label>
+                  <textarea class="form-control" name="description" id="dropPointDescription" rows="3" placeholder="Enter description"></textarea>
+                </div> 
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary" id="createDropPointButton">Create</button>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <!-- Map container -->
+              <div id="map" style="height: 400px"></div>
+              <!-- Address display -->
+              <div class="mt-2">
+                <small class="form-text text-muted">You can adjust the search location by clicking on the map.</small>
+                <input type="text" id="search" placeholder="Search for a location" title="Search for a location and adjust as needed."  class="form-control">
+                <button id="searchButton" class="btn btn-primary mt-2">Search</button>
+              </div>
+            </div>
+          </div> 
+        </div> 
+      </div>
+    </div>
+  </div> 
+
+  <!-- Modal for assigning a manager to a drop point -->
+  <div class="modal fade" id="assignManagerModal" tabindex="-1" role="dialog" aria-labelledby="assignManagerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="assignManagerModalLabel">Assign Manager</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/admin/assignManagerToDropPoint" method="post">
+          <div class="modal-body">
+            <input type="hidden" id="modalDropPointId" name="dropPointId">
+            <div class="form-group">
+              <label for="managerName">Manager's Name</label><select name="managerName" id="managerName" class="form-control">
+                <option value="" disabled selected>Select a manager to assign</option>
+                <!-- Loop through all available managers -->
+                <% managers.forEach(manager => { %>
+                  <option value="<%= manager.email %>"><%= manager.firstName %> <%= manager.lastName %></option>
+                <% }) %>
+              </select>              
+            </div>            
+            <div class="form-group">
+              <label for="managerEmail">Manager's Gmail</label>
+              <input type="text" name="managerEmail" id="managerEmail" class="form-control" readonly>
+            </div>            
+            <div class="form-group">
+              <label for="managerPassword">Set Password</label>
+              <input type="password" name="password" class="form-control" id="managerPassword" placeholder="Set manager's password">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Assign</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+
+
+  <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+  
+  <script>
+    var map;
+    var marker = null; // To store the marker
+
+    $('#createDropPointModal').on('shown.bs.modal', function () {
+    if (!map) {
+        map = L.map('map', {
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+                position: 'topleft'
+            }
+        }).setView([14.6091, 121.0223], 10);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        map.on('click', function(e) {
+            if (marker) {
+                map.removeLayer(marker); // Remove existing marker
+            }
+            
+            marker = L.marker(e.latlng).addTo(map);
+            
+            var lat = e.latlng.lat;
+            var lon = e.latlng.lng;
+            reverseGeocode(lat, lon);
+        });
+
+        // Add event listeners here
+        map.on('enterFullscreen', function() {
+            if(window.console) window.console.log('enterFullscreen event fired');
+        });
+
+        map.on('exitFullscreen', function() {
+            if(window.console) window.console.log('exitFullscreen event fired');
+        });
+    } else {
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 10);
+    }
+});
+
+
+
+    var searchButton = document.getElementById('searchButton');
+    var searchInput = document.getElementById('search');
+    
+    searchButton.addEventListener('click', function() {
+        var query = searchInput.value;
+        if (query !== '') {
+            searchLocation(query);
+        }
+    });
+    
+    function searchLocation(query) {
+        fetch('https://nominatim.openstreetmap.org/search?q=' + query + '&format=json')
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.length > 0) {
+                    var result = data[0];
+                    var lat = parseFloat(result.lat);
+                    var lon = parseFloat(result.lon);
+                    
+                    map.setView([lat, lon], 15); // Update map view to the search result location
+                    
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+
+                    marker = L.marker([lat, lon]).addTo(map).bindPopup(result.display_name).openPopup();
+                    displayAddress(result.display_name);
+                }
+            })
+            .catch(function(error) {
+                console.log('Error:', error);
+            });
+    }
+    
+    function reverseGeocode(lat, lon) {
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.display_name) {
+                    displayAddress(data.display_name);
+                    if(marker) {
+                        marker.bindPopup(data.display_name).openPopup();
+                    }
+                }
+            })
+            .catch(function(error) {
+                console.log('Error:', error);
+            });
+    }
+
+    function displayAddress(address) {
+        var addressElement = document.getElementById('dropPointLocation');
+        addressElement.value = address;
+    }
+</script>
+
+<script> 
+
+$(document).ready(function() {
+  $('#assignManagerModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
+    var modal = $(this);
+    modal.find('#modalDropPointId').val(dropPointId);
+  });
+});
+document.getElementById('managerName').addEventListener('change', function() {
+  const selectedEmail = this.value;
+  document.getElementById('managerEmail').value = selectedEmail;
+});
+</script>
+ 
+
+
+
+</body>
+</html>
