@@ -21,10 +21,9 @@ model User {
   donations    Donation[]
 }
 
-
 model Organization {
   id                   String    @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String
+  organizationname     String
   address              String
   contactNumber        String
   secRegistrationNumber String?
@@ -39,9 +38,9 @@ model Document {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   filename    String
   url         String    @unique
-  uploadedBy  String   // Store the user's name or identifier here
+  uploadedBy  String  
   organization  Organization?  @relation(fields: [organizationId], references: [id])
-  organizationId String?
+  organizationId String? 
 
   createdAt   DateTime  @default(now())
 }
