@@ -10,7 +10,7 @@ router.get('/', authMiddlewareUser.checkLoggedInRedirect, indexController.getInd
 router.get('/login', authMiddlewareUser.checkLoggedInRedirect, indexController.getLogin); 
 router.get('/signup', authMiddlewareUser.checkLoggedInRedirect, indexController.getSignup); 
 router.get('/verify-otp', authMiddlewareUser.checkLoggedInRedirect, indexController.getVerifyOTP); 
-router.post('/signup', upload.single('profilePicture'), indexController.registerUser);
+router.post('/user-signup', upload.single('profilePicture'), indexController.registerUser);
 router.post('/login', indexController.loginUser);
 router.post('/verify-otp', indexController.verifyOTP);
 
