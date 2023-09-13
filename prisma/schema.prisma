@@ -21,6 +21,43 @@ model User {
   donations    Donation[]
 }
 
+
+model Organization {
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  address              String
+  contactNumber        String
+  secRegistrationNumber String?
+  verificationStatus   VerificationStatus @default(PENDING)
+  submittedDocuments   Document[]
+
+  type                 OrganizationType
+  createdAt            DateTime  @default(now())
+}
+
+model Document {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  filename    String
+  url         String    @unique
+  uploadedBy  String   // Store the user's name or identifier here
+  organization  Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId String?
+
+  createdAt   DateTime  @default(now())
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OrganizationType {
+  COMPANY
+  NGO
+}
+
+
 model DropPoint {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String
