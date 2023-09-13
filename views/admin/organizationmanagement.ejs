@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Organization Management</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+      /* Additional custom styles for the page */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Sidebar styles */
+      .sidebar {
+        height: 100%;
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #f0f0f0;
+        padding-top: 20px;
+      }
+
+      .sidebar a {
+        display: block;
+        padding: 10px 20px;
+        color: #333;
+        text-decoration: none;
+      }
+
+      .sidebar a:hover {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/organizationmanagement">Organization Management</a> 
+      <a href="/admin/droppointmanagement">Drop Point Management</a> 
+      <a href="/admin/managermanagement">Manager Management</a>
+      <a href="/admin/usermanagement">User Management</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content ml-200">
+      <div class="container">
+        <h1>Organization Management</h1>
+        <!-- Tabs for filtering organizations -->
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#approved">Approved</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#pending">Pending</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#rejected">Rejected</a>
+          </li>
+        </ul>
+        
+        <!-- Tab panes for organization lists -->
+        <div class="tab-content">
+          <div class="tab-pane fade <%= selectedStatus === 'APPROVED' ? 'show active' : '' %>" id="approved">
+            <!-- Organizations for Approved status -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Organization Name</th>
+                  <th>Email</th>
+                  <th>Address</th>
+                  <th>Contact Number</th>
+                  <th>Secondary Registration Number</th>
+                  <th>Verification Status</th>
+                  <th>Actions</th> <!-- Add an Actions column for viewing documents -->
+                </tr>
+              </thead>
+              <tbody>
+                <% organizations.forEach((organization) => { %>
+                  <% if (organization.verificationStatus === 'APPROVED') { %>
+                    <tr>
+                      <td><%= organization.organizationname %></td>
+                      <td><%= organization.email %></td>
+                      <td><%= organization.address %></td>
+                      <td><%= organization.contactNumber %></td>
+                      <td><%= organization.secRegistrationNumber || 'N/A' %></td>
+                      <td><%= organization.verificationStatus %></td>
+                      <td>
+                        <!-- Button to view documents -->
+                        <a href="/admin/viewdocuments?organizationId=<%= organization.id %>">View Documents</a>
+                      </td>
+                    </tr>
+                  <% } %>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade <%= selectedStatus === 'PENDING' ? 'show active' : '' %>" id="pending">
+            <!-- Organizations for Pending status -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Organization Name</th>
+                  <th>Email</th>
+                  <th>Address</th>
+                  <th>Contact Number</th>
+                  <th>Secondary Registration Number</th>
+                  <th>Verification Status</th>
+                  <th>Actions</th> <!-- Add an Actions column for viewing documents -->
+                </tr>
+              </thead>
+              <tbody>
+                <% organizations.forEach((organization) => { %>
+                  <% if (organization.verificationStatus === 'PENDING') { %>
+                    <tr>
+                      <td><%= organization.organizationname %></td>
+                      <td><%= organization.email %></td>
+                      <td><%= organization.address %></td>
+                      <td><%= organization.contactNumber %></td>
+                      <td><%= organization.secRegistrationNumber || 'N/A' %></td>
+                      <td><%= organization.verificationStatus %></td>
+                      <td>
+                        <!-- Button to view documents -->
+                        
+                        <td>
+                          <a href="/admin/viewdocuments?organizationId=<%= organization.id %>">View Documents</a>
+
+                          
+                        </td>
+                        
+                      </td>
+                    </tr>
+                  <% } %>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade <%= selectedStatus === 'REJECTED' ? 'show active' : '' %>" id="rejected">
+            <!-- Organizations for Rejected status -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Organization Name</th>
+                  <th>Email</th>
+                  <th>Address</th>
+                  <th>Contact Number</th>
+                  <th>Secondary Registration Number</th>
+                  <th>Verification Status</th>
+                  <th>Actions</th> <!-- Add an Actions column for viewing documents -->
+                </tr>
+              </thead>
+              <tbody>
+                <% organizations.forEach((organization) => { %>
+                  <% if (organization.verificationStatus === 'REJECTED') { %>
+                    <tr>
+                      <td><%= organization.organizationname %></td>
+                      <td><%= organization.email %></td>
+                      <td><%= organization.address %></td>
+                      <td><%= organization.contactNumber %></td>
+                      <td><%= organization.secRegistrationNumber || 'N/A' %></td>
+                      <td><%= organization.verificationStatus %></td>
+                      <td>
+                        <!-- Button to view documents -->
+                        <a href="/admin/viewdocuments?organizationId=<%= organization.id %>">View Documents</a>
+                      </td>
+                    </tr>
+                  <% } %>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Add your JavaScript code here to fetch and populate organization lists based on tabs -->
+    <script>
+      // You'll need to use JavaScript to fetch data from your backend and populate the organization lists based on tabs.
+      // You can use AJAX or fetch API to retrieve data from your server.
+      // For each tab (pending, approved, rejected), update the content accordingly.
+    </script>
+  </body>
+</html>

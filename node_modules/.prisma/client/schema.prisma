@@ -46,8 +46,6 @@ model Document {
   createdAt   DateTime  @default(now())
 }
  
- 
-
 
 model DropPoint {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
