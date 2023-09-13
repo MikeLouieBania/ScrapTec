@@ -109,6 +109,7 @@ module.exports = {
     try {
       const {
         organizationname,
+        email,
         address,
         contactNumber,
         secRegistrationNumber,
@@ -122,6 +123,7 @@ module.exports = {
       const newOrganization = await prisma.organization.create({
         data: {
           organizationname,
+          email,
           address,
           contactNumber,
           secRegistrationNumber,

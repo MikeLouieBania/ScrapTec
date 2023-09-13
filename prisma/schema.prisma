@@ -23,14 +23,15 @@ model User {
 
 model Organization {
   id                   String    @id @default(auto()) @map("_id") @db.ObjectId
-  organizationname     String
-  address              String
+  organizationname     String    @unique
+  email                String    @unique
+  address              String 
   contactNumber        String
-  secRegistrationNumber String?
-  verificationStatus   VerificationStatus @default(PENDING)
+  secRegistrationNumber String?  @unique
+  verificationStatus   String @default("PENDING")
   submittedDocuments   Document[]
 
-  type                 OrganizationType
+  type                 String
   createdAt            DateTime  @default(now())
 }
 
@@ -44,17 +45,8 @@ model Document {
 
   createdAt   DateTime  @default(now())
 }
-
-enum VerificationStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
-enum OrganizationType {
-  COMPANY
-  NGO
-}
+ 
+ 
 
 
 model DropPoint {
