@@ -1,11 +1,13 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const fs = require('fs');
+const prisma = new PrismaClient(); 
 
 function isPDF(filename) {
   return filename.toLowerCase().endsWith('.pdf');
 }
 
+function isDOCX(filename) {
+  return filename.toLowerCase().endsWith('.docx');
+}
 
 
 module.exports = {
@@ -36,41 +38,29 @@ module.exports = {
   async viewDocuments(req, res) {
     try {
       const { organizationId } = req.query;
-  
+
       // Fetch the organization by ID to display its name or other information if needed
       const organization = await prisma.organization.findUnique({
         where: {
           id: organizationId,
         },
       });
-  
+
       if (!organization) {
         // Handle the case where the organization is not found
         res.status(404).send("Organization not found");
         return;
       }
-  
+
       // Fetch the documents associated with the organization by organizationId
       const documents = await prisma.document.findMany({
         where: {
           organizationId,
         },
       });
-  
-      // Iterate through the documents and determine their type (PDF or non-PDF)
-      for (const document of documents) {
-        if (isPDF(document.filename)) {
-          // If it's a PDF, provide a link to view it using pdf.js
-          document.isPDF = true;
-          document.base64Content = document.url; // Rename the property for clarity
-        } else {
-          // If it's not a PDF, provide a link to download it
-          document.isPDF = false;
-        }
-      }
-  
+
       // Pass the organization and documents to the template
-      res.render('admin/viewdocuments', { organization, documents, isPDF });
+      res.render('admin/viewdocuments', { organization, documents, isPDF, isDOCX });
     } catch (error) {
       console.error("Error fetching documents:", error);
       res.status(500).send("Internal Server Error");
