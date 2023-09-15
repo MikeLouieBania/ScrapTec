@@ -5,8 +5,7 @@ const prisma = new PrismaClient();
 const bcrypt = require('bcryptjs');
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs');  
 const authMiddleware = require('./authMiddlewareUser');
 
 module.exports = {
@@ -105,6 +104,48 @@ module.exports = {
   },
   async getVerifyOTP(req, res) {
     res.render('verify-otp', { message: 'Enter the OTP you received in your email.' });
+  },
+  async registerOrganization(req, res) {
+    try {
+      const {
+        organizationname,
+        email,
+        address,
+        contactNumber,
+        secRegistrationNumber,
+        type,
+      } = req.body;
+  
+      // Get the uploaded document from req.file
+      const documentUpload = req.file;
+  
+      // Create a new organization in the database along with associated documents
+      const newOrganization = await prisma.organization.create({
+        data: {
+          organizationname,
+          email,
+          address,
+          contactNumber,
+          secRegistrationNumber,
+          type,
+          submittedDocuments: {
+            create: [
+              {
+                filename: documentUpload.originalname,
+                url: documentUpload.buffer.toString('base64'), // Store the document content as base64
+                uploadedBy: organizationname, // Update with actual identifier
+              },
+            ],
+          },
+        },
+      });
+  
+      // Redirect to a success page or take any other necessary actions
+      res.render('login', { message: 'Organization registered successfully.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
   },
   async loginUser(req, res) {
     try {

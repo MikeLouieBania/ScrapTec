@@ -1,10 +1,74 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = new PrismaClient(); 
+
+function isPDF(filename) {
+  return filename.toLowerCase().endsWith('.pdf');
+}
+
+function isDOCX(filename) {
+  return filename.toLowerCase().endsWith('.docx');
+}
+
 
 module.exports = {
   async getDashboard(req, res) {
     res.render('admin/dashboard');
   }, 
+  async getOrganizationManagement(req, res) {
+    try {
+      const { status } = req.query;
+      const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
+  
+      // Check if the status parameter is not valid, default to "pending"
+      const selectedStatus = validStatuses.includes(status) ? status : "PENDING";
+  
+      // Fetch organizations based on the selected status
+      const organizations = await prisma.organization.findMany({
+        where: {
+          verificationStatus: selectedStatus,
+        },
+      });
+  
+      res.render('admin/organizationmanagement', { organizations, selectedStatus });
+    } catch (error) {
+      console.error("Error fetching organizations:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  async viewDocuments(req, res) {
+    try {
+      const { organizationId } = req.query;
+
+      // Fetch the organization by ID to display its name or other information if needed
+      const organization = await prisma.organization.findUnique({
+        where: {
+          id: organizationId,
+        },
+      });
+
+      if (!organization) {
+        // Handle the case where the organization is not found
+        res.status(404).send("Organization not found");
+        return;
+      }
+
+      // Fetch the documents associated with the organization by organizationId
+      const documents = await prisma.document.findMany({
+        where: {
+          organizationId,
+        },
+      });
+
+      // Pass the organization and documents to the template
+      res.render('admin/viewdocuments', { organization, documents, isPDF, isDOCX });
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  
+  
+  
   async getDropPointManagement(req, res) {
     try {
       const managers = await prisma.manager.findMany();

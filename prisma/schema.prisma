@@ -21,6 +21,32 @@ model User {
   donations    Donation[]
 }
 
+model Organization {
+  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
+  organizationname     String    @unique
+  email                String    @unique
+  address              String 
+  contactNumber        String
+  secRegistrationNumber String?  @unique
+  verificationStatus   String @default("PENDING")
+  submittedDocuments   Document[]
+
+  type                 String
+  createdAt            DateTime  @default(now())
+}
+
+model Document {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  filename    String
+  url         String    @unique
+  uploadedBy  String  
+  organization  Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId String? 
+
+  createdAt   DateTime  @default(now())
+}
+ 
+
 model DropPoint {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String

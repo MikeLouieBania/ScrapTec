@@ -1,6 +1,65 @@
-extends layout
 
-block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style> 
+      .error-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-color: #f8f8f8;
+      }
+
+      /* Style the error content */
+      .error-content {
+          text-align: center;
+          padding: 2rem;
+          background-color: #ffffff;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          max-width: 400px;
+          width: 80%;
+      }
+
+      /* Style the headings and text */
+      h1 {
+          font-size: 2rem;
+          color: #ff0000;
+          margin-bottom: 0.5rem;
+      }
+
+      h2 {
+          font-size: 1.5rem;
+          color: #333;
+          margin-top: 0;
+      }
+
+      h3 {
+          font-size: 1rem;
+          color: #555;
+      }
+
+      p {
+          font-size: 1rem;
+          color: #777;
+          margin-top: 1rem;
+      }
+
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <h1>Error</h1>
+            <h2><%= message %></h2>
+            <h3>Status Code: <%= error.status %></h3>
+            <p>We apologize for the inconvenience. Please try again later or contact support.</p>
+        </div>
+    </div>
+</body>
+</html>
