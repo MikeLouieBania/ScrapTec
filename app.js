@@ -9,7 +9,7 @@ var { PrismaClient } = require('@prisma/client');
 
 // Initialize Prisma client
 const prisma = new PrismaClient(); 
-
+s
 // Middleware for handling session data
 const authMiddlewareUser = require('./controllers/authMiddlewareUser');
 const authMiddlewareManager = require('./controllers/authMiddlewareManager'); 
