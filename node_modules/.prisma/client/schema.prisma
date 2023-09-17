@@ -22,18 +22,19 @@ model User {
 }
 
 model Organization {
-  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
-  organizationname     String    @unique
-  email                String    @unique
-  password             String 
-  address              String 
-  contactNumber        String    @unique
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  organizationname      String    @unique
+  email                 String    @unique
+  password              String 
+  address               String 
+  contactNumber         String    @unique
   secRegistrationNumber String?  @unique
-  verificationStatus   String @default("PENDING")
-  submittedDocuments   Document[]
+  verificationStatus    String @default("PENDING")
+  submittedDocuments    Document[]
 
-  type                 String
-  createdAt            DateTime  @default(now())
+  type                  String
+  profilePicture        Bytes?    // Updated to Bytes data type
+  createdAt             DateTime  @default(now())
 }
 
 model Document {

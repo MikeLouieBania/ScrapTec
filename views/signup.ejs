@@ -107,59 +107,93 @@
 
             <!-- Organization Registration Form -->
             <div class="tab-pane fade" id="organizationForm">
-              <form action="/organization-signup" method="POST" enctype="multipart/form-data">
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="organizationname">Organization Name:</label>
-                        <input type="text" class="form-control" id="organizationname" name="organizationname" required>
+                <form action="/organization-signup" method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="organizationname">Organization Name:</label>
+                                <input type="text" class="form-control" id="organizationname" name="organizationname" required>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Business Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <label for="email">Business Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address">Business Address:</label>
+                                <input type="text" class="form-control" id="address" name="address" required>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="contactNumber">Contact Number:</label>
+                                <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="address">Business Address:</label>
-                        <input type="text" class="form-control" id="address" name="address" required>
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="secRegistrationNumber">SEC Registration Number:</label>
+                                <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="organizationType">Organization Type:</label>
+                                <select class="form-control" id="organizationType" name="type">
+                                    <option value="COMPANY">Company</option>
+                                    <option value="NGO">NGO</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <label for="contactNumber">Contact Number:</label>
-                        <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="documentUpload">Business Registration Documents and TIN:</label>
+                                <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
+                                <small class="form-text text-muted">
+                                    Upload SEC or DTI Certificate, and TIN document for tax compliance.
+                                </small>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="secRegistrationNumber">SEC Registration Number:</label>
-                        <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="profilePicture">Profile Picture:</label>
+                                <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
+                                <small class="form-text text-muted">
+                                    Upload a profile picture (JPG, JPEG, or PNG format).
+                                </small>
+                                <div class="profile-picture-preview"></div> <!-- Preview container -->
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <label for="organizationType">Organization Type:</label>
-                        <select class="form-control" id="organizationType" name="type">
-                            <option value="COMPANY">Company</option>
-                            <option value="NGO">NGO</option>
-                        </select>
-                    </div>
-                </div>
-            
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label for="documentUpload">Business Registration Documents and TIN:</label>
-                        <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
-                        <small class="form-text text-muted">
-                            Upload SEC or DTI Certificate, and TIN document for tax compliance.
-                        </small>
-                    </div>
-                </div>
-            
-                <button type="submit" class="btn btn-primary mt-3">Register as an Organization</button>
-              </form>
+                
+                    <button type="submit" class="btn btn-primary mt-3">Register as an Organization</button>
+                </form>
+                
             </div>
         </div>
     </div>

@@ -119,9 +119,11 @@ module.exports = {
 
       
       const hashedPassword = await bcrypt.hash(password, 10);
-  
-      // Get the uploaded document from req.file
-      const documentUpload = req.file;
+
+      
+      const profilePicture = req.files.profilePicture ? req.files.profilePicture[0].buffer.toString('base64') : null;
+      const documentUpload = req.files.documentUpload ? req.files.documentUpload[0] : null;
+
 
       const uniqueFilename = `${Date.now()}-${documentUpload.originalname}`;
       const base64Content = documentUpload.buffer.toString('base64');
@@ -148,6 +150,7 @@ module.exports = {
               },
             ],
           },
+          profilePicture,
         },
       });
   
