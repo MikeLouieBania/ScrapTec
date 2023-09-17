@@ -104,6 +104,7 @@
                   <th>Company Address</th>
                   <th>Contact Number</th>
                   <th>Secondary Registration Number</th>
+                  <th>Organization Type</th>
                   <th>Verification Status</th>
                   <th colspan="3">Actions</th> <!-- Add an Actions column for viewing documents -->
                 </tr>
@@ -117,6 +118,7 @@
                       <td><%= organization.address %></td>
                       <td><%= organization.contactNumber %></td>
                       <td><%= organization.secRegistrationNumber || 'N/A' %></td>
+                      <td><%= organization.type %></td>
                       <td><%= organization.verificationStatus %></td>
                       <!-- Dropdown to select new status -->
                       <td>
@@ -157,6 +159,7 @@
                   <th>Company Address</th>
                   <th>Contact Number</th>
                   <th>Secondary Registration Number</th>
+                  <th>Organization Type</th>
                   <th>Documents</th>
                   <th colspan="2">Verification Action</th> <!-- Renamed for clarity -->
                 </tr>
@@ -170,24 +173,32 @@
                       <td><%= organization.address %></td>
                       <td><%= organization.contactNumber %></td>
                       <td><%= organization.secRegistrationNumber || 'N/A' %></td>
+                      <td><%= organization.type %></td>
                       
                       <!-- Link to view documents -->
                       <td>
                         <a href="/admin/viewdocuments?organizationId=<%= organization.id %>" class="btn btn-link btn-sm" target="_blank">View</a>
                       </td>
               
-                      <td>
-                        <select class="form-control status-dropdown" data-org-id="<%= organization.id %>" style="width: auto;">
-                          <option value="APPROVED">Approve</option>
-                          <option value="PENDING" selected>Keep Pending</option>
-                          <option value="REJECTED">Reject</option>
-                        </select>
-                      </td>
-              
-                      <!-- Button to submit the change -->
-                      <td>
-                        <button class="btn btn-primary btn-sm update-status-btn">Submit</button>
-                      </td>
+                      <form action="/admin/updateOrganizationStatus" method="post">
+                        <td>
+                          <select class="form-control status-dropdown" name="newStatus" style="width: auto;">
+                            <option value="PENDING" <%= organization.verificationStatus === 'PENDING' ? 'selected' : '' %>>Pending</option>
+                            <option value="APPROVED" <%= organization.verificationStatus === 'APPROVED' ? 'selected' : '' %>>Approve</option>
+                            <option value="REJECTED" <%= organization.verificationStatus === 'REJECTED' ? 'selected' : '' %>>Reject</option>
+                        </select>                        
+                        </td>
+                    
+                        <!-- Hidden input to send the organization ID -->
+                        <input type="hidden" name="organizationId" value="<%= organization.id %>">
+                        <!-- Hidden input to send the current selected status -->
+                        <input type="hidden" name="selectedStatus" value="<%= selectedStatus %>">
+                    
+                        <!-- Button to submit the form -->
+                        <td>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </td>
+                    </form>                    
                     </tr>
                   <% } %>
                 <% }); %>
@@ -205,6 +216,7 @@
                   <th>Company Address</th>
                   <th>Contact Number</th>
                   <th>Secondary Registration Number</th>
+                  <th>Organization Type</th>
                   <th>Verification Status</th>
                   <th colspan="3">Actions</th> <!-- Add an Actions column for viewing documents -->
                 </tr>
@@ -218,6 +230,7 @@
                       <td><%= organization.address %></td>
                       <td><%= organization.contactNumber %></td>
                       <td><%= organization.secRegistrationNumber || 'N/A' %></td>
+                      <td><%= organization.type %></td>
                       <td><%= organization.verificationStatus %></td>
                       <!-- Dropdown to select new status -->
                       <td>
@@ -258,10 +271,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Add your JavaScript code here to fetch and populate organization lists based on tabs -->
-    <script>
-      // You'll need to use JavaScript to fetch data from your backend and populate the organization lists based on tabs.
-      // You can use AJAX or fetch API to retrieve data from your server.
-      // For each tab (pending, approved, rejected), update the content accordingly.
-    </script>
+    
   </body>
 </html>
