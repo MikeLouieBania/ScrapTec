@@ -5,9 +5,9 @@ const organizationController = require('../controllers/organizationController');
 
 router.get('/dashboard', organizationController.getDashboard);
 router.get('/donations', organizationController.getDonations); 
-router.post('/make-donation', organizationController.getMakeDonations);
-router.get('/account', organizationController.getAccount);
-router.post('/submitDonation', multer({ dest: 'uploads/', limits: { fileSize: 5 * 1024 * 1024 }}).array('pcPhoto', 3), organizationController.submitDonation);
+router.post('/make-donation', organizationController.getDonationPage);
+router.post('/donate', organizationController.submitDonationForm);
+router.get('/account', organizationController.getAccount); 
 router.post('/logout', organizationController.logout); 
 
 module.exports = router;

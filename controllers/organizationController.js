@@ -35,7 +35,7 @@ module.exports = {
     }
   },
   
-  async getMakeDonations(req, res) {
+  async getDonationPage(req, res) {
     try {
         const dropPointId = req.body.dropPointId;
 
@@ -57,6 +57,71 @@ module.exports = {
     }
   },
 
+  async submitDonationForm(req, res) {
+    try {
+        const {
+            dropPointId, brand, model, processor, ramSize, storage, graphicsCard, condition, pcQuantity,
+            type, // this will be an array
+            // ... and so on for peripherals ...
+        } = req.body;
+
+        const organizationId = req.session.organization.id;
+
+        // Create a new donation record
+        const donation = await prisma.donation.create({
+            data: {
+                organizationId: organizationId,
+                dropPointId: dropPointId,
+                status: "Pending" // This can be changed later on
+            }
+        });
+
+        if (donation) {
+            // Create a new complete PC system record
+            if (brand && model) { // Add more conditions as needed to check if PC details are filled
+                await prisma.completePCSystem.create({
+                    data: {
+                        brand,
+                        model,
+                        processor,
+                        ramSize: parseInt(ramSize),
+                        storage,
+                        graphicCard: graphicsCard,
+                        condition,
+                        quantity: parseInt(pcQuantity),
+                        donationId: donation.id
+                    }
+                });
+            }
+
+            // Create new peripheral/component records
+            if (type && type.length > 0) {
+                const peripheralsData = type.map((_, index) => ({
+                    type: type[index],
+                    brand: req.body.brand[index],
+                    model: req.body.model[index],
+                    condition: req.body.condition[index],
+                    quantity: parseInt(req.body.peripheralQuantity[index]),
+                    donationId: donation.id
+                }));
+
+                await prisma.peripheralOrComponent.createMany({
+                    data: peripheralsData
+                });
+            }
+
+            res.redirect('/organization/donations');
+        } else {
+            throw new Error('Error creating the donation record.');
+        }
+
+    } catch (error) {
+        console.error("Error processing donation form:", error);
+        res.status(500).send('An error occurred while processing your donation.');
+    }
+  },
+
+
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
@@ -66,84 +131,15 @@ module.exports = {
   },
 
   async getDonations(req, res) {
-    try {
-      const organizationDonations = await prisma.donation.findMany({
-        where: {
-          organizationId: req.session.organization.id,
-        },
-        include: {
-          images: true,
-        },
-      });
+    try { 
   
-      res.render('organization/donations', { 
-        organization: req.session.organization,
-        donations: organizationDonations 
-      });
+      res.render('organization/donations');
     } catch (error) {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal server error");
     }
   },
-
-  async submitDonation(req, res) {
-    try {
-      const { pcBrand, pcModel, processor, ramSize, storage, graphicCard, condition, quantity, expectedDateOfArrival, dropPointId } = req.body;
-      const images = req.files;
-  
-      if (images && images.length > 3) {
-        return res.status(400).send('You can upload a maximum of 3 images.');
-      }
-  
-      let imageDatas = [];
-      for (let image of images) {
-        // Convert images to webp format
-        const outputPath = image.path + '.webp';
-        await sharp(image.path).toFile(outputPath);
-  
-        // Read the converted image as bytes
-        const imageData = fs.readFileSync(outputPath);
-        imageDatas.push({ imageData });
-  
-        // Optionally, delete the temp image file after reading its content
-        fs.unlinkSync(image.path);
-        fs.unlinkSync(outputPath);
-      }
-  
-      // Insert into database using prisma
-      const donation = await prisma.donation.create({
-        data: {
-          pcBrand,
-          pcModel,
-          processor,
-          ramSize: parseInt(ramSize),
-          storage,
-          graphicCard,
-          condition,
-          quantity: parseInt(quantity),
-          expectedDateOfArrival: new Date(expectedDateOfArrival),
-          user: {
-            connect: {
-              id: req.session.user.id
-            }
-          },
-          dropPoint: {
-            connect: {
-              id: dropPointId
-            }
-          },
-          images: {
-            create: imageDatas
-          }
-        }
-      });
-  
-      res.redirect('/user/userdonations');
-    } catch (error) {
-      console.error("Error submitting donation:", error);
-      res.status(500).send('An error occurred while processing your donation.');
-    }
-  }, 
+ 
      
   logout(req, res) {
     // Clear the session to log out the user
