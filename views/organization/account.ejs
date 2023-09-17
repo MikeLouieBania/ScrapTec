@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Account</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+      /* Additional custom styles for the page */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/donations">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container">   
+      <div>
+        <h3>Account Settings</h3> 
+        <p><strong>Organization Name:</strong> <%= organization.organizationname %></p>
+        <p><strong>Business Email:</strong> <%= organization.email %></p> 
+        <p><strong>Company Address:</strong> <%= organization.address %></p> 
+        <p><strong>Contact Number:</strong> <%= organization.contactNumber %></p> 
+        <p><strong>SEC Registration Number:</strong> <%= organization.secRegistrationNumber %></p> 
+        
+        <% if (organization.profilePicture) { %>
+          <p><strong>Profile Picture:</strong></p>
+          <img src="data:image/jpeg;base64, <%= organization.profilePicture.toString('base64') %>" alt="Profile Picture" style="max-width: 200px;"/>
+        <% } else { %>
+          <p><strong>No Profile Picture</strong></p>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

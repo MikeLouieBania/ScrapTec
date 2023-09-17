@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Donations</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        /* Additional custom styles for the page */
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .table thead th {
+            background-color: #e9ecef;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto"> 
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/donations">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="my-4">My Donations</h1>
+
+        <table class="table table-hover table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>PC Brand</th>
+                    <th>PC Model</th>
+                    <th>Status</th>
+                    <th>Expected Date of Arrival</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% donations.forEach(function(donation) { %>
+                    <tr>
+                        <td><%= donation.pcBrand %></td>
+                        <td><%= donation.pcModel %></td>
+                        <td><%= donation.status %></td>
+                        <td><%= donation.expectedDateOfArrival ? donation.expectedDateOfArrival.toDateString() : '-' %></td>
+                        <td>
+                            <% if (donation.images && donation.images.length > 0) { %>
+                                <img src="data:image/png;base64,<%= donation.images[0].imageData.toString('base64') %>" alt="Donation Image" width="100" />
+                            <% } else { %>
+                                No image
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
