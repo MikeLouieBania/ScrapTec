@@ -20,14 +20,17 @@ module.exports = {
       const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
   
       // Check if the status parameter is not valid, default to "pending"
-      const selectedStatus = validStatuses.includes(status) ? status : "PENDING";
+      const selectedStatus = validStatuses.includes(status) ? status : "APPROVED";
   
       // Fetch organizations based on the selected status
-      const organizations = await prisma.organization.findMany({
-        where: {
-          verificationStatus: selectedStatus,
-        },
-      });
+      // const organizations = await prisma.organization.findMany({
+      //   where: {
+      //     verificationStatus: selectedStatus,
+      //   },
+      // });
+      
+    // Fetch ALL organizations, not just based on the selected status
+    const organizations = await prisma.organization.findMany();
   
       res.render('admin/organizationmanagement', { organizations, selectedStatus });
     } catch (error) {
