@@ -34,10 +34,27 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
- 
   
   async getMakeDonations(req, res) {
-    res.render('organization/make-donation'); 
+    try {
+        const dropPointId = req.body.dropPointId;
+
+        // Fetch the drop point details based on the dropPointId
+        const dropPoint = await prisma.dropPoint.findUnique({
+            where: {
+                id: dropPointId
+            }
+        });
+
+        if (!dropPoint) {
+            return res.status(404).send("Drop point not found");
+        } 
+        // Render the make-donation page with the drop point data
+        res.render('organization/make-donation', { dropPoint });
+    } catch (error) {
+        console.error("Error fetching drop point:", error);
+        res.status(500).send("Internal Server Error");
+    }
   },
 
   async getAccount(req, res) { 
