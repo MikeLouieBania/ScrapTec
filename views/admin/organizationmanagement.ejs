@@ -82,10 +82,10 @@
         <!-- Tabs for filtering organizations -->
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <a class="nav-link <%= selectedStatus === 'APPROVED' ? 'active' : '' %>" data-toggle="tab" href="#approved">Approved</a>
+            <a class="nav-link <%= selectedStatus === 'PENDING' ? 'active' : '' %>" data-toggle="tab" href="#pending">Pending</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <%= selectedStatus === 'PENDING' ? 'active' : '' %>" data-toggle="tab" href="#pending">Pending</a>
+            <a class="nav-link <%= selectedStatus === 'APPROVED' ? 'active' : '' %>" data-toggle="tab" href="#approved">Approved</a>
           </li>
           <li class="nav-item">
             <a class="nav-link <%= selectedStatus === 'REJECTED' ? 'active' : '' %>" data-toggle="tab" href="#rejected">Rejected</a>
@@ -94,61 +94,6 @@
         
         <!-- Tab panes for organization lists -->
         <div class="tab-content">
-          <div class="tab-pane fade <%= selectedStatus === 'APPROVED' ? 'show active' : '' %>" id="approved">
-            <!-- Organizations for Approved status -->
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Organization Name</th>
-                  <th>Business Email</th>
-                  <th>Company Address</th>
-                  <th>Contact Number</th>
-                  <th>Secondary Registration Number</th>
-                  <th>Organization Type</th>
-                  <th>Verification Status</th>
-                  <th colspan="3">Actions</th> <!-- Add an Actions column for viewing documents -->
-                </tr>
-              </thead>
-              <tbody>
-                <% organizations.forEach((organization) => { %>
-                  <% if (organization.verificationStatus === 'APPROVED') { %>
-                    <tr>
-                      <td><%= organization.organizationname %></td>
-                      <td><%= organization.email %></td>
-                      <td><%= organization.address %></td>
-                      <td><%= organization.contactNumber %></td>
-                      <td><%= organization.secRegistrationNumber || 'N/A' %></td>
-                      <td><%= organization.type %></td>
-                      <td><%= organization.verificationStatus %></td>
-                      <!-- Dropdown to select new status -->
-                      <td>
-                        <div class="d-inline-block">
-                          <select class="form-control status-dropdown" data-org-id="<%= organization.id %>" style="width: auto;">
-                            <option value="APPROVED" <%= organization.verificationStatus === 'APPROVED' ? 'selected' : '' %>>Approved</option>
-                            <option value="PENDING" <%= organization.verificationStatus === 'PENDING' ? 'selected' : '' %>>Pending</option>
-                            <option value="REJECTED" <%= organization.verificationStatus === 'REJECTED' ? 'selected' : '' %>>Rejected</option>
-                          </select>
-                        </div>
-                      </td>
-
-                      <!-- Button to update status -->
-                      <td>
-                        <button class="btn btn-primary btn-sm update-status-btn">Update</button>
-                      </td>
-
-                      <!-- Link to view documents -->
-                      <td>
-                        <a href="/admin/viewdocuments?organizationId=<%= organization.id %>" class="btn btn-link btn-sm" target="_blank">View Documents</a>
-                      </td>
-
-                      
-                      
-                    </tr>
-                  <% } %>
-                <% }); %>
-              </tbody>
-            </table>
-          </div>
           <div class="tab-pane fade <%= selectedStatus === 'PENDING' ? 'show active' : '' %>" id="pending">
             <!-- Organizations for Pending status -->
             <table class="table">
@@ -206,6 +151,40 @@
               
             </table>
           </div>
+          <div class="tab-pane fade <%= selectedStatus === 'APPROVED' ? 'show active' : '' %>" id="approved">
+            <!-- Organizations for Approved status -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Organization Name</th>
+                  <th>Business Email</th>
+                  <th>Company Address</th>
+                  <th>Contact Number</th>
+                  <th>SEC Registration Number</th>
+                  <th>Organization Type</th> 
+                  <th>Documents</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% organizations.forEach((organization) => { %>
+                  <% if (organization.verificationStatus === 'APPROVED') { %>
+                    <tr>
+                      <td><%= organization.organizationname %></td>
+                      <td><%= organization.email %></td>
+                      <td><%= organization.address %></td>
+                      <td><%= organization.contactNumber %></td>
+                      <td><%= organization.secRegistrationNumber || 'N/A' %></td>
+                      <td><%= organization.type %></td> 
+                      <!-- Link to view documents -->
+                      <td>
+                        <a href="/admin/viewdocuments?organizationId=<%= organization.id %>" class="btn btn-link btn-sm" target="_blank">View Documents</a>
+                      </td>
+                    </tr>
+                  <% } %>
+                <% }); %>
+              </tbody>
+            </table>
+          </div> 
           <div class="tab-pane fade <%= selectedStatus === 'REJECTED' ? 'show active' : '' %>" id="rejected">
             <!-- Organizations for Rejected status -->
             <table class="table">
@@ -215,10 +194,9 @@
                   <th>Business Email</th>
                   <th>Company Address</th>
                   <th>Contact Number</th>
-                  <th>Secondary Registration Number</th>
-                  <th>Organization Type</th>
-                  <th>Verification Status</th>
-                  <th colspan="3">Actions</th> <!-- Add an Actions column for viewing documents -->
+                  <th>SEC Registration Number</th>
+                  <th>Organization Type</th> 
+                  <th>Documents</th>
                 </tr>
               </thead>
               <tbody>
@@ -230,37 +208,18 @@
                       <td><%= organization.address %></td>
                       <td><%= organization.contactNumber %></td>
                       <td><%= organization.secRegistrationNumber || 'N/A' %></td>
-                      <td><%= organization.type %></td>
-                      <td><%= organization.verificationStatus %></td>
-                      <!-- Dropdown to select new status -->
-                      <td>
-                        <div class="d-inline-block">
-                          <select class="form-control status-dropdown" data-org-id="<%= organization.id %>" style="width: auto;">
-                            <option value="APPROVED" <%= organization.verificationStatus === 'APPROVED' ? 'selected' : '' %>>Approved</option>
-                            <option value="PENDING" <%= organization.verificationStatus === 'PENDING' ? 'selected' : '' %>>Pending</option>
-                            <option value="REJECTED" <%= organization.verificationStatus === 'REJECTED' ? 'selected' : '' %>>Rejected</option>
-                          </select>
-                        </div>
-                      </td>
-
-                      <!-- Button to update status -->
-                      <td>
-                        <button class="btn btn-primary btn-sm update-status-btn">Update</button>
-                      </td>
-
+                      <td><%= organization.type %></td> 
                       <!-- Link to view documents -->
                       <td>
                         <a href="/admin/viewdocuments?organizationId=<%= organization.id %>" class="btn btn-link btn-sm" target="_blank">View Documents</a>
                       </td>
-
-                      
-                      
                     </tr>
                   <% } %>
                 <% }); %>
               </tbody>
             </table>
           </div>
+          
         </div>
       </div> 
     </div>

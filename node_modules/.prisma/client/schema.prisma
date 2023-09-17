@@ -25,8 +25,9 @@ model Organization {
   id                   String    @id @default(auto()) @map("_id") @db.ObjectId
   organizationname     String    @unique
   email                String    @unique
+  password             String 
   address              String 
-  contactNumber        String
+  contactNumber        String    @unique
   secRegistrationNumber String?  @unique
   verificationStatus   String @default("PENDING")
   submittedDocuments   Document[]
@@ -38,7 +39,7 @@ model Organization {
 model Document {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   filename    String
-  url         String    @unique
+  url         String    
   uploadedBy  String  
   organization  Organization?  @relation(fields: [organizationId], references: [id])
   organizationId String? 

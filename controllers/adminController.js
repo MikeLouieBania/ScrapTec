@@ -21,7 +21,7 @@ module.exports = {
       // Get the status from the session or default to "PENDING"
       const selectedStatus = req.session.status && validStatuses.includes(req.session.status) 
                              ? req.session.status 
-                             : "APPROVED";
+                             : "PENDING";
   
       // Delete the status from the session
       delete req.session.status;
@@ -59,8 +59,7 @@ module.exports = {
         console.error("Error updating organization status:", error);
         res.status(500).send("Internal Server Error");
     }
-  }.
-  
+  },
   async viewDocuments(req, res) {
     try {
       const { organizationId } = req.query;
