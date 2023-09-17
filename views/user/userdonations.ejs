@@ -66,22 +66,7 @@
                     <th>Image</th>
                 </tr>
             </thead>
-            <tbody>
-                <% donations.forEach(function(donation) { %>
-                    <tr>
-                        <td><%= donation.pcBrand %></td>
-                        <td><%= donation.pcModel %></td>
-                        <td><%= donation.status %></td>
-                        <td><%= donation.expectedDateOfArrival ? donation.expectedDateOfArrival.toDateString() : '-' %></td>
-                        <td>
-                            <% if (donation.images && donation.images.length > 0) { %>
-                                <img src="data:image/png;base64,<%= donation.images[0].imageData.toString('base64') %>" alt="Donation Image" width="100" />
-                            <% } else { %>
-                                No image
-                            <% } %>
-                        </td>
-                    </tr>
-                <% }) %>
+            <tbody>  
             </tbody>
         </table>
     </div>

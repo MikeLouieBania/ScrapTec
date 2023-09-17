@@ -2,23 +2,42 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
 
 module.exports = {
-  async getDashboard(req, res) { 
+  async getDashboard(req, res) {
     try {
-        const dropPoints = await prisma.dropPoint.findMany({
-          where: {
-            NOT: {
-              managerId: null
-            }
-          },
-          include: {
-              manager: true
+      const dropPoints = await prisma.dropPoint.findMany({
+        where: {
+          NOT: {
+            managerId: null
           }
-        });
-        res.render('organization/dashboard', { organization: req.session.organization, dropPoints });
-    } catch(error) {
-        console.error("Error fetching drop points:", error);
-        res.status(500).send("Internal Server Error");
+        },
+        select: {
+          id: true,
+          name: true,
+          location: true,
+          openingTime: true,
+          closingTime: true,
+          description: true,
+          manager: {
+            select: {
+              phoneNumber: true,
+              email: true
+            }
+          }
+        },
+        // take: 20, // or whatever number you feel suitable
+        // skip: (req.query.page || 0) * 20 // assuming you pass the page number in the query string
+      });
+      
+      res.render('organization/dashboard', { dropPoints: dropPoints });
+    } catch (error) {
+      console.error("Error fetching drop points:", error);
+      res.status(500).send("Internal Server Error");
     }
+  },
+ 
+  
+  async getMakeDonations(req, res) {
+    res.render('organization/make-donation'); 
   },
 
   async getAccount(req, res) { 

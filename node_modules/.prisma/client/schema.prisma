@@ -76,34 +76,46 @@ model Manager {
 }
 
 model Donation {
-  id                    String          @id @default(auto()) @map("_id") @db.ObjectId
-  organizationId        String          @map("organization_id") @db.ObjectId
-  dropPointId           String          @map("drop_point_id") @db.ObjectId
-  pcBrand               String          // e.g., Dell, HP, Lenovo
-  pcModel               String          // e.g., Inspiron 15, Pavilion x360
-  processor             String          // e.g., Intel i5 10th gen, Ryzen 5 3600
-  ramSize               Int             // RAM size in GB, e.g., 8, 16, 32
-  storage               String          // e.g., 512GB SSD, 1TB HDD
-  graphicCard           String?         // e.g., Nvidia RTX 3070. It can be optional if not all PCs have dedicated graphics.
-  condition             String     
-  quantity              Int             @default(1)
-  createdAt             DateTime        @default(now())
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String           @map("organization_id") @db.ObjectId
+  dropPointId   String            @map("drop_point_id") @db.ObjectId
+  createdAt     DateTime          @default(now())
   expectedDateOfArrival DateTime?  
-  confirmedByName       String?         // This captures the name of the manager who confirmed the donation.
-  confirmedByEmail      String?         // This captures the email of the manager who confirmed the donation.
-  images                DonationImage[] // Relation to images
-  status                String  @default("Pending")  // default value is set to Pending 
-
-  organization          Organization    @relation(fields: [organizationId], references: [id])
-  dropPoint             DropPoint       @relation(fields: [dropPointId], references: [id])
+  confirmedByName String?
+  confirmedByEmail String?
+  status        String            @default("Pending")
+  
+  organization  Organization      @relation(fields: [organizationId], references: [id])
+  dropPoint     DropPoint         @relation(fields: [dropPointId], references: [id])
+  completeSystems CompletePCSystem[] // Relationship with Complete Systems
+  peripherals   PeripheralOrComponent[] // Relationship with Peripherals/Components
 }
 
-model DonationImage {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  donationId String   @map("donation_id") @db.ObjectId
-  imageData  Bytes    // This will hold the actual image data.
-  donation   Donation @relation(fields: [donationId], references: [id])
+model CompletePCSystem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  brand     String
+  model     String
+  processor String?
+  ramSize   Int?     // RAM size in GB
+  storage   String?  // Optional
+  graphicCard String?
+  condition String  
+  quantity  Int     @default(1)
+  
+  donation  Donation @relation(fields: [donationId], references: [id])
+  donationId String @map("donation_id") @db.ObjectId
 }
- 
+
+model PeripheralOrComponent {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  type     String   // e.g., Mouse, Keyboard, RAM, HDD, SSD, Graphic Card, etc.
+  brand    String
+  model    String
+  condition String  
+  quantity Int     @default(1)
+  
+  donation  Donation @relation(fields: [donationId], references: [id])
+  donationId String @map("donation_id") @db.ObjectId
+}
 
 
