@@ -33,8 +33,7 @@ module.exports = {
       where: {id: userId},
     });
     res.render('user/useraccount', { user }); 
-  }, 
- 
+  },  
 
   logout(req, res) {
     // Clear the session to log out the user

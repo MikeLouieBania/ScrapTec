@@ -121,7 +121,6 @@ module.exports = {
     }
   },
 
-
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
@@ -132,14 +131,21 @@ module.exports = {
 
   async getDonations(req, res) {
     try { 
+      const donations = await prisma.donation.findMany({
+        where: {
+          organizationId: req.session.organization.id  // Assuming you have the organizationId in your session or some auth middleware
+        },
+        include: {
+          completeSystems: true  // This fetches the related PC Systems for each donation
+        }
+      });
   
-      res.render('organization/donations');
+      res.render('organization/donations', { donations });  // Send the fetched donations to the view
     } catch (error) {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal server error");
     }
   },
- 
      
   logout(req, res) {
     // Clear the session to log out the user

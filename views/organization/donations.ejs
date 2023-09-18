@@ -62,8 +62,27 @@
                     <th>Expected Date of Arrival</th> 
                 </tr>
             </thead>
-            <tbody> 
-            </tbody>
+            <tbody>
+                <% if (donations && donations.length) { %>
+                    <% donations.forEach(donation => { %>
+                        <tr>
+                            <% if (donation.completeSystems && donation.completeSystems.length) { %>
+                                <td><%= donation.completeSystems[0].brand %></td>
+                                <td><%= donation.completeSystems[0].model %></td>
+                            <% } else { %>
+                                <td>-</td>
+                                <td>-</td>
+                            <% } %>
+                            <td><%= donation.status %></td>
+                            <td><%= donation.expectedDateOfArrival ? donation.expectedDateOfArrival.toLocaleDateString() : '-' %></td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="4">No donations available</td>
+                    </tr>
+                <% } %>
+                </tbody>                
         </table>
     </div>
 
