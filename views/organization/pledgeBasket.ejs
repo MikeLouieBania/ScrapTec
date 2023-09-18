@@ -54,12 +54,32 @@
                 </tr>
             </thead>
             <tbody>
+                <% donations.forEach(donation => { %>
+                    <% donation.peripherals.forEach(peripheral => { %>
+                        <tr>
+                            <td><%= donation.dropPoint.name %></td>
+                            <td><%= peripheral.type %></td>
+                            <td><%= peripheral.brand %></td>
+                            <td><%= peripheral.model %></td>
+                            <td><%= peripheral.condition %></td>
+                            <td><%= peripheral.quantity %></td>
+                            <td>
+                                <!-- For the action, you might want a button or link to edit or remove the item. -->
+                                <form action="/organization/donationForm" method="POST">
+                                    <input type="hidden" name="dropPointId" value="<%= donation.dropPoint.id %>">
+                                    <button type="submit" class="btn btn-sm btn-secondary">Add More Items</button>
+                                </form>
+                                <a href="/organization/editDonation/<%= donation.id %>" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="/organization/deleteDonation/<%= donation.id %>" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% }); %>
             </tbody>
         </table>
 
         <!-- Confirmation -->
         <div class="d-flex justify-content-end">
-            <a href="/organization/donationForm" class="btn btn-secondary mr-2">Add More Items</a>
             <button class="btn btn-success">Confirm Donations</button>
         </div>
     </div>
