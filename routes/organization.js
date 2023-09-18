@@ -6,6 +6,8 @@ const organizationController = require('../controllers/organizationController');
 router.get('/dashboard', organizationController.getDashboard);
 router.get('/donations', organizationController.getDonations); 
 router.post('/donationForm', organizationController.getDonationForm);  
+router.post('/addDonation', organizationController.getAddDonation); 
+router.get('/pledgeBasket', organizationController.getPledgeBasketPage);  
 router.get('/account', organizationController.getAccount); 
 router.post('/logout', organizationController.logout); 
 

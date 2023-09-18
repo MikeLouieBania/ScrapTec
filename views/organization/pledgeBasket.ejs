@@ -27,13 +27,16 @@
                     <a class="nav-link" href="/organization/donations">My Donations</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/organization/account">My Account</a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
             </form>
-        </div>
+        </div>  
     </nav>
 
     <div class="container">
@@ -51,20 +54,6 @@
                 </tr>
             </thead>
             <tbody>
-                <% donations.forEach(donation => { %>
-                <tr>
-                    <td><%= donation.dropPoint.name %></td>
-                    <td><%= donation.peripheral.type %></td>
-                    <td><%= donation.peripheral.brand %></td>
-                    <td><%= donation.peripheral.model %></td>
-                    <td><%= donation.peripheral.condition %></td>
-                    <td><%= donation.peripheral.quantity %></td>
-                    <td>
-                        <a href="/organization/editDonation/<%= donation.id %>" class="btn btn-warning">Edit</a>
-                        <a href="/organization/removeDonation/<%= donation.id %>" class="btn btn-danger">Remove</a>
-                    </td>
-                </tr>
-                <% }) %>
             </tbody>
         </table>
 

@@ -57,6 +57,64 @@ module.exports = {
     }
   },
 
+  async addDonation(req, res) {
+    try {
+        const {
+            dropPointId, expectedDateOfArrival, 
+            type, brand, model, condition, quantity 
+        } = req.body;
+
+        const organizationId = req.session.organization.id;
+
+        // Check if there's an existing donation with status 'Pending' to the same drop point
+        const existingDonation = await prisma.donation.findFirst({
+            where: {
+                organizationId: organizationId,
+                dropPointId: dropPointId,
+                status: "Pending"
+            }
+        });
+
+        if (existingDonation) {
+            return res.status(400).send("You have an existing pending donation to this drop point. Please wait for it to be verified.");
+        }
+
+        // Create a new donation record with isSubmitted set to false
+        const newDonation = await prisma.donation.create({
+            data: {
+                dropPointId: dropPointId,
+                organizationId: organizationId,
+                expectedDateOfArrival: new Date(expectedDateOfArrival),
+                status: "Pending",
+                isSubmitted: false,
+                peripherals: {
+                    create: {
+                        type: type,
+                        brand: brand,
+                        model: model,
+                        condition: condition,
+                        quantity: parseInt(quantity)
+                    }
+                }
+            }
+        });
+
+        res.redirect('/pledgeBasket');
+    } catch (error) {
+        console.error("Error adding donation:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getPledgeBasketPage(req, res) {
+    try {  
+        res.render('organization/pledgeBasket');
+    } catch (error) {
+        console.error("Error fetching drop point:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
+
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
