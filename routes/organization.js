@@ -5,6 +5,7 @@ const organizationController = require('../controllers/organizationController');
 
 router.get('/dashboard', organizationController.getDashboard);
 router.get('/donations', organizationController.getDonations); 
+router.get('/donationForm', organizationController.getDonationForm); 
 router.post('/make-donation', organizationController.getDonationPage);
 router.post('/donate', organizationController.submitDonationForm);
 router.get('/account', organizationController.getAccount); 

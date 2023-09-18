@@ -33,6 +33,15 @@ module.exports = {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
     }
+  }, 
+  
+  async getDonationForm(req, res) {
+    try { 
+        res.render('organization/donationForm');
+    } catch (error) {
+        console.error("Error fetching drop point:", error);
+        res.status(500).send("Internal Server Error");
+    }
   },
   
   async getDonationPage(req, res) {
