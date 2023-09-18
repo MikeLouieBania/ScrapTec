@@ -66,24 +66,47 @@ module.exports = {
 
         const organizationId = req.session.organization.id;
 
-        // Create a new donation record with isSubmitted set to false (akin to adding to cart)
-        const newDonation = await prisma.donation.create({
-            data: {
-                dropPointId: dropPointId,
+        // Find if there's an existing donation that hasn't been submitted yet for the given organization and drop point.
+        const existingDonation = await prisma.donation.findFirst({
+            where: {
                 organizationId: organizationId,
-                expectedDateOfArrival: new Date(expectedDateOfArrival),
-                isSubmitted: false,
-                peripherals: {
-                    create: {
-                        type: type,
-                        brand: brand,
-                        model: model,
-                        condition: condition,
-                        quantity: parseInt(quantity)
-                    }
-                }
+                dropPointId: dropPointId,
+                isSubmitted: false
             }
         });
+
+        if (existingDonation) {
+            // If the donation already exists, just create the new peripheral under it.
+            await prisma.peripheral.create({
+                data: {
+                    type: type,
+                    brand: brand,
+                    model: model,
+                    condition: condition,
+                    quantity: parseInt(quantity),
+                    donationId: existingDonation.id
+                }
+            });
+        } else {
+            // If the donation doesn't exist, create a new one and then create the peripheral under it.
+            const newDonation = await prisma.donation.create({
+                data: {
+                    dropPointId: dropPointId,
+                    organizationId: organizationId,
+                    expectedDateOfArrival: new Date(expectedDateOfArrival),
+                    isSubmitted: false,
+                    peripherals: {
+                        create: {
+                            type: type,
+                            brand: brand,
+                            model: model,
+                            condition: condition,
+                            quantity: parseInt(quantity)
+                        }
+                    }
+                }
+            });
+        }
 
         res.redirect('/organization/pledgeBasket');
     } catch (error) {
