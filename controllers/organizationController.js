@@ -33,18 +33,9 @@ module.exports = {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
     }
-  }, 
-  
-  async getDonationForm(req, res) {
-    try { 
-        res.render('organization/donationForm');
-    } catch (error) {
-        console.error("Error fetching drop point:", error);
-        res.status(500).send("Internal Server Error");
-    }
   },
-  
-  async getDonationPage(req, res) {
+
+  async getDonationForm(req, res) {
     try {
         const dropPointId = req.body.dropPointId;
 
@@ -59,74 +50,10 @@ module.exports = {
             return res.status(404).send("Drop point not found");
         } 
         // Render the make-donation page with the drop point data
-        res.render('organization/make-donation', { dropPoint });
+        res.render('organization/donationForm', { dropPoint });
     } catch (error) {
         console.error("Error fetching drop point:", error);
         res.status(500).send("Internal Server Error");
-    }
-  },
-
-  async submitDonationForm(req, res) {
-    try {
-        const {
-            dropPointId, brand, model, processor, ramSize, storage, graphicsCard, condition, pcQuantity,
-            type, // this will be an array
-            // ... and so on for peripherals ...
-        } = req.body;
-
-        const organizationId = req.session.organization.id;
-
-        // Create a new donation record
-        const donation = await prisma.donation.create({
-            data: {
-                organizationId: organizationId,
-                dropPointId: dropPointId,
-                status: "Pending" // This can be changed later on
-            }
-        });
-
-        if (donation) {
-            // Create a new complete PC system record
-            if (brand && model) { // Add more conditions as needed to check if PC details are filled
-                await prisma.completePCSystem.create({
-                    data: {
-                        brand,
-                        model,
-                        processor,
-                        ramSize: parseInt(ramSize),
-                        storage,
-                        graphicCard: graphicsCard,
-                        condition,
-                        quantity: parseInt(pcQuantity),
-                        donationId: donation.id
-                    }
-                });
-            }
-
-            // Create new peripheral/component records
-            if (type && type.length > 0) {
-                const peripheralsData = type.map((_, index) => ({
-                    type: type[index],
-                    brand: req.body.brand[index],
-                    model: req.body.model[index],
-                    condition: req.body.condition[index],
-                    quantity: parseInt(req.body.peripheralQuantity[index]),
-                    donationId: donation.id
-                }));
-
-                await prisma.peripheralOrComponent.createMany({
-                    data: peripheralsData
-                });
-            }
-
-            res.redirect('/organization/donations');
-        } else {
-            throw new Error('Error creating the donation record.');
-        }
-
-    } catch (error) {
-        console.error("Error processing donation form:", error);
-        res.status(500).send('An error occurred while processing your donation.');
     }
   },
 

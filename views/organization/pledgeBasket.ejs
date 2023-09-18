@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pledge Basket</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/donations">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3>Your Pledge Basket</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Drop Point</th>
+                    <th>Peripheral Type</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Condition</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% donations.forEach(donation => { %>
+                <tr>
+                    <td><%= donation.dropPoint.name %></td>
+                    <td><%= donation.peripheral.type %></td>
+                    <td><%= donation.peripheral.brand %></td>
+                    <td><%= donation.peripheral.model %></td>
+                    <td><%= donation.peripheral.condition %></td>
+                    <td><%= donation.peripheral.quantity %></td>
+                    <td>
+                        <a href="/organization/editDonation/<%= donation.id %>" class="btn btn-warning">Edit</a>
+                        <a href="/organization/removeDonation/<%= donation.id %>" class="btn btn-danger">Remove</a>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Confirmation -->
+        <div class="d-flex justify-content-end">
+            <a href="/organization/donationForm" class="btn btn-secondary mr-2">Add More Items</a>
+            <button class="btn btn-success">Confirm Donations</button>
+        </div>
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

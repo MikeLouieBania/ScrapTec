@@ -39,12 +39,9 @@
       <form action="/organization/donation/submit" method="post">
         <!-- DropPoint Selection -->
         <div class="form-group">
-          <label for="dropPoint">Choose Drop Point:</label>
-          <select class="form-control" name="dropPointId" id="dropPoint">
-            <!-- Assuming you'll populate this with drop points from the database -->
-            <option value="dropPoint1Id">Drop Point Name 1</option>
-            <option value="dropPoint2Id">Drop Point Name 2</option>
-          </select>
+            <label>Selected Drop Point:</label>
+            <p class="form-control-static"><%= dropPoint.name %></p>
+            <input type="hidden" name="dropPointId" value="<%= dropPoint.id %>">
         </div>
 
         <!-- Expected Date of Arrival -->
@@ -77,7 +74,7 @@
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Submit Donation</button>
+        <button type="submit" class="btn btn-primary">Add to Donation</button>
       </form>
     </div>
 
