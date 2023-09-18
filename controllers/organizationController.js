@@ -60,7 +60,7 @@ module.exports = {
   async getAddDonation(req, res) {
     try {
         const {
-            dropPointId, expectedDateOfArrival, 
+            dropPointId, 
             type, brand, model, condition, quantity 
         } = req.body;
 
@@ -92,8 +92,7 @@ module.exports = {
             const newDonation = await prisma.donation.create({
                 data: {
                     dropPointId: dropPointId,
-                    organizationId: organizationId,
-                    expectedDateOfArrival: new Date(expectedDateOfArrival),
+                    organizationId: organizationId, 
                     isSubmitted: false,
                     peripherals: {
                         create: {

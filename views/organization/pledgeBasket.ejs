@@ -59,7 +59,16 @@
                                 <input type="hidden" name="dropPointId" value="<%= donation.dropPoint.id %>">
                                 <button type="submit" class="btn btn-sm btn-secondary">Add More Items</button>
                             </form>
-                            <button type="button" class="btn btn-sm btn-success" onclick="confirmDonation(<%= donation.id %>)">Confirm</button>
+                            <!-- Before the Confirm Donations button -->
+                            <div class="mb-3">
+                                <label for="expectedDateOfArrival" class="form-label">Expected Date of Arrival:</label>
+                                <input type="date" class="form-control" id="expectedDateOfArrival" name="expectedDateOfArrival">
+                            </div>
+
+                            <!-- Confirmation -->
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-success">Confirm Donations</button>
+                            </div>
                         </td>
                     </tr>
                     <tr>
