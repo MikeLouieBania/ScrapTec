@@ -72,7 +72,6 @@ module.exports = {
                 dropPointId: dropPointId,
                 organizationId: organizationId,
                 expectedDateOfArrival: new Date(expectedDateOfArrival),
-                status: "Pending",  // You may want to change this to "Unconfirmed" or another suitable status indicating it's in the cart and not yet confirmed.
                 isSubmitted: false,
                 peripherals: {
                     create: {
@@ -94,10 +93,24 @@ module.exports = {
   },
 
   async getPledgeBasketPage(req, res) {
-    try {  
-        res.render('organization/pledgeBasket');
+    try {
+        const organizationId = req.session.organization.id;
+
+        // Fetch the unsubmitted donations of the organization
+        const donations = await prisma.donation.findMany({
+            where: {
+                organizationId: organizationId,
+                isSubmitted: false
+            },
+            include: {
+                dropPoint: true, // Include drop point details
+                peripherals: true // Include peripheral details
+            }
+        });
+
+        res.render('organization/pledgeBasket', { donations: donations });
     } catch (error) {
-        console.error("Error fetching drop point:", error);
+        console.error("Error fetching pledge basket items:", error);
         res.status(500).send("Internal Server Error");
     }
   },
