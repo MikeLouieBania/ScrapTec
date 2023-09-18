@@ -57,7 +57,7 @@ module.exports = {
     }
   },
 
-  async addDonation(req, res) {
+  async getAddDonation(req, res) {
     try {
         const {
             dropPointId, expectedDateOfArrival, 
@@ -66,26 +66,13 @@ module.exports = {
 
         const organizationId = req.session.organization.id;
 
-        // Check if there's an existing donation with status 'Pending' to the same drop point
-        const existingDonation = await prisma.donation.findFirst({
-            where: {
-                organizationId: organizationId,
-                dropPointId: dropPointId,
-                status: "Pending"
-            }
-        });
-
-        if (existingDonation) {
-            return res.status(400).send("You have an existing pending donation to this drop point. Please wait for it to be verified.");
-        }
-
-        // Create a new donation record with isSubmitted set to false
+        // Create a new donation record with isSubmitted set to false (akin to adding to cart)
         const newDonation = await prisma.donation.create({
             data: {
                 dropPointId: dropPointId,
                 organizationId: organizationId,
                 expectedDateOfArrival: new Date(expectedDateOfArrival),
-                status: "Pending",
+                status: "Pending",  // You may want to change this to "Unconfirmed" or another suitable status indicating it's in the cart and not yet confirmed.
                 isSubmitted: false,
                 peripherals: {
                     create: {
@@ -99,7 +86,7 @@ module.exports = {
             }
         });
 
-        res.redirect('/pledgeBasket');
+        res.redirect('/organization/pledgeBasket');
     } catch (error) {
         console.error("Error adding donation:", error);
         res.status(500).send("Internal Server Error");
