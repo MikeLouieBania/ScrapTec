@@ -3,7 +3,6 @@
 
 <head>
     <title>Pledge Basket</title>
-    <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
     <style>
         .container {
@@ -39,41 +38,61 @@
         </div>  
     </nav>
 
+
     <div class="container">
         <h3>Your Pledge Basket</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Drop Point</th>
-                    <th>Peripheral Type</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Condition</th>
-                    <th>Quantity</th>
+                    <th>Details</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <% donations.forEach(donation => { %>
-                    <% donation.peripherals.forEach(peripheral => { %>
-                        <tr>
-                            <td><%= donation.dropPoint.name %></td>
-                            <td><%= peripheral.type %></td>
-                            <td><%= peripheral.brand %></td>
-                            <td><%= peripheral.model %></td>
-                            <td><%= peripheral.condition %></td>
-                            <td><%= peripheral.quantity %></td>
-                            <td>
-                                <!-- For the action, you might want a button or link to edit or remove the item. -->
-                                <form action="/organization/donationForm" method="POST">
-                                    <input type="hidden" name="dropPointId" value="<%= donation.dropPoint.id %>">
-                                    <button type="submit" class="btn btn-sm btn-secondary">Add More Items</button>
-                                </form>
-                                <a href="/organization/editDonation/<%= donation.id %>" class="btn btn-sm btn-warning">Edit</a>
-                                <a href="/organization/deleteDonation/<%= donation.id %>" class="btn btn-sm btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                    <% }); %>
+                    <tr data-toggle="collapse" data-target="#donation-<%= donation.id %>" class="accordion-toggle">
+                        <td><%= donation.dropPoint.name %></td>
+                        <td>Click to see peripherals</td>
+                        <td>
+                            <form action="/organization/donationForm" method="POST">
+                                <input type="hidden" name="dropPointId" value="<%= donation.dropPoint.id %>">
+                                <button type="submit" class="btn btn-sm btn-secondary">Add More Items</button>
+                            </form>
+                            <button type="button" class="btn btn-sm btn-success" onclick="confirmDonation(<%= donation.id %>)">Confirm</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="hiddenRow">
+                            <div class="collapse" id="donation-<%= donation.id %>">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Peripheral Type</th>
+                                            <th>Brand</th>
+                                            <th>Model</th>
+                                            <th>Condition</th>
+                                            <th>Quantity</th>
+                                            <th colspan="2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% donation.peripherals.forEach(peripheral => { %>
+                                            <tr>
+                                                <td><%= peripheral.type %></td>
+                                                <td><%= peripheral.brand %></td>
+                                                <td><%= peripheral.model %></td>
+                                                <td><%= peripheral.condition %></td>
+                                                <td><%= peripheral.quantity %></td>
+                                                <td><a href="/organization/editDonation/<%= donation.id %>" class="btn btn-sm btn-warning">Edit</a></td>
+                                                <td><a href="/organization/deleteDonation/<%= donation.id %>" class="btn btn-sm btn-danger">Delete</a></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
                 <% }); %>
             </tbody>
         </table>
@@ -84,10 +103,10 @@
         </div>
     </div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
