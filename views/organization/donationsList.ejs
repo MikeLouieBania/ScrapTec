@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>My Account</title>
+      <!-- Link to Bootstrap CSS -->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+      <style>
+        /* Additional custom styles for the page */
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+      </style>
+    </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">    
+      
+      <!-- Donations Table -->
+      <div class="mt-5">
+        <h3>My Donations</h3>
+        <table class="table table-bordered">
+          <thead>
+            <tr> 
+              <th scope="col">Status</th>
+              <th scope="col">Drop Point</th>
+              <th scope="col">Expected Date of Arrival</th>
+              <th scope="col">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% donations.forEach(donation => { %>
+              <tr> 
+                <td><%= donation.status %></td>
+                <td><%= donation.dropPoint.name %></td>
+                <td><%= donation.expectedDateOfArrival ? new Date(donation.expectedDateOfArrival).toLocaleDateString() : 'N/A' %></td>
+                <td><button class="btn btn-info btn-sm" data-toggle="collapse" data-target="#donation-<%= donation.id %>">Toggle</button></td>
+              </tr>
+              <!-- Collapsible Row for Donation Details -->
+              <tr id="donation-<%= donation.id %>" class="collapse">
+                <td colspan="5">
+                    <h5>Peripherals:</h5> 
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Brand</th>
+                                    <th>Model</th>
+                                    <th>Condition</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% donation.peripherals.forEach(peripheral => { %>
+                                    <tr>
+                                        <td><%= peripheral.type %></td>
+                                        <td><%= peripheral.brand %></td>
+                                        <td><%= peripheral.model %></td>
+                                        <td><%= peripheral.condition %></td>
+                                        <td><%= peripheral.quantity %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

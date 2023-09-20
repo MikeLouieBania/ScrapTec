@@ -164,30 +164,34 @@ module.exports = {
     }
   },
 
+  async getDonationsList(req, res) {
+    try {
+      const organizationId = req.session.organization.id;
+      
+      // Fetch the donations for the given organization
+      const donations = await prisma.donation.findMany({
+        where: {
+          organizationId: organizationId,
+        },
+        include: {
+            dropPoint: true, // Include drop point details
+            peripherals: true // Include peripheral details
+        }
+      });
+      
+      res.render('organization/donationsList', { donations: donations });
+    } catch (error) {
+      console.error("Error fetching donations:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
       where: {id: organizationId},
     });
     res.render('organization/account', { organization }); 
-  },
-
-  async getDonations(req, res) {
-    try { 
-      const donations = await prisma.donation.findMany({
-        where: {
-          organizationId: req.session.organization.id  // Assuming you have the organizationId in your session or some auth middleware
-        },
-        include: {
-          completeSystems: true  // This fetches the related PC Systems for each donation
-        }
-      });
-  
-      res.render('organization/donations', { donations });  // Send the fetched donations to the view
-    } catch (error) {
-      console.error("Error fetching donations:", error);
-      res.status(500).send("Internal server error");
-    }
   },
      
   logout(req, res) {
