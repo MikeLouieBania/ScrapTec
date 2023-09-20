@@ -8,6 +8,7 @@ router.get('/donations', organizationController.getDonations);
 router.post('/donationForm', organizationController.getDonationForm);  
 router.post('/addDonation', organizationController.getAddDonation); 
 router.get('/pledgeBasket', organizationController.getPledgeBasketPage);  
+router.post('/confirmDonation', organizationController.getConfirmDonation);
 router.get('/account', organizationController.getAccount); 
 router.post('/logout', organizationController.logout); 
 

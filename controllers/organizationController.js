@@ -137,6 +137,33 @@ module.exports = {
     }
   },
 
+  async getConfirmDonation(req, res) {
+    try {
+        const { donationId, expectedDateOfArrival } = req.body;
+
+        if (!donationId || !expectedDateOfArrival) {
+            return res.status(400).send("Missing required fields");
+        }
+
+        // Update the donation record
+        await prisma.donation.update({
+            where: {
+                id: donationId
+            },
+            data: {
+                expectedDateOfArrival: new Date(expectedDateOfArrival),
+                isSubmitted: true,
+                status: 'PENDING'
+            }
+        });
+
+        res.redirect('/organization/donations');
+    } catch (error) {
+        console.error("Error confirming donation:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
+
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
