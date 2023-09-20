@@ -1,254 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tab Layout</title>
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Link to Google's Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
+      body {
+        background-image: url('https://i.postimg.cc/HspmXSYg/blue.png'); /* Adjust the path if necessary */
+        background-size: cover;  /* Cover the entire viewport */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-attachment: fixed; /* Background stays in place when scrolling */
+        background-position: center center; /* Center the image */
+    }
+    
+        /* Additional custom styles for the page */
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+          width: 800px;  /* Fixed width. Adjust as needed */
+          margin: 0 auto;  /* Center the container */
+          margin-top: 150px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);  /* Shadows around the container */
+          padding: 20px;  /* Inner spacing */
+          background-color: #fff;  /* Background color */
+          border-radius: 8px;  /* Rounded corners */
         }
 
+        .profile-picture-preview {
+            max-width: 200px;
+            margin-top: 10px;
+        }
+            /* Center the tabs */
         .nav-tabs {
-            border: 1px solid lightgrey;
-            border-radius: 5px;
-            overflow: hidden;
-            width: 100%;
-            margin: 30px 0 10px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .nav-item {
-            width: 50%;
-        }
-
-        .nav-link {
-            display: block;
-            border: none;
-            color: #000;
-            border-radius: 0;
-            font-size: 18px;
-            font-weight: 500;
-            text-align: center;
-            line-height: 48px;
-            transition: color 0.6s ease;
-            position: relative;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .nav-link:hover {
-            background: none;
-            color: #5c8aec;
-        }
-
-        .nav-link.active {
-            color: #fff;
-            background: linear-gradient(to right, #49befd, #4292fa);
-        }
-
-        .tab-content {
-            border: 1px solid lightgrey;
-            padding: 20px;
-            border-radius: 5px;
+        display: flex;
+        justify-content: center;
         }
 
         .tab-pane {
-            display: none;
-            opacity: 0; /* Initially hidden */
-            transition: opacity 0.6s ease; /* Fade-in/out transition */
-        }
+          display: none; /* Initially hide all panes */
+      }
+      .tab-pane.active {
+          display: block; /* Show the active pane */
+      }
+      
 
-        .tab-pane.active {
-            display: block;
-            opacity: 1; /* Visible */
-        }
-    </style>
+       /* Increase the size of the tabs */
+    .nav-tabs .nav-link {
+    padding: 15px 30px;  /* Increased padding for larger tabs */
+    font-size: 18px;    /* Larger font size for the tab text */
+    border-radius: 10px; /* Optional: Rounded corners */
+    border: 2px solid transparent; /* Optional: Thicker border */
+    }
+
+    .nav-tabs .nav-link.active {
+    border-color: #007BFF;  /* Blue border for the active tab. Adjust the color if needed. */
+    }
+      /* Ensure the nav-tabs take up the full width */
+    .nav-tabs {
+    width: 100%;
+    }
+
+/* Make each nav-item take equal width */
+    .nav-tabs .nav-item {
+    flex: 1;
+    text-align: center; /* Center the text within each tab */
+    }
+    /* Set the background color for the tabs */
+.nav-tabs .nav-link {
+  background-color: #3498db; /* Example color: a shade of blue */
+  color: #fff; /* Setting the text color to white for contrast */
+}
+
+/* Set a different background color for the active tab and on hover */
+.nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
+  background-color: #2980b9; /* A slightly darker shade of blue */
+  color: #fff; /* Keeping the text color white for contrast */
+}
+/* Add space between the tabs */
+.nav-tabs .nav-item {
+  margin-right: 10px; /* Adds space to the right of each tab */
+}
+
+/* Remove the margin from the last tab so there's no extra space on the far right */
+.nav-tabs .nav-item:last-child {
+  margin-right: 0;
+}
+    /* Enhancing the labels */
+.form-group label {
+  font-size: 1.1rem; /* Slightly larger font */
+  color: #333;      /* Darker font color for better contrast */
+  margin-bottom: 10px; /* Space between label and input */
+}
+
+/* Enhancing the labels */
+.form-group label {
+  font-size: 1.1rem; 
+  color: #333;      
+  margin-bottom: 10px;
+}
+
+/* Styling the input fields, select dropdown, and file input */
+/* Styling the select dropdown */
+.form-group select {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 0.375rem 0.75rem;  /* Default Bootstrap padding for select elements */
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  appearance: none;  /* To ensure consistent appearance across browsers */
+  background-color: #fff;  /* Setting a white background color */
+}
+
+.form-group input,
+.form-group .form-control-file {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+/* Adjusting file input style to maintain uniformity */
+.form-group .form-control-file {
+  padding: 0.5rem 1rem;
+}
+
+/* Hover effect for input fields and select dropdown */
+.form-group input:hover,
+.form-group select:hover {
+  border-color: #3498db;
+}
+
+/* Space between form groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Additional styling for textareas if any are added in the future */
+.form-group textarea {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group textarea:hover {
+  border-color: #3498db;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: #3498db;  /* Base color */
+  border: none;
+  border-radius: 15px;  /* Rounded corners */
+  padding: 12px 25px;  /* Padding for a larger button */
+  font-size: 1rem;  /* Font size */
+  font-weight: bold;
+  transition: background-color 0.3s;  /* Transition for a smooth color change */
+}
+
+.btn-primary:hover {
+  background-color: #2c3e50;  /* Dark blue color */
+  border-color: #2c3e50;
+}
+
+
+/* Center the button */
+.form-group.button-center {
+  text-align: center;  /* Center the button using text alignment */
+}
+    /* Responsiveness for smaller screens */
+    @media (max-width: 767px) {
+      .container {
+          width: 100%;
+          padding: 20px;
+          margin-top: 50px;
+      }
+
+      .nav-tabs .nav-item {
+          margin-right: 0; /* Reset the margin for tabs on small screens */
+      }
+
+      /* Adjust padding for the button on smaller screens */
+      .btn-primary {
+          padding: 8px 15px;
+          font-size: 0.9rem;
+      }
+  }
+
+      </style>
 </head>
-
 <body>
+    <!-- Add a Bootstrap container for better layout -->
+    <div class="container">
+        <br>
+        <% if (typeof message !== 'undefined') { %>
+        <p><%= message %></p>
+        <% } %>
 
-<div class="container">
-    <!-- Tabs Navigation -->
-    <h1>Signup Page</h1>
-    <br>
-    <% if (typeof message !== 'undefined') { %>
-    <p><%= message %></p>
-    <% } %>
+        <!-- Tabbed interface for registration -->
+        <ul class="nav nav-tabs" id="registrationTabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="normalUserTab" data-toggle="tab" href="#normalUserForm">User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="organizationTab" data-toggle="tab" href="#organizationForm">Organization</a>
+            </li>
+        </ul>
+        <!-- Tab content for registration forms -->
+        <div class="tab-content mt-4">
+            <!-- Normal User Registration Form -->
+            <div class="tab-pane fade show active" id="normalUserForm">
+              <form action="/user-signup" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-lg-6 col-md-12">
+                    <div class="form-group">
+                      <label for="firstName">First Name:</label>
+                      <input type="text" class="form-control" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="lastName">Last Name:</label>
+                      <input type="text" class="form-control" id="lastName" name="lastName" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email:</label>
+                      <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password:</label>
+                      <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-12">
+                    <div class="form-group">
+                      <label for="city">City:</label>
+                      <input type="text" class="form-control" id="city" name="city" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="gender">Gender:</label>
+                      <select class="form-control" id="gender" name="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="contactNumber">Contact Number:</label>
+                      <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+                    </div>
+                  </div>
+                </div>
+                    
+                <div class="form-group">
+                  <label for="profilePicture">Profile Picture:</label>
+                  <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
+                  <div class="profile-picture-preview"></div> <!-- Preview container -->
+                </div>
+                <div class="form-group button-center">
+                  <button type="submit" class="btn btn-primary">Register as a User</button>
+              </div>              
+              </form>
+            </div>
 
-    <ul class="nav nav-tabs" id="registrationTabs">
-        <li class="nav-item">
-          <a class="nav-link active" id="normalUserTab" data-toggle="tab" href="#normalUserForm">User</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="organizationTab" data-toggle="tab" href="#organization-content">Organization</a>
-        </li>
-    </ul>
-
-    <!-- Tabs Content -->
-    <div class="tab-content">
-      <div id="normalUserForm" class="tab-pane fade show active">
-          <form action="/user-signup" method="POST" enctype="multipart/form-data">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="firstName">First Name:</label>
-                  <input type="text" class="form-control" id="firstName" name="firstName" required>
-                </div>
-                <div class="form-group">
-                  <label for="lastName">Last Name:</label>
-                  <input type="text" class="form-control" id="lastName" name="lastName" required>
-                </div>
-                <div class="form-group">
-                  <label for="email">Email:</label>
-                  <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                  <label for="password">Password:</label>
-                  <input type="password" class="form-control" id="password" name="password" required>
-                </div>
+         <!-- Organization Registration Form -->
+<div class="tab-pane fade" id="organizationForm">
+  <form action="/organization-signup" method="POST" enctype="multipart/form-data">
+      <div class="row"> <!-- Start of Bootstrap row -->
+          <div class="col-md-6"> <!-- Start of first column -->
+              <div class="form-group">
+                  <label for="organizationname">Organization Name:</label>
+                  <input type="text" class="form-control" id="organizationname" name="organizationname" required>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="city">City:</label>
-                  <input type="text" class="form-control" id="city" name="city" required>
-                </div>
-                <div class="form-group">
-                  <label for="gender">Gender:</label>
-                  <select class="form-control" id="gender" name="gender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div class="form-group">
+              <div class="form-group">
+                  <label for="email">Business Email:</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <div class="form-group">
+                  <label for="address">Business Address:</label>
+                  <input type="text" class="form-control" id="address" name="address" required>
+              </div>
+          </div> <!-- End of first column -->
+
+          <div class="col-md-6"> <!-- Start of second column -->
+              <div class="form-group">
                   <label for="contactNumber">Contact Number:</label>
                   <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
-                </div>
               </div>
-            </div>
-                
-            <div class="form-group">
-              <label for="profilePicture">Profile Picture:</label>
-              <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
-              <div class="profile-picture-preview"></div> <!-- Preview container -->
-            </div>
+              <div class="form-group">
+                  <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
+                  <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
+              </div>
+              <div class="form-group">
+                  <label for="organizationType">Organization Type:</label>
+                  <select class="form-control" id="organizationType" name="type">
+                      <option value="COMPANY">Company</option>
+                      <option value="NGO">NGO</option>
+                  </select>
+              </div>
+          </div> <!-- End of second column -->
+      </div> <!-- End of Bootstrap row -->
+
+      <!-- This remains outside the columns since it might be wider and can span both columns -->
+      <div class="form-group">
+          <label for="documentUpload">Business Registration Documents and TIN:</label>
+          <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
+          <small class="form-text text-muted">
+              Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
+          </small>
+      </div>
       
-            <button type="submit" class="btn btn-primary">Register as a User</button>
-          </form>
-        </div>
-
-<!-- Org Formy --> 
-
-  
-        <div id="organization-content" class="tab-pane fade ac">
-          <form action="/organization-signup" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-              <label for="organizationname">Organization Name:</label>
-              <input type="text" class="form-control" id="organizationname" name="organizationname" required>
-            </div> 
-            <div class="form-group">
-              <label for="email">Business Email:</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-              <label for="address">Business Address:</label>
-              <input type="text" class="form-control" id="address" name="address" required>
-            </div>
-            <div class="form-group">
-              <label for="contactNumber">Contact Number:</label>
-              <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
-            </div>
-            <div class="form-group">
-              <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
-              <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
-            </div>
-            <div class="form-group">
-              <label for="organizationType">Organization Type:</label>
-              <select class="form-control" id="organizationType" name="type">
-                <option value="COMPANY">Company</option>
-                <option value="NGO">NGO</option>
-              </select>
-            </div>
-            <!-- Upload Required Documents -->
-            <div class="form-group">
-              <label for="documentUpload">Business Registration Documents and TIN:</label>
-              <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
-              <small class="form-text text-muted">
-                Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
-              </small>
-            </div>
-            <button type="submit" class="btn btn-primary">Register as an Organization</button>
-          </form>
-        </div>
-    </div>
+      <!-- Button -->
+      <div class="form-group button-center">
+          <button type="submit" class="btn btn-primary">Register as an Organization</button>
+      </div>
+  </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </div>
+            </div>
+        </div>
+    </div>
 
-<script>
-  // Code for previewing profile picture (same as before)
-  const profilePictureInput = document.getElementById('profilePicture');
-  const profilePicturePreview = document.querySelector('.profile-picture-preview');
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Code for previewing profile picture (same as before)
+        const profilePictureInput = document.getElementById('profilePicture');
+        const profilePicturePreview = document.querySelector('.profile-picture-preview');
 
-  profilePictureInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = function (event) {
-              const image = document.createElement('img');
-              image.src = event.target.result;
-              image.className = 'img-thumbnail';
-              profilePicturePreview.innerHTML = '';
-              profilePicturePreview.appendChild(image);
-          }
-          reader.readAsDataURL(file);
-      } else {
-          profilePicturePreview.innerHTML = '';
-      }
-  });
+        profilePictureInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const image = document.createElement('img');
+                    image.src = event.target.result;
+                    image.className = 'img-thumbnail';
+                    profilePicturePreview.innerHTML = '';
+                    profilePicturePreview.appendChild(image);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                profilePicturePreview.innerHTML = '';
+            }
+        });
 
-  // Tab toggling functionality with fade effect
-  document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', function() {
-          // Deactivate all tabs
-          document.querySelectorAll('.nav-link').forEach(item => {
-              item.classList.remove('active');
-          });
-          // Hide all content
-          document.querySelectorAll('.tab-pane').forEach(content => {
-              content.classList.remove('active');
-          });
-
-          // Activate the clicked tab and its content with fade effect
-          this.classList.add('active');
-          const contentId = this.getAttribute('href');
-          const content = document.querySelector(contentId);
-          content.classList.add('active');
-          // Delaying the fade-in for a smoother effect
-          setTimeout(() => {
-              content.style.opacity = '1';
-          }, 50);
-      });
-  });
-</script>
+      // Handle the tab switch without the sliding effect
+$('#registrationTabs a').on('click', function (e) {
+  e.preventDefault();
+  $('.tab-pane.active').removeClass('active');
+  $($(this).attr('href')).addClass('active');
+});
 
 
+
+    </script>
 </body>
-
 </html>
