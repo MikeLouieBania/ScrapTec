@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+
 module.exports = {
   async getLogin(req, res) {
     res.render('manager/login');
@@ -63,6 +64,44 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+  async getManageDonation(req, res) {
+    try {
+        // Fetch the manager's profile and associated drop point using the ID stored in the session
+        const managerWithDropPoint = await prisma.manager.findUnique({
+          where: {
+            id: req.session.managerId
+          },
+          include: {
+            dropPoint: {
+              include: {
+                donations: {
+                  where: { isSubmitted: true },  // Fetch only the submitted donations
+                  include: { organization: true }  // Fetch related organization for each donation
+                }
+              }
+            }
+          }
+        }); 
+        
+        // Format the Expected Date of Arrival for each donation
+        managerWithDropPoint.dropPoint.donations.forEach(donation => {
+          if (donation.expectedDateOfArrival) {
+              const dateObj = new Date(donation.expectedDateOfArrival);
+              donation.formattedDateOfArrival = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'long' })} ${dateObj.getFullYear()}`;
+          }
+      });
+
+        // Render the manageDonation view, passing in the donations and dropPoint name
+        res.render('manager/manageDonation', { 
+          donations: managerWithDropPoint.dropPoint.donations,
+          dropPointName: managerWithDropPoint.dropPoint.name,  
+      });
+
+    } catch (error) {
+        console.error("Error fetching donations:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
   async getManagerAccount(req, res) {
     try {
       // Fetch the manager's profile and associated drop point using the ID stored in the session
@@ -83,7 +122,6 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   }, 
-
   managerLogout(req, res) {
     req.session.managerId = null; // Clear the manager's session
     res.redirect('/manager/login');
