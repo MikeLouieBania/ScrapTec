@@ -19,14 +19,17 @@
     <a class="navbar-brand" href="/manager/dashboard">Manager</a>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
+          <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/manager/manageradddonation">Manage Donations</a>
-      </li>
+          <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
+      </li> 
       <li class="nav-item">
-        <a class="nav-link" href="/manager/manageraccount">Account</a>
-      </li>
+          <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
+      </li> 
+      <li class="nav-item">
+          <a class="nav-link" href="/manager/managerAccount">Account</a>
+      </li> 
     </ul>
     <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>

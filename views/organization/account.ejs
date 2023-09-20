@@ -16,20 +16,23 @@
   <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/user/dashboard">Dashboard</a>
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto"> 
+            <ul class="navbar-nav mr-auto">  
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/marketplace">Marketplace</a>
-                </li> 
+                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/useraccount">My Account</a>
+                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0" method="post" action="/user/logout">
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
             </form>
         </div>
@@ -37,14 +40,15 @@
     <div class="container">   
       <div>
         <h3>Account Settings</h3> 
-        <p><strong>Name:</strong> <%= user.firstName %> <%= user.lastName %></p>
-        <p><strong>Email:</strong> <%= user.email %></p>
-        <p><strong>City:</strong> <%= user.city %></p>
-        <p><strong>Contact Number:</strong> <%= user.contactNumber %></p>
-        <p><strong>Gender:</strong> <%= user.gender %></p>
-        <% if (user.profilePicture) { %>
+        <p><strong>Organization Name:</strong> <%= organization.organizationname %></p>
+        <p><strong>Business Email:</strong> <%= organization.email %></p> 
+        <p><strong>Company Address:</strong> <%= organization.address %></p> 
+        <p><strong>Contact Number:</strong> <%= organization.contactNumber %></p> 
+        <p><strong>SEC Registration Number:</strong> <%= organization.secRegistrationNumber %></p> 
+        
+        <% if (organization.profilePicture) { %>
           <p><strong>Profile Picture:</strong></p>
-          <img src="data:image/jpeg;base64, <%= user.profilePicture.toString('base64') %>" alt="Profile Picture" style="max-width: 200px;"/>
+          <img src="data:image/jpeg;base64, <%= organization.profilePicture.toString('base64') %>" alt="Profile Picture" style="max-width: 200px;"/>
         <% } else { %>
           <p><strong>No Profile Picture</strong></p>
         <% } %>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pledge Basket</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>  
+    </nav>
+
+
+    <div class="container">
+        <h3>Your Pledge Basket</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Drop Point</th>
+                    <th>Details</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% donations.forEach(donation => { %>
+                    <tr data-toggle="collapse" data-target="#donation-<%= donation.id %>" class="accordion-toggle">
+                        <td><%= donation.dropPoint.name %></td>
+                        <td>Click to see peripherals</td>
+                        <td>
+                            <form action="/organization/donationForm" method="POST">
+                                <input type="hidden" name="dropPointId" value="<%= donation.dropPoint.id %>">
+                                <button type="submit" class="btn btn-sm btn-secondary">Add More Items</button>
+                            </form>
+                            <!-- Before the Confirm Donations button -->
+                            <form action="/organization/confirmDonation" method="POST">
+                                <!-- Hidden input for donation ID -->
+                                <input type="hidden" name="donationId" value="<%= donation.id %>">
+                                <div class="mb-3">
+                                    <label for="expectedDateOfArrival" class="form-label">Expected Date of Arrival:</label>
+                                    <input type="date" class="form-control" id="expectedDateOfArrival" name="expectedDateOfArrival">
+                                </div>
+    
+                                <!-- Confirmation -->
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-success">Confirm Donations</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="hiddenRow">
+                            <div class="collapse" id="donation-<%= donation.id %>">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Peripheral Type</th>
+                                            <th>Brand</th>
+                                            <th>Model</th>
+                                            <th>Condition</th>
+                                            <th>Quantity</th>
+                                            <th colspan="2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% donation.peripherals.forEach(peripheral => { %>
+                                            <tr>
+                                                <td><%= peripheral.type %></td>
+                                                <td><%= peripheral.brand %></td>
+                                                <td><%= peripheral.model %></td>
+                                                <td><%= peripheral.condition %></td>
+                                                <td><%= peripheral.quantity %></td>
+                                                <td><a href="/organization/editPeripheral/<%= peripheral.id %>" class="btn btn-sm btn-warning">Edit</a></td>
+                                                <td><a href="/organization/deletePeripheral/<%= peripheral.id %>" class="btn btn-sm btn-danger">Delete</a></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+    </div>
+
+     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
