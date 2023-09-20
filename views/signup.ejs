@@ -1,180 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Page</title>
-    <!-- Link to Bootstrap CSS -->
+    <title>Tab Layout</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Link to Google's Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* Additional custom styles for the page */
+        * {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        .profile-picture-preview {
-            max-width: 200px;
-            margin-top: 10px;
+        .nav-tabs {
+            border: 1px solid lightgrey;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 100%;
+            margin: 30px 0 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-item {
+            width: 50%;
+        }
+
+        .nav-link {
+            display: block;
+            border: none;
+            color: #000;
+            border-radius: 0;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 48px;
+            transition: color 0.6s ease;
+            position: relative;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: none;
+            color: #5c8aec;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background: linear-gradient(to right, #49befd, #4292fa);
+        }
+
+        .tab-content {
+            border: 1px solid lightgrey;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .tab-pane {
+            display: none;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.6s ease; /* Fade-in/out transition */
+        }
+
+        .tab-pane.active {
+            display: block;
+            opacity: 1; /* Visible */
         }
     </style>
 </head>
+
 <body>
-    <!-- Add a Bootstrap container for better layout -->
-    <div class="container">
-        <h1>Signup Page</h1>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
-            </ul>
-        </nav>
-        <br>
-        <% if (typeof message !== 'undefined') { %>
-        <p><%= message %></p>
-        <% } %>
 
-        <!-- Tabbed interface for registration -->
-        <ul class="nav nav-tabs" id="registrationTabs">
-            <li class="nav-item">
-                <a class="nav-link active" id="normalUserTab" data-toggle="tab" href="#normalUserForm">User</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="organizationTab" data-toggle="tab" href="#organizationForm">Organization</a>
-            </li>
-        </ul>
+<div class="container">
+    <!-- Tabs Navigation -->
+    <h1>Signup Page</h1>
+    <br>
+    <% if (typeof message !== 'undefined') { %>
+    <p><%= message %></p>
+    <% } %>
 
-        <!-- Tab content for registration forms -->
-        <div class="tab-content mt-4">
-            <!-- Normal User Registration Form -->
-            <div class="tab-pane fade show active" id="normalUserForm">
-              <form action="/user-signup" method="POST" enctype="multipart/form-data">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="firstName">First Name:</label>
-                      <input type="text" class="form-control" id="firstName" name="firstName" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="lastName">Last Name:</label>
-                      <input type="text" class="form-control" id="lastName" name="lastName" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="email">Email:</label>
-                      <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="password">Password:</label>
-                      <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="city">City:</label>
-                      <input type="text" class="form-control" id="city" name="city" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="gender">Gender:</label>
-                      <select class="form-control" id="gender" name="gender">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="contactNumber">Contact Number:</label>
-                      <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
-                    </div>
-                  </div>
+    <ul class="nav nav-tabs" id="registrationTabs">
+        <li class="nav-item">
+          <a class="nav-link active" id="normalUserTab" data-toggle="tab" href="#normalUserForm">User</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="organizationTab" data-toggle="tab" href="#organization-content">Organization</a>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content">
+      <div id="normalUserForm" class="tab-pane fade show active">
+          <form action="/user-signup" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="firstName">First Name:</label>
+                  <input type="text" class="form-control" id="firstName" name="firstName" required>
                 </div>
-                    
                 <div class="form-group">
-                  <label for="profilePicture">Profile Picture:</label>
-                  <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
-                  <div class="profile-picture-preview"></div> <!-- Preview container -->
+                  <label for="lastName">Last Name:</label>
+                  <input type="text" class="form-control" id="lastName" name="lastName" required>
                 </div>
-          
-                <button type="submit" class="btn btn-primary">Register as a User</button>
-              </form>
-            </div>
-
-            <!-- Organization Registration Form -->
-            <div class="tab-pane fade" id="organizationForm">
-              <form action="/organization-signup" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                  <label for="organizationname">Organization Name:</label>
-                  <input type="text" class="form-control" id="organizationname" name="organizationname" required>
-                </div> 
-                <div class="form-group">
-                  <label for="email">Business Email:</label>
+                  <label for="email">Email:</label>
                   <input type="email" class="form-control" id="email" name="email" required>
                 </div>
                 <div class="form-group">
-                  <label for="address">Business Address:</label>
-                  <input type="text" class="form-control" id="address" name="address" required>
+                  <label for="password">Password:</label>
+                  <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="city">City:</label>
+                  <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                  <label for="gender">Gender:</label>
+                  <select class="form-control" id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
                 <div class="form-group">
                   <label for="contactNumber">Contact Number:</label>
                   <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
                 </div>
-                <div class="form-group">
-                  <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
-                  <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
-                </div>
-                <div class="form-group">
-                  <label for="organizationType">Organization Type:</label>
-                  <select class="form-control" id="organizationType" name="type">
-                    <option value="COMPANY">Company</option>
-                    <option value="NGO">NGO</option>
-                  </select>
-                </div>
-                <!-- Upload Required Documents -->
-                <div class="form-group">
-                  <label for="documentUpload">Business Registration Documents and TIN:</label>
-                  <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
-                  <small class="form-text text-muted">
-                    Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
-                  </small>
-                </div>
-                <button type="submit" class="btn btn-primary">Register as an Organization</button>
-              </form>
-              
+              </div>
             </div>
+                
+            <div class="form-group">
+              <label for="profilePicture">Profile Picture:</label>
+              <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
+              <div class="profile-picture-preview"></div> <!-- Preview container -->
+            </div>
+      
+            <button type="submit" class="btn btn-primary">Register as a User</button>
+          </form>
+        </div>
+
+<!-- Org Formy --> 
+
+  
+        <div id="organization-content" class="tab-pane fade ac">
+          <form action="/organization-signup" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="organizationname">Organization Name:</label>
+              <input type="text" class="form-control" id="organizationname" name="organizationname" required>
+            </div> 
+            <div class="form-group">
+              <label for="email">Business Email:</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="address">Business Address:</label>
+              <input type="text" class="form-control" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+              <label for="contactNumber">Contact Number:</label>
+              <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+            </div>
+            <div class="form-group">
+              <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
+              <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
+            </div>
+            <div class="form-group">
+              <label for="organizationType">Organization Type:</label>
+              <select class="form-control" id="organizationType" name="type">
+                <option value="COMPANY">Company</option>
+                <option value="NGO">NGO</option>
+              </select>
+            </div>
+            <!-- Upload Required Documents -->
+            <div class="form-group">
+              <label for="documentUpload">Business Registration Documents and TIN:</label>
+              <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
+              <small class="form-text text-muted">
+                Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
+              </small>
+            </div>
+            <button type="submit" class="btn btn-primary">Register as an Organization</button>
+          </form>
         </div>
     </div>
+</div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        // Code for previewing profile picture (same as before)
-        const profilePictureInput = document.getElementById('profilePicture');
-        const profilePicturePreview = document.querySelector('.profile-picture-preview');
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        profilePictureInput.addEventListener('change', function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    const image = document.createElement('img');
-                    image.src = event.target.result;
-                    image.className = 'img-thumbnail';
-                    profilePicturePreview.innerHTML = '';
-                    profilePicturePreview.appendChild(image);
-                }
-                reader.readAsDataURL(file);
-            } else {
-                profilePicturePreview.innerHTML = '';
-            }
-        });
-    </script>
+<script>
+  // Code for previewing profile picture (same as before)
+  const profilePictureInput = document.getElementById('profilePicture');
+  const profilePicturePreview = document.querySelector('.profile-picture-preview');
+
+  profilePictureInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+              const image = document.createElement('img');
+              image.src = event.target.result;
+              image.className = 'img-thumbnail';
+              profilePicturePreview.innerHTML = '';
+              profilePicturePreview.appendChild(image);
+          }
+          reader.readAsDataURL(file);
+      } else {
+          profilePicturePreview.innerHTML = '';
+      }
+  });
+
+  // Tab toggling functionality with fade effect
+  document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function() {
+          // Deactivate all tabs
+          document.querySelectorAll('.nav-link').forEach(item => {
+              item.classList.remove('active');
+          });
+          // Hide all content
+          document.querySelectorAll('.tab-pane').forEach(content => {
+              content.classList.remove('active');
+          });
+
+          // Activate the clicked tab and its content with fade effect
+          this.classList.add('active');
+          const contentId = this.getAttribute('href');
+          const content = document.querySelector(contentId);
+          content.classList.add('active');
+          // Delaying the fade-in for a smoother effect
+          setTimeout(() => {
+              content.style.opacity = '1';
+          }, 50);
+      });
+  });
+</script>
+
+
 </body>
+
 </html>

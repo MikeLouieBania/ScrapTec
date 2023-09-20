@@ -1,40 +1,100 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Index</title>
-    <!-- Link to Bootstrap CSS -->
-      <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      />
-    <style>
-      /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Add a Bootstrap container for better layout -->
-    <div class="container">
-      <h1>Welcome to EcoCycle</h1>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/signup">Register</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+<!-- Navigation Bar -->
+<%- include('partials/navbar') %>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
-</html>
+<!-- Objective Section -->
+<section class="jumbotron text-center text-white mb-0 d-flex align-items-start justify-content-center" style="background: url('https://i.postimg.cc/T3xgwbvy/4685960.jpg'); background-size: cover; background-blend-mode: overlay; background-color: rgba(0, 0, 0, 0.5); padding: 320px 0;">
+    <div class="container">
+        <h1 class="display-4" style="font-family: 'Josefin Sans', sans-serif; font-size: 105px; margin-inline-start: auto;">Welcome to E-Waste Zero</h1>
+        <p class="lead" style="font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 21px">Help bridge the gap between donors and beneficiaries by donating and receiving computer parts.</p>
+        <a href="#services" style="font-family: Arial, sans-serif; font-size: 19px; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 10px 15px; border-radius: 25px; font-weight: bold; text-decoration: none">Learn More</a> 
+    </div>
+  </section>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
+</style>
+
+<!-- What We Do -->
+<section id="services" class="container-fluid text-center" style="padding: 100px 0; background-color: #2E5894; color: white;">
+    <div class="container">
+      <h2 class="mb-3" style="text-align: center; font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 65px;">What We Do</h2>
+      <div style="height:100px; overflow:auto;">
+          <p>This project proposes the creation of a web-based platform called E-Waste Zero, which is intended to expedite the process of preserving sustainable technology. The platform functions as an ecosystem that connects individuals, businesses, and organizations involved in the life cycle of sustainable technology, such as manufacturers, consumers, recyclers, and regulators.</p>
+      </div>
+      <div class="content-container" style="display: flex; justify-content: center; gap: 20px;">
+          <!-- Mission Container -->
+          <div class="mission-text" style="position: relative; width: 300px; height: 300px; border: 5px solid white; padding: 10px; margin-top: 100px;">
+              <h3 style="font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 30px;">Mission</h3>
+              <p>To lead the global movement in reducing electronic waste by promoting responsible recycling, reuse, and disposal practices. We aim to foster collaboration among businesses, governments, and consumers to build a sustainable digital future.</p>
+          </div>
+          
+          <!-- Vision Container -->
+          <div class="vision-text" style="position: relative; width: 300px; height: 300px; border: 5px solid white; padding: 10px; margin-top: 100px;">
+              <h3 style="font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 30px;">Vision</h3>
+              <p>A world where electronic products are sustainably produced, consumed, and recycled, ensuring a circular lifecycle. We envision a globe free from e-waste pollution, preserving our planet's health and resources for future generations.</p>
+          </div>
+
+          <!-- YouTube video container with frame -->
+          <div style="position: relative; width: 720px; height: 520px; border: 5px solid white;">
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/BNIF9fhVSPU?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+      </div>
+    </div>
+</section>
+
+
+  
+  
+
+<!-- About Us -->
+<section id="about" class="container-fluid" style="padding: 150px 0; background-color: #6CA0DC; color: white;">
+  <div class="container">
+    <h2 class="mb-3" style="text-align: center; font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 65px;">About Us</h2>
+    <div style="height: 90px; overflow:auto; text-align: center;">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod urna sit amet dignissim...</p>
+    </div>
+    <div class="img-container" style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+        <div style="position: relative; width: 520px; height: 420px;">
+            <img src="https://static.vecteezy.com/system/resources/previews/014/523/497/original/man-avatar-icon-flat-vector.jpg" alt="image 1" style="width: 100%; height: 100%;">
+            <div style="position: absolute; bottom: 0; width: 100%; height: 120px; background: white;">
+                <p style="margin: 0; padding: 10px; color: black;">Sample text 1</p>
+            </div>
+        </div>
+        <div style="position: relative; width: 520px; height: 420px;">
+            <img src="https://i.postimg.cc/P50bSpD7/351599931-804577657766099-4602106903930517285-n.jpg" alt="image 2" style="width: 100%; height: 100%;">
+            <div style="position: absolute; bottom: 0; width: 100%; height: 120px; background: white;">
+                <p style="margin: 0; padding: 10px; color: black;">Sample text 2</p>
+            </div>
+        </div>
+        <div style="position: relative; width: 520px; height: 420px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/168/168726.png" alt="image 3" style="width: 100%; height: 100%;">
+            <div style="position: absolute; bottom: 0; width: 100%; height: 120px; background: white;">
+                <p style="margin: 0; padding: 10px; color: black;">Sample text 3</p>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Us -->
+<section id="contact" class="container-fluid" style="padding: 350px 0; background-color: #003153; color: white;">
+  <div class="container">
+      <h2 class="mb-3">Contact Us</h2>
+      <div style="height:200px; overflow:auto;">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod urna sit amet dignissim...</p>
+      </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<%- include('partials/footer') %>
+
+<!-- Custom CSS for body background -->
+<style>
+     html {
+        scroll-behavior: smooth;
+    }
+    body {
+        background-color: rgba(144, 238, 144, 0.75);
+    }
+</style>

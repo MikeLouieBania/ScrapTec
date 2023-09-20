@@ -1,54 +1,145 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
-  <!-- Link to Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-  <!-- Link to Google's Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-  <style>
-    /* Additional custom styles for the page */
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <!-- Link to Google's Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Link to Google's Roboto Slab Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
+    <style>
+        /* Login page styles */
+        :root {
+            --primary-color: #4682B4;
+            --secondary-color: #87CEEB;
+            --tertiary-color: #B6D0E2;
+        }
+
+        body {
+            background: linear-gradient(to bottom, var(--tertiary-color), var(--secondary-color));
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* This will align the content to the top of the page */
+            margin: 0; /* Resetting any default margin */
+            padding: 0; /* Resetting any default padding */
+        }
+
+        .login-container, 
+        .login-container label, 
+        .login-container h1 {
+        color: var(--primary-color);  /* Use the primary color for text color within the login container */
+        font-family: 'Arial', sans-serif;
     }
-  </style>
-</head>
-<body>
-  <!-- Add a Bootstrap container for better layout -->
-  <div class="container">
-    <h1>Login Page</h1>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/signup">Register</a>
-        </li>
-      </ul>
-    </nav>
+        .login-container {
+            margin-top: 60px; /* Adjust this value based on the height of your navbar or as per your design needs */
+            width: 50%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
 
-    <!-- Login Form -->
-    <form action="/login" method="POST">
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-      </div>
-      
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-  </div>
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-  <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .form-control {
+            border: 1px solid var(--tertiary-color);
+            border-radius: 10px;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        #togglePassword {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--primary-color);
+            outline: none;
+        }
+    </style>
+</head>  
+<%- include('partials/navbar') %>
+<body class="login-page">
+    <!-- Login Content -->
+    <div class="login-container">
+        <div class="row">
+            <div class="col-md-5">
+                <img src="https://i.ibb.co/rMNxGhb/E-WASTE-ZERO-1.png" alt="Descriptive Image Text" class="img-fluid" />
+            </div>
+            <div class="col-md-7">
+                <h1>Login Page</h1>
+                <!-- Login Form -->
+                <form action="/login" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <button type="button" id="togglePassword">
+                                <i class="material-icons">visibility</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toggle Password Visibility -->
+    <script>
+        const togglePasswordButton = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePasswordButton.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordButton.innerHTML = '<i class="material-icons">visibility_off</i>';
+            } else {
+                passwordInput.type = 'password';
+                togglePasswordButton.innerHTML = '<i class="material-icons">visibility</i>';
+            }
+        });
+    </script>
 </body>
 </html>
