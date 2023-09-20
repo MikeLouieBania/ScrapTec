@@ -137,10 +137,14 @@
                         </div>
                         
                         <!-- Donate button -->
-                        <form action="/organization/donationForm" method="POST">
-                            <input type="hidden" name="dropPointId" value="<%= point.id %>">
-                            <button type="submit" class="btn btn-success btn-block">Donate</button>
-                        </form>                         
+                        <% if(point.canDonate) { %>
+                            <form action="/organization/donationForm" method="POST">
+                                <input type="hidden" name="dropPointId" value="<%= point.id %>">
+                                <button type="submit" class="btn btn-success btn-block">Donate</button>
+                            </form> 
+                        <% } else { %>
+                            <p class="alert alert-warning">You have a pending donation. Please complete it before donating again.</p>
+                        <% } %>                    
                     </div>
                     
                     <!-- Details Modal for this particular point -->
