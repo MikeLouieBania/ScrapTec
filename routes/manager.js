@@ -7,9 +7,8 @@ router.get('/login', authMiddlewareManager.checkLoggedInRedirect, managerControl
 router.post('/login', authMiddlewareManager.checkLoggedInRedirect, managerController.managerLogin); 
 
 router.get('/dashboard', authMiddlewareManager.requireLogin, managerController.getDashboard);
-router.get('/manageraccount', authMiddlewareManager.requireLogin, managerController.getManagerAccount);
-router.get('/manageradddonation', authMiddlewareManager.requireLogin, managerController.getAddDonation);
-router.post('/saveDonation', authMiddlewareManager.requireLogin, managerController.saveDonation);
+router.get('/manageDonation', authMiddlewareManager.requireLogin, managerController.getManageDonation);
+router.get('/managerAccount', authMiddlewareManager.requireLogin, managerController.getManagerAccount);  
 router.post('/logout', managerController.managerLogout);
 
 

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Card Styles */
+        .card {
+            height: 100%;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .card-body {
+            padding: 20px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* This will ensure all cards within the column will have the same height */
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .col-md-4 {
+            display: flex;
+        }
+        
+        .status-icon {
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .status-open {
+            color: green;
+        }
+        
+        .status-closed {
+            color: red;
+        }
+        .btn {
+            margin-top: 10px;
+        }
+
+        
+
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Drop Points</h2>
+
+        <!-- Search Bar -->
+        <input type="text" id="search" aria-label="Search Drop Points" placeholder="Search Drop Points..." class="form-control mb-3">
+
+
+        <!-- Drop Points rendering using a loop -->
+        <div class="row" id="dropPointsContainer">
+            <% dropPoints.forEach(point => { %>
+                <div class="col-md-4">
+                    <div class="card mb-3" data-toggle="modal" data-target="#detailsModal-<%= point.id %>"> 
+                        <div class="card-body">
+                            <h5 class="card-title"><%= point.name %></h5>
+                            
+                            <p class="drop-point">
+                                <i class="fas fa-sun"></i> <span id="openingTime-<%= point.id %>"><%= point.openingTime %></span>
+                                <span style="margin: 0 20px;">to</span> 
+                                <span id="closingTime-<%= point.id %>"><%= point.closingTime %></span> <i class="fas fa-moon"></i>
+                                
+                                <!-- Placeholder for Status -->
+                                <span class="status" id="status-<%= point.id %>">
+                                    <!-- We will populate this with JavaScript later -->
+                                </span>
+                            </p>
+                            
+                            <p><strong>Contact: <br></strong> <%= point.manager ? point.manager.phoneNumber : 'N/A' %></p> <!-- Displaying phone as a representative contact, adjust as needed -->      
+                            <p><strong>Email:</strong> <%= point.manager ? point.manager.email : 'N/A' %></p>
+                        </div>
+                        
+                        <!-- Donate button -->
+                        <% if(point.canDonate) { %>
+                            <form action="/organization/donationForm" method="POST">
+                                <input type="hidden" name="dropPointId" value="<%= point.id %>">
+                                <button type="submit" class="btn btn-success btn-block">Donate</button>
+                            </form> 
+                        <% } else { %>
+                            <p class="alert alert-warning">You have a pending donation. Please complete it before donating again.</p>
+                        <% } %>                    
+                    </div>
+                    
+                    <!-- Details Modal for this particular point -->
+                    <div class="modal fade" id="detailsModal-<%= point.id %>">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><%= point.name %></h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body row">
+                                    <!-- Left Side -->
+                                    <div class="col-md-6">
+                                        <p><strong>Location:</strong> <%= point.location %></p>
+                                        <p><strong>Description:</strong> <%= point.description %></p> 
+                                    </div>
+                
+                                    <!-- Right Side - Map Placeholder -->
+                                    <div class="col-md-6">
+                                        <!-- Placeholder for your map. You'll replace this with an actual map component or iframe -->
+                                        <div style="width: 100%; height: 250px; background-color: #e9e9e9; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center;">
+                                            Map Placeholder
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ 
+                </div>
+            <% }); %>
+        </div>
+
+
+    </div>
+     
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+        
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function isNowBetweenTimes(start, end) {
+            const now = new Date();
+            const [startHour, startMinute] = start.split(':').map(Number);
+            const [endHour, endMinute] = end.split(':').map(Number);
+
+            const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+            const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
+
+            return now >= startDate && now <= endDate;
+        }
+
+        const dropPoints = document.querySelectorAll('.drop-point');
+
+        dropPoints.forEach(dropPoint => {
+            const pointId = dropPoint.querySelector('span[id^="openingTime-"]').id.split('-')[1];
+            const openingTime = document.getElementById(`openingTime-${pointId}`).textContent.trim();
+            const closingTime = document.getElementById(`closingTime-${pointId}`).textContent.trim();
+
+            const statusElement = dropPoint.querySelector('.status');
+            if (isNowBetweenTimes(openingTime, closingTime)) {
+                statusElement.innerHTML = '<i class="fas fa-check-circle status-icon status-open"></i> Open';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-times-circle status-icon status-closed"></i> Closed';
+            }
+        });
+    });
+ 
+
+    $("#search").on("input", function() {
+        const query = $(this).val().toLowerCase();
+        $(".card").each(function() {
+            const pointName = $(this).find(".card-title").text().toLowerCase();
+            if (pointName.includes(query)) {
+                $(this).parent().show();
+            } else {
+                $(this).parent().hide();
+            }
+        });
+    });
+ 
+    // Change the button event listener to this:
+    document.querySelectorAll('.btn.btn-success').forEach(button => {
+        button.addEventListener('click', function(event) {
+            // Extract the point ID from the button's data attribute
+            // const pointId = this.dataset.pointId; 
+            event.stopPropagation();
+        });
+    });
+
+    </script>
+</body>
+</html>

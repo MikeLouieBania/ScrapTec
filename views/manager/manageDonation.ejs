@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Manage Donations</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/manager/dashboard">Manager</a>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
+        </li> 
+        <li class="nav-item">
+            <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
+        </li> 
+        <li class="nav-item">
+            <a class="nav-link" href="/manager/managerAccount">Account</a>
+        </li> 
+      </ul>
+      <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+      </form>
+    </nav>
+    <div class="container">
+        <h2>Manage Donations</h2> 
+
+        <!-- Table to List Donations -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Organization</th>
+                    <th scope="col">Expected Date of Arrival</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody> 
+                <% donations.forEach(function(donation, index) { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= donation.organization.organizationname %></td>
+                        <td><%= donation.formattedDateOfArrival %></td>
+                        <td><%= donation.status %></td>
+                        <td>
+                            <!-- Example action links; adjust accordingly -->
+                            <a href="/manager/verifyDonation/<%= donation.id %>" class="btn btn-success btn-sm">Verify</a>
+                            <a href="/manager/editDonation/<%= donation.id %>" class="btn btn-warning btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Load Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

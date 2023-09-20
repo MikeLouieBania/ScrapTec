@@ -11,12 +11,13 @@ var { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
 
 // Middleware for handling session data
-const authMiddlewareUser = require('./controllers/authMiddlewareUser');
-const authMiddlewareManager = require('./controllers/authMiddlewareManager'); 
+const authMiddlewareUser = require('./controllers/authMiddlewareUser'); 
+const authMiddlewareOrganization = require('./controllers/authMiddlewareOrganization'); 
 
 // Configure routes
 var indexRoutes = require('./routes/index'); 
 var userRoutes = require('./routes/user');
+var organizationRoutes = require('./routes/organization');
 var managerRoutes = require('./routes/manager');
 var adminRoutes = require('./routes/admin');
 
@@ -41,6 +42,7 @@ app.use(session({
 
 app.use('/', indexRoutes); 
 app.use('/user', authMiddlewareUser.requireLogin, userRoutes); 
+app.use('/organization', authMiddlewareOrganization.requireLogin, organizationRoutes); 
 app.use('/manager', managerRoutes);
 app.use('/admin', adminRoutes);
 

@@ -114,10 +114,22 @@ module.exports = {
         contactNumber,
         secRegistrationNumber,
         type,
+        password,
       } = req.body;
-  
-      // Get the uploaded document from req.file
-      const documentUpload = req.file;
+
+      
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      
+      const profilePicture = req.files.profilePicture ? req.files.profilePicture[0].buffer.toString('base64') : null;
+      const documentUpload = req.files.documentUpload ? req.files.documentUpload[0] : null;
+
+
+      const uniqueFilename = `${Date.now()}-${documentUpload.originalname}`;
+      const base64Content = documentUpload.buffer.toString('base64');
+      const uniqueUrl = `data:${documentUpload.mimetype};base64,${base64Content}`;
+
+
   
       // Create a new organization in the database along with associated documents
       const newOrganization = await prisma.organization.create({
@@ -128,15 +140,17 @@ module.exports = {
           contactNumber,
           secRegistrationNumber,
           type,
+          password: hashedPassword,
           submittedDocuments: {
             create: [
               {
                 filename: documentUpload.originalname,
-                url: documentUpload.buffer.toString('base64'), // Store the document content as base64
+                url: uniqueUrl, // Store the document content as base64
                 uploadedBy: organizationname, // Update with actual identifier
               },
             ],
           },
+          profilePicture,
         },
       });
   
@@ -147,32 +161,62 @@ module.exports = {
       res.status(500).json({ message: 'An error occurred' });
     }
   },
-  async loginUser(req, res) {
+  async login(req, res) {
     try {
       const { email, password } = req.body;
-
+  
+      // Check if the user exists
       const user = await prisma.user.findUnique({
-        where: { email }
+        where: { email },
       });
-
-      if (!user) {
+  
+      // Check if the organization exists
+      const organization = await prisma.organization.findUnique({
+        where: { email },
+      });
+  
+      if (!user && !organization) {
         return res.render('login', { message: 'Invalid email or password.' });
       }
-
-      const passwordMatch = await bcrypt.compare(password, user.password);
-
-      if (!passwordMatch) {
-        return res.render('login', { message: 'Invalid email or password.' });
+  
+      if (user) {
+        // User login
+        const passwordMatch = await bcrypt.compare(password, user.password);
+  
+        if (!passwordMatch) {
+          return res.render('login', { message: 'Invalid email or password.' });
+        }
+  
+        // Set user session after successful login
+        req.session.user = user;
+  
+        // Redirect to the user dashboard
+        return res.redirect('/user/dashboard');
       }
-
-      // Set user session after successful login
-      req.session.user = user;
-
-      // Redirect to the user dashboard
-      res.redirect('/user/dashboard');
+  
+      if (organization) {
+        // Organization login
+        if (organization.verificationStatus === 'APPROVED') {
+          const passwordMatch = await bcrypt.compare(password, organization.password);
+  
+          if (!passwordMatch) {
+            return res.render('login', { message: 'Invalid email or password.' });
+          }
+  
+          // Set organization session after successful login
+          req.session.organization = organization;
+  
+          // Redirect to the organization dashboard
+          return res.redirect('/organization/dashboard');
+        } else if (organization.verificationStatus === 'PENDING') {
+          return res.render('login', { message: 'Your organization is pending approval.' });
+        } else {
+          return res.render('login', { message: 'Your organization has been rejected.' });
+        }
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'An error occurred' });
     }
-  },
+  },  
 };
