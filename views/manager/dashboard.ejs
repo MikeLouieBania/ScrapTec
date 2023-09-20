@@ -20,14 +20,17 @@
       <a class="navbar-brand" href="/manager/dashboard">Manager</a>
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
+            <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/manager/manageradddonation">Manage Donations</a>
-        </li>
+            <a class="nav-link" href="/manager/managedonation">Manage Donations</a>
+        </li> 
         <li class="nav-item">
-          <a class="nav-link" href="/manager/manageraccount">Account</a>
-        </li>
+            <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
+        </li> 
+        <li class="nav-item">
+            <a class="nav-link" href="/manager/manageraccount">Account</a>
+        </li> 
       </ul>
       <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
@@ -38,39 +41,6 @@
 
     <div class="container"> 
 
-      <!-- Basic Analytics -->
-      <h2>Basic Analytics</h2>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Total Donations</h5>
-          <p class="card-text">100</p>
-        </div>
-      </div>
-
-      <!-- Table of Donated Items -->
-      <h2>Donated Items</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Item Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Condition</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Item 1</td>
-            <td>Description of Item 1</td>
-            <td>Used</td>
-          </tr>
-          <tr>
-            <td>Item 2</td>
-            <td>Description of Item 2</td>
-            <td>New</td>
-          </tr>
-          <!-- Add more rows for other donated items -->
-        </tbody>
-      </table>
     </div>
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->

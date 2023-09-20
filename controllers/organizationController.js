@@ -173,7 +173,7 @@ module.exports = {
             }
         });
 
-        res.redirect('/organization/donations');
+        res.redirect('/organization/donationsList');
     } catch (error) {
         console.error("Error confirming donation:", error);
         res.status(500).send("Internal Server Error");
