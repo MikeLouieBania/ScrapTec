@@ -260,4 +260,31 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },   
+  async updateDropPoint(req, res) {
+    try {
+      const { id, name, location, openingTime, closingTime, description } = req.body;
+  
+      // Ensure all required fields are provided
+      if (!id || !name || !location || !openingTime || !closingTime || !description) {
+        return res.status(400).send("Missing required parameters.");
+      }
+  
+      // Update the DropPoint
+      await prisma.dropPoint.update({
+        where: { id },
+        data: {
+          name,
+          location,  // You might choose to omit this since it's readonly in your form
+          openingTime,
+          closingTime,
+          description,
+        },
+      });
+  
+      res.redirect('/admin/droppointmanagement');
+    } catch (error) {
+      console.error("Error while updating drop point:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 };

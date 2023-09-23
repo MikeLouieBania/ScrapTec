@@ -13,5 +13,6 @@ router.post('/managermanagement', adminController.registerManager);
 router.post('/assignManagerToDropPoint', adminController.assignManagerToDropPoint); 
 router.post('/removeManagerFromDropPoint', adminController.removeManagerFromDropPoint);  
 router.post('/updateOrganizationStatus', adminController.updateOrganizationStatus); 
+router.post('/updateDropPoint', adminController.updateDropPoint);
 
 module.exports = router; 
