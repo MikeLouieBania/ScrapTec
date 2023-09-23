@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+
 module.exports = {
   async getLogin(req, res) {
     res.render('manager/login');
@@ -63,6 +64,44 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+  async getManageDonation(req, res) {
+    try {
+        // Fetch the manager's profile and associated drop point using the ID stored in the session
+        const managerWithDropPoint = await prisma.manager.findUnique({
+          where: {
+            id: req.session.managerId
+          },
+          include: {
+            dropPoint: {
+              include: {
+                donations: {
+                  where: { isSubmitted: true },  // Fetch only the submitted donations
+                  include: { organization: true }  // Fetch related organization for each donation
+                }
+              }
+            }
+          }
+        }); 
+        
+        // Format the Expected Date of Arrival for each donation
+        managerWithDropPoint.dropPoint.donations.forEach(donation => {
+          if (donation.expectedDateOfArrival) {
+              const dateObj = new Date(donation.expectedDateOfArrival);
+              donation.formattedDateOfArrival = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'long' })} ${dateObj.getFullYear()}`;
+          }
+      });
+
+        // Render the manageDonation view, passing in the donations and dropPoint name
+        res.render('manager/manageDonation', { 
+          donations: managerWithDropPoint.dropPoint.donations,
+          dropPointName: managerWithDropPoint.dropPoint.name,  
+      });
+
+    } catch (error) {
+        console.error("Error fetching donations:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
   async getManagerAccount(req, res) {
     try {
       // Fetch the manager's profile and associated drop point using the ID stored in the session
@@ -82,69 +121,7 @@ module.exports = {
       console.error("Error fetching manager's profile:", error);
       res.status(500).send("Internal Server Error");
     }
-  },
-  async getAddDonation(req, res) {
-    try {
-      // Fetch only the associated drop point for the logged-in manager
-      const managerWithDropPoint = await prisma.manager.findUnique({
-        where: {
-          id: req.session.managerId
-        },
-        select: {
-          dropPoint: true  // Only select associated drop point details
-        }
-      });
-
-      // Render the add donation page with the drop point name
-      res.render('manager/manageradddonation', { dropPointName: managerWithDropPoint.dropPoint?.name });
-
-    } catch (error) {
-      console.error("Error fetching manager's drop point:", error);
-      res.status(500).send("Internal Server Error");
-    }
   }, 
-  async saveDonation(req, res) {
-    try {
-        const { userId, itemName, itemDescription, status, quantity, category, itemPhoto } = req.body;
-
-        // TODO: Validate the inputs if necessary
-
-        // Fetch the drop point ID for the logged-in manager
-        const managerWithDropPoint = await prisma.manager.findUnique({
-            where: {
-                id: req.session.managerId
-            },
-            select: {
-                dropPoint: true  // Only select associated drop point details
-            }
-        });
-
-        const dropPointId = managerWithDropPoint.dropPoint?.id;
-
-        // Store the donation in the database
-        const donation = await prisma.donation.create({
-            data: {
-                itemName: itemName,
-                itemDescription: itemDescription,
-                status: status,
-                quantity: parseInt(quantity, 10),
-                category: category,
-                // Assuming itemPhoto is just a string for the filename; adjust accordingly if handling actual files
-                itemPhoto: itemPhoto,
-                dropPointId: dropPointId,
-                userId: userId
-            }
-        });
-
-        // Redirect to a success page or the dashboard with a success message
-        res.redirect('/manager/dashboard');
-    } catch (error) {
-        console.error("Error saving donation:", error);
-        // Redirect to the add donation page with an error message
-        res.redirect('/manager/manageradddonation');
-    }
-  },
-
   managerLogout(req, res) {
     req.session.managerId = null; // Clear the manager's session
     res.redirect('/manager/login');

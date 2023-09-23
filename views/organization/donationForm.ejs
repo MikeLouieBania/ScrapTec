@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Donation Form</title>
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+    
+    <div class="container">
+      <h3>Donation Form</h3>
+      <form action="/organization/addDonation" method="post">
+        <!-- DropPoint Selection -->
+        <div class="form-group">
+            <label>Selected Drop Point:</label>
+            <p class="form-control-static"><%= dropPoint.name %></p>
+            <input type="hidden" name="dropPointId" value="<%= dropPoint.id %>">
+        </div>
+
+        <!-- Peripheral Information -->
+        <h4>Peripheral Information</h4>
+        <div class="form-group">
+          <label for="type">Type:</label>
+          <input type="text" class="form-control" name="type" id="type">
+        </div>
+        <div class="form-group">
+          <label for="brand">Brand:</label>
+          <input type="text" class="form-control" name="brand" id="brand">
+        </div>
+        <div class="form-group">
+          <label for="model">Model:</label>
+          <input type="text" class="form-control" name="model" id="model">
+        </div>
+        <div class="form-group">
+          <label for="condition">Condition:</label>
+          <input type="text" class="form-control" name="condition" id="condition">
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input type="number" class="form-control" name="quantity" id="quantity">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Add to Donation</button>
+      </form>
+    </div>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

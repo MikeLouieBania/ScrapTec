@@ -16,23 +16,48 @@ module.exports = {
   }, 
   async getOrganizationManagement(req, res) {
     try {
-      const { status } = req.query;
       const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
   
-      // Check if the status parameter is not valid, default to "pending"
-      const selectedStatus = validStatuses.includes(status) ? status : "PENDING";
+      // Get the status from the session or default to "PENDING"
+      const selectedStatus = req.session.status && validStatuses.includes(req.session.status) 
+                             ? req.session.status 
+                             : "PENDING";
   
-      // Fetch organizations based on the selected status
-      const organizations = await prisma.organization.findMany({
-        where: {
-          verificationStatus: selectedStatus,
-        },
-      });
+      // Delete the status from the session
+      delete req.session.status;
+  
+      // Fetch ALL organizations
+      const organizations = await prisma.organization.findMany();
   
       res.render('admin/organizationmanagement', { organizations, selectedStatus });
     } catch (error) {
       console.error("Error fetching organizations:", error);
       res.status(500).send("Internal Server Error");
+    }
+  },
+  
+  async updateOrganizationStatus(req, res) {
+    try {
+        const { organizationId, newStatus } = req.body;
+  
+        if (!organizationId || !newStatus) {
+            return res.status(400).send("Missing required parameters.");
+        }
+  
+        await prisma.organization.update({
+            where: { id: organizationId },
+            data: { verificationStatus: newStatus }
+        });
+  
+        // Store the newStatus in the session
+        req.session.status = newStatus;
+  
+        // Redirect back to the organization management page without the query parameter
+        res.redirect('/admin/organizationmanagement');
+  
+    } catch (error) {
+        console.error("Error updating organization status:", error);
+        res.status(500).send("Internal Server Error");
     }
   },
   async viewDocuments(req, res) {
@@ -66,9 +91,6 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
-  
-  
-  
   async getDropPointManagement(req, res) {
     try {
       const managers = await prisma.manager.findMany();
