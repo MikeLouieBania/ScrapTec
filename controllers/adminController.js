@@ -299,6 +299,13 @@ module.exports = {
       if (!dropPointId) {
         return res.status(400).send('dropPointId is missing or invalid.');
       }
+      
+
+      // Fetch the DropPoint to find the current manager's ID
+      const dropPoint = await prisma.dropPoint.findUnique({
+        where: { id: dropPointId },
+        include: { manager: true }
+      });
   
       // Update the DropPoint to remove the manager's ID
       await prisma.dropPoint.update({
@@ -308,6 +315,46 @@ module.exports = {
           password: null  // Optional: Reset the password if needed
         }
       });
+
+      // Send an email to the removed manager if there was one
+      if (dropPoint.manager) {
+        const manager = dropPoint.manager;
+
+        // Create email transporter
+        const transporter = nodemailer.createTransport({
+          service: process.env.EMAIL_SERVICE,
+          auth: {
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+
+        // Set up formal email content
+        const mailOptions = {
+          from: process.env.EMAIL_USERNAME,
+          to: manager.email,
+          subject: 'Unassignment from Drop Point',
+          html: `
+            <div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+              <h1 style="color: #333366;">Unassignment from Drop Point</h1>
+              <p>Dear ${manager.firstName} ${manager.lastName},</p>
+              <p>We regret to inform you that you have been unassigned from the drop point named "${dropPoint.name}".</p>
+              <p>If you have any questions or require further clarification, please contact our support team.</p>
+              <p>Best regards,</p>
+              <p>Your Team</p>
+            </div>
+          `,
+        };
+
+        // Send the email
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error("Email could not be sent:", error);
+          } else {
+            console.log("Email sent:", info.response);
+          }
+        });
+      }
   
       // Redirect back to the management page
       res.redirect('/admin/droppointmanagement');
