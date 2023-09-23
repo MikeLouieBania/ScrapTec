@@ -22,6 +22,18 @@ module.exports = {
     try {
       const { firstName, lastName, email, password, city, gender, contactNumber } = req.body;
 
+      // Check if email is already used by an organization
+      const existingOrganization = await prisma.organization.findUnique({
+        where: {
+          email: email,
+        },
+      });
+
+      if (existingOrganization) {
+        return res.status(400).json({ message: 'Email is already used by an organization.' });
+      }
+
+
       const otp = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false }); // Generate OTP
  
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -115,8 +127,18 @@ module.exports = {
         secRegistrationNumber,
         type,
         password,
-      } = req.body;
+      } = req.body; 
+      
+      // Check if email is already used by a user
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
 
+      if (existingUser) {
+        return res.status(400).json({ message: 'Email is already used by a user.' });
+      }
       
       const hashedPassword = await bcrypt.hash(password, 10);
 
