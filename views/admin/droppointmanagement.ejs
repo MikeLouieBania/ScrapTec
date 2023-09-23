@@ -116,8 +116,7 @@
 
               
               <!-- Conditional buttons for manager actions -->
-              <% if(dropPoint.manager) { %>
-                <button type="button" class="btn btn-info btn-sm mb-2" data-toggle="modal" data-target="#updateManagerModal" data-droppointid="<%= dropPoint.id %>">Update Manager</button>
+              <% if(dropPoint.manager) { %> 
                 <button type="button" class="btn btn-danger btn-sm mb-2" data-toggle="modal" data-target="#removeManagerModal" data-droppointid="<%= dropPoint.id %>">Remove Manager</button>
               <% } else { %>
                 <button type="button" class="btn btn-warning btn-sm mb-2" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>

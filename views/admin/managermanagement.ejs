@@ -66,8 +66,7 @@
               <th>Email</th>
               <th>Contact Number</th>
               <th>Address</th>
-              <th>Assigned Status</th>
-              <th>Action</th>
+              <th>Assigned Status</th> 
             </tr>
           </thead>
           <tbody>
@@ -81,13 +80,6 @@
               <td><%= manager.phoneNumber %></td>
               <td><%= manager.address %></td> 
               <td><%= manager.isAssigned ? "Assigned" : "Not Assigned" %></td>
-              <td>
-                <% if (!manager.isAssigned) { %>
-                  <button><i class="fas fa-user-slash"></i> Set to Inactive</button>
-                <% } else { %>
-                  <button disabled><i class="fas fa-user"></i> Set to Inactive</button>
-                <% } %>
-              </td>
             </tr>
             <% }) %>
           </tbody>
