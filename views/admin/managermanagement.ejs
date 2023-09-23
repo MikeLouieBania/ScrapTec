@@ -4,6 +4,7 @@
     <title>Manager Management</title>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
       /* Additional custom styles for the page */
       .container {
@@ -65,6 +66,8 @@
               <th>Email</th>
               <th>Contact Number</th>
               <th>Address</th>
+              <th>Assigned Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -76,7 +79,15 @@
               <td><%= manager.firstName %> <%= manager.firstName %></td>
               <td><%= manager.email %></td> 
               <td><%= manager.phoneNumber %></td>
-              <td><%= manager.address %></td>
+              <td><%= manager.address %></td> 
+              <td><%= manager.isAssigned ? "Assigned" : "Not Assigned" %></td>
+              <td>
+                <% if (!manager.isAssigned) { %>
+                  <button><i class="fas fa-user-slash"></i> Set to Inactive</button>
+                <% } else { %>
+                  <button disabled><i class="fas fa-user"></i> Set to Inactive</button>
+                <% } %>
+              </td>
             </tr>
             <% }) %>
           </tbody>
