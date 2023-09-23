@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
+const nodemailer = require("nodemailer");
 
 function isPDF(filename) {
   return filename.toLowerCase().endsWith('.pdf');
@@ -225,6 +226,61 @@ module.exports = {
         data: {
           managerId: manager.id,
           password: password
+        }
+      });
+      
+
+      // Fetch the updated drop point details
+      const updatedDropPoint = await prisma.dropPoint.findUnique({
+        where: { id: dropPointId },
+      });
+
+      // Send email to the manager with details
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: manager.email,
+        subject: 'Assignment to Drop Point',
+        html: `
+          <div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+            <h1 style="color: #333366;">You've Been Assigned to a Drop Point</h1>
+            <p>Dear ${manager.firstName} ${manager.lastName},</p>
+            <p>We are pleased to inform you that you have been assigned to the following drop point:</p>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">Name</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">${updatedDropPoint.name}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">Location</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">${updatedDropPoint.location}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">Operating Hours</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">${updatedDropPoint.openingTime} - ${updatedDropPoint.closingTime}</td>
+              </tr>
+            </table>
+            <p>Your access password is: <strong>${updatedDropPoint.password}</strong></p>
+            <p>Please reach out to our support team for any further assistance.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          </div>
+        `,
+      };
+      
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email could not be sent:", error);
+        } else {
+          console.log("Email sent:", info.response);
         }
       });
   
