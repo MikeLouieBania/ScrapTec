@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -55,6 +56,7 @@
             
             <tbody>
                 <% donations.forEach(function(donation, index) { %>
+
                     <tr>
                         <td><%= index + 1 %></td>
                         <td><%= donation.organization.organizationname %></td>
@@ -85,7 +87,8 @@
                                                             <th>Model</th>
                                                             <th>Condition</th>
                                                             <th>Quantity</th>
-                                                            <th>Verification</th> <!-- New column for verification -->
+                                                            <% /* Add other attributes you want to verify */ %>
+                                                            <th>Actions</th> <!-- New column for actions -->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -96,10 +99,9 @@
                                                                 <td><%= peripheral.model %></td>
                                                                 <td><%= peripheral.condition %></td>
                                                                 <td><%= peripheral.quantity %></td>
+                                                                <% /* Add other input fields for attributes you want to verify */ %>
                                                                 <td>
-                                                                    <!-- Checkbox for verification -->
-                                                                    <input type="checkbox" id="verified<%= index %>" name="verified<%= index %>" value="verified">
-                                                                    <label for="verified<%= index %>">Verified</label>
+                                                                    <button class="btn btn-primary btn-sm" onclick="updatePeripheral(<%= index %>, '<%= peripheral.id %>')">Update</button>
                                                                 </td>
                                                             </tr>
                                                         <% }) %>
@@ -111,27 +113,62 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <!-- Button to submit the verification -->
-                                            <button type="button" class="btn btn-primary" onclick="submitVerification(<%= index %>)">Submit Verification</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td> 
                             <!-- Display different verification statuses -->
                             <% if (donation.status === 'PENDING') { %>
-                                <span class="badge badge-warning">Pending Verification</span>
-                            <% } else if (donation.status === 'VERIFIED') { %>
-                                <span class="badge badge-success">Verified</span>
-                            <% } else if (donation.status === 'Not Verified') { %>
-                                <span class="badge badge-danger">Not Verified</span>
+                                <span class="badge badge-warning"><%= donation.status %></span>
+                            <% } else if (donation.status === 'Arrived') { %>
+                                <span class="badge badge-primary"><%= donation.status %></span>
+                            <% } else if (donation.status === 'Verified') { %>
+                                <span class="badge badge-success"><%= donation.status %></span>
+                            <% } else if (donation.status === 'Rejected') { %>
+                                <span class="badge badge-danger"><%= donation.status %></span>
+                            <% } else if (donation.status === 'AcceptedWithIssues') { %>
+                                <span class="badge badge-info"><%= donation.status %></span>
                             <% } %>
+                            
                         </td>
-                        <td>
-                            <!-- Example action links; adjust accordingly -->
-                            <a href="/manager/verifyDonation/<%= donation.id %>" class="btn btn-success btn-sm">Verify</a>
-                            <a href="/manager/editDonation/<%= donation.id %>" class="btn btn-warning btn-sm">Edit</a>
+                        <td> 
+                            <!-- Button to open a modal for status update -->
+                            <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="modal" data-target="#statusModal<%= index %>">
+                                Update Status
+                            </button>
+                            <!-- Modal for status update -->
+                            <div class="modal fade" id="statusModal<%= index %>" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="statusModalLabel">Update Donation Status</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Status update form -->
+                                            <form action="/manager/updateDonationStatus/<%= donation.id %>" method="post">
+                                                <div class="form-group">
+                                                    <label for="newStatus">Select New Status:</label>
+                                                    <select class="form-control" id="newStatus" name="newStatus">
+                                                        <option value="ARRIVED">Arrived</option>
+                                                        <option value="VERIFIED">Verified</option>
+                                                        <option value="REJECTED">Rejected</option>
+                                                        <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
+                                                    </select>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Update Status</button>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
                         </td>
                     </tr>
                 <% }) %>
@@ -144,6 +181,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    
 
 </body>
 
