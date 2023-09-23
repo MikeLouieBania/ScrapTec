@@ -153,7 +153,36 @@ module.exports = {
           profilePicture,
         },
       });
-  
+
+      // Setup email data with unicode symbols
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USERNAME, // Sender address
+        to: email, // List of receivers
+        subject: "Your Organization Registration", // Subject line
+        html: `<h1>Welcome ${organizationname}</h1>
+        <p>Thank you for registering your organization with us. Your registration is currently <b>pending</b>.</p>
+        <p>We will verify your submitted documents and assess your organization's credibility. This process may take some time.</p>
+        <p>We will send you another email once the registration status is updated.</p>
+        <p>Best regards,</p>
+        <p>Your Team</p>`
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email could not be sent:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+    
       // Redirect to a success page or take any other necessary actions
       res.render('login', { message: 'Organization registered successfully.' });
     } catch (error) {

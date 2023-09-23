@@ -69,7 +69,7 @@ module.exports = {
           subject = 'Your Organization Has Been Approved';
           htmlContent = `
             <h1>Congratulations!</h1>
-            <p>Your organization, ${organization.organizationname}, has been approved.</p>
+            <p>Your organization, "${organization.organizationname}", has been approved.</p>
             <p>Best regards,</p>
             <p>Your Team</p>
           `;
@@ -77,7 +77,7 @@ module.exports = {
           subject = 'Your Organization Application Was Not Approved';
           htmlContent = `
             <h1>Application Not Approved</h1>
-            <p>Unfortunately, your organization, ${organization.organizationname}, has not been approved.</p>
+            <p>Unfortunately, your organization, "${organization.organizationname}", has not been approved.</p>
             <p>If you have questions, please reach out to our support team.</p>
             <p>Best regards,</p>
             <p>Your Team</p>
