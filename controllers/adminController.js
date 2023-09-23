@@ -93,22 +93,52 @@ module.exports = {
   },
   async getDropPointManagement(req, res) {
     try {
+      // Fetch all managers
       const managers = await prisma.manager.findMany();
-      const dropPoints = await prisma.dropPoint.findMany();
-
+      // Fetch all drop points
+      const dropPoints = await prisma.dropPoint.findMany({
+        include: {
+          manager: true,  // Include manager details
+        },
+      });
+  
+      // Render the management page
       res.render('admin/droppointmanagement', { managers, dropPoints });
     } catch (error) {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
     }
   },
+  
   async getManagerManagement(req, res) {
     try {
-      const managers = await prisma.manager.findMany(); 
-
-      res.render('admin/managermanagement', { managers });
+      // Fetch managers
+      const managers = await prisma.manager.findMany();
+  
+      // Fetch unique assigned managerIds from drop points
+      const dropPoints = await prisma.dropPoint.groupBy({
+        by: ['managerId'],
+        where: {
+          managerId: {
+            not: {
+              equals: null
+            }
+          }
+        },
+        _count: true
+      });
+  
+      const assignedManagerIds = new Set(dropPoints.map(dp => dp.managerId));
+  
+      // Add assignment status to managers
+      const managersWithStatus = managers.map(manager => ({
+        ...manager,
+        isAssigned: assignedManagerIds.has(manager.id)
+      }));
+  
+      res.render('admin/managermanagement', { managers: managersWithStatus });
     } catch (error) {
-      console.error("Error fetching drop points:", error);
+      console.error("Error fetching managers:", error);
       res.status(500).send("Internal Server Error");
     }
   },
@@ -203,24 +233,29 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
-  async getDropPointManagement(req, res) {
+  async removeManagerFromDropPoint(req, res) {
     try {
-      // Fetching managers who aren't assigned to any DropPoint yet
-      const availableManagers = await prisma.manager.findMany({
-        where: {
-          dropPoint: null
-        }
-      });
-      const dropPoints = await prisma.dropPoint.findMany({
-        include: {
-          manager: true
+      const { dropPointId } = req.body;
+  
+      if (!dropPointId) {
+        return res.status(400).send('dropPointId is missing or invalid.');
+      }
+  
+      // Update the DropPoint to remove the manager's ID
+      await prisma.dropPoint.update({
+        where: { id: dropPointId },
+        data: {
+          managerId: null,
+          password: null  // Optional: Reset the password if needed
         }
       });
   
-      res.render('admin/droppointmanagement', { managers: availableManagers, dropPoints });
+      // Redirect back to the management page
+      res.redirect('/admin/droppointmanagement');
     } catch (error) {
-      console.error("Error fetching drop points:", error);
+      console.error("Error removing manager from drop point:", error);
       res.status(500).send("Internal Server Error");
     }
   },
+   
 };

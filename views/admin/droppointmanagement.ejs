@@ -81,7 +81,7 @@
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDropPointModal">
         Create Drop Point
       </button>
-      <!-- Table to display created drop points -->
+      <!-- Table to display created drop points --> 
       <table class="table mt-4">
         <thead>
           <tr>
@@ -91,29 +91,42 @@
             <th>Operating Hours</th>
             <th>Description</th>
             <th>Assigned Manager</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Populate table rows with drop point data -->
           <% let counter = 1; %>
           <% dropPoints.forEach(dropPoint => { %>
           <tr>
             <td><%= counter++ %></td>
             <td><%= dropPoint.name %></td>
-            <td><%= dropPoint.location %></td> 
+            <td><%= dropPoint.location %></td>
             <td><%= dropPoint.openingTime %> - <%= dropPoint.closingTime %></td>
-            <td><%= dropPoint.description %></td> 
+            <td><%= dropPoint.description %></td>
             <td>
-              <% if(dropPoint.manager) { %>  <!-- Check if manager data is available -->
-                <%= dropPoint.manager.firstName %> <%= dropPoint.manager.lastName %>  <!-- Display the manager's name -->
+              <% if(dropPoint.manager) { %>
+                <%= dropPoint.manager.firstName %> <%= dropPoint.manager.lastName %>
               <% } else { %>
-                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
+                N/A
               <% } %>
-            </td>                       
+            </td>
+            <td>
+              <!-- Update Drop Point Button -->
+              <button type="button" class="btn btn-success btn-sm mb-2" data-toggle="modal" data-target="#updateDropPointModal" data-droppointid="<%= dropPoint.id %>">Update</button>
+              <!-- Conditional buttons for manager actions -->
+              <% if(dropPoint.manager) { %>
+                <button type="button" class="btn btn-info btn-sm mb-2" data-toggle="modal" data-target="#updateManagerModal" data-droppointid="<%= dropPoint.id %>">Update Manager</button>
+                <button type="button" class="btn btn-danger btn-sm mb-2" data-toggle="modal" data-target="#removeManagerModal" data-droppointid="<%= dropPoint.id %>">Remove Manager</button>
+              <% } else { %>
+                <button type="button" class="btn btn-warning btn-sm mb-2" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
+              <% } %>
+            </td>
+            
           </tr>
           <% }) %>
         </tbody>
       </table>
+
     </div>
   </div>
 
@@ -219,6 +232,32 @@
     </div>
   </div>
   
+  <!-- Modal for removing a manager from a drop point -->
+  <div class="modal fade" id="removeManagerModal" tabindex="-1" role="dialog" aria-labelledby="removeManagerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeManagerModalLabel">Remove Manager</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/admin/removeManagerFromDropPoint" method="post">
+          <div class="modal-body">
+            <input type="hidden" id="modalRemoveDropPointId" name="dropPointId">  <!-- Make sure the ID here is correct -->
+            <p>Are you sure you want to remove the manager from this drop point?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Remove</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
 
 
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
@@ -333,7 +372,7 @@
 </script>
 
 <script> 
-
+// assigned a manager to a droppoint
 $(document).ready(function() {
   $('#assignManagerModal').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
@@ -342,6 +381,15 @@ $(document).ready(function() {
     modal.find('#modalDropPointId').val(dropPointId);
   });
 });
+// remove a manager to a droppoint
+$('#removeManagerModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
+    var modal = $(this);
+    modal.find('#modalRemoveDropPointId').val(dropPointId);  // Make sure the ID matches your HTML input ID
+});
+
+
 document.getElementById('managerName').addEventListener('change', function() {
   const selectedEmail = this.value;
   document.getElementById('managerEmail').value = selectedEmail;

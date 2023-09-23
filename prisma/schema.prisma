@@ -56,7 +56,7 @@ model DropPoint {
   closingTime   String
   description   String 
   manager       Manager?  @relation(fields: [managerId], references: [id])
-  managerId     String?   @unique @map("manager_id") @db.ObjectId
+  managerId     String?   @map("manager_id") @db.ObjectId  // removed @unique
   password      String?   // This password is used when assigning a manager to a drop point
   donations       Donation[] 
 }
@@ -69,8 +69,8 @@ model Manager {
   phoneNumber  String?   
   address      String?  
   createdAt    DateTime @default(now())   
-  updatedAt    DateTime @updatedAt    
-  dropPoint    DropPoint?
+  updatedAt    DateTime @updatedAt  
+  dropPoint DropPoint[]
 }
 
 model Donation {
