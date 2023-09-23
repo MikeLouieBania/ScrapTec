@@ -18,27 +18,27 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/manager/dashboard">Manager</a>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-            <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
-        </li> 
-        <li class="nav-item">
-            <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
-        </li> 
-        <li class="nav-item">
-            <a class="nav-link" href="/manager/managerAccount">Account</a>
-        </li> 
-      </ul>
-      <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-      </form>
+        <a class="navbar-brand" href="/manager/dashboard">Manager</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/manager/managerAccount">Account</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+        </form>
     </nav>
     <div class="container">
-        <h2>Manage Donations</h2> 
+        <h2>Manage Donations</h2>
 
         <!-- Table to List Donations -->
         <table class="table table-bordered">
@@ -47,33 +47,85 @@
                     <th scope="col">#</th>
                     <th scope="col">Organization</th>
                     <th scope="col">Expected Date of Arrival</th>
-                    <th scope="col">Status</th>
                     <th scope="col">Peripherals</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
-            <tbody> 
+            
+            <tbody>
                 <% donations.forEach(function(donation, index) { %>
                     <tr>
                         <td><%= index + 1 %></td>
                         <td><%= donation.organization.organizationname %></td>
                         <td><%= donation.expectedDateOfArrival ? new Date(donation.expectedDateOfArrival).toLocaleDateString() : 'N/A' %></td>
-                        <td><%= donation.status %></td>
-                        <% console.log(donation.peripherals); %>
                         <td>
-                            <!-- Check if donation.peripherals is defined -->
-                            <% if (donation.peripherals) { %>
-                                <% donation.peripherals.forEach(function(peripheral) { %>
-                                    <!-- Display each peripheral -->
-                                    <p><strong>Type:</strong> <%= peripheral.type %></p>
-                                    <p><strong>Brand:</strong> <%= peripheral.brand %></p>
-                                    <p><strong>Model:</strong> <%= peripheral.model %></p>
-                                    <p><strong>Condition:</strong> <%= peripheral.condition %></p>
-                                    <p><strong>Quantity:</strong> <%= peripheral.quantity %></p>
-                                    <hr> <!-- Add a horizontal line to separate peripherals -->
-                                <% }) %>
-                            <% } else { %>
-                                <p>No peripherals available</p>
+                            <!-- Add a button to open a modal for peripherals -->
+                            <button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#peripheralsModal<%= index %>">
+                                View Peripherals
+                            </button>
+                            <!-- Modal for peripherals -->
+                            <div class="modal fade" id="peripheralsModal<%= index %>" tabindex="-1" role="dialog" aria-labelledby="peripheralsModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="peripheralsModalLabel">Peripherals for <%= donation.organization.organizationname %></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Check if donation.peripherals is defined -->
+                                            <% if (donation.peripherals) { %>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type</th>
+                                                            <th>Brand</th>
+                                                            <th>Model</th>
+                                                            <th>Condition</th>
+                                                            <th>Quantity</th>
+                                                            <th>Verification</th> <!-- New column for verification -->
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% donation.peripherals.forEach(function(peripheral) { %>
+                                                            <tr>
+                                                                <td><%= peripheral.type %></td>
+                                                                <td><%= peripheral.brand %></td>
+                                                                <td><%= peripheral.model %></td>
+                                                                <td><%= peripheral.condition %></td>
+                                                                <td><%= peripheral.quantity %></td>
+                                                                <td>
+                                                                    <!-- Checkbox for verification -->
+                                                                    <input type="checkbox" id="verified<%= index %>" name="verified<%= index %>" value="verified">
+                                                                    <label for="verified<%= index %>">Verified</label>
+                                                                </td>
+                                                            </tr>
+                                                        <% }) %>
+                                                    </tbody>
+                                                </table>
+                                            <% } else { %>
+                                                <p>No peripherals available</p>
+                                            <% } %>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <!-- Button to submit the verification -->
+                                            <button type="button" class="btn btn-primary" onclick="submitVerification(<%= index %>)">Submit Verification</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <!-- Display different verification statuses -->
+                            <% if (donation.status === 'PENDING') { %>
+                                <span class="badge badge-warning">Pending Verification</span>
+                            <% } else if (donation.status === 'VERIFIED') { %>
+                                <span class="badge badge-success">Verified</span>
+                            <% } else if (donation.status === 'Not Verified') { %>
+                                <span class="badge badge-danger">Not Verified</span>
                             <% } %>
                         </td>
                         <td>
@@ -92,7 +144,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
 </body>
 
 </html>
