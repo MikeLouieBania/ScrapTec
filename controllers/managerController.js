@@ -76,7 +76,10 @@ module.exports = {
             include: {
               donations: {
                 where: { isSubmitted: true },  // Fetch only the submitted donations
-                include: { organization: true }  // Fetch related organization for each donation
+                include: { 
+                  organization: true,
+                  peripherals: true
+                }  // Fetch related organization for each donation
               }
             }
           }

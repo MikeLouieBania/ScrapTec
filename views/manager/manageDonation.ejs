@@ -48,6 +48,7 @@
                     <th scope="col">Organization</th>
                     <th scope="col">Expected Date of Arrival</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Peripherals</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -56,8 +57,25 @@
                     <tr>
                         <td><%= index + 1 %></td>
                         <td><%= donation.organization.organizationname %></td>
-                        <td><%= donation.formattedDateOfArrival %></td>
+                        <td><%= donation.expectedDateOfArrival ? new Date(donation.expectedDateOfArrival).toLocaleDateString() : 'N/A' %></td>
                         <td><%= donation.status %></td>
+                        <% console.log(donation.peripherals); %>
+                        <td>
+                            <!-- Check if donation.peripherals is defined -->
+                            <% if (donation.peripherals) { %>
+                                <% donation.peripherals.forEach(function(peripheral) { %>
+                                    <!-- Display each peripheral -->
+                                    <p><strong>Type:</strong> <%= peripheral.type %></p>
+                                    <p><strong>Brand:</strong> <%= peripheral.brand %></p>
+                                    <p><strong>Model:</strong> <%= peripheral.model %></p>
+                                    <p><strong>Condition:</strong> <%= peripheral.condition %></p>
+                                    <p><strong>Quantity:</strong> <%= peripheral.quantity %></p>
+                                    <hr> <!-- Add a horizontal line to separate peripherals -->
+                                <% }) %>
+                            <% } else { %>
+                                <p>No peripherals available</p>
+                            <% } %>
+                        </td>
                         <td>
                             <!-- Example action links; adjust accordingly -->
                             <a href="/manager/verifyDonation/<%= donation.id %>" class="btn btn-success btn-sm">Verify</a>
@@ -74,14 +92,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        function formatDate(dateString) {
-          if (!dateString) return "N/A";
-          const dateObj = new Date(dateString);
-          return `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'long' })} ${dateObj.getFullYear()}`;
-        }
-    </script>
     
 </body>
 
