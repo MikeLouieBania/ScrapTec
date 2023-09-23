@@ -23,7 +23,7 @@ module.exports = {
       }
   
       // Fetch the drop point associated with this manager
-      const dropPoint = await prisma.dropPoint.findUnique({
+      const dropPoint = await prisma.dropPoint.findFirst({
         where: {
           managerId: manager.id
         }

@@ -3,12 +3,10 @@ const prisma = new PrismaClient();
 
 function isPDF(filename) {
   return filename.toLowerCase().endsWith('.pdf');
-}
-
+} 
 function isDOCX(filename) {
   return filename.toLowerCase().endsWith('.docx');
-}
-
+} 
 
 module.exports = {
   async getDashboard(req, res) {
@@ -34,8 +32,7 @@ module.exports = {
       console.error("Error fetching organizations:", error);
       res.status(500).send("Internal Server Error");
     }
-  },
-  
+  }, 
   async updateOrganizationStatus(req, res) {
     try {
         const { organizationId, newStatus } = req.body;
@@ -115,8 +112,7 @@ module.exports = {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
     }
-  },
-  
+  },    
   async getManagerManagement(req, res) {
     try {
       // Fetch managers
@@ -263,5 +259,5 @@ module.exports = {
       console.error("Error removing manager from drop point:", error);
       res.status(500).send("Internal Server Error");
     }
-  },  
+  },   
 };
