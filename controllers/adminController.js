@@ -94,16 +94,23 @@ module.exports = {
   async getDropPointManagement(req, res) {
     try {
       // Fetch all managers
-      const managers = await prisma.manager.findMany();
+      const allManagers = await prisma.manager.findMany();
+    
       // Fetch all drop points
       const dropPoints = await prisma.dropPoint.findMany({
         include: {
           manager: true,  // Include manager details
         },
       });
-  
-      // Render the management page
-      res.render('admin/droppointmanagement', { managers, dropPoints });
+    
+      // Filter out managers who are already assigned to a drop point
+      const unassignedManagers = allManagers.filter(manager => {
+        return !dropPoints.some(dropPoint => dropPoint.managerId === manager.id);
+      });
+    
+      // Render the management page, sending only the unassigned managers
+      res.render('admin/droppointmanagement', { managers: unassignedManagers, dropPoints });
+    
     } catch (error) {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
@@ -206,7 +213,7 @@ module.exports = {
       }
   
       // Check if this manager is already assigned to a drop point (Optional: Depending on your business rules)
-      const existingDropPoint = await prisma.dropPoint.findUnique({
+      const existingDropPoint = await prisma.dropPoint.findFirst({
         where: {
           managerId: manager.id
         }
@@ -256,6 +263,5 @@ module.exports = {
       console.error("Error removing manager from drop point:", error);
       res.status(500).send("Internal Server Error");
     }
-  },
-   
+  },  
 };
