@@ -127,11 +127,11 @@
               
                       <form action="/admin/updateOrganizationStatus" method="post">
                         <td>
-                          <select class="form-control status-dropdown" name="newStatus" style="width: auto;">
-                            <option value="PENDING" <%= organization.verificationStatus === 'PENDING' ? 'selected' : '' %>>Pending</option>
+                          <select class="form-control status-dropdown" name="newStatus" style="width: auto;" required>
+                            <option value="PENDING" <%= organization.verificationStatus === 'PENDING' ? 'selected' : '' %>>Select Status</option>
                             <option value="APPROVED" <%= organization.verificationStatus === 'APPROVED' ? 'selected' : '' %>>Approve</option>
                             <option value="REJECTED" <%= organization.verificationStatus === 'REJECTED' ? 'selected' : '' %>>Reject</option>
-                        </select>                        
+                          </select>                        
                         </td>
                     
                         <!-- Hidden input to send the organization ID -->
@@ -143,7 +143,7 @@
                         <td>
                             <button type="submit" class="btn btn-primary btn-sm">Update</button>
                         </td>
-                    </form>                    
+                      </form>                    
                     </tr>
                   <% } %>
                 <% }); %>
@@ -228,8 +228,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Add your JavaScript code here to fetch and populate organization lists based on tabs -->
-    
+   
   </body>
 </html>

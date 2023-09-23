@@ -41,11 +41,68 @@ module.exports = {
         if (!organizationId || !newStatus) {
             return res.status(400).send("Missing required parameters.");
         }
+
+        // Fetch the organization's details
+        const organization = await prisma.organization.findUnique({
+          where: { id: organizationId },
+        });
   
+        // Update the organization's status
         await prisma.organization.update({
             where: { id: organizationId },
             data: { verificationStatus: newStatus }
         });
+
+        // Create email transporter
+        const transporter = nodemailer.createTransport({
+          service: process.env.EMAIL_SERVICE,
+          auth: {
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+
+        // Set up different email content based on the new status
+        let subject, htmlContent;
+
+        if (newStatus === 'APPROVED') {
+          subject = 'Your Organization Has Been Approved';
+          htmlContent = `
+            <h1>Congratulations!</h1>
+            <p>Your organization, ${organization.organizationname}, has been approved.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          `;
+        } else if (newStatus === 'REJECTED') {
+          subject = 'Your Organization Application Was Not Approved';
+          htmlContent = `
+            <h1>Application Not Approved</h1>
+            <p>Unfortunately, your organization, ${organization.organizationname}, has not been approved.</p>
+            <p>If you have questions, please reach out to our support team.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          `;
+        } else {
+          // Handle other statuses if needed
+        }
+
+        // Only send the email if subject and htmlContent are set
+        if (subject && htmlContent) {
+          const mailOptions = {
+            from: process.env.EMAIL_USERNAME,
+            to: organization.email,
+            subject: subject,
+            html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">${htmlContent}</div>`
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error("Email could not be sent:", error);
+            } else {
+              console.log("Email sent:", info.response);
+            }
+          });
+        }
   
         // Store the newStatus in the session
         req.session.status = newStatus;
@@ -268,6 +325,7 @@ module.exports = {
               </tr>
             </table>
             <p>Your access password is: <strong>${updatedDropPoint.password}</strong></p>
+            <p>You can update this password in your profile settings for additional security.</p>
             <p>Please reach out to our support team for any further assistance.</p>
             <p>Best regards,</p>
             <p>Your Team</p>
@@ -298,8 +356,7 @@ module.exports = {
   
       if (!dropPointId) {
         return res.status(400).send('dropPointId is missing or invalid.');
-      }
-      
+      } 
 
       // Fetch the DropPoint to find the current manager's ID
       const dropPoint = await prisma.dropPoint.findUnique({
@@ -371,18 +428,71 @@ module.exports = {
       if (!id || !name || !location || !openingTime || !closingTime || !description) {
         return res.status(400).send("Missing required parameters.");
       }
+
+      // Fetch the DropPoint to find the current manager's ID
+      const dropPoint = await prisma.dropPoint.findFirst({
+        where: { id },
+        include: { manager: true }
+      });
   
       // Update the DropPoint
       await prisma.dropPoint.update({
         where: { id },
         data: {
           name,
-          location,  // You might choose to omit this since it's readonly in your form
+          location,
           openingTime,
           closingTime,
           description,
         },
       });
+
+       // Send an email to the assigned manager if there is one
+    if (dropPoint.manager) {
+      const manager = dropPoint.manager;
+
+      // Create email transporter
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      // Set up formal email content
+      const mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: manager.email,
+        subject: 'Drop Point Details Updated',
+        html: `
+          <div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+            <h1 style="color: #333366;">Drop Point Details Updated</h1>
+            <p>Dear ${manager.firstName} ${manager.lastName},</p>
+            <p>The drop point "${name}" to which you are assigned has had its details updated. The new details are as follows:</p>
+            <ul>
+              <li><strong>Name:</strong> ${name}</li>
+              <li><strong>Location:</strong> ${location}</li>
+              <li><strong>Opening Time:</strong> ${openingTime}</li>
+              <li><strong>Closing Time:</strong> ${closingTime}</li>
+              <li><strong>Description:</strong> ${description}</li>
+            </ul>
+            <p>If you have any questions, please contact our support team.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          </div>
+        `,
+      };
+
+      // Send the email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email could not be sent:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+    }
   
       res.redirect('/admin/droppointmanagement');
     } catch (error) {
