@@ -1,6 +1,58 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
 
+async function calculatePoints(type, condition, quantity) {
+    let basePoints = 0;
+    let conditionPoints = 0;
+    let quantityBonus = 0;
+    
+    // Criteria for types
+    switch (type) {
+      case 'Input Devices':
+        basePoints += 0.5;
+        break;
+      case 'Storage Devices':
+        basePoints += 1;
+        break;
+      case 'Memory and Processing':
+        basePoints += 1.5;
+        break;
+      case 'Graphics and Video':
+        basePoints += 2;
+        break;
+      case 'Power and Cooling':
+        basePoints += 1;
+        break;
+      case 'Network and Sound':
+        basePoints += 1;
+        break;
+      case 'Whole Systems':
+        basePoints += 3;
+        break;
+      default:
+        break;
+    }
+  
+    // Criteria for condition
+    if (condition === 'New') {
+      conditionPoints += 1;
+    } else if (condition === 'Used but Working') {
+      conditionPoints += 0.5;
+    }
+  
+    // Criteria for quantity
+    if (quantity >= 10 && quantity <= 49) {
+      quantityBonus += 3;
+    } else if (quantity >= 50) {
+      quantityBonus += 5;
+    }
+  
+    const points = ((basePoints + conditionPoints) * quantity);
+    const totalPoints = points + quantityBonus;
+  
+    return totalPoints;
+  }
+
 module.exports = {
   async getDashboard(req, res) {
     try {
@@ -81,6 +133,7 @@ module.exports = {
         } = req.body;
 
         const organizationId = req.session.organization.id;
+        const points = await calculatePoints(type, condition, parseInt(quantity));
 
         // Find if there's an existing donation that hasn't been submitted yet for the given organization and drop point.
         const existingDonation = await prisma.donation.findFirst({
@@ -103,6 +156,13 @@ module.exports = {
                     donationId: existingDonation.id
                 }
             });
+
+            // Update the points in the existing donation
+            await prisma.donation.update({
+              where: { id: existingDonation.id },
+              data: { points: existingDonation.points + points }
+            });
+            
         } else {
             // If the donation doesn't exist, create a new one and then create the peripheral under it.
             const newDonation = await prisma.donation.create({
@@ -110,6 +170,7 @@ module.exports = {
                     dropPointId: dropPointId,
                     organizationId: organizationId, 
                     isSubmitted: false,
+                    points,
                     peripherals: {
                         create: {
                             type: type,
@@ -188,6 +249,7 @@ module.exports = {
       const donations = await prisma.donation.findMany({
         where: {
           organizationId: organizationId,
+          isSubmitted: true
         },
         include: {
             dropPoint: true, // Include drop point details

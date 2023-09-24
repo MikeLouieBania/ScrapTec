@@ -83,6 +83,7 @@ model Donation {
   confirmedByEmail      String?
   status                String?
   isSubmitted  Boolean  @default(false)  // Indicates if the donation has been submitted or it's just in "cart"
+  points                Float? 
   
   organization          Organization @relation(fields: [organizationId], references: [id])
   dropPoint             DropPoint    @relation(fields: [dropPointId], references: [id])

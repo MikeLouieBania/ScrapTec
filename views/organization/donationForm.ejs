@@ -54,19 +54,32 @@
         <h4>Peripheral Information</h4>
         <div class="form-group">
           <label for="type">Type:</label>
-          <input type="text" class="form-control" name="type" id="type">
+          <select class="form-control" name="type" id="type" required>
+            <option value="" disabled selected readonly>Select Type</option>
+            <option value="Input Devices">Input Devices (Mouse, Keyboard)</option>
+            <option value="Storage Devices">Storage Devices (HDD, SSD, Optical Drives)</option>
+            <option value="Memory and Processing">Memory and Processing (RAM, Processor, Motherboard)</option>
+            <option value="Graphics and Video">Graphics and Video (Graphic Card, Monitor, Webcam)</option>
+            <option value="Power and Cooling">Power and Cooling (Power Supplies, Cooling Fans)</option>
+            <option value="Network and Sound">Network and Sound (Network Cards, Sound Cards)</option>
+            <option value="Whole Systems">Whole Systems (Laptop, Desktop)</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="brand">Brand:</label>
-          <input type="text" class="form-control" name="brand" id="brand">
+          <input type="text" class="form-control" name="brand" id="brand" required>
         </div>
         <div class="form-group">
           <label for="model">Model:</label>
-          <input type="text" class="form-control" name="model" id="model">
+          <input type="text" class="form-control" name="model" id="model" required>
         </div>
         <div class="form-group">
           <label for="condition">Condition:</label>
-          <input type="text" class="form-control" name="condition" id="condition">
+          <select class="form-control" name="condition" id="condition" required>
+            <option value="" disabled selected readonly>Select Condition</option>
+            <option value="New">New</option>
+            <option value="Used but Working">Used but Working</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="quantity">Quantity:</label>
