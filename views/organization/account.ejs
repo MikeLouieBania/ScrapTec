@@ -41,7 +41,7 @@
     
     <div class="container">
       <!-- Points and Org Name -->
-      <h2 class="mb-4"><%= organization.organizationname %> <span class="badge badge-success">Total Points: <%= totalPoints %></span></h2>
+      <h2 class="mb-4"><%= organization.organizationname %> <span class="badge badge-success">Total Points: <%= organization.totalPoints %></span></h2>
       
       <!-- Nav tabs -->
       <ul class="nav nav-tabs">
@@ -79,7 +79,39 @@
         <div class="tab-pane" id="redeem">
           <!-- Redeem Content Here -->
           <h3>Redeem Points</h3>
-          <p>Information about redeeming points can go here.</p>
+          <p>Information about redeeming points can go here.</p> 
+          
+          <!-- Redeem for Advertisements -->
+          <section>
+            <h4>Redeem for Advertisements</h4>
+            <p>You can redeem your points to run advertisements in the User Marketplace. Here are the options:</p>
+            <ul>
+              <li><strong>Basic Ad (1 week):</strong> 10 points</li>
+              <li><strong>Premium Ad (2 weeks with featured placement):</strong> 20 points</li>
+            </ul>
+            <p>To redeem points for an advertisement, please [insert how they can redeem here, possibly through a form or button].</p>
+          </section>
+          
+          <!-- Ad Targeting and Ranking -->
+          <section>
+            <h4>Advertisement Targeting and Ranking</h4>
+            <p>You can target your advertisement based on cities. Additionally, the exposure of your ads will depend on your organization's ranking within that city's drop point.</p>
+            <ul>
+              <li><strong>City Selection:</strong> Choose the city where you want your ad to be displayed.</li>
+              <li><strong>Ranking:</strong> Ads from organizations with higher points or contributions at specific city drop points will be displayed more prominently.</li>
+            </ul>
+          </section>
+          
+          <!-- Ad Expiry -->
+          <section>
+            <h4>Advertisement Expiry</h4>
+            <p>All advertisements have an expiration period:</p>
+            <ul>
+              <li><strong>Basic Ad:</strong> Expires after 1 week</li>
+              <li><strong>Premium Ad:</strong> Expires after 2 weeks</li>
+            </ul>
+            <p>You will be notified via email before your ad expires.</p>
+          </section>
         </div>
         
         <!-- Status Tab -->

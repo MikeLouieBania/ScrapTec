@@ -104,11 +104,46 @@ module.exports = {
     try {
       const { donationId, newStatus } = req.body;
   
+      // Fetch the existing donation
+      const donation = await prisma.donation.findUnique({
+        where: { id: donationId },
+        select: {
+          points: true,
+          organizationId: true
+        }
+      });
+  
+      // Check if the donation exists and has points.
+      if (!donation || donation.points === null) {
+        return res.status(404).send("Donation not found or points are null");
+      }
+    
       // Update the donation status using donationId and newStatus
       await prisma.donation.update({
         where: { id: donationId },
         data: { status: newStatus },
       });
+  
+      // Proceed with updating the organization's points if the new status is "VERIFIED" or "ACCEPTEDWITHISSUES"
+      if (newStatus === "VERIFIED" || newStatus === "ACCEPTEDWITHISSUES") {
+        // Fetch the existing organization
+        const organization = await prisma.organization.findUnique({
+          where: { id: donation.organizationId }
+        });
+
+        if (!organization) {
+          return res.status(404).send("Organization not found");
+        }
+
+        const newTotalPoints = (organization.totalPoints || 0) + (donation.points || 0);
+       
+
+        // Update the organization's totalPoints
+        await prisma.organization.update({
+          where: { id: donation.organizationId },
+          data: { totalPoints: newTotalPoints }
+        });
+      }
   
       // Redirect back to the donations management page
       res.redirect('/manager/manageDonation');
@@ -116,7 +151,8 @@ module.exports = {
       console.error("Error updating donation status:", error);
       res.status(500).send("Internal Server Error");
     }
-  },  
+  },
+    
   async getManagerAccount(req, res) {
     try {
       // Fetch the manager's profile and associated drop point using the ID stored in the session

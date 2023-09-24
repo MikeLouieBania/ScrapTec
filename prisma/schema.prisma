@@ -30,6 +30,7 @@ model Organization {
   secRegistrationNumber String?  @unique
   verificationStatus    String @default("PENDING")
   submittedDocuments    Document[]
+  totalPoints           Float     @default(0)
 
   type                  String
   profilePicture        Bytes?    // Updated to Bytes data type
