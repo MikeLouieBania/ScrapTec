@@ -205,7 +205,7 @@ module.exports = {
                 dropPoint: true, // Include drop point details
                 peripherals: true // Include peripheral details
             }
-        });
+        }); 
 
         res.render('organization/pledgeBasket', { donations: donations });
     } catch (error) {
