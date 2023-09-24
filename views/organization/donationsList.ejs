@@ -23,13 +23,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">  
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                  <a class="nav-link" href="/organization/donationsList">My Donations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                  <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li> 
+                <li class="nav-item">
+                  <a class="nav-link" href="/organization/donationPointInfo">Donation Points Guide</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/account">My Account</a>
+                  <a class="nav-link" href="/organization/account">My Account</a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
@@ -49,7 +52,7 @@
               <th scope="col">Status</th>
               <th scope="col">Drop Point</th>
               <th scope="col">Scheduled Drop-off Date</th>
-              <th scope="col-2">Action</th>
+              <th scope="col" colspan="2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -104,7 +107,7 @@
                       </button>
                     </div>
                     <div class="modal-body">
-                      <p>Are you sure you want to cancel this donation?</p>
+                      <p>Are you sure you want to cancel this donation? Forfeiture of the donation will remove all your inputs.</p>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

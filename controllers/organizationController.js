@@ -200,8 +200,12 @@ module.exports = {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal Server Error");
     }
+  }, 
+  
+  async getDonationPointInfoPage(req, res) { 
+     
+    res.render('organization/donationPointInfo'); 
   },
-
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({

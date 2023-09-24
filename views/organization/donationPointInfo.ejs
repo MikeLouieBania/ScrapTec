@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Donation Points Guide</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <style>
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .alert {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">  
+            <li class="nav-item">
+              <a class="nav-link" href="/organization/donationsList">My Donations</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+            </li> 
+            <li class="nav-item">
+              <a class="nav-link" href="/organization/donationPointInfo">Donation Points Guide</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/organization/account">My Account</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+        </form>
+    </div>
+  </nav>
+  
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Donation Points Guide</h1>
+      <p class="lead">Earn points with each donation to boost your organization's impact!</p>
+    </div>
+
+    <div class="accordion" id="pointsAccordion">
+      <!-- Peripheral Types Section -->
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Types of Peripherals
+            </button>
+          </h2>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#pointsAccordion">
+          <div class="card-body">
+            <ul>
+              <li><strong>Input Devices:</strong> Includes Mouse and Keyboard. Earn <span class="badge badge-primary">0.5 point per item</span>.</li>
+              <li><strong>Storage Devices:</strong> HDD, SSD, and Optical Drives fall under this category. <span class="badge badge-primary">1 point per item</span>.</li>
+              <li><strong>Memory and Processing:</strong> Consists of RAM, Processors, and Motherboards. <span class="badge badge-primary">1.5 points per item</span>.</li>
+              <li><strong>Graphics and Video:</strong> Graphic Cards, Monitors, and Webcams are part of this category. <span class="badge badge-primary">2 points per item</span>.</li>
+              <li><strong>Power and Cooling:</strong> Power Supplies and Cooling Fans. <span class="badge badge-primary">1 point per item</span>.</li>
+              <li><strong>Network and Sound:</strong> Network Cards and Sound Cards. <span class="badge badge-primary">1 point per item</span>.</li>
+              <li><strong>Whole Systems:</strong> Laptops and Desktops fall under this category. <span class="badge badge-primary">3 points per item</span>.</li>
+              <li><strong>Miscellaneous:</strong> Other peripherals like Cables and Mousepads. <span class="badge badge-primary">0.5 point per item</span>.</li>
+            </ul>
+          </div>
+        </div>
+      </div> 
+      <!-- Condition Section -->
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h2 class="mb-0">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Condition
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#pointsAccordion">
+          <div class="card-body">
+            <ul>
+              <li>New: <span class="badge badge-success">1 bonus point</span></li>
+              <li>Used but Working: <span class="badge badge-warning">0.5 bonus points</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Quantity Section -->
+      <div class="card">
+        <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              Quantity
+            </button>
+          </h2>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pointsAccordion">
+          <div class="card-body">
+            <ul>
+              <li>10 to 49 items: <span class="badge badge-info">3 bonus points</span></li>
+              <li>50 or more items: <span class="badge badge-info">5 bonus points</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Penalty Alert -->
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">Important:</h4>
+      <p>If the items you donated do not match the claimed information, point deductions may apply. For example, if an item is claimed as 'New' but appears to be 'Used', points will be recalculated accordingly.</p>
+    </div>
+
+    <!-- Penalty Details -->
+    <section>
+      <h4>Penalties</h4>
+      <ul>
+        <li><strong>Incorrect Item Condition:</strong> <span class="badge badge-danger">-1 point per item</span></li>
+        <li><strong>Incorrect Quantity:</strong> <span class="badge badge-danger">-2 points</span></li>
+      </ul>
+    </section>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
