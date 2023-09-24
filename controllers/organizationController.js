@@ -53,6 +53,88 @@ async function calculatePoints(type, condition, quantity) {
     return totalPoints;
   }
 
+  // Function to get total points for an organization
+async function getTotalPointsForOrganization(organizationId) {
+  try {
+    const donations = await prisma.donation.findMany({
+      where: {
+        organizationId: organizationId,
+        isSubmitted: true,
+        OR: [
+          { status: 'VERIFIED' },
+          { status: 'ACCEPTEDWITHISSUES' }
+        ]
+      },
+      select: {
+        points: true
+      }
+    });
+
+    let totalPoints = 0;
+    donations.forEach(donation => {
+      if (donation.points !== null) {
+        totalPoints += donation.points;
+      }
+    });
+
+    return totalPoints;
+  } catch (error) {
+    console.error("Error fetching total points:", error);
+    return 0; // Return 0 if an error occurs
+  }
+}
+
+// Function to get total points per drop point for a specific organization
+async function getTotalPointsPerDropPoint(organizationId) {
+  try {
+    const dropPoints = await prisma.dropPoint.findMany({
+      where: {
+        donations: {
+          some: {
+            organizationId: organizationId,
+            OR: [
+              { status: 'VERIFIED' },
+              { status: 'ACCEPTEDWITHISSUES' }
+            ]
+          }
+        }
+      },
+      include: {
+        donations: {
+          where: {
+            OR: [
+              { status: 'VERIFIED' },
+              { status: 'ACCEPTEDWITHISSUES' }
+            ]
+          },
+          select: {
+            points: true
+          }
+        }
+      }
+    });
+
+    let pointsPerDropPoint = {};
+
+    dropPoints.forEach(dropPoint => {
+      let totalPoints = 0;
+      dropPoint.donations.forEach(donation => {
+        if (donation.points !== null) {
+          totalPoints += donation.points;
+        }
+      });
+      pointsPerDropPoint[dropPoint.id] = totalPoints;
+    });
+
+    return pointsPerDropPoint;
+
+  } catch (error) {
+    console.error("Error fetching points per drop point:", error);
+    return {}; // Return an empty object if an error occurs
+  }
+}
+
+
 module.exports = {
   async getDashboard(req, res) {
     try {
@@ -86,7 +168,13 @@ module.exports = {
                 where: {
                     organizationId: organizationId,
                     dropPointId: point.id,
-                    isSubmitted: true
+                    isSubmitted: true,
+                    NOT: {
+                      // Add these statuses here
+                      status: {
+                        in: ["VERIFIED", "ACCEPTEDWITHISSUES", "REJECTED"]
+                      }
+                    }
                 }
             });
 
@@ -273,7 +361,11 @@ module.exports = {
     const organization = await prisma.organization.findUnique({
       where: {id: organizationId},
     });
-    res.render('organization/account', { organization }); 
+
+    
+    const totalPoints = await getTotalPointsForOrganization(organizationId); 
+
+    res.render('organization/account', { organization, totalPoints }); 
   },
      
   logout(req, res) {
