@@ -100,6 +100,23 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   }, 
+  async updateDonationStatus(req, res) {
+    try {
+      const { donationId, newStatus } = req.body;
+  
+      // Update the donation status using donationId and newStatus
+      await prisma.donation.update({
+        where: { id: donationId },
+        data: { status: newStatus },
+      });
+  
+      // Redirect back to the donations management page
+      res.redirect('/manager/manageDonation');
+    } catch (error) {
+      console.error("Error updating donation status:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },  
   async getManagerAccount(req, res) {
     try {
       // Fetch the manager's profile and associated drop point using the ID stored in the session

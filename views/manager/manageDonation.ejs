@@ -122,13 +122,13 @@
                             <!-- Display different verification statuses -->
                             <% if (donation.status === 'PENDING') { %>
                                 <span class="badge badge-warning"><%= donation.status %></span>
-                            <% } else if (donation.status === 'Arrived') { %>
+                            <% } else if (donation.status === 'ARRIVED') { %>
                                 <span class="badge badge-primary"><%= donation.status %></span>
-                            <% } else if (donation.status === 'Verified') { %>
+                            <% } else if (donation.status === 'VERIFIED') { %>
                                 <span class="badge badge-success"><%= donation.status %></span>
-                            <% } else if (donation.status === 'Rejected') { %>
+                            <% } else if (donation.status === 'REJECTED') { %>
                                 <span class="badge badge-danger"><%= donation.status %></span>
-                            <% } else if (donation.status === 'AcceptedWithIssues') { %>
+                            <% } else if (donation.status === 'ACCEPTEDWITHISSUES') { %>
                                 <span class="badge badge-info"><%= donation.status %></span>
                             <% } %>
                             
@@ -150,7 +150,9 @@
                                         </div>
                                         <div class="modal-body">
                                             <!-- Status update form -->
-                                            <form action="/manager/updateDonationStatus/<%= donation.id %>" method="post">
+                                            <form action="/manager/updateDonationStatus" method="post">
+                                                <!-- Hidden input for the donation ID -->
+                                                <input type="hidden" name="donationId" value="<%= donation.id %>">
                                                 <div class="form-group">
                                                     <label for="newStatus">Select New Status:</label>
                                                     <select class="form-control" id="newStatus" name="newStatus">
