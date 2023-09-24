@@ -21,18 +21,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">  
                 <li class="nav-item">
-                  <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-                </li> 
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>  
                 <li class="nav-item">
-                  <a class="nav-link" href="/organization/donationPointInfo">Donation Points Guide</a>
+                <a class="nav-link" href="/organization/faq">FAQ</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/organization/account">My Account</a>
+                <a class="nav-link" href="/organization/account">Account</a>
                 </li>
-            </ul>
+            </ul> 
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
             </form>
@@ -47,10 +47,7 @@
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#account">Account Settings</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#donationPointsInfo">Donation Points Info</a>
-        </li>
+        </li> 
         <li class="nav-item">
           <a class="nav-link" data-toggle="tab" href="#redeem">Redeem</a>
         </li>
@@ -76,108 +73,7 @@
           <% } else { %>
             <p><strong>No Profile Picture</strong></p>
           <% } %>
-        </div> 
-        <div class="tab-pane" id="donationPointsInfo">
-          <!-- Donation Points Info Content Here -->
-          <div class="jumbotron">
-            <h1>Donation Points Guide</h1>
-            <p class="lead">Earn points with each donation to boost your organization's impact!</p>
-          </div>
-      
-          <div class="accordion" id="pointsAccordion">
-            <!-- Peripheral Types Section -->
-            <div class="card">
-              <div class="card-header" id="headingOne">
-                <h2 class="mb-0">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Types of Peripherals
-                  </button>
-                </h2>
-              </div>
-              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#pointsAccordion">
-                <div class="card-body">
-                  <ul>
-                    <li><strong>Input Devices:</strong> Includes Mouse and Keyboard. Earn <span class="badge badge-primary">0.5 point per item</span>.</li>
-                    <li><strong>Storage Devices:</strong> HDD, SSD, and Optical Drives fall under this category. <span class="badge badge-primary">1 point per item</span>.</li>
-                    <li><strong>Memory and Processing:</strong> Consists of RAM, Processors, and Motherboards. <span class="badge badge-primary">1.5 points per item</span>.</li>
-                    <li><strong>Graphics and Video:</strong> Graphic Cards, Monitors, and Webcams are part of this category. <span class="badge badge-primary">2 points per item</span>.</li>
-                    <li><strong>Power and Cooling:</strong> Includes Power Supplies and Cooling Fans. <span class="badge badge-primary">1 point per item</span>.</li>
-                    <li><strong>Network and Sound:</strong> Covers Network Cards and Sound Cards. <span class="badge badge-primary">1 point per item</span>.</li>
-                    <li><strong>Whole Systems:</strong> Laptops and Desktops fall under this category. <span class="badge badge-primary">3 points per item</span>.</li>
-                  </ul>            
-                </div>
-              </div>
-            </div> 
-            <!-- Condition Section -->
-            <div class="card">
-              <div class="card-header" id="headingTwo">
-                <h2 class="mb-0">
-                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Condition
-                  </button>
-                </h2>
-              </div>
-              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#pointsAccordion">
-                <div class="card-body">
-                  <ul>
-                    <li>New: <span class="badge badge-success">1 bonus point</span></li>
-                    <li>Used but Working: <span class="badge badge-warning">0.5 bonus points</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <!-- Quantity Section -->
-            <div class="card">
-              <div class="card-header" id="headingThree">
-                <h2 class="mb-0">
-                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Quantity
-                  </button>
-                </h2>
-              </div>
-              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pointsAccordion">
-                <div class="card-body">
-                  <ul>
-                    <li>10 to 49 items: <span class="badge badge-info">3 bonus points</span></li>
-                    <li>50 or more items: <span class="badge badge-info">5 bonus points</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-      
-          </div>
-      
-          <!-- Penalty Alert -->
-          <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading">Important:</h4>
-            <p>If the items you donated do not match the claimed information, point deductions may apply. For example, if an item is claimed as 'New' but appears to be 'Used', points will be recalculated accordingly.</p>
-          </div>
-      
-          <!-- Penalty Details -->
-          <section>
-            <h4>Penalties</h4>
-            <ul>
-              <li><strong>Incorrect Item Condition:</strong> <span class="badge badge-danger">-1 point per item</span></li>
-              <li><strong>Incorrect Quantity:</strong> <span class="badge badge-danger">-2 points</span></li>
-            </ul>
-          </section>
-      
-              <!-- Computation Section -->
-              <section>
-                <h4>Computation Formula</h4>
-                <p>To give you a clear understanding of how points are calculated, here is the formula:</p>
-                <pre>
-                  <code>
-                  Total Points = ((Base Points per Item + Condition Bonus per Item) x Quantity) + Quantity Bonus (if applicable)
-                  </code>
-                </pre>
-                <p>For example:</p>
-                <ul>
-                  <li>If you are donating 5 'Whole Systems' that are 'Used but Working', your points would be calculated as follows: <br> <code>(3 (Base for Whole Systems) + 0.5 (Condition Bonus)) x 5 (Quantity) = 17.5</code></li>
-                  <li>If you are donating 10 'Input Devices' that are 'New', your points would be calculated as follows: <br> <code>(0.5 (Base for Input Devices) + 1 (Condition Bonus)) x 10 (Quantity) + 3 (Quantity Bonus) = 28</code></li>
-                </ul>
-              </section>
-        </div>
+        </div>  
         
         <!-- Redeem Tab -->
         <div class="tab-pane" id="redeem">

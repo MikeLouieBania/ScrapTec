@@ -352,9 +352,9 @@ module.exports = {
     }
   }, 
   
-  async getDonationPointInfoPage(req, res) { 
+  async getFAQ(req, res) { 
      
-    res.render('organization/donationPointInfo'); 
+    res.render('organization/FAQ'); 
   },
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;

@@ -9,7 +9,7 @@ router.post('/addDonation', organizationController.getAddDonation);
 router.get('/pledgeBasket', organizationController.getPledgeBasketPage);   
 router.post('/confirmDonation', organizationController.getConfirmDonation);
 router.get('/donationsList', organizationController.getDonationsList); 
-router.get('/donationPointInfo', organizationController.getDonationPointInfoPage); 
+router.get('/faq', organizationController.getFAQ);  
 router.get('/account', organizationController.getAccount); 
 router.post('/logout', organizationController.logout); 
 

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <title>Donation Points Guide</title>
+  <title>FAQ</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
   <style>
     .container {
@@ -10,41 +9,43 @@
       margin: 0 auto;
       padding: 20px;
     }
-    .alert {
-      margin-top: 20px;
-    }
   </style>
 </head>
-
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/faq">FAQ</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/account">Account</a>
+                </li>
+            </ul> 
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
   
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">  
-            <li class="nav-item">
-              <a class="nav-link" href="/organization/donationsList">My Donations</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-            </li> 
-            <li class="nav-item">
-              <a class="nav-link" href="/organization/donationPointInfo">Donation Points Guide</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/organization/account">My Account</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-        </form>
-    </div>
-  </nav>
-  
+  <div class="container">
+    <h1>Frequently Asked Questions</h1>
+
+    <!-- Donation Points Guide moved here -->
+    <h2>Donation Points Guide</h2>
+    <p>Earn points with each donation to boost your organization's impact!</p>
+    
   <div class="container">
     <div class="jumbotron">
       <h1>Donation Points Guide</h1>
@@ -147,9 +148,22 @@
     
   </div>
 
+    <h3>Donating Items</h3>
+    <ul>
+      <li><strong>How can I donate?</strong></li>
+      <li><strong>What types of items can I donate?</strong></li>
+      <li><strong>Is my donation tax-deductible?</strong></li>
+    </ul>
+
+    <h3>Account & Status</h3>
+    <ul>
+      <li><strong>How do I change my account settings?</strong></li>
+      <li><strong>What is the status of my donations?</strong></li>
+    </ul>
+  </div>
+
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
