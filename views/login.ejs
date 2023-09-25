@@ -1,54 +1,229 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
-  <!-- Link to Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-  <!-- Link to Google's Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-  <style>
-    /* Additional custom styles for the page */
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <!-- Link to Google's Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Link to Google's Roboto Slab Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
+    <style>
+        /* Login page styles */
+        :root {
+            --primary-color: #4682B4;
+            --secondary-color: #87CEEB;
+            --tertiary-color: #B6D0E2;
+        }
+
+        body {
+            background-image: url('https://i.postimg.cc/MTnk8t9F/buee.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+
+        img {
+            margin: 0;       /* Remove any margins */
+            padding: 0;      /* Remove any padding */
+            width: 100%;     /* Force the image to occupy the full width of its container */
+            height: auto;    /* Keep the image aspect ratio */
+        }
+        
+
+        .login-container, 
+        .login-container label, 
+        .login-container h1 {
+        color: var(--primary-color);  /* Use the primary color for text color within the login container */
+        font-family: 'Arial', sans-serif;
     }
-  </style>
-</head>
-<body>
-  <!-- Add a Bootstrap container for better layout -->
-  <div class="container">
-    <h1>Login Page</h1>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/signup">Register</a>
-        </li>
-      </ul>
-    </nav>
+        .login-container {
+            margin-top: 60px; /* Adjust this value based on the height of your navbar or as per your design needs */
+            width: 50%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
 
-    <!-- Login Form -->
-    <form action="/login" method="POST">
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-      </div>
-      
-      <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-  </div>
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-  <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        @media (max-width: 992px) {
+            .login-container {
+                width: 100%;
+                padding: 20px;
+                margin-top: 30px;
+            }
+
+            .form-section h1 {
+                font-size: 1.5rem; /* Adjust font size for smaller headers on smaller screens */
+            }
+
+            .btn-primary {
+                width: 100%; /* Full width button on smaller screens */
+            }
+        }
+
+        .form-group label {
+            font-size: 1.2rem;      /* Increase font size for better readability */
+            color: var(--primary-color);  /* Use the primary color for labels */
+            margin-bottom: 10px;    /* Add some spacing between label and input field */
+        }
+        
+        .form-control {
+            border: 2px solid var(--tertiary-color);  /* Thicker border for input fields */
+            transition: border-color 0.3s, box-shadow 0.3s;  /* Smooth transition effect for focus and hover states */
+            font-size: 1rem;        /* Adjust font size for input fields */
+        }
+        
+        .form-control:hover {
+            border-color: var(--primary-color);  /* Change border color on hover */
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);  /* Border color when input is focused */
+            box-shadow: 0 0 5px var(--primary-color);  /* Add a subtle shadow to indicate focus */
+            outline: none;        /* Remove the default focus outline */
+        }
+        
+        .password-container .form-control {
+            padding-right: 40px;   /* Provide space for the visibility icon */
+        }
+
+        .password-container {
+            position: relative;
+        }
+        .form-group.password-spacing {
+            margin-top: 20px;  /* Adjust this value as needed to provide more or less spacing */
+        }
+
+        #togglePassword {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--primary-color);
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);  /* Base color */
+            border: none;
+            border-radius: 20px;  /* Highly rounded corners for a pill-shaped button */
+            padding: 10px 30px;  /* Padding for a larger button */
+            font-size: 1.1rem;  /* Font size */
+            font-weight: bold;  /* Bold text */
+            width: 250px;
+            transition: background-color 0.3s, transform 0.3s;  /* Transition for a smooth color change and a slight size increase on hover */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            display: block;       /* Convert the button to a block-level element */
+            margin-left: auto;    /* Automatically adjust the left margin */
+            margin-right: auto;   /* Automatically adjust the right margin */
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--secondary-color);  /* Slightly different shade on hover/focus */
+            transform: scale(1.05);  /* Slight size increase on hover */
+            outline: none;  /* Remove the default focus outline */
+        }
+        
+        .btn-primary:active {
+            transform: scale(1);  /* Return to normal size when button is active/clicked */
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow when button is clicked */
+        }
+       /* Adjust the padding of the column containing the image */
+.login-container .col-md-5 {
+    padding-left: 0; /* Remove left padding */
+    padding-right: 15px; /* Maintain some padding on the right */
+}
+
+.form-section {
+    padding-top: 40px;  /* Adjust this value to your liking */
+}
+
+
+        
+</style>
+</head>  
+<body class="login-page">
+    <!-- Login Content -->
+    <div class="login-container">
+        <div class="row">
+            <div class="col-lg-5 col-md-12">
+                <img src="https://i.ibb.co/rMNxGhb/E-WASTE-ZERO-1.png" alt="Descriptive Image Text" class="img-fluid" />
+            </div>
+            <div class="col-lg-7 col-md-12 form-section">
+                <h1>Sign In</h1>
+                <!-- Login Form -->
+                <form action="/login" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group password-spacing">
+                        <label for="password">Password:</label>
+                        <div class="password-container">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <button type="button" id="togglePassword">
+                                <i class="material-icons">visibility</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toggle Password Visibility -->
+    <script>
+        const togglePasswordButton = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePasswordButton.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordButton.innerHTML = '<i class="material-icons">visibility_off</i>';
+            } else {
+                passwordInput.type = 'password';
+                togglePasswordButton.innerHTML = '<i class="material-icons">visibility</i>';
+            }
+        });
+
+        
+    </script>
 </body>
 </html>
