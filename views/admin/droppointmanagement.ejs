@@ -81,7 +81,7 @@
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDropPointModal">
         Create Drop Point
       </button>
-      <!-- Table to display created drop points -->
+      <!-- Table to display created drop points --> 
       <table class="table mt-4">
         <thead>
           <tr>
@@ -91,29 +91,43 @@
             <th>Operating Hours</th>
             <th>Description</th>
             <th>Assigned Manager</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Populate table rows with drop point data -->
           <% let counter = 1; %>
           <% dropPoints.forEach(dropPoint => { %>
           <tr>
             <td><%= counter++ %></td>
             <td><%= dropPoint.name %></td>
-            <td><%= dropPoint.location %></td> 
+            <td><%= dropPoint.location %></td>
             <td><%= dropPoint.openingTime %> - <%= dropPoint.closingTime %></td>
-            <td><%= dropPoint.description %></td> 
+            <td><%= dropPoint.description %></td>
             <td>
-              <% if(dropPoint.manager) { %>  <!-- Check if manager data is available -->
-                <%= dropPoint.manager.firstName %> <%= dropPoint.manager.lastName %>  <!-- Display the manager's name -->
+              <% if(dropPoint.manager) { %>
+                <%= dropPoint.manager.firstName %> <%= dropPoint.manager.lastName %>
               <% } else { %>
-                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
+                N/A
               <% } %>
-            </td>                       
+            </td>
+            <td> 
+              <!-- Update Drop Point Button -->
+              <button type="button" class="btn btn-success btn-sm mb-2" data-toggle="modal" data-target="#updateDropPointModal" data-droppointid="<%= dropPoint.id %>">Update</button>
+
+              
+              <!-- Conditional buttons for manager actions -->
+              <% if(dropPoint.manager) { %> 
+                <button type="button" class="btn btn-danger btn-sm mb-2" data-toggle="modal" data-target="#removeManagerModal" data-droppointid="<%= dropPoint.id %>">Remove Manager</button>
+              <% } else { %>
+                <button type="button" class="btn btn-warning btn-sm mb-2" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
+              <% } %>
+            </td>
+            
           </tr>
           <% }) %>
         </tbody>
       </table>
+
     </div>
   </div>
 
@@ -127,8 +141,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          
+        <div class="modal-body"> 
           <div class="row">
             <div class="col-md-6">
               <!-- Add the drop point creation form here -->
@@ -219,58 +232,145 @@
     </div>
   </div>
   
+  <!-- Modal for removing a manager from a drop point -->
+  <div class="modal fade" id="removeManagerModal" tabindex="-1" role="dialog" aria-labelledby="removeManagerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeManagerModalLabel">Remove Manager</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/admin/removeManagerFromDropPoint" method="post">
+          <div class="modal-body">
+            <input type="hidden" id="modalRemoveDropPointId" name="dropPointId">  <!-- Make sure the ID here is correct -->
+            <p>Are you sure you want to remove the manager from this drop point?</p>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Remove</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> 
+
+  <!-- Modal for updating drop points -->
+  <div class="modal fade" id="updateDropPointModal" tabindex="-1" role="dialog" aria-labelledby="updateDropPointModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateDropPointModalLabel">Update Drop Point</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> 
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Update drop point form -->
+                        <form action="/admin/updateDropPoint" method="post">
+                            <input type="hidden" name="id" id="updateDropPointId">
+                            <div class="form-group">
+                                <label for="updateDropPointName">Name</label>
+                                <input type="text" name="name" class="form-control" id="updateDropPointName">
+                            </div>
+                            <div class="form-group">
+                                <label for="updateDropPointLocation">Location</label>
+                                <input type="text" name="location" class="form-control" id="updateDropPointLocation" readonly> 
+                            </div>
+                            <!-- Other fields similar to the create modal... -->
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="updateDropPointOpeningTime">Opening Time</label>
+                                    <input type="time" name="openingTime" class="form-control" id="updateDropPointOpeningTime">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="updateDropPointClosingTime">Closing Time</label>
+                                    <input type="time" name="closingTime" class="form-control" id="updateDropPointClosingTime">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateDropPointDescription">Description</label>
+                                <textarea class="form-control" name="description" id="updateDropPointDescription" rows="3"></textarea>
+                            </div> 
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Map container -->
+                        <div id="updateMap" style="height: 400px"></div>
+                        <!-- Address display and search -->
+                        <div class="mt-2">
+                            <small class="form-text text-muted">You can adjust the search location by clicking on the map.</small>
+                            <input type="text" id="updateSearch" placeholder="Search for a location" title="Search for a location and adjust as needed."  class="form-control">
+                            <button id="updateSearchButton" class="btn btn-primary mt-2">Search</button>
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </div>
+  </div>
 
 
+
+   
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
   
+  <!-- create drop point -->
   <script>
     var map;
     var marker = null; // To store the marker
 
     $('#createDropPointModal').on('shown.bs.modal', function () {
-    if (!map) {
-        map = L.map('map', {
-            fullscreenControl: true,
-            fullscreenControlOptions: {
-                position: 'topleft'
-            }
-        }).setView([14.6091, 121.0223], 10);
+        if (!map) {
+            map = L.map('map', {
+                fullscreenControl: true,
+                fullscreenControlOptions: {
+                    position: 'topleft'
+                }
+            }).setView([14.6091, 121.0223], 10);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-        }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
 
-        map.on('click', function(e) {
-            if (marker) {
-                map.removeLayer(marker); // Remove existing marker
-            }
-            
-            marker = L.marker(e.latlng).addTo(map);
-            
-            var lat = e.latlng.lat;
-            var lon = e.latlng.lng;
-            reverseGeocode(lat, lon);
-        });
+            map.on('click', function(e) {
+                if (marker) {
+                    map.removeLayer(marker); // Remove existing marker
+                }
+                
+                marker = L.marker(e.latlng).addTo(map);
+                
+                var lat = e.latlng.lat;
+                var lon = e.latlng.lng;
+                reverseGeocode(lat, lon);
+            });
 
-        // Add event listeners here
-        map.on('enterFullscreen', function() {
-            if(window.console) window.console.log('enterFullscreen event fired');
-        });
+            // Add event listeners here
+            map.on('enterFullscreen', function() {
+                if(window.console) window.console.log('enterFullscreen event fired');
+            });
 
-        map.on('exitFullscreen', function() {
-            if(window.console) window.console.log('exitFullscreen event fired');
-        });
-    } else {
-        setTimeout(function() {
-            map.invalidateSize();
-        }, 10);
-    }
-});
-
-
+            map.on('exitFullscreen', function() {
+                if(window.console) window.console.log('exitFullscreen event fired');
+            });
+        } else {
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 10);
+        }
+    });
+ 
 
     var searchButton = document.getElementById('searchButton');
     var searchInput = document.getElementById('search');
@@ -330,26 +430,173 @@
         var addressElement = document.getElementById('dropPointLocation');
         addressElement.value = address;
     }
-</script>
 
-<script> 
+    
+  </script>
+  <!-- udpate drop point -->
+  <script>
+    $(document).ready(function() { 
+      
+      var updateMap; // For Leaflet map in update modal
+      var updateMarker = null; // For marker in update modal
+      var updateSearchButton = document.getElementById('updateSearchButton');
+      var updateSearchInput = document.getElementById('updateSearch');
 
-$(document).ready(function() {
-  $('#assignManagerModal').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
-    var modal = $(this);
-    modal.find('#modalDropPointId').val(dropPointId);
-  });
-});
-document.getElementById('managerName').addEventListener('change', function() {
-  const selectedEmail = this.value;
-  document.getElementById('managerEmail').value = selectedEmail;
-});
-</script>
+      // Function to geocode address and set the map view
+      function geocodeAndSetMap(address) {
+          fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(address) + '&format=json')
+          .then(response => response.json())
+          .then(data => {
+              if(data && data[0] && data[0].lat && data[0].lon) {
+                  var lat = parseFloat(data[0].lat);
+                  var lon = parseFloat(data[0].lon);
+                  updateMap.setView([lat, lon], 10);
+                  if (updateMarker) {
+                      updateMap.removeLayer(updateMarker);
+                  }
+                  updateMarker = L.marker([lat, lon]).addTo(updateMap);
+              }
+          })
+          .catch(error => {
+              console.error('Geocoding error', error);
+          });
+      } 
+      function displayAddress(address) {
+          var addressElement = document.getElementById('updateDropPointLocation');
+          addressElement.value = address;
+      }
+      function reverseGeocode(lat, lon) {
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.display_name) {
+                    displayAddress(data.display_name);
+                    if(updateMarker) {
+                        updateMarker.bindPopup(data.display_name).openPopup();
+                    }
+                }
+            })
+            .catch(function(error) {
+                console.log('Error:', error);
+            });
+    }
+
+      // Event listener for showing the update modal
+      $('#updateDropPointModal').on('show.bs.modal', function(event) {
+          var button = $(event.relatedTarget);  // Button that triggered the modal
+          var dropPointId = button.data('droppointid');  // Extract the ID from data-droppointid attribute
+
+          // Assuming dropPoints is an array passed to EJS from the server-side
+          var dropPoints = <%- JSON.stringify(dropPoints) %>;
+
+          // Find the corresponding drop point object
+          var dropPoint = dropPoints.find(function(dp) {
+              return dp.id === dropPointId;
+          });
+
+          // Populate form fields
+          $('#updateDropPointId').val(dropPoint.id);
+          $('#updateDropPointName').val(dropPoint.name);
+          $('#updateDropPointLocation').val(dropPoint.location);
+          $('#updateDropPointOpeningTime').val(dropPoint.openingTime);
+          $('#updateDropPointClosingTime').val(dropPoint.closingTime);
+          $('#updateDropPointDescription').val(dropPoint.description);
+
+          // Initialize or update the map
+          if (!updateMap) {
+              updateMap = L.map('updateMap', {
+                  // ... (options)
+              });
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  maxZoom: 19
+              }).addTo(updateMap);
+          }
+
+          // Geocode the address and set map view
+          geocodeAndSetMap(dropPoint.location);
+      });
+
+       // New Search Functionality
+      updateSearchButton.addEventListener('click', function() {
+          var query = updateSearchInput.value;
+          if (query !== '') {
+              fetch('https://nominatim.openstreetmap.org/search?q=' + query + '&format=json')
+              .then(function(response) {
+                  return response.json();
+              })
+              .then(function(data) {
+                  if (data.length > 0) {
+                      var result = data[0];
+                      var lat = parseFloat(result.lat);
+                      var lon = parseFloat(result.lon);
+                      
+                      updateMap.setView([lat, lon], 15); // Update map view
+                      
+                      if (updateMarker) {
+                          updateMap.removeLayer(updateMarker);
+                      }
+
+                      updateMarker = L.marker([lat, lon]).addTo(updateMap).bindPopup(result.display_name).openPopup();
+                      displayAddress(result.display_name);
+                  }
+              })
+              .catch(function(error) {
+                  console.log('Error:', error);
+              });
+          }
+      });
+      // New functionality to click on the map to place a marker
+       if (!updateMap) {
+        updateMap = L.map('updateMap', {
+            // ... (options)
+        });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(updateMap);
+
+        updateMap.on('click', function(e) {
+            if (updateMarker) {
+                updateMap.removeLayer(updateMarker); // Remove existing marker
+            }
+            
+            updateMarker = L.marker(e.latlng).addTo(updateMap);
+            
+            var lat = e.latlng.lat;
+            var lon = e.latlng.lng;
+            reverseGeocode(lat, lon);
+        });
+    }
+    });
+
+
+  </script>
  
+  <script> 
+  // assigned a manager to a droppoint
+  $(document).ready(function() {
+    $('#assignManagerModal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
+      var modal = $(this);
+      modal.find('#modalDropPointId').val(dropPointId);
+    });
+  });
+  // remove a manager to a droppoint
+  $('#removeManagerModal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
+      var modal = $(this);
+      modal.find('#modalRemoveDropPointId').val(dropPointId);  // Make sure the ID matches your HTML input ID
+  });
 
 
+  document.getElementById('managerName').addEventListener('change', function() {
+    const selectedEmail = this.value;
+    document.getElementById('managerEmail').value = selectedEmail;
+  });
+  </script>  
 
 </body>
 </html>

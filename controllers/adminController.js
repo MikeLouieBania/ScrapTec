@@ -1,14 +1,13 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
+const nodemailer = require("nodemailer");
 
 function isPDF(filename) {
   return filename.toLowerCase().endsWith('.pdf');
-}
-
+} 
 function isDOCX(filename) {
   return filename.toLowerCase().endsWith('.docx');
-}
-
+} 
 
 module.exports = {
   async getDashboard(req, res) {
@@ -34,8 +33,7 @@ module.exports = {
       console.error("Error fetching organizations:", error);
       res.status(500).send("Internal Server Error");
     }
-  },
-  
+  }, 
   async updateOrganizationStatus(req, res) {
     try {
         const { organizationId, newStatus } = req.body;
@@ -43,11 +41,68 @@ module.exports = {
         if (!organizationId || !newStatus) {
             return res.status(400).send("Missing required parameters.");
         }
+
+        // Fetch the organization's details
+        const organization = await prisma.organization.findUnique({
+          where: { id: organizationId },
+        });
   
+        // Update the organization's status
         await prisma.organization.update({
             where: { id: organizationId },
             data: { verificationStatus: newStatus }
         });
+
+        // Create email transporter
+        const transporter = nodemailer.createTransport({
+          service: process.env.EMAIL_SERVICE,
+          auth: {
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+
+        // Set up different email content based on the new status
+        let subject, htmlContent;
+
+        if (newStatus === 'APPROVED') {
+          subject = 'Your Organization Has Been Approved';
+          htmlContent = `
+            <h1>Congratulations!</h1>
+            <p>Your organization, "${organization.organizationname}", has been approved.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          `;
+        } else if (newStatus === 'REJECTED') {
+          subject = 'Your Organization Application Was Not Approved';
+          htmlContent = `
+            <h1>Application Not Approved</h1>
+            <p>Unfortunately, your organization, "${organization.organizationname}", has not been approved.</p>
+            <p>If you have questions, please reach out to our support team.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          `;
+        } else {
+          // Handle other statuses if needed
+        }
+
+        // Only send the email if subject and htmlContent are set
+        if (subject && htmlContent) {
+          const mailOptions = {
+            from: process.env.EMAIL_USERNAME,
+            to: organization.email,
+            subject: subject,
+            html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">${htmlContent}</div>`
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error("Email could not be sent:", error);
+            } else {
+              console.log("Email sent:", info.response);
+            }
+          });
+        }
   
         // Store the newStatus in the session
         req.session.status = newStatus;
@@ -93,22 +148,58 @@ module.exports = {
   },
   async getDropPointManagement(req, res) {
     try {
-      const managers = await prisma.manager.findMany();
-      const dropPoints = await prisma.dropPoint.findMany();
-
-      res.render('admin/droppointmanagement', { managers, dropPoints });
+      // Fetch all managers
+      const allManagers = await prisma.manager.findMany();
+    
+      // Fetch all drop points
+      const dropPoints = await prisma.dropPoint.findMany({
+        include: {
+          manager: true,  // Include manager details
+        },
+      });
+    
+      // Filter out managers who are already assigned to a drop point
+      const unassignedManagers = allManagers.filter(manager => {
+        return !dropPoints.some(dropPoint => dropPoint.managerId === manager.id);
+      });
+    
+      // Render the management page, sending only the unassigned managers
+      res.render('admin/droppointmanagement', { managers: unassignedManagers, dropPoints });
+    
     } catch (error) {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
     }
-  },
+  },    
   async getManagerManagement(req, res) {
     try {
-      const managers = await prisma.manager.findMany(); 
-
-      res.render('admin/managermanagement', { managers });
+      // Fetch managers
+      const managers = await prisma.manager.findMany();
+  
+      // Fetch unique assigned managerIds from drop points
+      const dropPoints = await prisma.dropPoint.groupBy({
+        by: ['managerId'],
+        where: {
+          managerId: {
+            not: {
+              equals: null
+            }
+          }
+        },
+        _count: true
+      });
+  
+      const assignedManagerIds = new Set(dropPoints.map(dp => dp.managerId));
+  
+      // Add assignment status to managers
+      const managersWithStatus = managers.map(manager => ({
+        ...manager,
+        isAssigned: assignedManagerIds.has(manager.id)
+      }));
+  
+      res.render('admin/managermanagement', { managers: managersWithStatus });
     } catch (error) {
-      console.error("Error fetching drop points:", error);
+      console.error("Error fetching managers:", error);
       res.status(500).send("Internal Server Error");
     }
   },
@@ -176,7 +267,7 @@ module.exports = {
       }
   
       // Check if this manager is already assigned to a drop point (Optional: Depending on your business rules)
-      const existingDropPoint = await prisma.dropPoint.findUnique({
+      const existingDropPoint = await prisma.dropPoint.findFirst({
         where: {
           managerId: manager.id
         }
@@ -194,6 +285,62 @@ module.exports = {
           password: password
         }
       });
+      
+
+      // Fetch the updated drop point details
+      const updatedDropPoint = await prisma.dropPoint.findUnique({
+        where: { id: dropPointId },
+      });
+
+      // Send email to the manager with details
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: manager.email,
+        subject: 'Assignment to Drop Point',
+        html: `
+          <div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+            <h1 style="color: #333366;">You've Been Assigned to a Drop Point</h1>
+            <p>Dear ${manager.firstName} ${manager.lastName},</p>
+            <p>We are pleased to inform you that you have been assigned to the following drop point:</p>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">Name</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">${updatedDropPoint.name}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">Location</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">${updatedDropPoint.location}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">Operating Hours</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">${updatedDropPoint.openingTime} - ${updatedDropPoint.closingTime}</td>
+              </tr>
+            </table>
+            <p>Your access password is: <strong>${updatedDropPoint.password}</strong></p>
+            <p>You can update this password in your profile settings for additional security.</p>
+            <p>Please reach out to our support team for any further assistance.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          </div>
+        `,
+      };
+      
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email could not be sent:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
   
       // Redirect or send a success response
       res.redirect('/admin/droppointmanagement');
@@ -203,23 +350,153 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
-  async getDropPointManagement(req, res) {
+  async removeManagerFromDropPoint(req, res) {
     try {
-      // Fetching managers who aren't assigned to any DropPoint yet
-      const availableManagers = await prisma.manager.findMany({
-        where: {
-          dropPoint: null
-        }
-      });
-      const dropPoints = await prisma.dropPoint.findMany({
-        include: {
-          manager: true
-        }
+      const { dropPointId } = req.body;
+  
+      if (!dropPointId) {
+        return res.status(400).send('dropPointId is missing or invalid.');
+      } 
+
+      // Fetch the DropPoint to find the current manager's ID
+      const dropPoint = await prisma.dropPoint.findUnique({
+        where: { id: dropPointId },
+        include: { manager: true }
       });
   
-      res.render('admin/droppointmanagement', { managers: availableManagers, dropPoints });
+      // Update the DropPoint to remove the manager's ID
+      await prisma.dropPoint.update({
+        where: { id: dropPointId },
+        data: {
+          managerId: null,
+          password: null  // Optional: Reset the password if needed
+        }
+      });
+
+      // Send an email to the removed manager if there was one
+      if (dropPoint.manager) {
+        const manager = dropPoint.manager;
+
+        // Create email transporter
+        const transporter = nodemailer.createTransport({
+          service: process.env.EMAIL_SERVICE,
+          auth: {
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+
+        // Set up formal email content
+        const mailOptions = {
+          from: process.env.EMAIL_USERNAME,
+          to: manager.email,
+          subject: 'Unassignment from Drop Point',
+          html: `
+            <div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+              <h1 style="color: #333366;">Unassignment from Drop Point</h1>
+              <p>Dear ${manager.firstName} ${manager.lastName},</p>
+              <p>We regret to inform you that you have been unassigned from the drop point named "${dropPoint.name}".</p>
+              <p>If you have any questions or require further clarification, please contact our support team.</p>
+              <p>Best regards,</p>
+              <p>Your Team</p>
+            </div>
+          `,
+        };
+
+        // Send the email
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error("Email could not be sent:", error);
+          } else {
+            console.log("Email sent:", info.response);
+          }
+        });
+      }
+  
+      // Redirect back to the management page
+      res.redirect('/admin/droppointmanagement');
     } catch (error) {
-      console.error("Error fetching drop points:", error);
+      console.error("Error removing manager from drop point:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },   
+  async updateDropPoint(req, res) {
+    try {
+      const { id, name, location, openingTime, closingTime, description } = req.body;
+  
+      // Ensure all required fields are provided
+      if (!id || !name || !location || !openingTime || !closingTime || !description) {
+        return res.status(400).send("Missing required parameters.");
+      }
+
+      // Fetch the DropPoint to find the current manager's ID
+      const dropPoint = await prisma.dropPoint.findFirst({
+        where: { id },
+        include: { manager: true }
+      });
+  
+      // Update the DropPoint
+      await prisma.dropPoint.update({
+        where: { id },
+        data: {
+          name,
+          location,
+          openingTime,
+          closingTime,
+          description,
+        },
+      });
+
+       // Send an email to the assigned manager if there is one
+    if (dropPoint.manager) {
+      const manager = dropPoint.manager;
+
+      // Create email transporter
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      // Set up formal email content
+      const mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: manager.email,
+        subject: 'Drop Point Details Updated',
+        html: `
+          <div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+            <h1 style="color: #333366;">Drop Point Details Updated</h1>
+            <p>Dear ${manager.firstName} ${manager.lastName},</p>
+            <p>The drop point "${name}" to which you are assigned has had its details updated. The new details are as follows:</p>
+            <ul>
+              <li><strong>Name:</strong> ${name}</li>
+              <li><strong>Location:</strong> ${location}</li>
+              <li><strong>Opening Time:</strong> ${openingTime}</li>
+              <li><strong>Closing Time:</strong> ${closingTime}</li>
+              <li><strong>Description:</strong> ${description}</li>
+            </ul>
+            <p>If you have any questions, please contact our support team.</p>
+            <p>Best regards,</p>
+            <p>Your Team</p>
+          </div>
+        `,
+      };
+
+      // Send the email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email could not be sent:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+    }
+  
+      res.redirect('/admin/droppointmanagement');
+    } catch (error) {
+      console.error("Error while updating drop point:", error);
       res.status(500).send("Internal Server Error");
     }
   },

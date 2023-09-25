@@ -23,15 +23,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">  
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/faq">FAQ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/account">My Account</a>
+                <a class="nav-link" href="/organization/account">Account</a>
                 </li>
-            </ul>
+            </ul> 
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
             </form>
@@ -49,7 +52,8 @@
               <th scope="col">Status</th>
               <th scope="col">Drop Point</th>
               <th scope="col">Scheduled Drop-off Date</th>
-              <th scope="col">Details</th>
+              <th scope="col">Total Points</th>
+              <th scope="col" colspan="2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -58,7 +62,20 @@
                 <td><%= donation.status %></td>
                 <td><%= donation.dropPoint.name %></td>
                 <td><%= donation.expectedDateOfArrival ? new Date(donation.expectedDateOfArrival).toLocaleDateString() : 'N/A' %></td>
-                <td><button class="btn btn-info btn-sm" data-toggle="collapse" data-target="#donation-<%= donation.id %>">Toggle</button></td>
+                <td>
+                  <% if (donation.status === 'PENDING' || donation.status === 'ARRIVED') { %>
+                    <span class="text-warning"><%= donation.points ? donation.points + " (Attainable)" : "N/A" %></span>
+                  <% } else if (donation.status === 'REJECTED') { %>
+                    <span class="text-danger">0</span>
+                  <% } else if (donation.status === 'VERIFIED' || donation.status === 'ACCEPTEDWITHISSUES') { %>
+                    <span class="text-success"><%= donation.points ? donation.points : "N/A" %></span>
+                  <% } %>
+                </td>
+                
+                <td><button class="btn btn-info btn-sm" data-toggle="collapse" data-target="#donation-<%= donation.id %>">Toggle Details</button></td>
+                <td>
+                  <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cancelDonationModal-<%= donation.id %>">Cancel</button>
+                </td>                
               </tr>
               <!-- Collapsible Row for Donation Details -->
               <tr id="donation-<%= donation.id %>" class="collapse">
@@ -89,12 +106,35 @@
                         </table>
                     </div>
                 </td>
-              </tr>
+              </tr> 
+              <!-- Modal -->
+              <div class="modal fade" id="cancelDonationModal-<%= donation.id %>" tabindex="-1" role="dialog" aria-labelledby="cancelDonationModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="cancelDonationModalLabel">Cancel Donation</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure you want to cancel this donation? Forfeiture of the donation will remove all your inputs.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-danger" onclick="cancelDonation('<%= donation.id %>')">Cancel Donation</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             <% }); %>
           </tbody>
         </table>
       </div>
     </div>
+
+
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
