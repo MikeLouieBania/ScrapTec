@@ -3,12 +3,43 @@
   <head>
     <title>My Account</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-    <style>
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+    <style> 
+    /* Custom CSS for enhanced city card */
+    .city-card {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .city-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .city-details {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .city-actions {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    /* Style the "Explore" button */
+    .city-actions a.btn-primary {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .city-actions a.btn-primary:hover {
+      background-color: #0056b3;
+    }
+
     </style>
   </head>
   <body>
@@ -74,55 +105,126 @@
             <p><strong>No Profile Picture</strong></p>
           <% } %>
         </div>  
-        
         <!-- Redeem Tab -->
         <div class="tab-pane" id="redeem">
-          <!-- Redeem Content Here -->
-          <h3>Redeem Points</h3>
-          <p>You have <span class="badge badge-success"><%= organization.totalPoints %></span> spendable points.</p> 
-                  
-          <!-- Redeem for Advertisements -->
-          <section>
-            <h4>Redeem for Advertisements</h4>
-            <p>You can redeem your points to run advertisements in the User Marketplace. Here are the options:</p>
-            <ul>
-              <li><strong>Basic Ad (1 week):</strong> 10 points</li>
-              <li><strong>Premium Ad (2 weeks with featured placement):</strong> 20 points</li>
-            </ul>
-            <form action="/organization/redeem" method="post">
-              <label for="adType">Select Advertisement Type:</label>
-              <select id="adType" name="adType">
-                <option value="basic">Basic Ad - 10 points</option>
-                <option value="premium">Premium Ad - 20 points</option>
-              </select>
-              <button type="submit">Redeem</button>
-            </form>
-          </section>
-                  
-          <!-- Ad Targeting and Ranking -->
-          <section>
-            <h4>Advertisement Targeting and Ranking</h4>
-            <p>Your ads' exposure will automatically be determined by your organization's total donation points in the selected city. The higher your donation points, the more prominently your ad will be displayed.</p>
-            <ul>
-              <li><strong>City Selection:</strong> Choose the city where you want your ad to be displayed. This can be done in the form above.</li>
-              <li><strong>Automatic Ranking:</strong> Ads will be automatically ranked and displayed based on total donation points in the selected city.</li>
-            </ul>
-            <p>Your current ranking points in donations: <span class="badge badge-info"><%= totalPoints %></span></p>
-          </section>
-                  
-          <!-- Ad Expiry -->
-          <section>
-            <h4>Advertisement Expiry</h4>
-            <p>All advertisements have an expiration period:</p>
-            <ul>
-              <li><strong>Basic Ad:</strong> Expires after 1 week</li>
-              <li><strong>Premium Ad:</strong> Expires after 2 weeks</li>
-            </ul>
-            <p>You will be notified via email before your ad expires.</p>
-          </section>
-        </div>
+          <div class="row">
+            <!-- Side Navigation -->
+            <div class="col-md-3">
+              <h4>Filter by Points</h4>
+              <input type="text" id="citySearch" class="form-control" placeholder="Search Cities">
+              <div class="list-group mt-3">
+                <a href="#" class="list-group-item list-group-item-action">Highest Points Required</a>
+                <a href="#" class="list-group-item list-group-item-action">Lowest Points Required</a>
+              </div>
+              <h4 class="mt-4">Redeem History</h4>
+              <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">Advertisements</a>
+                <a href="#" class="list-group-item list-group-item-action">Spent Points</a>
+              </div>
+            </div>
 
-        
+            <!-- Main Content -->
+            <div class="col-md-9">
+                    
+              <!-- Redeem for Advertisements -->
+              <div class="card">
+                <div class="card-header" id="redeemAdHeader">
+                  <h4 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#redeemAdCollapse" aria-expanded="true" aria-controls="redeemAdCollapse">
+                      Redeem for Advertisements
+                    </button>
+                  </h4>
+                </div>
+                <div id="redeemAdCollapse" class="collapse show" aria-labelledby="redeemAdHeader">
+                  <div class="card-body">
+                    <p>You can redeem your points to run advertisements in the User Marketplace. Here are the options:</p>
+                    <ul>
+                      <li><strong>Basic Ad (1 week):</strong> 10 points</li>
+                      <li><strong>Premium Ad (2 weeks with featured placement):</strong> 20 points</li>
+                    </ul> 
+                  </div>
+                </div>
+              </div> 
+              <!-- Ad Targeting and Ranking -->
+              <div class="card mt-3">
+                <div class="card-header" id="targetRankHeader">
+                  <h4 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#targetRankCollapse" aria-expanded="false" aria-controls="targetRankCollapse">
+                      Advertisement Targeting and Ranking
+                    </button>
+                  </h4>
+                </div>
+                <div id="targetRankCollapse" class="collapse" aria-labelledby="targetRankHeader">
+                  <div class="card-body">
+                    <p>Your ads' exposure will automatically be determined by your organization's total donation points in the selected city. The higher your donation points, the more prominently your ad will be displayed.</p>
+                    <ul>
+                      <li><strong>City Selection:</strong> Choose the city where you want your ad to be displayed.</li>
+                      <li><strong>Automatic Ranking:</strong> Ads will be automatically ranked and displayed based on total donation points in the selected city.</li>
+                    </ul>
+                    <p>Your current ranking points in donations: <span class="badge badge-info"><%= totalPoints %></span></p>
+                  </div>
+                </div>
+              </div> 
+              <!-- Ad Expiry -->
+              <div class="card mt-3">
+                <div class="card-header" id="expiryHeader">
+                  <h4 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#expiryCollapse" aria-expanded="false" aria-controls="expiryCollapse">
+                      Advertisement Expiry
+                    </button>
+                  </h4>
+                </div>
+                <div id="expiryCollapse" class="collapse" aria-labelledby="expiryHeader">
+                  <div class="card-body">
+                    <p>All advertisements have an expiration period:</p>
+                    <ul>
+                      <li><strong>Basic Ad:</strong> Expires after 1 week</li>
+                      <li><strong>Premium Ad:</strong> Expires after 2 weeks</li>
+                    </ul>
+                    <p>You will be notified via email before your ad expires.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- City Cards Section -->
+              <div class="card mt-3">
+                <div class="card-header">
+                  <h4 class="mb-0">
+                    Cities
+                  </h4>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <!-- Loop through cities and display as cards -->
+                    <% cities.forEach((city) => { %>
+                      <div class="col-md-4">
+                        <!-- Enhanced city card -->
+                        <div class="card mb-4 city-card">
+                          <div class="card-body">
+                            <h5 class="card-title"><%= city.name %></h5>
+                            <p class="card-text">Total Users: <%= city.usersCount %></p>
+                            <!-- Additional design elements -->
+                            <div class="city-details">
+                              <span class="badge badge-info">Required Points: <%= city.requiredPoints %></span>
+                              <!-- Add more details as needed -->
+                            </div>
+                            <div class="city-actions">
+                              <a href="#" class="btn btn-primary">Explore</a>
+                              <!-- Add more actions as needed -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% }); %>
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div> 
         <!-- Status Tab -->
         <div class="tab-pane" id="status">
           <!-- Status Content Here -->
