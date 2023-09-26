@@ -1,64 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>FAQ</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-  <style>
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <style>
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .faq-section {
+            margin-top: 40px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/donationsList">Donations</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-                </li>  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/faq">FAQ</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/account">Account</a>
-                </li>
-            </ul> 
-            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-            </form>
-        </div>
-    </nav>
-  
-  <div class="container">
-    <h1>Frequently Asked Questions</h1>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mr-auto">  
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/donationsList">Donations</a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+              </li>  
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/faq">FAQ</a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/account">Account</a>
+              </li>
+          </ul> 
+          <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+          </form>
+      </div>
+  </nav>
 
+    <div class="container">
+        <h1>Frequently Asked Questions</h1>
 
-    <h3>Donating Items</h3>
-    <ul>
-      <li><strong>How can I donate?</strong></li>
-      <li><strong>What types of items can I donate?</strong></li>
-      <li><strong>Is my donation tax-deductible?</strong></li>
-    </ul>
+        <div class="faq-section">
+            <h3>Donating Items</h3>
+            <div id="donationFAQ">
+                <div>
+                    <a data-toggle="collapse" href="#q1" aria-expanded="false">
+                        <strong>How can I donate?</strong>
+                    </a>
+                    <div class="collapse" id="q1">
+                        <p>Answer for the first question...</p>
+                    </div>
+                </div>
+                <div>
+                    <a data-toggle="collapse" href="#q2" aria-expanded="false">
+                        <strong>What types of items can I donate?</strong>
+                    </a>
+                    <div class="collapse" id="q2">
+                        <p>Answer for the second question...</p>
+                    </div>
+                </div>
+                <div>
+                    <a data-toggle="collapse" href="#q3" aria-expanded="false">
+                        <strong>Is my donation tax-deductible?</strong>
+                    </a>
+                    <div class="collapse" id="q3">
+                        <p>Answer for the third question...</p>
+                    </div>
+                </div>
+            </div>
 
-    <h3>Account & Status</h3>
-    <ul>
-      <li><strong>How do I change my account settings?</strong></li>
-      <li><strong>What is the status of my donations?</strong></li>
-    </ul>
-  </div>
+            <div class="faq-section">
+                <h3>Account & Status</h3>
+                <div id="accountFAQ">
+                    <div>
+                        <a data-toggle="collapse" href="#q4" aria-expanded="false">
+                            <strong>How do I change my account settings?</strong>
+                        </a>
+                        <div class="collapse" id="q4">
+                            <p>Answer for the fourth question...</p>
+                        </div>
+                    </div>
+                    <div>
+                        <a data-toggle="collapse" href="#q5" aria-expanded="false">
+                            <strong>What is the status of my donations?</strong>
+                        </a>
+                        <div class="collapse" id="q5">
+                            <p>Answer for the fifth question...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

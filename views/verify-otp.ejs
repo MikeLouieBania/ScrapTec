@@ -103,12 +103,12 @@
     <% } %>
     <form action="/verify-otp" method="POST">
         <div class="input-field">
-            <input type="text" maxlength="1" required>
-            <input type="text" maxlength="1" required disabled>
-            <input type="text" maxlength="1" required disabled>
-            <input type="text" maxlength="1" required disabled>
-            <input type="text" maxlength="1" required disabled>
-            <input type="text" maxlength="1" required disabled>
+            <input type="text" name="otp1" maxlength="1" required>
+            <input type="text" name="otp2" maxlength="1" required disabled>
+            <input type="text" name="otp3" maxlength="1" required disabled>
+            <input type="text" name="otp4" maxlength="1" required disabled>
+            <input type="text" name="otp5" maxlength="1" required disabled>
+            <input type="text" name="otp6" maxlength="1" required disabled>
         </div>
         <button type="submit" class="btn btn-primary">Verify OTP</button>
     </form>

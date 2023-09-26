@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Link to Google's Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+    
     <style>
 
       body {
@@ -237,8 +240,9 @@
                   </div>
                   <div class="col-lg-6 col-md-12">
                     <div class="form-group">
-                      <label for="city">City:</label>
-                      <input type="text" class="form-control" id="city" name="city" required>
+                        <label for="city">City:</label>
+                        <input type="search" class="form-control" id="cityInput" name="city" required>
+                        <div id="suggestions" style="margin-top: 10px;"></div>
                     </div>
                     <div class="form-group">
                       <label for="gender">Gender:</label>
@@ -267,68 +271,94 @@
             </div>
 
          <!-- Organization Registration Form -->
-<div class="tab-pane fade" id="organizationForm">
-  <form action="/organization-signup" method="POST" enctype="multipart/form-data">
-      <div class="row"> <!-- Start of Bootstrap row -->
-          <div class="col-md-6"> <!-- Start of first column -->
-              <div class="form-group">
-                  <label for="organizationname">Organization Name:</label>
-                  <input type="text" class="form-control" id="organizationname" name="organizationname" required>
-              </div>
-              <div class="form-group">
-                  <label for="email">Business Email:</label>
-                  <input type="email" class="form-control" id="email" name="email" required>
-              </div>
-              <div class="form-group">
-                  <label for="address">Business Address:</label>
-                  <input type="text" class="form-control" id="address" name="address" required>
-              </div>
-          </div> <!-- End of first column -->
+        <div class="tab-pane fade" id="organizationForm">
+          <form action="/organization-signup" method="POST" enctype="multipart/form-data">
+              <div class="row"> <!-- Start of Bootstrap row -->
+                  <div class="col-md-6"> <!-- Start of first column -->
+                      <div class="form-group">
+                          <label for="organizationname">Organization Name:</label>
+                          <input type="text" class="form-control" id="organizationname" name="organizationname" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="email">Business Email:</label>
+                          <input type="email" class="form-control" id="email" name="email" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="address">Business Address:</label>
+                          <input type="text" class="form-control" id="address" name="address" required>
+                      </div>
+                  </div> <!-- End of first column -->
 
-          <div class="col-md-6"> <!-- Start of second column -->
-              <div class="form-group">
-                  <label for="contactNumber">Contact Number:</label>
-                  <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
-              </div>
-              <div class="form-group">
-                  <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
-                  <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
-              </div>
-              <div class="form-group">
-                  <label for="organizationType">Organization Type:</label>
-                  <select class="form-control" id="organizationType" name="type">
-                      <option value="COMPANY">Company</option>
-                      <option value="NGO">NGO</option>
-                  </select>
-              </div>
-          </div> <!-- End of second column -->
-      </div> <!-- End of Bootstrap row -->
+                  <div class="col-md-6"> <!-- Start of second column -->
+                      <div class="form-group">
+                          <label for="contactNumber">Contact Number:</label>
+                          <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
+                          <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
+                      </div>
+                      <div class="form-group">
+                          <label for="organizationType">Organization Type:</label>
+                          <select class="form-control" id="organizationType" name="type">
+                              <option value="COMPANY">Company</option>
+                              <option value="NGO">NGO</option>
+                          </select>
+                      </div>
+                  </div> <!-- End of second column -->
+              </div> <!-- End of Bootstrap row -->
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-      </div>
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+              </div>
 
-      <!-- This remains outside the columns since it might be wider and can span both columns -->
-      <div class="form-group">
-          <label for="documentUpload">Business Registration Documents and TIN:</label>
-          <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
-          <small class="form-text text-muted">
-              Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
-          </small>
-      </div>
-      
-      <!-- Button -->
-      <div class="form-group button-center">
-          <button type="submit" class="btn btn-primary">Register as an Organization</button>
-      </div>
-  </form>
-</div>
+              <!-- This remains outside the columns since it might be wider and can span both columns -->
+              <div class="form-group">
+                  <label for="documentUpload">Business Registration Documents and TIN:</label>
+                  <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
+                  <small class="form-text text-muted">
+                      Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
+                  </small>
+              </div>
+              
+              <!-- Button -->
+              <div class="form-group button-center">
+                  <button type="submit" class="btn btn-primary">Register as an Organization</button>
+              </div>
+          </form>
+        </div>
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <script>
+        const accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';  // Replace with your Mapbox Access Token
+
+        let input = document.getElementById('cityInput');
+        let suggestionsDiv = document.getElementById('suggestions');
+
+        input.addEventListener('keyup', function() {
+            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${input.value}.json?access_token=${accessToken}&country=PH&types=place`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsDiv.innerHTML = '';
+                    data.features.forEach(feature => {
+                        let cityName = feature.text;  // Only extracting the city name
+                        let cityDiv = document.createElement('div');
+                        cityDiv.innerHTML = cityName;
+                        cityDiv.style.cursor = 'pointer';
+                        cityDiv.onclick = function() {
+                            input.value = cityName;
+                            suggestionsDiv.innerHTML = '';
+                        };
+                        suggestionsDiv.appendChild(cityDiv);
+                    });
+                });
+        });
+    </script>
     <script>
         // Code for previewing profile picture (same as before)
         const profilePictureInput = document.getElementById('profilePicture');
