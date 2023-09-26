@@ -7,9 +7,10 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch/dist/geosearch.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-fullscreen@1.5.4/dist/leaflet.fullscreen.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@1.7.0/dist/leaflet.fullscreen.css" />
-    <script src="https://unpkg.com/leaflet.fullscreen@1.7.0"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-fullscreen/dist/leaflet.fullscreen.css" /> 
+
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -128,6 +129,10 @@
             max-width: none !important;
             width: 100% !important;
         } 
+        
+    .leaflet-control-fullscreen {
+        z-index: 1001 !important; 
+    }
 
         .btn-enhanced {
             background-color: #34495e; /* A smooth dark blue shade */
@@ -385,55 +390,55 @@
     <!-- Load Leaflet and plugins ONCE and AFTER Bootstrap -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-geosearch/dist/geosearch.umd.js"></script>
-    <script src="https://unpkg.com/leaflet-fullscreen@1.5.4/dist/Leaflet.fullscreen.min.js"></script>
-        
+    <script src="https://unpkg.com/leaflet-fullscreen/dist/Leaflet.fullscreen.min.js"></script>
+
     <script>
         $(document).ready(function() {
-    var maps = {};
+            var maps = {};
 
-    $('.modal').each(function() {
-        var $modal = $(this);
-        var pointId = $modal.data('point-id');
-        var location = $modal.data('location');
+            $('.modal').each(function() {
+                var $modal = $(this);
+                var pointId = $modal.data('point-id');
+                var location = $modal.data('location');
 
-        var mapId = 'map-' + pointId;
-        if ($('#' + mapId).length) {
-            maps[mapId] = L.map(mapId, {
-                fullscreenControl: true,
-                fullscreenControlOptions: {
-                    position: 'topleft' // this will position the fullscreen button at the top left corner of the map. You can adjust as needed.
+                var mapId = 'map-' + pointId;
+                if ($('#' + mapId).length) {
+                    maps[mapId] = L.map(mapId, {
+                        fullscreenControl: true,
+                        fullscreenControlOptions: {
+                            position: 'topleft' // this will position the fullscreen button at the top left corner of the map. You can adjust as needed.
+                        }
+                    }).setView([0, 0], 13);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(maps[mapId]);
+
+                    var provider = new GeoSearch.OpenStreetMapProvider();
+
+                    provider.search({ query: location }).then(function(result) {
+                        if (result && result[0]) {
+                            var coordinates = [result[0].y, result[0].x];
+                            maps[mapId].setView(coordinates, 13);
+                            L.marker(coordinates).addTo(maps[mapId]).bindPopup(location);
+                        } else {
+                            console.error("No results found for location:", location);
+                        }
+                    }).catch(function(error) {
+                        console.error("Error searching for location", location, ":", error);
+                    });
                 }
-            }).setView([0, 0], 13);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(maps[mapId]);
-
-            var provider = new GeoSearch.OpenStreetMapProvider();
-    
-            provider.search({ query: location }).then(function(result) {
-                if (result && result[0]) {
-                    var coordinates = [result[0].y, result[0].x];
-                    maps[mapId].setView(coordinates, 13);
-                    L.marker(coordinates).addTo(maps[mapId]).bindPopup(location);
-                } else {
-                    console.error("No results found for location:", location);
-                }
-            }).catch(function(error) {
-                console.error("Error searching for location", location, ":", error);
             });
-        }
-    });
 
-    $('.modal').on('shown.bs.modal', function(e) {
-        var mapId = 'map-' + $(this).data('point-id');
-        if (maps[mapId]) {
-            maps[mapId].invalidateSize();
-        }
-    });
-});
-
+            $('.modal').on('shown.bs.modal', function(e) {
+                var mapId = 'map-' + $(this).data('point-id');
+                if (maps[mapId]) {
+                    maps[mapId].invalidateSize();
+                }
+            });
+        });
     </script>
+
     
  
     <script>
