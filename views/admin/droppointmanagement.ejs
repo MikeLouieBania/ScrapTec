@@ -508,6 +508,10 @@
           if (!updateMap) {
               updateMap = L.map('updateMap', {
                   // ... (options)
+                    fullscreenControl: true,
+                    fullscreenControlOptions: {
+                        position: 'topleft' // Adjust the position as needed
+                    }
               });
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                   maxZoom: 19
@@ -551,6 +555,10 @@
        if (!updateMap) {
         updateMap = L.map('updateMap', {
             // ... (options)
+                fullscreenControl: true,
+                fullscreenControlOptions: {
+                    position: 'topleft' // Adjust the position as needed
+                }
         });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
