@@ -93,7 +93,7 @@ async function getCitiesWithUserCounts() {
         name: true,
         users: {
           select: {
-            id: true, // You can select other user properties if needed
+            id: true, 
           },
         },
       },
@@ -349,6 +349,36 @@ module.exports = {
     const citiesWithCounts = await getCitiesWithUserCounts();
 
     res.render('organization/account', { organization, totalPoints, cities: citiesWithCounts, }); 
+  }, 
+  async getAdvertisements(req, res) { 
+    const organizationId = req.session.organization.id;
+    const organization = await prisma.organization.findUnique({
+      where: {id: organizationId},
+    });
+
+    
+    const totalPoints = await getTotalPointsForOrganization(organizationId); 
+
+    
+    // Get cities with user counts
+    const citiesWithCounts = await getCitiesWithUserCounts();
+
+    res.render('organization/advertisements', { organization, totalPoints, cities: citiesWithCounts, }); 
+  }, 
+  async getSpentPoints(req, res) { 
+    const organizationId = req.session.organization.id;
+    const organization = await prisma.organization.findUnique({
+      where: {id: organizationId},
+    });
+
+    
+    const totalPoints = await getTotalPointsForOrganization(organizationId); 
+
+    
+    // Get cities with user counts
+    const citiesWithCounts = await getCitiesWithUserCounts();
+
+    res.render('organization/spentPoints', { organization, totalPoints, cities: citiesWithCounts, }); 
   },   
   logout(req, res) {
     // Clear the session to log out the user

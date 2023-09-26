@@ -122,6 +122,9 @@ model Advertisement {
   title          String
   content        String
   pointsSpent    Float
+  link           String
+  imageUrl       Bytes
+  isActive       Boolean      // If the advertisement is currently active or not
   startDate      DateTime
   expiryDate     DateTime
   interactions   AdInteraction[] // Relation to Advertisement Interactions
