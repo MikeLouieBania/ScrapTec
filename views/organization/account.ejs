@@ -207,10 +207,9 @@
                             <div class="city-details">
                               <span class="badge badge-info">Required Points: <%= city.requiredPoints %></span>
                               <!-- Add more details as needed -->
-                            </div>
-                            <div class="city-actions">
-                              <a href="#" class="btn btn-primary">Explore</a>
-                              <!-- Add more actions as needed -->
+                            </div> 
+                            <div class="city-actions"> 
+                              <a href="/organization/advertise/<%= city.id %>" class="btn btn-primary">Advertise in <%= city.name %></a>
                             </div>
                           </div>
                         </div>
@@ -218,10 +217,7 @@
                     <% }); %>
                   </div>
                 </div>
-              </div>
-
-
-
+              </div> 
             </div>
           </div>
         </div> 

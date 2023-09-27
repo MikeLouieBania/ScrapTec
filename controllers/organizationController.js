@@ -110,9 +110,7 @@ async function getCitiesWithUserCounts() {
     console.error("Error fetching cities with user counts:", error);
     return []; // Return an empty array if an error occurs
   }
-}
- 
-
+} 
 
 module.exports = {
   async getDashboard(req, res) {
@@ -339,26 +337,24 @@ module.exports = {
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
       where: {id: organizationId},
-    });
+    }); 
+    const cities = await prisma.city.findMany();
 
     
     const totalPoints = await getTotalPointsForOrganization(organizationId); 
-
     
     // Get cities with user counts
     const citiesWithCounts = await getCitiesWithUserCounts();
 
-    res.render('organization/account', { organization, totalPoints, cities: citiesWithCounts, }); 
+    res.render('organization/account', { organization, totalPoints, cities: citiesWithCounts, cities }); 
   }, 
   async getAdvertisements(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
       where: {id: organizationId},
-    });
-
+    }); 
     
-    const totalPoints = await getTotalPointsForOrganization(organizationId); 
-
+    const totalPoints = await getTotalPointsForOrganization(organizationId);  
     
     // Get cities with user counts
     const citiesWithCounts = await getCitiesWithUserCounts();
@@ -379,7 +375,25 @@ module.exports = {
     const citiesWithCounts = await getCitiesWithUserCounts();
 
     res.render('organization/spentPoints', { organization, totalPoints, cities: citiesWithCounts, }); 
-  },   
+  },  
+  async getAdCity(req, res) { 
+    const cityId = req.params.cityId;
+  
+    // Fetch city details by ID
+    const city = await prisma.city.findUnique({
+      where: { id: cityId },
+    });
+  
+    if (!city) {
+      // City not found
+      return res.status(404).send('City not found');
+    }
+
+    console.log(city);
+  
+    // Render the form for advertising in the chosen city
+    res.render('organization/adCity', { city }); 
+  }, 
   logout(req, res) {
     // Clear the session to log out the user
     req.session.organization = null;
