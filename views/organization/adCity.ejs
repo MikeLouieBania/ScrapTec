@@ -36,8 +36,8 @@
         <div class="row">
             <div class="col-md-8">
                 <h2>Advertise in <%= city.name %></h2>
-                <p class="lead">Reach out to  potential users by advertising in this city!</p>
-
+                <p class="lead">Reach out to potential users by advertising in this city!</p>
+        
                 <!-- Required Points Display -->
                 <p class="text-info">Required Points to Advertise: <%= city.requiredPoints %></p>
                 
@@ -64,32 +64,23 @@
                 
                     <!-- Link -->
                     <div class="form-group">
-                        <label for="adLink">Link (optional):</label>
+                        <label for="adLink">Link:</label>
                         <input type="url" class="form-control" id="adLink" name="link">
                     </div>
                 
                     <!-- Image Upload -->
                     <div class="form-group">
-                        <label for="adImage">Advertisement Image (optional):</label>
+                        <label for="adImage">Advertisement Image:</label>
                         <input type="file" class="form-control-file" id="adImage" name="imageUrl">
-                    </div>
+                    </div> 
                 
-                    <!-- Is Active -->
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
-                        <label class="form-check-label" for="isActive">Is Active?</label>
-                    </div>
-                
-                    <!-- Start Date -->
+                    <!-- Advertisement Plan -->
                     <div class="form-group">
-                        <label for="startDate">Start Date:</label>
-                        <input type="date" class="form-control" id="startDate" name="startDate" required>
-                    </div>
-                
-                    <!-- Expiry Date -->
-                    <div class="form-group">
-                        <label for="expiryDate">Expiry Date:</label>
-                        <input type="date" class="form-control" id="expiryDate" name="expiryDate" required>
+                        <label for="adPlan">Advertisement Plan:</label>
+                        <select class="form-control" id="adPlan" name="adPlan" required>
+                            <option value="basic">Basic Ad (1 week) - 10 points</option>
+                            <option value="premium">Premium Ad (2 weeks with featured placement) - 20 points</option>
+                        </select>
                     </div>
                 
                     <button type="submit" class="btn btn-primary">Submit Advertisement</button>
@@ -117,6 +108,7 @@
                 <% } %>
             </div>
         </div>
+        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

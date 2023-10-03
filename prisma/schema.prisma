@@ -125,7 +125,7 @@ model Advertisement {
   link           String
   imageUrl       Bytes
   isActive       Boolean      // If the advertisement is currently active or not
-  startDate      DateTime
+  startDate      DateTime     @default(now())
   expiryDate     DateTime
   interactions   AdInteraction[] // Relation to Advertisement Interactions
 }

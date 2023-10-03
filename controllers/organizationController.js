@@ -388,8 +388,6 @@ module.exports = {
       // City not found
       return res.status(404).send('City not found');
     }
-
-    console.log(city);
   
     // Render the form for advertising in the chosen city
     res.render('organization/adCity', { city }); 
