@@ -1,64 +1,117 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- Link to Google's Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-      /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+        /* Additional custom styles for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c1e4fc;
+        }
+    
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
 
-      /* Sidebar styles */
-      .sidebar {
-        height: 100%;
-        width: 200px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background-color: #f0f0f0;
-        padding-top: 20px;
-      }
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 60px; /* Initial width just for the icons */
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #6499E9; /* Main blue */
+            padding-top: 20px;
+            transition: 0.5s;
+            z-index: 2; /* Ensure the sidebar is above the main content */
+        }
 
-      .sidebar a {
-        display: block;
-        padding: 10px 20px;
-        color: #333;
-        text-decoration: none;
-      }
+        .sidebar:hover {
+            width: 200px; /* Width when hovered */
+        }
 
-      .sidebar a:hover {
-        background-color: #ddd;
-      }
+        .sidebar a {
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+
+        }
+
+        .sidebar a .material-icons {
+            margin-right: 10px; /* Space between icon and text */
+        }
+
+        /* Hide text labels by default */
+        .sidebar a::after {
+            content: attr(data-label);
+            display: none;
+        }
+
+        /* Show text labels on hover */
+        .sidebar:hover a::after {
+            display: inline;
+        }
+
+        .sidebar a:hover {
+            background-color: #4477CE; /* Darker blue on hover */
+        }
+
+        /* Main content styles */
+        .main-content {
+            padding-left: 70px; /* Adjusted to avoid overlap with sidebar */
+            padding-top: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            transition: 0.5s; /* Smooth transition */
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007BFF; /* Main blue */
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
+
     <!-- Sidebar -->
-    <div class="sidebar">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/organizationmanagement">Organization Management</a>
-      <a href="/admin/droppointmanagement">Drop Point Management</a> 
-      <a href="/admin/managermanagement">Manager Management</a>
-      <a href="/admin/usermanagement">User Management</a>
+    <div class="sidebar" id="sidebar">
+        <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
+        <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
+        <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
+        <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
+        <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
     </div>
 
     <!-- Main content -->
-    <div class="main-content ml-200">
-
-
-      <div class="container">
-        <h1>Admin Dashboard</h1
-      </div> 
-
-      
+    <div class="main-content">
+        <div class="container">
+            <h1>Admin Dashboard</h1>
+            <!-- Add your content here -->
+        </div>
     </div>
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+</body>
 </html>

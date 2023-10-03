@@ -7,12 +7,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">  
   <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
   <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
 
 
   <!-- Link to Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 
   <style>
+
+    body {
+      background-color: #c1e4fc;
+  }
     /* Additional custom styles for the page */
     .container {
       max-width: 800px;
@@ -20,27 +26,116 @@
       padding: 20px;
     }
 
-    /* Sidebar styles */
-    .sidebar {
-      height: 100%;
-      width: 200px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #f0f0f0;
-      padding-top: 20px;
+    
+       /* Sidebar styles */
+       .sidebar {
+        height: 100%;
+        width: 60px; /* Initial width just for the icons */
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #6499E9; /* Main blue */
+        padding-top: 20px;
+        transition: 0.5s;
+        z-index: 2; /* Ensure the sidebar is above the main content */
+    }
+
+    .sidebar:hover {
+        width: 200px; /* Width when hovered */
     }
 
     .sidebar a {
-      display: block;
-      padding: 10px 20px;
-      color: #333;
-      text-decoration: none;
+        margin-top: 25px;
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .sidebar a .material-icons {
+        margin-right: 10px; /* Space between icon and text */
+    }
+
+    /* Hide text labels by default */
+    .sidebar a::after {
+        content: attr(data-label);
+        display: none;
+    }
+
+    /* Show text labels on hover */
+    .sidebar:hover a::after {
+        display: inline;
     }
 
     .sidebar a:hover {
-      background-color: #ddd;
+        background-color: #4477CE; /* Darker blue on hover */
     }
+
+      /* TABLE STYLE */
+
+.table {
+  width: 150%;  /* This will ensure the table takes up the full width of its container */
+  border-collapse: collapse;
+  font-family: Arial, sans-serif; /* Use any preferred font-family */
+  font-size: 18px;  /* Increase the font size */
+  margin-left: -120px;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.table th, .table td {
+  padding: 15px 20px;  /* Increased padding for a larger appearance */
+  text-align: left;
+}
+
+.table th {
+  background-color: #66C3F4;  /* Light blue header background */
+  /* Slightly darker blue border for headers */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;  /* Center-align the header text */
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #f0f7ff;  /* Very light blue stripe */
+}
+
+.table tbody tr:hover {
+  background-color: #a7dbfc;  /* Blueish hover effect */
+  cursor: pointer;
+}
+
+.mt-4 {
+  margin-top: 2rem;  /* Adjust as needed */
+}
+
+.reg-button {
+  background-color: #3b93c7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 50px; /* Increased horizontal padding */
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 50%;
+  white-space: nowrap; /* Prevents text inside the button from wrapping */
+}
+
+
+
+/* Hover effect */
+.reg-button:hover {
+  background-color: #8babf1; /* Darker blue on hover */
+}
+/* Specific CSS rule to left-align text in the designated header cell */
+th[colspan="6"] {
+  text-align: left;
+}
 
     /* Custom CSS to avoid style conflicts with Leaflet */
     .leaflet-map-pane,
@@ -57,16 +152,235 @@
       z-index: 400 !important; 
     }
 
+
+
+              /* Form Styles */
+              .form-group, .form-row {
+                margin-bottom: 20px;
+            }
+    
+            label { 
+                display: block;
+                margin-bottom: 8px;
+                color: black;
+                font-weight: 600;
+            }
+    
+            .form-control {
+                width: 100%;
+                padding: 12px 15px;
+                border: 1px solid #e0e4e9;
+                border-radius: 5px;
+                background-color: #fff;
+                transition: border-color 0.3s;
+            }
+    
+            .form-control:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+                outline: none;
+            }
+    
+            .btn {
+                padding: 10px 20px;
+                border-radius: 5px;
+                border: none;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+    
+            .btn:hover {
+                transform: translateY(-1px);
+            }
+    
+            .btn-secondary {
+                background-color: #b2b5c3;
+                color: #fff;
+            }
+    
+            .btn-secondary:hover {
+                background-color: #a0a4b8;
+            }
+    
+            .btn-primary {
+                background-color: #667eea;
+                color: #fff;
+            }
+    
+            .btn-primary:hover {
+                background-color: #5668d4;
+            }
+    
+            .modal-footer {
+              display: flex;
+              justify-content: center; /* Center-align the content horizontally */
+              gap: 20px; /* Space between the buttons */
+          }
+          
+    
+            #map {
+                border-radius: 5px;
+                box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+            }
+    
+            /* Additional styles */
+            .form-row > div {
+                padding: 0 10px;
+            }
+    
+            .form-row > div:first-child {
+                padding-left: 0;
+            }
+    
+            .form-row > div:last-child {
+                padding-right: 0;
+            }
+            .search-container {
+              text-align: center;  /* Center-aligns the content of the container */
+          }
+          
+          .search-container .form-control {
+              margin-bottom: 10px;  /* Adds a margin to the bottom of the search input */
+          }
+
+          .modal-title {
+            text-align: center;
+            margin-left: 40%;
+        }
+
+
+        /* Modal main styles */
+.modal-content {
+  background-color: #96c1cf;  /* Soft blue-gray background */
+  border-radius: 10px;  /* Rounded corners for the modal */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);  /* Shadow for depth */
+}
+
+.modal-header {
+  background-color: #2E8BC0;  /* Darker blue-gray for header */
+  border-top-left-radius: 10px;  /* Rounded corners for the modal header */
+  border-top-right-radius: 10px;
+}
+
+.modal-title {
+  color: white;  /* Dark gray text for contrast */
+  font-weight: bold;
+}
+
+.close {
+  color: white;  /* Dark gray for the close button */
+  opacity: 0.8;
+}
+
+.close:hover {
+  color: #d9e4ff;  /* Darker gray on hover */
+  opacity: 1;
+}
+
+/* Adjusted button colors for better contrast with the new background */
+.btn-secondary {
+  background-color: #ccc;  /* Gray background */
+  color: #333;  /* Dark gray text */
+  font-weight: bold;
+}
+
+.btn-secondary:hover {
+  background-color: #b2b2b2;  /* Darker gray on hover */
+}
+
+.btn-primary {
+  background-color: #288ec9;  /* Blue background */
+  color: #fff;  /* White text */
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #5668d4;  /* Darker blue on hover */
+}
+
+/* Form Input Styles */
+.form-control {
+  background-color: #fff;  /* White background for clarity */
+  padding: 12px 15px;  /* Spacious padding */
+  border: 1px solid #e0e4e9;  /* Soft gray border */
+  border-radius: 5px;  /* Rounded edges */
+  font-size: 16px;  /* Slightly larger font for readability */
+  transition: border-color 0.3s, box-shadow 0.3s;  /* Smooth transition effects */
+}
+
+.form-control:focus {
+  border-color: #667eea;  /* Blue border on focus for better UX */
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);  /* Gentle glow effect */
+  outline: none;  /* Removing browser's default outline */
+}
+
+/* Textarea styles for a consistent look */
+textarea.form-control {
+  resize: vertical;  /* Allows only vertical resizing */
+  min-height: 100px;  /* Minimum height for better appearance */
+}
+
+/* Placeholder color adjustment */
+.form-control::placeholder {
+  color: #b0b8c5;  /* Soft gray color for placeholder text */
+}
+
+
+/* Custom CSS for responsiveness */
+
+/* Responsive styles for medium screens (tablets) */
+@media (max-width: 992px) {
+  .sidebar {
+      width: 80px;
+  }
+}
+
+/* Responsive styles for small screens (mobile) */
+@media (max-width: 768px) {
+  .sidebar {
+      width: 60px;
+  }
+  .sidebar a {
+      padding: 10px;
+  }
+
+  /* Adjust container padding for small screens */
+  .container {
+      padding: 10px;
+  }
+}
+
+/* Further adjustments for extra small screens (very small mobile devices) */
+@media (max-width: 576px) {
+  .sidebar {
+      width: 50px;
+  }
+  .sidebar a {
+      padding: 8px;
+  }
+
+  /* Adjust container padding for extra small screens */
+  .container {
+      padding: 8px;
+  }
+}
+
+        
+          
+
+
+
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <a href="/admin/dashboard">Dashboard</a>
-    <a href="/admin/organizationmanagement">Organization Management</a> 
-    <a href="/admin/droppointmanagement">Drop Point Management</a> 
-    <a href="/admin/managermanagement">Manager Management</a>
-    <a href="/admin/usermanagement">User Management</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
+      <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
+      <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
+      <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
+      <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
   </div>
 
   <!-- Main content -->
@@ -74,46 +388,65 @@
 
 
     <div class="container">
-      <!-- Add the content of the admin dashboard here -->
-      <h1>Drop Point Management</h1> 
-      
-      <!-- Button to open the drop point creation modal -->
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDropPointModal">
-        Create Drop Point
-      </button>
-      <!-- Table to display created drop points -->
+      <!-- Table to display created drop points --> 
       <table class="table mt-4">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Location</th>
-            <th>Operating Hours</th>
-            <th>Description</th>
-            <th>Assigned Manager</th>
-          </tr>
-        </thead>
+          <thead>
+              <!-- Additional table row for title and button -->
+              <tr>
+                  <th colspan="6">Drop Point Management</th> <!-- Spanning 6 columns for title -->
+                  <th>
+                      <!-- Button to open the drop point creation modal -->
+                      <button type="button" class="btn btn-primary reg-button" data-toggle="modal" data-target="#createDropPointModal">
+                        Create Drop Point
+                    </button>
+                    
+                  </th>
+              </tr>
+              <!-- Original table headers -->
+              <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>Operating Hours</th>
+                  <th>Description</th>
+                  <th>Assigned Manager</th>
+                  <th>Actions</th>
+              </tr>
+          </thead>
         <tbody>
-          <!-- Populate table rows with drop point data -->
           <% let counter = 1; %>
           <% dropPoints.forEach(dropPoint => { %>
           <tr>
             <td><%= counter++ %></td>
             <td><%= dropPoint.name %></td>
-            <td><%= dropPoint.location %></td> 
+            <td><%= dropPoint.location %></td>
             <td><%= dropPoint.openingTime %> - <%= dropPoint.closingTime %></td>
-            <td><%= dropPoint.description %></td> 
+            <td><%= dropPoint.description %></td>
             <td>
-              <% if(dropPoint.manager) { %>  <!-- Check if manager data is available -->
-                <%= dropPoint.manager.firstName %> <%= dropPoint.manager.lastName %>  <!-- Display the manager's name -->
+              <% if(dropPoint.manager) { %>
+                <%= dropPoint.manager.firstName %> <%= dropPoint.manager.lastName %>
               <% } else { %>
-                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
+                N/A
               <% } %>
-            </td>                       
+            </td>
+            <td> 
+              <!-- Update Drop Point Button -->
+              <button type="button" class="btn btn-success btn-sm mb-2" data-toggle="modal" data-target="#updateDropPointModal" data-droppointid="<%= dropPoint.id %>">Update</button>
+
+              
+              <!-- Conditional buttons for manager actions -->
+              <% if(dropPoint.manager) { %> 
+                <button type="button" class="btn btn-danger btn-sm mb-2" data-toggle="modal" data-target="#removeManagerModal" data-droppointid="<%= dropPoint.id %>">Remove Manager</button>
+              <% } else { %>
+                <button type="button" class="btn btn-warning btn-sm mb-2" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
+              <% } %>
+            </td>
+            
           </tr>
           <% }) %>
         </tbody>
       </table>
+
     </div>
   </div>
 
@@ -127,8 +460,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          
+        <div class="modal-body"> 
           <div class="row">
             <div class="col-md-6">
               <!-- Add the drop point creation form here -->
@@ -167,7 +499,7 @@
               <!-- Map container -->
               <div id="map" style="height: 400px"></div>
               <!-- Address display -->
-              <div class="mt-2">
+              <div class="search-container mt-2">
                 <small class="form-text text-muted">You can adjust the search location by clicking on the map.</small>
                 <input type="text" id="search" placeholder="Search for a location" title="Search for a location and adjust as needed."  class="form-control">
                 <button id="searchButton" class="btn btn-primary mt-2">Search</button>
@@ -219,58 +551,145 @@
     </div>
   </div>
   
+  <!-- Modal for removing a manager from a drop point -->
+  <div class="modal fade" id="removeManagerModal" tabindex="-1" role="dialog" aria-labelledby="removeManagerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeManagerModalLabel">Remove Manager</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/admin/removeManagerFromDropPoint" method="post">
+          <div class="modal-body">
+            <input type="hidden" id="modalRemoveDropPointId" name="dropPointId">  <!-- Make sure the ID here is correct -->
+            <p>Are you sure you want to remove the manager from this drop point?</p>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Remove</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> 
+
+  <!-- Modal for updating drop points -->
+  <div class="modal fade" id="updateDropPointModal" tabindex="-1" role="dialog" aria-labelledby="updateDropPointModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateDropPointModalLabel">Update Drop Point</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> 
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Update drop point form -->
+                        <form action="/admin/updateDropPoint" method="post">
+                            <input type="hidden" name="id" id="updateDropPointId">
+                            <div class="form-group">
+                                <label for="updateDropPointName">Name</label>
+                                <input type="text" name="name" class="form-control" id="updateDropPointName">
+                            </div>
+                            <div class="form-group">
+                                <label for="updateDropPointLocation">Location</label>
+                                <input type="text" name="location" class="form-control" id="updateDropPointLocation" readonly> 
+                            </div>
+                            <!-- Other fields similar to the create modal... -->
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="updateDropPointOpeningTime">Opening Time</label>
+                                    <input type="time" name="openingTime" class="form-control" id="updateDropPointOpeningTime">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="updateDropPointClosingTime">Closing Time</label>
+                                    <input type="time" name="closingTime" class="form-control" id="updateDropPointClosingTime">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="updateDropPointDescription">Description</label>
+                                <textarea class="form-control" name="description" id="updateDropPointDescription" rows="3"></textarea>
+                            </div> 
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Map container -->
+                        <div id="updateMap" style="height: 400px"></div>
+                        <!-- Address display and search -->
+                        <div class="mt-2">
+                            <small class="form-text text-muted">You can adjust the search location by clicking on the map.</small>
+                            <input type="text" id="updateSearch" placeholder="Search for a location" title="Search for a location and adjust as needed."  class="form-control">
+                            <button id="updateSearchButton" class="btn btn-primary mt-2">Search</button>
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </div>
+  </div>
 
 
+
+   
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
   
+  <!-- create drop point -->
   <script>
     var map;
     var marker = null; // To store the marker
 
     $('#createDropPointModal').on('shown.bs.modal', function () {
-    if (!map) {
-        map = L.map('map', {
-            fullscreenControl: true,
-            fullscreenControlOptions: {
-                position: 'topleft'
-            }
-        }).setView([14.6091, 121.0223], 10);
+        if (!map) {
+            map = L.map('map', {
+                fullscreenControl: true,
+                fullscreenControlOptions: {
+                    position: 'topleft'
+                }
+            }).setView([14.6091, 121.0223], 10);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-        }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
 
-        map.on('click', function(e) {
-            if (marker) {
-                map.removeLayer(marker); // Remove existing marker
-            }
-            
-            marker = L.marker(e.latlng).addTo(map);
-            
-            var lat = e.latlng.lat;
-            var lon = e.latlng.lng;
-            reverseGeocode(lat, lon);
-        });
+            map.on('click', function(e) {
+                if (marker) {
+                    map.removeLayer(marker); // Remove existing marker
+                }
+                
+                marker = L.marker(e.latlng).addTo(map);
+                
+                var lat = e.latlng.lat;
+                var lon = e.latlng.lng;
+                reverseGeocode(lat, lon);
+            });
 
-        // Add event listeners here
-        map.on('enterFullscreen', function() {
-            if(window.console) window.console.log('enterFullscreen event fired');
-        });
+            // Add event listeners here
+            map.on('enterFullscreen', function() {
+                if(window.console) window.console.log('enterFullscreen event fired');
+            });
 
-        map.on('exitFullscreen', function() {
-            if(window.console) window.console.log('exitFullscreen event fired');
-        });
-    } else {
-        setTimeout(function() {
-            map.invalidateSize();
-        }, 10);
-    }
-});
-
-
+            map.on('exitFullscreen', function() {
+                if(window.console) window.console.log('exitFullscreen event fired');
+            });
+        } else {
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 10);
+        }
+    });
+ 
 
     var searchButton = document.getElementById('searchButton');
     var searchInput = document.getElementById('search');
@@ -330,26 +749,180 @@
         var addressElement = document.getElementById('dropPointLocation');
         addressElement.value = address;
     }
-</script>
 
-<script> 
+    
+  </script>
+  <!-- udpate drop point -->
+  <script>
+    $(document).ready(function() { 
+      
+      var updateMap; // For Leaflet map in update modal
+      var updateMarker = null; // For marker in update modal
+      var updateSearchButton = document.getElementById('updateSearchButton');
+      var updateSearchInput = document.getElementById('updateSearch');
 
-$(document).ready(function() {
-  $('#assignManagerModal').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
-    var modal = $(this);
-    modal.find('#modalDropPointId').val(dropPointId);
-  });
-});
-document.getElementById('managerName').addEventListener('change', function() {
-  const selectedEmail = this.value;
-  document.getElementById('managerEmail').value = selectedEmail;
-});
-</script>
+      // Function to geocode address and set the map view
+      function geocodeAndSetMap(address) {
+          fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(address) + '&format=json')
+          .then(response => response.json())
+          .then(data => {
+              if(data && data[0] && data[0].lat && data[0].lon) {
+                  var lat = parseFloat(data[0].lat);
+                  var lon = parseFloat(data[0].lon);
+                  updateMap.setView([lat, lon], 10);
+                  if (updateMarker) {
+                      updateMap.removeLayer(updateMarker);
+                  }
+                  updateMarker = L.marker([lat, lon]).addTo(updateMap);
+              }
+          })
+          .catch(error => {
+              console.error('Geocoding error', error);
+          });
+      } 
+      function displayAddress(address) {
+          var addressElement = document.getElementById('updateDropPointLocation');
+          addressElement.value = address;
+      }
+      function reverseGeocode(lat, lon) {
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.display_name) {
+                    displayAddress(data.display_name);
+                    if(updateMarker) {
+                        updateMarker.bindPopup(data.display_name).openPopup();
+                    }
+                }
+            })
+            .catch(function(error) {
+                console.log('Error:', error);
+            });
+    }
+
+      // Event listener for showing the update modal
+      $('#updateDropPointModal').on('show.bs.modal', function(event) {
+          var button = $(event.relatedTarget);  // Button that triggered the modal
+          var dropPointId = button.data('droppointid');  // Extract the ID from data-droppointid attribute
+
+          // Assuming dropPoints is an array passed to EJS from the server-side
+          var dropPoints = <%- JSON.stringify(dropPoints) %>;
+
+          // Find the corresponding drop point object
+          var dropPoint = dropPoints.find(function(dp) {
+              return dp.id === dropPointId;
+          });
+
+          // Populate form fields
+          $('#updateDropPointId').val(dropPoint.id);
+          $('#updateDropPointName').val(dropPoint.name);
+          $('#updateDropPointLocation').val(dropPoint.location);
+          $('#updateDropPointOpeningTime').val(dropPoint.openingTime);
+          $('#updateDropPointClosingTime').val(dropPoint.closingTime);
+          $('#updateDropPointDescription').val(dropPoint.description);
+
+          // Initialize or update the map
+          if (!updateMap) {
+              updateMap = L.map('updateMap', {
+                  // ... (options)
+                    fullscreenControl: true,
+                    fullscreenControlOptions: {
+                        position: 'topleft' // Adjust the position as needed
+                    }
+              });
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  maxZoom: 19
+              }).addTo(updateMap);
+          }
+
+          // Geocode the address and set map view
+          geocodeAndSetMap(dropPoint.location);
+      });
+
+       // New Search Functionality
+      updateSearchButton.addEventListener('click', function() {
+          var query = updateSearchInput.value;
+          if (query !== '') {
+              fetch('https://nominatim.openstreetmap.org/search?q=' + query + '&format=json')
+              .then(function(response) {
+                  return response.json();
+              })
+              .then(function(data) {
+                  if (data.length > 0) {
+                      var result = data[0];
+                      var lat = parseFloat(result.lat);
+                      var lon = parseFloat(result.lon);
+                      
+                      updateMap.setView([lat, lon], 15); // Update map view
+                      
+                      if (updateMarker) {
+                          updateMap.removeLayer(updateMarker);
+                      }
+
+                      updateMarker = L.marker([lat, lon]).addTo(updateMap).bindPopup(result.display_name).openPopup();
+                      displayAddress(result.display_name);
+                  }
+              })
+              .catch(function(error) {
+                  console.log('Error:', error);
+              });
+          }
+      });
+      // New functionality to click on the map to place a marker
+       if (!updateMap) {
+        updateMap = L.map('updateMap', {
+            // ... (options)
+                fullscreenControl: true,
+                fullscreenControlOptions: {
+                    position: 'topleft' // Adjust the position as needed
+                }
+        });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(updateMap);
+
+        updateMap.on('click', function(e) {
+            if (updateMarker) {
+                updateMap.removeLayer(updateMarker); // Remove existing marker
+            }
+            
+            updateMarker = L.marker(e.latlng).addTo(updateMap);
+            
+            var lat = e.latlng.lat;
+            var lon = e.latlng.lng;
+            reverseGeocode(lat, lon);
+        });
+    }
+    });
  
+  </script>
+ 
+  <script> 
+  // assigned a manager to a droppoint
+  $(document).ready(function() {
+    $('#assignManagerModal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
+      var modal = $(this);
+      modal.find('#modalDropPointId').val(dropPointId);
+    });
+  });
+  // remove a manager to a droppoint
+  $('#removeManagerModal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var dropPointId = button.data('droppointid'); // Extract drop point ID from the data-droppointid attribute
+      var modal = $(this);
+      modal.find('#modalRemoveDropPointId').val(dropPointId);  // Make sure the ID matches your HTML input ID
+  });
 
 
+  document.getElementById('managerName').addEventListener('change', function() {
+    const selectedEmail = this.value;
+    document.getElementById('managerEmail').value = selectedEmail;
+  });
+  </script>  
 
 </body>
 </html>
