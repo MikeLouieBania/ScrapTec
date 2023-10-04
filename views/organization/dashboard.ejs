@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" /> 
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch/dist/geosearch.css" />
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet-fullscreen/dist/leaflet.fullscreen.css" /> 
@@ -15,10 +16,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
+ 
 
-    <!-- Add Leaflet CSS and JS files -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- ROUTING -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"> 
+
 
 
     <style>
@@ -86,11 +88,7 @@
         .card-info {
             display: flex;
             justify-content: space-between;
-        }
-        
-        .col-md-4 {
-            display: flex;
-        }
+        } 
         
         .status-icon {
             margin-left: 10px;
@@ -125,11 +123,25 @@
         }
         
         .map-container {
-            width: 100%;
-            height: 400px;
-            z-index: 1000 !important;
-            border: 1px solid #ccc;
-        }
+    width: 100% !important;
+    height: 400px !important; /* Set a fixed height */
+    border: 1px solid #ccc;
+}
+
+
+.modal .map-container { 
+    height: 600px !important; /* Set a fixed height */
+    border: 1px solid #ccc;
+}
+
+     
+
+.modal { z-index: 1050; /* Ensure it's above other elements */
+  
+
+}
+
+
 
         .leaflet-container {
             max-width: none !important;
@@ -158,487 +170,623 @@
         .btn-enhanced:focus {
             outline: none; /* Removing the default focus outline */
             box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.3); /* Add a blue glow around the button when it's focused */
-        }
+        } 
+
+        #mainMap {
+    width: 100%;
+    height: 400px; /* or whatever height you want */
+}
+
+.btn-locate {
+    background-color: #007bff; /* Blue button color */
+    color: #fff; /* White text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Adjust padding as needed */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+.btn-locate:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+} 
+
+
+
+
+        
 
        
     </style>
 </head>
 
-<body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/donationsList">Donations</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-                </li>  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/faq">FAQ</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/account">Account</a>
-                </li>
-            </ul> 
-            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-            </form>
-        </div>
-    </nav>
-
-
-    <div class="dashboard-container mt-4">
-        
-        <h2>Drop Points</h2>  
-
-        <button type="button" class="btn btn-secondary btn-enhanced mb-3" data-toggle="modal" data-target="#donationGuideModal">
-            View Donation Points Guide
-        </button>
-        
-        
-
-          <!-- Modal Structure Starts Here -->
-        <div class="modal fade" id="donationGuideModal" tabindex="-1" role="dialog" aria-labelledby="donationGuideModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="donationGuideModalLabel">Donation Points Guide</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-body"> 
-                    <div class="container">
-                        <div class="jumbotron">
-                            <h1>Donation Points Guide</h1>
-                            <p class="lead">Earn points with each donation to boost your organization's impact!</p>
-                        </div>
-
-                        <div class="accordion" id="pointsAccordion">
-                            <!-- Peripheral Types Section -->
-                            <div class="card">
-                                <div class="card-header" id="headingOne">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Types of Peripherals
-                                    </button>
-                                </h2>
-                                </div>
-                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#pointsAccordion">
-                                <div class="card-body">
-                                    <ul>
-                                    <li><strong>Input Devices:</strong> Includes Mouse and Keyboard. Earn <span class="badge badge-primary">0.5 point per item</span>.</li>
-                                    <li><strong>Storage Devices:</strong> HDD, SSD, and Optical Drives fall under this category. <span class="badge badge-primary">1 point per item</span>.</li>
-                                    <li><strong>Memory and Processing:</strong> Consists of RAM, Processors, and Motherboards. <span class="badge badge-primary">1.5 points per item</span>.</li>
-                                    <li><strong>Graphics and Video:</strong> Graphic Cards, Monitors, and Webcams are part of this category. <span class="badge badge-primary">2 points per item</span>.</li>
-                                    <li><strong>Power and Cooling:</strong> Includes Power Supplies and Cooling Fans. <span class="badge badge-primary">1 point per item</span>.</li>
-                                    <li><strong>Network and Sound:</strong> Covers Network Cards and Sound Cards. <span class="badge badge-primary">1 point per item</span>.</li>
-                                    <li><strong>Whole Systems:</strong> Laptops and Desktops fall under this category. <span class="badge badge-primary">3 points per item</span>.</li>
-                                    </ul>            
-                                </div>
-                                </div>
-                            </div> 
-                            <!-- Condition Section -->
-                            <div class="card">
-                                <div class="card-header" id="headingTwo">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Condition
-                                    </button>
-                                </h2>
-                                </div>
-                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#pointsAccordion">
-                                <div class="card-body">
-                                    <ul>
-                                    <li>New: <span class="badge badge-success">1 bonus point</span></li>
-                                    <li>Used but Working: <span class="badge badge-warning">0.5 bonus points</span></li>
-                                    </ul>
-                                </div>
-                                </div>
-                            </div>
-                            <!-- Quantity Section -->
-                            <div class="card">
-                                <div class="card-header" id="headingThree">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Quantity
-                                    </button>
-                                </h2>
-                                </div>
-                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pointsAccordion">
-                                <div class="card-body">
-                                    <ul>
-                                    <li>10 to 49 items: <span class="badge badge-info">3 bonus points</span></li>
-                                    <li>50 or more items: <span class="badge badge-info">5 bonus points</span></li>
-                                    </ul>
-                                </div>
-                                </div>
-                            </div> 
-                        </div> 
-                        <!-- Penalty Alert -->
-                        <div class="alert alert-danger" role="alert">
-                            <h4 class="alert-heading">Important:</h4>
-                            <p>If the items you donated do not match the claimed information, point deductions may apply. For example, if an item is claimed as 'New' but appears to be 'Used', points will be recalculated accordingly.</p>
-                        </div> 
-                        <!-- Penalty Details -->
-                        <section>
-                            <h4>Penalties</h4>
-                            <ul>
-                                <li><strong>Incorrect Item Condition:</strong> <span class="badge badge-danger">-1 point per item</span></li>
-                                <li><strong>Incorrect Quantity:</strong> <span class="badge badge-danger">-2 points</span></li>
-                            </ul>
-                        </section> 
-                        <!-- Computation Section -->
-                        <section>
-                            <h4>Computation Formula</h4>
-                            <p>To give you a clear understanding of how points are calculated, here is the formula:</p>
-                            <pre>
-        <code>
-            Total Points = ((Base Points per Item + Condition Bonus per Item) x Quantity) + Quantity Bonus (if applicable)
-        </code>
-                            </pre>
-                            <p>For example:</p>
-                            <ul>
-                                <li>If you are donating 5 'Whole Systems' that are 'Used but Working', your points would be calculated as follows: <br> <code>(3 (Base for Whole Systems) + 0.5 (Condition Bonus)) x 5 (Quantity) = 17.5</code></li>
-                                <li>If you are donating 10 'Input Devices' that are 'New', your points would be calculated as follows: <br> <code>(0.5 (Base for Input Devices) + 1 (Condition Bonus)) x 10 (Quantity) + 3 (Quantity Bonus) = 28</code></li>
-                            </ul>
-                        </section> 
-                    </div>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+    <body>
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">  
+                    <li class="nav-item">
+                    <a class="nav-link" href="/organization/donationsList">Donations</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                    </li>  
+                    <li class="nav-item">
+                    <a class="nav-link" href="/organization/faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/organization/account">Account</a>
+                    </li>
+                </ul> 
+                <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+                </form>
             </div>
-            </div>
-        </div>
-        <!-- Modal Structure Ends Here -->
-  
-
-        <!-- Search Bar -->
-        <input type="text" id="search" aria-label="Search Drop Points" placeholder="Search Drop Points..." class="form-control mb-3">
- 
-        <!-- Loading spinner -->
-        <div id="loadingSpinner" class="text-center mb-3">
-            <span>Loading nearest drop points...</span>
-            <div class="spinner-border ml-2" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
+        </nav>
 
 
-        <!-- Drop Points rendering using a loop -->
-        <div class="row" id="dropPointsContainer">
-            <% dropPoints.forEach(point => { %>
-                <div class="col-md-4">
-                    <div class="card mb-3" data-toggle="modal" data-target="#detailsModal-<%= point.id %>"> 
-                        <div class="card-body">
-                            <h5 class="card-title"><%= point.name %></h5>
-
-                            
-                             
-                            <p class="drop-point">
-                                <i class="fas fa-sun"></i> <span id="openingTime-<%= point.id %>"><%= point.openingTime %></span>
-                                <span style="margin: 0 20px;">to</span> 
-                                <span id="closingTime-<%= point.id %>"><%= point.closingTime %></span> <i class="fas fa-moon"></i>
-                                
-                                <!-- Placeholder for Status -->
-                                <span class="status" id="status-<%= point.id %>">
-                                    <!-- We will populate this with JavaScript later -->
-                                </span>
-                            </p>
-                            
-                            <p><strong>Contact: <br></strong> <%= point.manager ? point.manager.phoneNumber : 'N/A' %></p> <!-- Displaying phone as a representative contact, adjust as needed -->      
-                            <p><strong>Email:</strong> <%= point.manager ? point.manager.email : 'N/A' %></p> 
-                            <p class="distance-to-user" id="distance-to-user-<%= point.id %>"></p>
-                                        
-                        </div>
-                        
-                        <!-- Donate button -->
-                        <% if(point.canDonate) { %>
-                            <form action="/organization/donationForm" method="POST">
-                                <input type="hidden" name="dropPointId" value="<%= point.id %>">
-                                <button type="submit" class="btn btn-success btn-block">Donate</button>
-                            </form> 
-                        <% } else { %>
-                            <p class="alert alert-warning">You have a pending donation. Please complete it before donating again.</p>
-                        <% } %>                    
-                    </div>
-                    
-                    <!-- Details Modal for this particular point -->
-                    <div class="modal fade" id="detailsModal-<%= point.id %>" data-point-id="<%= point.id %>" data-location="<%= point.location %>">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title"><%= point.name %></h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body row">
-                                    <!-- Left Side -->
-                                    <div class="col-md-6">
-                                        <p><strong>Location:</strong> <%= point.location %></p>
-                                        <p><strong>Description:</strong> <%= point.description %></p> 
-                                         
-                                    </div>
-                
-                                    <!-- Right Side - Map Placeholder -->
-                                    <div class="col-md-6">
-                                        <div class="map-container" id="map-<%= point.id %>"></div>
-                                    </div> 
-
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
- 
-                </div>
-            <% }); %>
-        </div>
-
-
-    </div> 
-    
-    
-    <!-- Scripts - In Order -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Load Leaflet and plugins ONCE and AFTER Bootstrap -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-geosearch/dist/geosearch.umd.js"></script>
-    <script src="https://unpkg.com/leaflet-fullscreen/dist/Leaflet.fullscreen.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            var maps = {};
-
-            $('.modal').each(function() {
-                var $modal = $(this);
-                var pointId = $modal.data('point-id');
-                var location = $modal.data('location');
-
-                var mapId = 'map-' + pointId;
-                if ($('#' + mapId).length) {
-                    maps[mapId] = L.map(mapId, {
-                        fullscreenControl: true,
-                        fullscreenControlOptions: {
-                            position: 'topleft' // this will position the fullscreen button at the top left corner of the map. You can adjust as needed.
-                        }
-                    }).setView([0, 0], 13);
-
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    }).addTo(maps[mapId]);
-
-                    var provider = new GeoSearch.OpenStreetMapProvider();
-
-                    provider.search({ query: location }).then(function(result) {
-                        if (result && result[0]) {
-                            var coordinates = [result[0].y, result[0].x];
-                            maps[mapId].setView(coordinates, 13);
-                            L.marker(coordinates).addTo(maps[mapId]).bindPopup(location);
-                        } else {
-                            console.error("No results found for location:", location);
-                        }
-                    }).catch(function(error) {
-                        console.error("Error searching for location", location, ":", error);
-                    });
-                }
-            });
-
-            $('.modal').on('shown.bs.modal', function(e) {
-                var mapId = 'map-' + $(this).data('point-id');
-                if (maps[mapId]) {
-                    maps[mapId].invalidateSize();
-                }
-            });
+        <div class="dashboard-container mt-4">
             
-        });
-    </script> 
+            <h2>Drop Points</h2>  
+
+            
+            <!-- Main Map Container -->
+            <div class="map-container" id="mainMap" style="height: 400px;"></div> 
+
+            <button type="button" class="btn btn-secondary btn-enhanced mb-3" data-toggle="modal" data-target="#donationGuideModal">
+                View Donation Points Guide
+            </button>
+            
+            
+
+            <!-- Modal Structure Starts Here -->
+            <div class="modal fade" id="donationGuideModal" tabindex="-1" role="dialog" aria-labelledby="donationGuideModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="donationGuideModalLabel">Donation Points Guide</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body"> 
+                        <div class="container">
+                            <div class="jumbotron">
+                                <h1>Donation Points Guide</h1>
+                                <p class="lead">Earn points with each donation to boost your organization's impact!</p>
+                            </div>
+
+                            <div class="accordion" id="pointsAccordion">
+                                <!-- Peripheral Types Section -->
+                                <div class="card">
+                                    <div class="card-header" id="headingOne">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Types of Peripherals
+                                        </button>
+                                    </h2>
+                                    </div>
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#pointsAccordion">
+                                    <div class="card-body">
+                                        <ul>
+                                        <li><strong>Input Devices:</strong> Includes Mouse and Keyboard. Earn <span class="badge badge-primary">0.5 point per item</span>.</li>
+                                        <li><strong>Storage Devices:</strong> HDD, SSD, and Optical Drives fall under this category. <span class="badge badge-primary">1 point per item</span>.</li>
+                                        <li><strong>Memory and Processing:</strong> Consists of RAM, Processors, and Motherboards. <span class="badge badge-primary">1.5 points per item</span>.</li>
+                                        <li><strong>Graphics and Video:</strong> Graphic Cards, Monitors, and Webcams are part of this category. <span class="badge badge-primary">2 points per item</span>.</li>
+                                        <li><strong>Power and Cooling:</strong> Includes Power Supplies and Cooling Fans. <span class="badge badge-primary">1 point per item</span>.</li>
+                                        <li><strong>Network and Sound:</strong> Covers Network Cards and Sound Cards. <span class="badge badge-primary">1 point per item</span>.</li>
+                                        <li><strong>Whole Systems:</strong> Laptops and Desktops fall under this category. <span class="badge badge-primary">3 points per item</span>.</li>
+                                        </ul>            
+                                    </div>
+                                    </div>
+                                </div> 
+                                <!-- Condition Section -->
+                                <div class="card">
+                                    <div class="card-header" id="headingTwo">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Condition
+                                        </button>
+                                    </h2>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#pointsAccordion">
+                                    <div class="card-body">
+                                        <ul>
+                                        <li>New: <span class="badge badge-success">1 bonus point</span></li>
+                                        <li>Used but Working: <span class="badge badge-warning">0.5 bonus points</span></li>
+                                        </ul>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- Quantity Section -->
+                                <div class="card">
+                                    <div class="card-header" id="headingThree">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Quantity
+                                        </button>
+                                    </h2>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pointsAccordion">
+                                    <div class="card-body">
+                                        <ul>
+                                        <li>10 to 49 items: <span class="badge badge-info">3 bonus points</span></li>
+                                        <li>50 or more items: <span class="badge badge-info">5 bonus points</span></li>
+                                        </ul>
+                                    </div>
+                                    </div>
+                                </div> 
+                            </div> 
+                            <!-- Penalty Alert -->
+                            <div class="alert alert-danger" role="alert">
+                                <h4 class="alert-heading">Important:</h4>
+                                <p>If the items you donated do not match the claimed information, point deductions may apply. For example, if an item is claimed as 'New' but appears to be 'Used', points will be recalculated accordingly.</p>
+                            </div> 
+                            <!-- Penalty Details -->
+                            <section>
+                                <h4>Penalties</h4>
+                                <ul>
+                                    <li><strong>Incorrect Item Condition:</strong> <span class="badge badge-danger">-1 point per item</span></li>
+                                    <li><strong>Incorrect Quantity:</strong> <span class="badge badge-danger">-2 points</span></li>
+                                </ul>
+                            </section> 
+                            <!-- Computation Section -->
+                            <section>
+                                <h4>Computation Formula</h4>
+                                <p>To give you a clear understanding of how points are calculated, here is the formula:</p>
+                                <pre>
+            <code>
+                Total Points = ((Base Points per Item + Condition Bonus per Item) x Quantity) + Quantity Bonus (if applicable)
+            </code>
+                                </pre>
+                                <p>For example:</p>
+                                <ul>
+                                    <li>If you are donating 5 'Whole Systems' that are 'Used but Working', your points would be calculated as follows: <br> <code>(3 (Base for Whole Systems) + 0.5 (Condition Bonus)) x 5 (Quantity) = 17.5</code></li>
+                                    <li>If you are donating 10 'Input Devices' that are 'New', your points would be calculated as follows: <br> <code>(0.5 (Base for Input Devices) + 1 (Condition Bonus)) x 10 (Quantity) + 3 (Quantity Bonus) = 28</code></li>
+                                </ul>
+                            </section> 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- Modal Structure Ends Here -->
     
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        function isNowBetweenTimes(start, end) {
-            const now = new Date();
-            const [startHour, startMinute] = start.split(':').map(Number);
-            const [endHour, endMinute] = end.split(':').map(Number);
 
-            const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
-            const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
+            <!-- Search Bar -->
+            <input type="text" id="search" aria-label="Search Drop Points" placeholder="Search Drop Points..." class="form-control mb-3">
+    
 
-            return now >= startDate && now <= endDate;
+
+            <!-- Drop Points rendering using a loop -->
+            <div class="row" id="dropPointsContainer">
+                <% dropPoints.forEach(point => { %>
+                    <div class="col-md-4">
+                        <div class="card mb-3" data-toggle="modal" data-target="#detailsModal-<%= point.id %>"> 
+                            <div class="card-body">
+                                <h5 class="card-title"><%= point.name %></h5>
+
+                                
+                                
+                                <p class="drop-point">
+                                    <i class="fas fa-sun"></i> <span id="openingTime-<%= point.id %>"><%= point.openingTime %></span>
+                                    <span style="margin: 0 20px;">to</span> 
+                                    <span id="closingTime-<%= point.id %>"><%= point.closingTime %></span> <i class="fas fa-moon"></i>
+                                    
+                                    <!-- Placeholder for Status -->
+                                    <span class="status" id="status-<%= point.id %>">
+                                        <!-- We will populate this with JavaScript later -->
+                                    </span>
+                                </p>
+                                
+                                <p><strong>Contact: <br></strong> <%= point.manager ? point.manager.phoneNumber : 'N/A' %></p> <!-- Displaying phone as a representative contact, adjust as needed -->      
+                                <p><strong>Email:</strong> <%= point.manager ? point.manager.email : 'N/A' %></p> 
+                                <p class="distance-to-user" id="distance-to-user-<%= point.id %>"></p>
+                                            
+                            </div>
+                            <button type="button" class="btn btn-primary btn-locate" onclick="markDropPointOnMainMap('<%= point.id %>')">Locate</button>                
+                
+                            
+                            <!-- Donate button -->
+                            <% if(point.canDonate) { %>
+                                <form action="/organization/donationForm" method="POST">
+                                    <input type="hidden" name="dropPointId" value="<%= point.id %>">
+                                    <button type="submit" class="btn btn-success btn-block">Donate</button>
+                                </form> 
+                            <% } else { %>
+                                <p class="alert alert-warning">You have a pending donation. Please complete it before donating again.</p>
+                            <% } %>    
+                            
+                                </div>
+                        
+                        <!-- Details Modal for this particular point -->
+                        <div class="modal fade" id="detailsModal-<%= point.id %>" data-point-id="<%= point.id %>" data-location="<%= point.location %>"  data-description="<%= point.description %>">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><%= point.name %></h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body row">
+                                        <!-- Left Side -->
+                                        <div class="col-md-6">
+                                            <p><strong>Location:</strong> <%= point.location %></p>
+                                            <p><strong>Description:</strong> <%= point.description %></p> 
+                                            
+                                        </div>
+                    
+                                        <!-- Right Side - Map Placeholder -->
+                                        <div class="col-md-6">
+                                            <!-- <div class="map-container" id="map-<%= point.id %>"></div> -->
+                                            <div class="modal-map-container" id="map-<%= point.id %>" style="height: 400px;"></div>
+                                            <button class="btn btn-sm btn-info refresh-map" data-map-id="map-<%= point.id %>">Refresh Map</button>
+
+                                        </div> 
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                <% }); %>
+            </div>
+
+
+        </div> 
+        
+        
+        <!-- Scripts - In Order -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <!-- Load Leaflet and plugins ONCE and AFTER Bootstrap -->
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-geosearch/dist/geosearch.umd.js"></script>
+        <script src="https://unpkg.com/leaflet-fullscreen/dist/Leaflet.fullscreen.min.js"></script>
+        <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+        <script>
+            
+            let mainMap;
+            let userMarker;
+            let dropPointMarkers = {};
+            let routingControl;
+            let maps = {};
+            let userLocation;
+            
+            $(document).on('click', '.refresh-map', function() {
+                const mapId = $(this).data('map-id');
+                const map = maps[mapId];
+                if (map) {
+                    map.invalidateSize();
+                }
+            });
+
+
+
+            $(document).ready(function() {
+        filterByDistance();
+
+        // Event listener for when a modal is shown
+        $('#detailsModal').on('shown.bs.modal', function(e) {
+            
+        const pointId = $(this).data('point-id');
+        const mapId = `map-${pointId}`;
+
+        // Ensure that the modal is rendered before initializing the map
+        setTimeout(() => {
+            if (!maps[mapId]) {
+            const location = $(this).data('location');
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`)
+                .then(response => response.json())
+                .then(data => {
+                if (data && data[0]) {
+                    const coords = { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+                    initializeDropPointMap(pointId, coords);
+                } else {
+                    console.error("Couldn't fetch coordinates for the location: ", location);
+                }
+                }).catch(error => {
+                console.error("Error fetching coordinates for the location: ", location, ". Error: ", error);
+                });
+            } else {
+            // Update the map size when the modal is shown
+            maps[mapId].invalidateSize();
+            }
+        }, 1000); // delay by 100 milliseconds
+        });
+    });
+
+                function initializeAllModalMaps() {
+        $('.modal').each(function() {
+            const pointId = $(this).data('point-id');
+            const location = $(this).data('location');
+            
+            if (!maps[`map-${pointId}`]) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data[0]) {
+                            const coords = { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+                            initializeDropPointMap(pointId, coords);
+                        } else {
+                            console.error("Couldn't fetch coordinates for the location: ", location);
+                        }
+                    }).catch(error => {
+                        console.error("Error fetching coordinates for the location: ", location, ". Error: ", error);
+                    });
+            }
+        });
+    }
+    // Add a class to the map container within each modal
+    function initializeDropPointMap(pointId, coords) {
+        const mapId = `map-${pointId}`;
+        const dropMap = L.map(mapId, {
+            fullscreenControl: true, // Add fullscreen control
+        }).setView([coords.lat, coords.lon], 13);
+
+        // Set a fixed size for the map container
+        $(`#${mapId}`).css({ width: '100%', height: '600px' });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(dropMap);
+
+        // Call invalidateSize immediately after initializing the map
+        dropMap.invalidateSize();
+
+        L.marker([coords.lat, coords.lon]).addTo(dropMap);
+        maps[mapId] = dropMap;
+        // Add a class to the map container
+        $(`#${mapId}`).addClass('modal-map');
+    }
+
+
+
+
+
+            async function initializeMainMap(userLocation) {
+                mainMap = L.map('mainMap').setView([userLocation.lat, userLocation.lon], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(mainMap);
+
+                const address = await reverseGeocode(userLocation);
+                userMarker = L.marker(userLocation).addTo(mainMap);
+                userMarker.bindPopup("You are here! <br> Address: " + address);
+
+                mainMap.addControl(new L.Control.Fullscreen());
+            }
+
+            
+
+
+            async function reverseGeocode(userLocation) {
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation.lat}&lon=${userLocation.lon}`);
+                    const data = await response.json();
+
+                    if (data && data.display_name) {
+                        return data.display_name;
+                    } else {
+                        return "Address not found";
+                    }
+                } catch (error) {
+                    console.error("Error fetching address:", error);
+                    return "Address not found";
+                }
+            }
+
+            async function markDropPointOnMainMap(pointId) {
+        // Ensure userLocation is defined
+        if (!userLocation) {
+            userLocation = await getCurrentLocation();
+            if (!userLocation) {
+                return;
+            }
         }
 
-        const dropPoints = document.querySelectorAll('.drop-point');
+        const dropPointModal = document.getElementById(`detailsModal-${pointId}`);
+        const location = dropPointModal.getAttribute('data-location');
+        const description = dropPointModal.getAttribute('data-description');
 
-        dropPoints.forEach(dropPoint => {
-            const pointId = dropPoint.querySelector('span[id^="openingTime-"]').id.split('-')[1];
-            const openingTime = document.getElementById(`openingTime-${pointId}`).textContent.trim();
-            const closingTime = document.getElementById(`closingTime-${pointId}`).textContent.trim();
+        const data = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`)
+            .then(response => response.json())
+        .catch(error => {
+            console.error("Error fetching data:", error);
+            return null;
+        });
 
-            const statusElement = dropPoint.querySelector('.status');
-            if (isNowBetweenTimes(openingTime, closingTime)) {
-                statusElement.innerHTML = '<i class="fas fa-check-circle status-icon status-open"></i> Open';
-            } else {
-                statusElement.innerHTML = '<i class="fas fa-times-circle status-icon status-closed"></i> Closed';
+        if (data && data[0]) {
+            const coords = { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+
+            // Clear previous drop markers and routing control
+            for (const markerId in dropPointMarkers) {
+                mainMap.removeLayer(dropPointMarkers[markerId]);
             }
-        });
-    });
- 
+            
 
-    $("#search").on("input", function() {
-        const query = $(this).val().toLowerCase();
-        $(".card").each(function() {
-            const pointName = $(this).find(".card-title").text().toLowerCase();
-            if (pointName.includes(query)) {
-                $(this).parent().show();
+            // Set user marker and its popup
+            if (!userMarker) {
+                userMarker = L.marker([userLocation.lat, userLocation.lon]).addTo(mainMap);
+                userMarker.bindPopup("You are here!");
             } else {
-                $(this).parent().hide();
+                userMarker.setLatLng([userLocation.lat, userLocation.lon]).update();
             }
-        });
+
+            const customIcon = L.icon({
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41], // size of the icon
+        iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
+        shadowSize: [41, 41], // size of the shadow
+        popupAnchor: [1, -34] // point from which the popup should open relative to the iconAnchor
     });
- 
-    // Change the button event listener to this:
-    document.querySelectorAll('.btn.btn-success').forEach(button => {
-        button.addEventListener('click', function(event) { 
-            event.stopPropagation();
-        });
-    });
-
-    </script>  
 
 
-    <!-- fillter drop points by nearest -->
+            // Set drop point marker and its popup
+            const dropMarker = L.marker([coords.lat, coords.lon], { icon: customIcon }).addTo(mainMap);
+
+            const popupContent = `<strong>Location:</strong> ${location}<br><strong>Description:</strong> ${description}`;
+            dropMarker.bindPopup(popupContent).openPopup();
+            dropPointMarkers[pointId] = dropMarker;
+
+            // Establish route between user location and drop point
+            const waypoints = [
+                L.latLng(userLocation.lat, userLocation.lon),
+                L.latLng(coords.lat, coords.lon)
+            ];
+
+        
+        }
+    }
+
+            async function getCurrentLocation() {
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition((position) => {
+                            resolve(position);
+                        }, (error) => {
+                            reject(error);
+                        });
+                    });
+
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude
+                    };
+
+                    initializeMainMap(userLocation);
+
+                    return userLocation;
+                } catch (error) {
+                    console.error("Error fetching current location:", error);
+                    alert("Unable to get your location. Please ensure location services are enabled and try again.");
+                    return null;
+                }
+            }
+
+            async function filterByDistance() {
+        try {
+            userLocation = await getCurrentLocation(); // Ensure userLocation is defined
+
+            const dropPoints = $(".col-md-4").toArray();
+
+            for (const point of dropPoints) {
+                const address = $(point).find(".modal").data('location');
+                const data = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+                    .then(response => response.json());
+
+                if (data && data[0]) {
+                    $(point).data('coords', { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) });
+                }
+            }
+
+            dropPoints.sort((a, b) => {
+                const coordsA = $(a).data('coords');
+                const coordsB = $(b).data('coords');
+
+                if (!coordsA || !coordsB) return 0;
+
+                const distA = L.latLng(userLocation.lat, userLocation.lon).distanceTo(L.latLng(coordsA.lat, coordsA.lon));
+                const distB = L.latLng(userLocation.lat, userLocation.lon).distanceTo(L.latLng(coordsB.lat, coordsB.lon));
+
+                $(a).find('.distance-to-user').text(`Distance: ${(distA / 1000).toFixed(2)} km`);
+                $(b).find('.distance-to-user').text(`Distance: ${(distB / 1000).toFixed(2)} km`);
+
+                return distA - distB;
+            });
+
+            $("#dropPointsContainer").empty().append(dropPoints);
+
+            // Initialize all modal maps after sorting
+            initializeAllModalMaps();
+
+            // After filtering, invalidate map size for correct rendering
+            setTimeout(() => {
+                for (let map in maps) {
+                    if (maps.hasOwnProperty(map)) {
+                        maps[map].invalidateSize();
+                    }
+                }
+        initializeAllModalMaps();
+            }, 1500);
+        } catch (error) {
+            console.error("Error sorting drop points:", error);
+            if (error.message.includes("Permission denied")) {
+                alert("Unable to get your location. Please ensure location services are enabled and try again.");
+            }
+        }
+    }
+            async function locateAndShowDirections() {
+                userLocation = await getCurrentLocation();
+                if (userLocation) {
+                    // Use this function to locate and show directions
+                    markDropPointOnMainMap(/* Specify the pointId here */);
+                }
+            }
+        </script>
 
         <script>
-            var maps = {};
-    function initializeMaps() {
-    $('.modal').each(function() {
-        var $modal = $(this);
-        var pointId = $modal.data('point-id');
-        var location = $modal.data('location');
+        document.addEventListener("DOMContentLoaded", function() {
+            function isNowBetweenTimes(start, end) {
+                const now = new Date();
+                const [startHour, startMinute] = start.split(':').map(Number);
+                const [endHour, endMinute] = end.split(':').map(Number);
 
-        var mapId = 'map-' + pointId;
-        if ($('#' + mapId).length && !maps[mapId]) {
-            maps[mapId] = L.map(mapId, {
-                fullscreenControl: true,
-                fullscreenControlOptions: {
-                    position: 'topleft'
-                }
-            }).setView([0, 0], 13);
+                const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+                const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(maps[mapId]);
+                return now >= startDate && now <= endDate;
+            }
 
-            var provider = new GeoSearch.OpenStreetMapProvider();
+            const dropPoints = document.querySelectorAll('.drop-point');
 
-            provider.search({ query: location }).then(function(result) {
-                if (result && result[0]) {
-                    var coordinates = [result[0].y, result[0].x];
-                    maps[mapId].setView(coordinates, 13);
-                    L.marker(coordinates).addTo(maps[mapId]).bindPopup(location);
+            dropPoints.forEach(dropPoint => {
+                const pointId = dropPoint.querySelector('span[id^="openingTime-"]').id.split('-')[1];
+                const openingTime = document.getElementById(`openingTime-${pointId}`).textContent.trim();
+                const closingTime = document.getElementById(`closingTime-${pointId}`).textContent.trim();
+
+                const statusElement = dropPoint.querySelector('.status');
+                if (isNowBetweenTimes(openingTime, closingTime)) {
+                    statusElement.innerHTML = '<i class="fas fa-check-circle status-icon status-open"></i> Open';
+                } else {
+                    statusElement.innerHTML = '<i class="fas fa-times-circle status-icon status-closed"></i> Closed';
                 }
             });
-        }
-    });
-}
+        });
+    
 
-async function getCurrentLocation() {
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            resolve({
-                lat: position.coords.latitude,
-                lon: position.coords.longitude
+        $("#search").on("input", function() {
+            const query = $(this).val().toLowerCase();
+            $(".card").each(function() {
+                const pointName = $(this).find(".card-title").text().toLowerCase();
+                if (pointName.includes(query)) {
+                    $(this).parent().show();
+                } else {
+                    $(this).parent().hide();
+                }
             });
-        }, (error) => {
-            reject(error);
-        });
-    });
-}
-
-
-$("#filter-distance").on("click", function() {
-    const permission = confirm("Do you give permission to access your location to filter drop points by nearest?");
-    if (permission) {
-        filterByDistance();
-    } else {
-        alert("Permission denied. We won't access your location.");
-    }
-});
-
-async function filterByDistance() {
-    try {
-        // Get the user's current location using our new function
-        const userLocation = await getCurrentLocation();
- 
-        const dropPoints = $(".col-md-4").toArray();
-
-        // Convert drop point addresses to coordinates
-        for (const point of dropPoints) {
-            const address = $(point).find(".modal").data('location');
-            const data = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-                .then(response => response.json());
-
-            if (data && data[0]) {
-                $(point).data('coords', { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) });
-            }
-        }
-
-        // Calculate distances and sort
-        dropPoints.sort((a, b) => {
-            const coordsA = $(a).data('coords');
-            const coordsB = $(b).data('coords');
-            
-            if (!coordsA || !coordsB) return 0;
-
-            const distA = L.latLng(userLocation.lat, userLocation.lon).distanceTo(L.latLng(coordsA.lat, coordsA.lon));
-            const distB = L.latLng(userLocation.lat, userLocation.lon).distanceTo(L.latLng(coordsB.lat, coordsB.lon));
-
-            // Update the distance on the drop point card. Convert meters to kilometers and fix to two decimal places.
-            $(a).find('.distance-to-user').text(`Distance: ${(distA / 1000).toFixed(2)} km`);
-            $(b).find('.distance-to-user').text(`Distance: ${(distB / 1000).toFixed(2)} km`);
-
-            return distA - distB;
+        }); 
+        // Stop modal from opening when these buttons are clicked
+        document.querySelectorAll('.btn.btn-success, .btn.btn-primary').forEach(button => {
+            button.addEventListener('click', function(event) { 
+                event.stopPropagation();
+            });
         });
 
-        $("#dropPointsContainer").empty().append(dropPoints);
 
-        initializeMaps();  // Reinitialize the maps for the sorted drop points
+        </script>  
 
-        // After filtering, invalidate map size for correct rendering
-        setTimeout(() => {
-        // After filtering, invalidate map size for correct rendering
-        for (let map in maps) {
-            if (maps.hasOwnProperty(map)) {
-                maps[map].invalidateSize();
-            }
-        }
-    }, 500);   
+    
+    </body>
 
-    } catch (error) {
-        console.error("Error sorting drop points:", error);
-        if (error.message.includes("Permission denied")) {
-            alert("Unable to get your location. Please ensure location services are enabled and try again.");
-        } else {
-            // alert("Error fetching your location or geocoding addresses. Please ensure location services are enabled and try again.");
-        }
-    }
-}
-
-
-   
-      
-      </script>
-  
-      
- 
-</body>
-</html>
+    </html>
