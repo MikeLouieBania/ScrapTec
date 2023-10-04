@@ -1,182 +1,863 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Marketplace</title>
-    <!-- Link to Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />  
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Waste Zero</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
+
     <style>
-      /* Additional custom styles for the page */
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+        /* Custom Styles from previous code */
+        .navbar .navbar-brand,
+        .navbar .nav-link {
+            color: #fff;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 20px;
+        }
 
-      /* Style for the advertisements */
-      .advertisements {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100px;
-        background-color: #f0f0f0;
-        margin-bottom: 20px;
-      }
+        body {
+            padding-top: 60px;  /* Adjusted the padding for navbar */
+            margin-bottom: 60px;
+            background-color: #8babf1;
+        }
 
-      /* Style for the category navigation */
-      .category-nav {
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 5px;
-      }
+        .navbar {
+            background-color: #219ebc;
+            padding: 10px 0;
+        }
 
-      .category-nav a {
-        display: block;
-        padding: 5px;
-        text-decoration: none;
-        color: #333;
-      }
+        .navbar .container {
+            padding: 0 15px;
+        }
 
-      .category-nav a:hover {
-        background-color: #ddd;
-      }
+        nav ul {
+            list-style: none;
+            text-align: center;
+        }
 
-      /* Style for the marketplace products */
-      .product {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 20px;
-        margin-bottom: 20px;
-      }
+        nav ul li {
+            display: inline-block;
+        }
 
-      .product h3 {
-        margin-top: 0;
-      }
+        nav ul li a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #aaa;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0 10px;
+            position: relative;
+            transition: all .5s;
+        }
 
-      .product p {
-        margin-bottom: 0;
+        nav ul li a:hover {
+            color: #555;
+        }
+
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #8ecae6;
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .navbar-logo {
+            max-height: 50px;
+            max-width: 60px;
+            height: auto;
+            width: 60px;
+            transform-origin: left center;
+            margin-left: 100px;
+        }
+        .navbar-nav.ms-auto .nav-item:last-child {
+          margin-right: 40px;  /* Adjust this value as needed */
+      }      
+        
+    .jumbotron::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      background: url('https://i.postimg.cc/T3xgwbvy/4685960.jpg') center/cover no-repeat, rgba(0, 0, 0, 0.5);
+      background-blend-mode: overlay;
+  }
+
+
+    /* The Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.358);
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #ffffff;
+  margin: auto;
+  padding: 20px 40px;
+  border-radius: 15px;
+  width: 60%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.row{
+  margin-top: 20px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.close:hover,
+.close:focus {
+  color: #333;
+}
+
+/* Filter By Button */
+.image-button {
+  background-color: #219ebc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.image-button:hover {
+  background-color:#a8dadc;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-button:focus {
+  outline: none;
+}
+
+/* Apply Modal Button Styling */
+button[type="submitz"] {
+  background-color: #219ebc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin-top: 20px;  /* Space at the top */
+  display: block;  /* Make it a block element */
+  width: 100%;  /* Full width */
+  text-align: center;  /* Center the text */
+}
+
+button[type="submitz"]:hover {
+  background-color: #a8dadc;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.1);
+}
+
+button[type="submitz"]:focus {
+  outline: none;
+}
+          
+      
+
+   /* Search Bar Customization */
+    .search-box{
+      width: fit-content;
+      height: fit-content;
+      position: relative;
       }
+                  .input-search{
+                    height: 50px;
+                    width: 50px;
+                    border-style: none;
+                    padding: 10px;
+                    font-size: 18px;
+                    letter-spacing: 2px;
+                    outline: none;
+                    border-radius: 25px;
+                    transition: all .5s ease-in-out;
+                    background-color: #22a6b3;
+                    padding-right: 40px;
+                    color:#000000;
+                  }
+                  .input-search::placeholder{
+                    color:rgba(0, 0, 0, 0.5);
+                    font-size: 18px;
+                    letter-spacing: 2px;
+                    font-weight: 100;
+                  }
+                  .btn-search{
+                    width: 50px;
+                    height: 50px;
+                    border-style: none;
+                    font-size: 20px;
+                    font-weight: bold;
+                    outline: none;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    position: absolute;
+                    right: 0px;
+                    color:#a7a6a6;
+                    background-color:transparent;
+                    pointer-events: auto;  
+                  }
+                  .btn-search:focus ~ .input-search{
+                    width: 300px;
+                    border-radius: 0px;
+                    background-color: transparent;
+                    border-bottom:1px solid rgba(0, 0, 0, 0.678);
+                    transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+                  }
+                  .input-search:focus{
+                    width: 300px;
+                    border-radius: 0px;
+                    background-color: transparent;
+                    border-bottom:1px solid rgba(255,255,255,.5);
+                    transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+                  }
+                  
+
+                  .footer-section {
+                    padding: 80px 0;
+                    background: #8babf1; }
+                    .footer-section .relative {
+                      position: relative; }
+                    .footer-section a {
+                      text-decoration: none;
+                      color: #2f2f2f;
+                      -webkit-transition: .3s all ease;
+                      -o-transition: .3s all ease;
+                      transition: .3s all ease; }
+                      .footer-section a:hover {
+                        color: rgba(47, 47, 47, 0.5); }
+                    .footer-section .subscription-form {
+                      margin-bottom: 40px;
+                      position: relative;
+                      z-index: 2;
+                      margin-top: 100px; }
+                      @media (min-width: 992px) {
+                        .footer-section .subscription-form {
+                          margin-top: 0px;
+                          margin-bottom: 80px; } }
+                      .footer-section .subscription-form h3 {
+                        font-size: 18px;
+                        font-weight: 500;
+                        color: #3b5d50; }
+                      .footer-section .subscription-form .form-control {
+                        height: 50px;
+                        border-radius: 10px;
+                        font-family: "Inter", sans-serif; }
+                        .footer-section .subscription-form .form-control:active, .footer-section .subscription-form .form-control:focus {
+                          outline: none;
+                          -webkit-box-shadow: none;
+                          box-shadow: none;
+                          border-color: #3b5d50;
+                          -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+                          box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2); }
+                        .footer-section .subscription-form .form-control::-webkit-input-placeholder {
+                          font-size: 14px; }
+                        .footer-section .subscription-form .form-control::-moz-placeholder {
+                          font-size: 14px; }
+                        .footer-section .subscription-form .form-control:-ms-input-placeholder {
+                          font-size: 14px; }
+                        .footer-section .subscription-form .form-control:-moz-placeholder {
+                          font-size: 14px; }
+                      .footer-section .subscription-form .btn {
+                        border-radius: 10px !important; }
+                    .footer-section .sofa-img {
+                      position: absolute;
+                      top: -200px;
+                      z-index: 1;
+                      right: 0; }
+                      .footer-section .sofa-img img {
+                        max-width: 380px; }
+                    .footer-section .links-wrap {
+                      margin-top: 0px; }
+                      @media (min-width: 992px) {
+                        .footer-section .links-wrap {
+                          margin-top: 54px; } }
+                      .footer-section .links-wrap ul li {
+                        margin-bottom: 10px; }
+                    .footer-section .footer-logo-wrap .footer-logo {
+                      font-size: 32px;
+                      font-weight: 500;
+                      text-decoration: none;
+                      color: #3b5d50; }
+                    .footer-section .custom-social li {
+                      margin: 2px;
+                      display: inline-block; }
+                      .footer-section .custom-social li a {
+                        width: 40px;
+                        height: 40px;
+                        text-align: center;
+                        line-height: 40px;
+                        display: inline-block;
+                        background: #dce5e4;
+                        color: #3b5d50;
+                        border-radius: 50%; }
+                        .footer-section .custom-social li a:hover {
+                          background: #3b5d50;
+                          color: #ffffff; }
+                    .footer-section .border-top {
+                      border-color: #dce5e4; }
+                      .footer-section .border-top.copyright {
+                        font-size: 14px !important; }
+                  
+                  .untree_co-section {
+                    padding: 7rem 0; }
+                  
+                  .form-control {
+                    height: 50px;
+                    border-radius: 10px;
+                    font-family: "Inter", sans-serif; }
+                    .form-control:active, .form-control:focus {
+                      outline: none;
+                      -webkit-box-shadow: none;
+                      box-shadow: none;
+                      border-color: #3b5d50;
+                      -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+                      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2); }
+                    .form-control::-webkit-input-placeholder {
+                      font-size: 14px; }
+                    .form-control::-moz-placeholder {
+                      font-size: 14px; }
+                    .form-control:-ms-input-placeholder {
+                      font-size: 14px; }
+                    .form-control:-moz-placeholder {
+                      font-size: 14px; }
+                  
+                             /* Style for pagination */
+                             .pager {
+                            list-style: none;
+                            display: flex;
+                            justify-content: center;
+                            margin-top: 15rem;
+                            padding: 0; 
+                        }
+                  
+                        .pager li {
+                            margin: 0 5px;
+                        }
+                  
+                        .pager a {
+                            text-decoration: none;
+                            padding: 5px 10px;
+                            background-color: #042400;
+                            color: #fff;
+                            border-radius: 3px;
+                            transition: background-color 0.3s;
+                        }
+                  
+                        .pager a:hover {
+                            background-color: #0056b3;
+                        }
+                  
+                                /* Style for active page */
+                                .pager .active {
+                                  font-weight: bold;
+                              }
+
+                              .card-body {
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: space-between;
+                                height: 100%;
+                            }
+                            
+                            .card-body .btn-primary {
+                                margin: 20px auto 0; /* Gives some spacing and centers the button */
+                            }
+                               
+     
+                              .card {
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                                transition: all 0.3s ease;
+                                margin-bottom: 0.5rem;
+                                margin-top: 1rem;
+                            }
+                    
+                            .card:hover {
+                                transform: translateY(-5px);
+                            }
+                    
+                            .card-title {
+                                font-size: 1.2rem;
+                                margin-bottom: 0.5rem;
+                            }
+                    
+                            .card-text {
+                                font-size: 1rem;
+                                color: #333;
+                                margin-bottom: 1rem;
+                            }
+                    
+                            .btn-primary {
+                                background-color: #219ebc;
+                                border-color: #219ebc;
+                            }
+                     
+                        /* Change color of "Sort by Price" label */
+                    .sort-price-section label {
+                      color: white; /* Change this color to your liking */
+                      font-weight: bold;
+                    }
+
+                    /* Change color of price label (e.g., 5000) */
+                    .sort-price-section #priceLabel {
+                      color: white; /* Change this color to your liking */
+                      font-weight: bold;
+                    }
+
+                    /* Change color of the range input slider thumb (the draggable part) and the track */
+                    .sort-price-section input[type="range"]::-webkit-slider-thumb {
+                      background-color: #2ecc71; /* Change this color to your liking */
+                    }
+
+                    .sort-price-section input[type="range"]::-webkit-slider-runnable-track {
+                      background-color: #ecf0f1; /* Change this color to your liking */
+                    }
+
+                    /* For Firefox */
+                    .sort-price-section input[type="range"]::-moz-range-thumb {
+                      background-color: #2ecc71; /* Change this color to your liking */
+                    }
+
+                    .sort-price-section input[type="range"]::-moz-range-track {
+                      background-color: #ecf0f1; /* Change this color to your liking */
+                    }
+
+                              
+        
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/user/dashboard">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shift">
+        <a class="navbar-brand" href="#">
+            <img src="https://i.postimg.cc/nVv1xPp1/logo.png" alt="" class="navbar-logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto"> 
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/marketplace">Marketplace</a>
-                </li> 
+                    <a class="nav-link" href="#">Dashboard</a>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/useraccount">My Account</a>
+                    <a class="nav-link" href="#">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My Account</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0" method="post" action="/user/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-            </form>
         </div>
     </nav>
-    <div class="container">
-      <h1>Marketplace</h1>
-      <!-- Advertisements -->
-      <div class="advertisements">
-        <!-- Add your advertisements content here -->
-        Advertisement 1
-      </div>
 
+
+<!-- Objective Section -->
+<section class="jumbotron text-center text-white mb-0 d-flex align-items-start justify-content-center" style="position: relative; padding: 100px 0;">
+  <div class="container">
+      <h1 class="display-4" style="font-family: 'Josefin Sans', sans-serif; font-size: 105px; margin-inline-start: auto;">Our Objective at E-Waste Zero</h1>
+      <p class="lead" style="font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 21px">
+          Reducing electronic waste by providing a platform for buying and selling used electronic products. We believe in sustainability and promoting a circular economy for electronics.
+      </p> 
+  </div>
+  <div class="jumbotron-bg"></div>
+</section>
+
+
+<div class="d-flex justify-content-center align-items-center" style="height: 10vh;"> <!-- Assuming you want to center it in the viewport height -->
+  
+  <!-- Search Bar -->
+  <div class="search-box">
+      <input type="text" class="input-search" placeholder="Search for products...">
+      <button class="btn-search" type="button">&#128269;</button> <!-- The Unicode character represents a magnifying glass icon -->
+  </div>
+</div>
+
+      
+
+      <!-- Filters -->
+<div class="untree_co-section product-section before-footer-section">
+  <div class="container">
       <div class="row">
-        <!-- Category Navigation -->
-        <div class="col-md-3">
-            <h4>Marketplace</h4>
-            <button class="btn btn-primary mt-3" type="button">Create New Listing</button> <br>
-            <br>
-            <ul class="list-group">
-                <li class="list-group-item">
-                  <a href="#">Search Marketplace</a>
-                  <!-- Add your search field here -->
-                  <input type="text" class="form-control mt-2" placeholder="Search">
-                  <!-- Add Inbox, Buying, and Selling links below the search field -->
-                  <a href="#">Inbox</a><br>
-                  <a href="#">Buying</a><br>
-                  <a href="#">Selling</a>
-                </li>
-            </ul>
-            <!-- Filters Section -->
-            <h4 class="mt-3">Filters</h4>
-            <ul class="list-group">
-                <li class="list-group-item" data-toggle="collapse" data-target="#sortByCollapse">
-                    <a href="#">Sort By</a>
-                    <div id="sortByCollapse" class="collapse">
-                    <!-- Add your Sort By options here -->
-                    <a href="#">Price: Lowest First</a><br>
-                    <a href="#">Price: Highest First</a>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <a href="#">Price</a> <br>
-                    <!-- Add your Price input fields here -->
-                    Min: <input type="text" class="form-control mt-2" placeholder="Min Price">
-                    Max: <input type="text" class="form-control mt-2" placeholder="Max Price">
-                </li>
-                <li class="list-group-item" data-toggle="collapse" data-target="#conditionCollapse">
-                    <a href="#">Condition</a>
-                    <div id="conditionCollapse" class="collapse">
-                    <!-- Add your Condition options here -->
-                    <a href="#">New</a><br>
-                    <a href="#">Good</a><br>
-                    <a href="#">Fair</a>
-                    </div>
-                </li>
-                <li class="list-group-item" data-toggle="collapse" data-target="#dateListedCollapse">
-                    <a href="#">Date Listed</a>
-                    <div id="dateListedCollapse" class="collapse">
-                    <!-- Add your Date Listed options here -->
-                    <a href="#">All</a><br>
-                    <a href="#">Last 24 Hours</a><br>
-                    <a href="#">Last 7 Days</a><br>
-                    <a href="#">Last 30 Days</a>
-                    </div>
-                </li> 
-            </ul>
-            
-            <h4 class="mt-3">Categories</h4>
-            <ul class="list-group">
-                <!-- Add your Categories options here -->
-                <li class="list-group-item"><a href="#">Category 1</a></li>
-                <li class="list-group-item"><a href="#">Category 2</a></li>
-                <li class="list-group-item"><a href="#">Category 3</a></li>
-            </ul>
+
+          <!-- Start Sidebar (Filter by Button) -->
+          <div class="col-lg-3">
+              <button class="image-button">
+                  <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                  >
+                      <path
+                          d="M3 4.5H21M3 12H21M3 19.5H13"
+                          stroke="White"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                      />
+                  </svg>
+                  Filter by
+              </button>
+          </div>
+
+          
+
+          <!-- Sort by Price Slider -->
+          <div class="col-lg-6">
+              <!-- Leaving this column empty for spacing -->
+          </div>
+
+          <div class="col-lg-3 text-right sort-price-section">
+            <label>Sort by Price:</label>
+            <input type="range" class="custom-range" id="priceSlider" min="50" max="1000" step="100" value="5000">
+            <span id="priceLabel">5000</span>
+        </div>
+        
+
+      </div> <!-- End of row for filters -->
+
+
+  <!-- Advertisement -->
+<div class="mt-4">
+  <h4>Advertisement</h4>
+  <img src="https://via.placeholder.com/468x60?text=Ad+Banner" alt="Advertisement" style="width: 100%; height: auto;">
+</div>
+
+
+      <!-- Start of Product Section -->
+       <!-- Products -->
+       <div class="row">
+        <!-- Sample Product -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Product 1</h5>
+                    <p class="card-text">$100</p>
+                    <a href="#" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
         </div>
 
-        <!-- Marketplace Products -->
-        <div class="col-md-9">
-          <div class="product">
-            <h3>Product 1</h3>
-            <p>Price: ₱10</p>
-            <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          </div>
+                  <!-- Sample Product -->
+                  <div class="col-md-3 mb-4">
+                      <div class="card">
+                          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                          <div class="card-body">
+                              <h5 class="card-title">Product 2</h5>
+                              <p class="card-text">$100</p>
+                              <a href="#" class="btn btn-primary">View Details</a>
+                          </div>
+                      </div>
+                  </div>
 
-          <div class="product">
-            <h3>Product 2</h3>
-            <p>Price: ₱20</p>
-            <p>Description: Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <!-- Sample Product -->
+        <div class="col-md-3 mb-4">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title">Product 3</h5>
+                  <p class="card-text">$100</p>
+                  <a href="#" class="btn btn-primary">View Details</a>
+              </div>
           </div>
-
-          <div class="product">
-            <h3>Product 3</h3>
-            <p>Price: ₱15</p>
-            <p>Description: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-          </div>
-          <!-- Add more products as needed -->
-        </div>
       </div>
+
+                <!-- Sample Product -->
+                <div class="col-md-3 mb-4">
+                  <div class="card">
+                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                      <div class="card-body">
+                          <h5 class="card-title">Product 4</h5>
+                          <p class="card-text">$100</p>
+                          <a href="#" class="btn btn-primary">View Details</a>
+                      </div>
+                  </div>
+              </div>
+
+
+                        <!-- Sample Product -->
+        <div class="col-md-3 mb-4">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title">Product 5</h5>
+                  <p class="card-text">$100</p>
+                  <a href="#" class="btn btn-primary">View Details</a>
+              </div>
+          </div>
+      </div>
+
+                <!-- Sample Product -->
+                <div class="col-md-3 mb-4">
+                  <div class="card">
+                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                      <div class="card-body">
+                          <h5 class="card-title">Product 6</h5>
+                          <p class="card-text">$100</p>
+                          <a href="#" class="btn btn-primary">View Details</a>
+                      </div>
+                  </div>
+              </div>
+
+                        <!-- Sample Product -->
+        <div class="col-md-3 mb-4">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title">Product 7</h5>
+                  <p class="card-text">$100</p>
+                  <a href="#" class="btn btn-primary">View Details</a>
+              </div>
+          </div>
+      </div>
+
+                <!-- Sample Product -->
+                <div class="col-md-3 mb-4">
+                  <div class="card">
+                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                      <div class="card-body">
+                          <h5 class="card-title">Product 8</h5>
+                          <p class="card-text">$100</p>
+                          <a href="#" class="btn btn-primary">View Details</a>
+                      </div>
+                  </div>
+              </div>
+
+                        <!-- Sample Product -->
+        <div class="col-md-3 mb-4">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title">Product 9</h5>
+                  <p class="card-text">$100</p>
+                  <a href="#" class="btn btn-primary">View Details</a>
+              </div>
+          </div>
+      </div>
+
+                <!-- Sample Product -->
+                <div class="col-md-3 mb-4">
+                  <div class="card">
+                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                      <div class="card-body">
+                          <h5 class="card-title">Product 10</h5>
+                          <p class="card-text">$100</p>
+                          <a href="#" class="btn btn-primary">View Details</a>
+                      </div>
+                  </div>
+              </div>
+
+                        <!-- Sample Product -->
+        <div class="col-md-3 mb-4">
+          <div class="card">
+              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title">Product 11</h5>
+                  <p class="card-text">$100</p>
+                  <a href="#" class="btn btn-primary">View Details</a>
+              </div>
+          </div>
+      </div>
+
+                <!-- Sample Product -->
+                <div class="col-md-3 mb-4">
+                  <div class="card">
+                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                      <div class="card-body">
+                          <h5 class="card-title">Product 12</h5>
+                          <p class="card-text">$100</p>
+                          <a href="#" class="btn btn-primary">View Details</a>
+                      </div>
+                  </div>
+        <!-- You can replicate the above div for more products -->
     </div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+
+    
+		
+      <ul class="pager">
+        <li><a href="#">&laquo; Previous</a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a style="color: white;">..................................................</a></li>
+        <li><a href="#">Next &raquo;</a></li>
+        <!-- Add more page numbers as needed -->
+    </ul>
+
+<!-- Start Footer Section -->
+<footer class="footer-section">
+
+    <!-- Use .container only for inner content, not for the entire footer -->
+    <div class="container relative">
+
+        <div class="sofa-img">
+            <img src="https://cdn-icons-png.flaticon.com/512/2913/2913447.png" alt="Earthify Logo" class="img-fluid" style="height: 50%; width: 50%; float: right">
+        </div>
+
+        <div class="row g-5 mb-5">
+            <div class="col-lg-4">
+                <header class="mb-4 footer-logo-wrap">
+                    <a href="#" class="footer-logo">E-Waste Zero<span>.</span></a>
+                </header>
+                <p class="mb-4">Donec facilisis quam ut purus rutrum lobortis... Pellentesque habitant</p>
+            </div>
+        </div>
+
+        <div class="border-top copyright">
+            <div class="row pt-4">
+                <div class="col-lg-6">
+                    <p class="mb-2 text-center text-lg-start">Copyright &copy; <span id="currentYear"></span>...</p>
+                </div>
+
+                <div class="col-lg-6 text-center text-lg-end">
+                    <nav>
+                        <ul class="list-unstyled d-inline-flex ms-auto">
+                            <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</footer>
+<!-- End Footer Section -->
+
+
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <!-- Your categories and conditions code here -->
+    <!-- Condition -->
+      <!-- Category Selector -->
+      <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Categories</h4>
+      <div class="categories-list">
+        <div class="categories-item">
+          <input type="checkbox" id="action">
+          <label for="action">Action</label>
+        </div>
+        <div class="categories-item">
+          <input type="checkbox" id="action-adventure">
+          <label for="action-adventure">Action & Adventure</label>
+        </div>
+        <div class="categories-item">
+          <input type="checkbox" id="adventure">
+          <label for="adventure">Adventure</label>
+        </div>
+        <!-- Add more categories similarly -->
+      </div>
+      
+      <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Condition</h4>
+      <div class="categories-list">
+        <div class="categories-item">
+          <input type="checkbox" id="action">
+          <label for="action">Action</label>
+        </div>
+        <div class="categories-item">
+          <input type="checkbox" id="action-adventure">
+          <label for="action-adventure">Action & Adventure</label>
+        </div>
+        <div class="categories-item">
+          <input type="checkbox" id="adventure">
+          <label for="adventure">Adventure</label>
+        </div>
+        <!-- Add more categories similarly -->
+      </div>
+      <button type="submitz" style="width: 150px; left: 100%;">Apply Filter</button>	
+  </div>
+</div>
+          
+        
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<script>
+
+  // Get the modal, button that opens the modal, and the <span> element that closes the modal
+var modal = document.getElementById("myModal");
+var btn = document.querySelector(".image-button");
+var span = document.getElementsByClassName("close")[0];
+
+// When the button is clicked, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When <span> is clicked, close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When anywhere outside of the modal is clicked, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+/* Magnifying */
+document.querySelector(".btn-search").addEventListener("click", function() {
+  document.querySelector(".input-search").focus();
+});
+
+ // Update the current slider value (each time you drag the slider handle)
+ document.getElementById("priceSlider").oninput = function() {
+  document.getElementById("priceLabel").innerHTML = this.value;
+  // Here you can also call a function to sort your products based on the selected price
+}
+
+
+</script>
+
 </html>
