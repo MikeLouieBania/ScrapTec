@@ -2,10 +2,8 @@
 <html>
   <head>
     <title>My Account</title>
-    <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
     <style>
-      /* Additional custom styles for the page */
       .container {
         max-width: 800px;
         margin: 0 auto;
@@ -23,39 +21,119 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">  
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/faq">FAQ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/account">My Account</a>
+                <a class="nav-link" href="/organization/account">Account</a>
                 </li>
-            </ul>
+            </ul> 
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
             </form>
         </div>
     </nav>
-    <div class="container">   
-      <div>
-        <h3>Account Settings</h3> 
-        <p><strong>Organization Name:</strong> <%= organization.organizationname %></p>
-        <p><strong>Business Email:</strong> <%= organization.email %></p> 
-        <p><strong>Company Address:</strong> <%= organization.address %></p> 
-        <p><strong>Contact Number:</strong> <%= organization.contactNumber %></p> 
-        <p><strong>SEC Registration Number:</strong> <%= organization.secRegistrationNumber %></p> 
+    
+    <div class="container">
+      <!-- Points and Org Name -->
+      <h2 class="mb-4"><%= organization.organizationname %> <span class="badge badge-success">Total Spendable Points: <%= organization.totalPoints %></span></h2>
+      
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#account">Account Settings</a>
+        </li> 
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#redeem">Redeem</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#status">Status</a>
+        </li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content mt-4">
+        <div class="tab-pane active" id="account">
+          <!-- Account Content Here -->
+          <h3>Account Settings</h3>
+          <p><strong>Organization Name:</strong> <%= organization.organizationname %></p>
+          <p><strong>Business Email:</strong> <%= organization.email %></p> 
+          <p><strong>Company Address:</strong> <%= organization.address %></p> 
+          <p><strong>Contact Number:</strong> <%= organization.contactNumber %></p> 
+          <p><strong>SEC Registration Number:</strong> <%= organization.secRegistrationNumber %></p> 
+          
+          <% if (organization.profilePicture) { %>
+            <p><strong>Profile Picture:</strong></p>
+            <img src="data:image/jpeg;base64, <%= organization.profilePicture.toString('base64') %>" alt="Profile Picture" style="max-width: 200px;"/>
+          <% } else { %>
+            <p><strong>No Profile Picture</strong></p>
+          <% } %>
+        </div>  
         
-        <% if (organization.profilePicture) { %>
-          <p><strong>Profile Picture:</strong></p>
-          <img src="data:image/jpeg;base64, <%= organization.profilePicture.toString('base64') %>" alt="Profile Picture" style="max-width: 200px;"/>
-        <% } else { %>
-          <p><strong>No Profile Picture</strong></p>
-        <% } %>
+        <!-- Redeem Tab -->
+<div class="tab-pane" id="redeem">
+  <!-- Redeem Content Here -->
+  <h3>Redeem Points</h3>
+  <p>You have <span class="badge badge-success"><%= organization.totalPoints %></span> spendable points.</p> 
+          
+  <!-- Redeem for Advertisements -->
+  <section>
+    <h4>Redeem for Advertisements</h4>
+    <p>You can redeem your points to run advertisements in the User Marketplace. Here are the options:</p>
+    <ul>
+      <li><strong>Basic Ad (1 week):</strong> 10 points</li>
+      <li><strong>Premium Ad (2 weeks with featured placement):</strong> 20 points</li>
+    </ul>
+    <form action="/organization/redeem" method="post">
+      <label for="adType">Select Advertisement Type:</label>
+      <select id="adType" name="adType">
+        <option value="basic">Basic Ad - 10 points</option>
+        <option value="premium">Premium Ad - 20 points</option>
+      </select>
+      <button type="submit">Redeem</button>
+    </form>
+  </section>
+          
+  <!-- Ad Targeting and Ranking -->
+  <section>
+    <h4>Advertisement Targeting and Ranking</h4>
+    <p>Your ads' exposure will automatically be determined by your organization's total donation points in the selected city. The higher your donation points, the more prominently your ad will be displayed.</p>
+    <ul>
+      <li><strong>City Selection:</strong> Choose the city where you want your ad to be displayed. This can be done in the form above.</li>
+      <li><strong>Automatic Ranking:</strong> Ads will be automatically ranked and displayed based on total donation points in the selected city.</li>
+    </ul>
+    <p>Your current ranking points in donations: <span class="badge badge-info"><%= totalPoints %></span></p>
+  </section>
+          
+  <!-- Ad Expiry -->
+  <section>
+    <h4>Advertisement Expiry</h4>
+    <p>All advertisements have an expiration period:</p>
+    <ul>
+      <li><strong>Basic Ad:</strong> Expires after 1 week</li>
+      <li><strong>Premium Ad:</strong> Expires after 2 weeks</li>
+    </ul>
+    <p>You will be notified via email before your ad expires.</p>
+  </section>
+</div>
+
+        
+        <!-- Status Tab -->
+        <div class="tab-pane" id="status">
+          <!-- Status Content Here -->
+          <h3>Status</h3>
+          <p>Information about your organization's status can go here.</p>
+        </div>
+      </div>
+
       </div>
     </div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

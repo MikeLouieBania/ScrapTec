@@ -23,19 +23,22 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">  
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/donationsList">My Donations</a>
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/faq">FAQ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/organization/account">My Account</a>
+                <a class="nav-link" href="/organization/account">Account</a>
                 </li>
-            </ul>
+            </ul> 
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
             </form>
-        </div>  
+        </div>
     </nav>
 
 
@@ -46,6 +49,7 @@
                 <tr>
                     <th>Drop Point</th>
                     <th>Details</th>
+                    <th>Attainable Points</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -53,7 +57,8 @@
                 <% donations.forEach(donation => { %>
                     <tr data-toggle="collapse" data-target="#donation-<%= donation.id %>" class="accordion-toggle">
                         <td><%= donation.dropPoint.name %></td>
-                        <td>Click to see peripherals</td>
+                        <td>Click to see peripherals</td> 
+                        <td><%= donation.points %></td>
                         <td>
                             <form action="/organization/donationForm" method="POST">
                                 <input type="hidden" name="dropPointId" value="<%= donation.dropPoint.id %>">
@@ -65,7 +70,7 @@
                                 <input type="hidden" name="donationId" value="<%= donation.id %>">
                                 <div class="mb-3">
                                     <label for="expectedDateOfArrival" class="form-label">Expected Date of Arrival:</label>
-                                    <input type="date" class="form-control" id="expectedDateOfArrival" name="expectedDateOfArrival">
+                                    <input type="date" class="form-control" id="expectedDateOfArrival" name="expectedDateOfArrival" required>
                                 </div>
     
                                 <!-- Confirmation -->

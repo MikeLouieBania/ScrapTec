@@ -441,7 +441,6 @@ textarea.form-control {
                 <button type="button" class="btn btn-warning btn-sm mb-2" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
               <% } %>
             </td>
-            
           </tr>
           <% }) %>
         </tbody>
@@ -636,9 +635,6 @@ textarea.form-control {
         </div>
     </div>
   </div>
-
-
-
    
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -662,7 +658,6 @@ textarea.form-control {
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
             }).addTo(map);
-
             map.on('click', function(e) {
                 if (marker) {
                     map.removeLayer(marker); // Remove existing marker
@@ -898,7 +893,6 @@ textarea.form-control {
     });
  
   </script>
- 
   <script> 
   // assigned a manager to a droppoint
   $(document).ready(function() {
