@@ -1,50 +1,90 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>User Management</title>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- Link to Google's Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-      /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+        body {
+            background-color: #c1e4fc;
+        }
+        /* Additional custom styles for the page */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-      /* Sidebar styles */
-      .sidebar {
-        height: 100%;
-        width: 200px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background-color: #f0f0f0;
-        padding-top: 20px;
-      }
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 60px; /* Initial width just for the icons */
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #6499E9; /* Main blue */
+            padding-top: 20px;
+            transition: 0.5s;
+            z-index: 2; /* Ensure the sidebar is above the main content */
+        }
 
-      .sidebar a {
-        display: block;
-        padding: 10px 20px;
-        color: #333;
-        text-decoration: none;
-      }
+        .sidebar:hover {
+            width: 200px; /* Width when hovered */
+        }
 
-      .sidebar a:hover {
-        background-color: #ddd;
-      }
+        .sidebar a {
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .sidebar a .material-icons {
+            margin-right: 10px; /* Space between icon and text */
+        }
+
+        /* Hide text labels by default */
+        .sidebar a::after {
+            content: attr(data-label);
+            display: none;
+        }
+
+        /* Show text labels on hover */
+        .sidebar:hover a::after {
+            display: inline;
+        }
+
+        .sidebar a:hover {
+            background-color: #4477CE; /* Darker blue on hover */
+        }
+
+        /* Main content styles */
+        .main-content {
+            padding-left: 70px; /* Adjusted to avoid overlap with sidebar */
+            padding-top: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            transition: 0.5s; /* Smooth transition */
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <!-- Sidebar -->
     <div class="sidebar">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/organizationmanagement">Organization Management</a> 
-      <a href="/admin/droppointmanagement">Drop Point Management</a> 
-      <a href="/admin/managermanagement">Manager Management</a>
-      <a href="/admin/usermanagement">User Management</a>
+        <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
+        <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
+        <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
+        <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
+        <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
     </div>
-
     <!-- Main content -->
     <div class="main-content ml-200">
 

@@ -136,4 +136,3 @@ model AdInteraction {
   advertisementId String      @map("advertisement_id") @db.ObjectId
   clickedAt      DateTime     @default(now()) // The time when the ad was clicked/interacted with
 }
-
