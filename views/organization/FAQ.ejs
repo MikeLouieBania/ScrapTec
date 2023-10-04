@@ -1,169 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>FAQ</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-  <style>
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <style>
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .faq-section {
+            margin-top: 40px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/donationsList">Donations</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-                </li>  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/faq">FAQ</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/account">Account</a>
-                </li>
-            </ul> 
-            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-            </form>
-        </div>
-    </nav>
-  
-  <div class="container">
-    <h1>Frequently Asked Questions</h1>
-
-    <!-- Donation Points Guide moved here -->
-    <h2>Donation Points Guide</h2>
-    <p>Earn points with each donation to boost your organization's impact!</p>
-    
-  <div class="container">
-    <div class="jumbotron">
-      <h1>Donation Points Guide</h1>
-      <p class="lead">Earn points with each donation to boost your organization's impact!</p>
-    </div>
-
-    <div class="accordion" id="pointsAccordion">
-      <!-- Peripheral Types Section -->
-      <div class="card">
-        <div class="card-header" id="headingOne">
-          <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Types of Peripherals
-            </button>
-          </h2>
-        </div>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#pointsAccordion">
-          <div class="card-body">
-            <ul>
-              <li><strong>Input Devices:</strong> Includes Mouse and Keyboard. Earn <span class="badge badge-primary">0.5 point per item</span>.</li>
-              <li><strong>Storage Devices:</strong> HDD, SSD, and Optical Drives fall under this category. <span class="badge badge-primary">1 point per item</span>.</li>
-              <li><strong>Memory and Processing:</strong> Consists of RAM, Processors, and Motherboards. <span class="badge badge-primary">1.5 points per item</span>.</li>
-              <li><strong>Graphics and Video:</strong> Graphic Cards, Monitors, and Webcams are part of this category. <span class="badge badge-primary">2 points per item</span>.</li>
-              <li><strong>Power and Cooling:</strong> Includes Power Supplies and Cooling Fans. <span class="badge badge-primary">1 point per item</span>.</li>
-              <li><strong>Network and Sound:</strong> Covers Network Cards and Sound Cards. <span class="badge badge-primary">1 point per item</span>.</li>
-              <li><strong>Whole Systems:</strong> Laptops and Desktops fall under this category. <span class="badge badge-primary">3 points per item</span>.</li>
-            </ul>            
-          </div>
-        </div>
-      </div> 
-      <!-- Condition Section -->
-      <div class="card">
-        <div class="card-header" id="headingTwo">
-          <h2 class="mb-0">
-            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              Condition
-            </button>
-          </h2>
-        </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#pointsAccordion">
-          <div class="card-body">
-            <ul>
-              <li>New: <span class="badge badge-success">1 bonus point</span></li>
-              <li>Used but Working: <span class="badge badge-warning">0.5 bonus points</span></li>
-            </ul>
-          </div>
-        </div>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mr-auto">  
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/donationsList">Donations</a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+              </li>  
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/faq">FAQ</a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/organization/account">Account</a>
+              </li>
+          </ul> 
+          <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+          </form>
       </div>
-      <!-- Quantity Section -->
-      <div class="card">
-        <div class="card-header" id="headingThree">
-          <h2 class="mb-0">
-            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              Quantity
-            </button>
-          </h2>
-        </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pointsAccordion">
-          <div class="card-body">
-            <ul>
-              <li>10 to 49 items: <span class="badge badge-info">3 bonus points</span></li>
-              <li>50 or more items: <span class="badge badge-info">5 bonus points</span></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+  </nav>
 
+    <div class="container">
+        <h1>Frequently Asked Questions</h1>
+
+        <div class="faq-section">
+            <h3>Donating Items</h3>
+            <div id="donationFAQ">
+                <div>
+                    <a data-toggle="collapse" href="#q1" aria-expanded="false">
+                        <strong>How can I donate?</strong>
+                    </a>
+                    <div class="collapse" id="q1">
+                        <p>Answer for the first question...</p>
+                    </div>
+                </div>
+                <div>
+                    <a data-toggle="collapse" href="#q2" aria-expanded="false">
+                        <strong>What types of items can I donate?</strong>
+                    </a>
+                    <div class="collapse" id="q2">
+                        <p>Answer for the second question...</p>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="faq-section">
+                <h3>Account & Status</h3>
+                <div id="accountFAQ">
+                    <div>
+                        <a data-toggle="collapse" href="#q4" aria-expanded="false">
+                            <strong>How do I change my account settings?</strong>
+                        </a>
+                        <div class="collapse" id="q4">
+                            <p>Answer for the fourth question...</p>
+                        </div>
+                    </div>
+                    <div>
+                        <a data-toggle="collapse" href="#q5" aria-expanded="false">
+                            <strong>What is the status of my donations?</strong>
+                        </a>
+                        <div class="collapse" id="q5">
+                            <p>Answer for the fifth question...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
     </div>
 
-    <!-- Penalty Alert -->
-    <div class="alert alert-danger" role="alert">
-      <h4 class="alert-heading">Important:</h4>
-      <p>If the items you donated do not match the claimed information, point deductions may apply. For example, if an item is claimed as 'New' but appears to be 'Used', points will be recalculated accordingly.</p>
-    </div>
-
-    <!-- Penalty Details -->
-    <section>
-      <h4>Penalties</h4>
-      <ul>
-        <li><strong>Incorrect Item Condition:</strong> <span class="badge badge-danger">-1 point per item</span></li>
-        <li><strong>Incorrect Quantity:</strong> <span class="badge badge-danger">-2 points</span></li>
-      </ul>
-    </section>
-
-        <!-- Computation Section -->
-        <section>
-          <h4>Computation Formula</h4>
-          <p>To give you a clear understanding of how points are calculated, here is the formula:</p>
-          <pre>
-            <code>
-            Total Points = ((Base Points per Item + Condition Bonus per Item) x Quantity) + Quantity Bonus (if applicable)
-            </code>
-          </pre>
-          <p>For example:</p>
-          <ul>
-            <li>If you are donating 5 'Whole Systems' that are 'Used but Working', your points would be calculated as follows: <br> <code>(3 (Base for Whole Systems) + 0.5 (Condition Bonus)) x 5 (Quantity) = 17.5</code></li>
-            <li>If you are donating 10 'Input Devices' that are 'New', your points would be calculated as follows: <br> <code>(0.5 (Base for Input Devices) + 1 (Condition Bonus)) x 10 (Quantity) + 3 (Quantity Bonus) = 28</code></li>
-          </ul>
-        </section>
-    
-  </div>
-
-    <h3>Donating Items</h3>
-    <ul>
-      <li><strong>How can I donate?</strong></li>
-      <li><strong>What types of items can I donate?</strong></li>
-      <li><strong>Is my donation tax-deductible?</strong></li>
-    </ul>
-
-    <h3>Account & Status</h3>
-    <ul>
-      <li><strong>How do I change my account settings?</strong></li>
-      <li><strong>What is the status of my donations?</strong></li>
-    </ul>
-  </div>
-
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
