@@ -28,92 +28,117 @@ module.exports = {
           email: email,
         },
       });
-
+      
       if (existingOrganization) {
         return res.status(400).json({ message: 'Email is already used by an organization.' });
       }
-
-
-      const otp = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false }); // Generate OTP
- 
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const profilePicture = req.file ? req.file.buffer.toString('base64') : null;
       
+      const otp = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false }); // Generate OTP
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const profilePicture = req.file ? req.file.buffer.toString('base64') : null;
+  
       // Store the OTP and registration data temporarily in a session or cache
       req.session.registrationData = {
         firstName,
         lastName,
         email,
         password: hashedPassword,
-        city,
+        city, // Keep the city in the registration data
         gender,
         contactNumber,
         otp,
         profilePicture,
       };
-
+  
       // Send OTP to user's email
       const transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE,
         auth: {
           user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD
-        }
+          pass: process.env.EMAIL_PASSWORD,
+        },
       });
-
+  
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: email,
         subject: 'OTP Verification',
-        text: `Your OTP for email verification is: ${otp}`
+        text: `Your OTP for email verification is: ${otp}`,
       };
-
+  
       await transporter.sendMail(mailOptions);
-
+  
       res.render('verify-otp', { message: 'An OTP has been sent to your email. Enter it below.' });
-    
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'An error occurred' });
     }
   },
   async verifyOTP(req, res) {
-    const { otp } = req.body;
-
+    const otp1 = req.body.otp1;
+    const otp2 = req.body.otp2;
+    const otp3 = req.body.otp3;
+    const otp4 = req.body.otp4;
+    const otp5 = req.body.otp5;
+    const otp6 = req.body.otp6;
+    // Concatenate the OTP values
+    const otp = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
+  
     // Retrieve stored registration data from session or cache
     const registrationData = req.session.registrationData;
-
+  
     if (!registrationData || registrationData.otp !== otp) {
       return res.render('verify-otp', { message: 'Invalid OTP. Enter the correct OTP or try again.' });
     }
-
+  
     const hashedPassword = registrationData.password;
-
+  
     try {
-      // Create the user in the database
+      // Check if the city already exists in the City table
+      let existingCity = await prisma.city.findFirst({
+        where: {
+          name: registrationData.city,
+        },
+      });
+  
+      // If the city doesn't exist, create a new city
+      if (!existingCity) {
+        existingCity = await prisma.city.create({
+          data: {
+            name: registrationData.city,
+            // You can set other fields for the city if needed
+          },
+        });
+      }
+  
+      // Create the user in the database and associate them with the city
       const newUser = await prisma.user.create({
         data: {
           firstName: registrationData.firstName,
           lastName: registrationData.lastName,
           email: registrationData.email,
           password: hashedPassword,
-          city: registrationData.city,
+          city: {
+            connect: {
+              id: existingCity.id,
+            },
+          },
           gender: registrationData.gender,
           contactNumber: registrationData.contactNumber,
           profilePicture: registrationData.profilePicture ? Buffer.from(registrationData.profilePicture, 'base64') : null,
-        }
+        },
       });
-
+  
       // Clear the stored registration data
       delete req.session.registrationData;
-
+  
       res.render('login', { message: 'User registered successfully. You can now log in.' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'An error occurred' });
     }
   },
+  
   async getVerifyOTP(req, res) {
     res.render('verify-otp', { message: 'Enter the OTP you received in your email.' });
   },
@@ -214,60 +239,74 @@ module.exports = {
   },
   async login(req, res) {
     try {
-      const { email, password } = req.body;
-  
-      // Check if the user exists
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
-  
-      // Check if the organization exists
-      const organization = await prisma.organization.findUnique({
-        where: { email },
-      });
-  
-      if (!user && !organization) {
-        return res.render('login', { message: 'Invalid email or password.' });
-      }
-  
-      if (user) {
-        // User login
-        const passwordMatch = await bcrypt.compare(password, user.password);
-  
-        if (!passwordMatch) {
-          return res.render('login', { message: 'Invalid email or password.' });
-        }
-  
-        // Set user session after successful login
-        req.session.user = user;
-  
-        // Redirect to the user dashboard
-        return res.redirect('/user/dashboard');
-      }
-  
-      if (organization) {
-        // Organization login
-        if (organization.verificationStatus === 'APPROVED') {
-          const passwordMatch = await bcrypt.compare(password, organization.password);
-  
-          if (!passwordMatch) {
+        const { email, password } = req.body;
+
+        // Run both queries concurrently
+        const [user, organization] = await Promise.all([
+            prisma.user.findUnique({
+                where: { email },
+                select: {
+                    id: true,
+                    email: true,
+                    password: true,
+                    //...other fields you need
+                }
+            }),
+            prisma.organization.findUnique({
+                where: { email },
+                select: {
+                    id: true,
+                    email: true,
+                    password: true,
+                    verificationStatus: true,
+                    //...other fields you need
+                }
+            })
+        ]);
+
+        if (!user && !organization) {
             return res.render('login', { message: 'Invalid email or password.' });
-          }
-  
-          // Set organization session after successful login
-          req.session.organization = organization;
-  
-          // Redirect to the organization dashboard
-          return res.redirect('/organization/dashboard');
-        } else if (organization.verificationStatus === 'PENDING') {
-          return res.render('login', { message: 'Your organization is pending approval.' });
-        } else {
-          return res.render('login', { message: 'Your organization has been rejected.' });
         }
-      }
+
+        if (user) {
+            // User login
+            const passwordMatch = await bcrypt.compare(password, user.password);
+
+            if (!passwordMatch) {
+                return res.render('login', { message: 'Invalid email or password.' });
+            }
+
+            // Set user session after successful login
+            req.session.user = user;
+
+            // Redirect to the user dashboard
+            return res.redirect('/user/dashboard');
+        }
+
+        if (organization) {
+            // Organization login
+            if (organization.verificationStatus === 'APPROVED') {
+                const passwordMatch = await bcrypt.compare(password, organization.password);
+
+                if (!passwordMatch) {
+                    return res.render('login', { message: 'Invalid email or password.' });
+                }
+
+                // Set organization session after successful login
+                req.session.organization = organization;
+
+                // Redirect to the organization dashboard
+                return res.redirect('/organization/dashboard');
+            } else if (organization.verificationStatus === 'PENDING') {
+                return res.render('login', { message: 'Your organization is pending approval.' });
+            } else {
+                return res.render('login', { message: 'Your organization has been rejected.' });
+            }
+        }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'An error occurred' });
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred' });
     }
-  },  
+  },
+
 };

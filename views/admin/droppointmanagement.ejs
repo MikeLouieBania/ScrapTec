@@ -7,12 +7,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">  
   <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
   <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
 
 
   <!-- Link to Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 
   <style>
+
+    body {
+      background-color: #c1e4fc;
+  }
     /* Additional custom styles for the page */
     .container {
       max-width: 800px;
@@ -20,27 +26,116 @@
       padding: 20px;
     }
 
-    /* Sidebar styles */
-    .sidebar {
-      height: 100%;
-      width: 200px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #f0f0f0;
-      padding-top: 20px;
+    
+       /* Sidebar styles */
+       .sidebar {
+        height: 100%;
+        width: 60px; /* Initial width just for the icons */
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #6499E9; /* Main blue */
+        padding-top: 20px;
+        transition: 0.5s;
+        z-index: 2; /* Ensure the sidebar is above the main content */
+    }
+
+    .sidebar:hover {
+        width: 200px; /* Width when hovered */
     }
 
     .sidebar a {
-      display: block;
-      padding: 10px 20px;
-      color: #333;
-      text-decoration: none;
+        margin-top: 25px;
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+
+    .sidebar a .material-icons {
+        margin-right: 10px; /* Space between icon and text */
+    }
+
+    /* Hide text labels by default */
+    .sidebar a::after {
+        content: attr(data-label);
+        display: none;
+    }
+
+    /* Show text labels on hover */
+    .sidebar:hover a::after {
+        display: inline;
     }
 
     .sidebar a:hover {
-      background-color: #ddd;
+        background-color: #4477CE; /* Darker blue on hover */
     }
+
+      /* TABLE STYLE */
+
+.table {
+  width: 150%;  /* This will ensure the table takes up the full width of its container */
+  border-collapse: collapse;
+  font-family: Arial, sans-serif; /* Use any preferred font-family */
+  font-size: 18px;  /* Increase the font size */
+  margin-left: -120px;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.table th, .table td {
+  padding: 15px 20px;  /* Increased padding for a larger appearance */
+  text-align: left;
+}
+
+.table th {
+  background-color: #66C3F4;  /* Light blue header background */
+  /* Slightly darker blue border for headers */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;  /* Center-align the header text */
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #f0f7ff;  /* Very light blue stripe */
+}
+
+.table tbody tr:hover {
+  background-color: #a7dbfc;  /* Blueish hover effect */
+  cursor: pointer;
+}
+
+.mt-4 {
+  margin-top: 2rem;  /* Adjust as needed */
+}
+
+.reg-button {
+  background-color: #3b93c7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 50px; /* Increased horizontal padding */
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 50%;
+  white-space: nowrap; /* Prevents text inside the button from wrapping */
+}
+
+
+
+/* Hover effect */
+.reg-button:hover {
+  background-color: #8babf1; /* Darker blue on hover */
+}
+/* Specific CSS rule to left-align text in the designated header cell */
+th[colspan="6"] {
+  text-align: left;
+}
 
     /* Custom CSS to avoid style conflicts with Leaflet */
     .leaflet-map-pane,
@@ -57,16 +152,235 @@
       z-index: 400 !important; 
     }
 
+
+
+              /* Form Styles */
+              .form-group, .form-row {
+                margin-bottom: 20px;
+            }
+    
+            label { 
+                display: block;
+                margin-bottom: 8px;
+                color: black;
+                font-weight: 600;
+            }
+    
+            .form-control {
+                width: 100%;
+                padding: 12px 15px;
+                border: 1px solid #e0e4e9;
+                border-radius: 5px;
+                background-color: #fff;
+                transition: border-color 0.3s;
+            }
+    
+            .form-control:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+                outline: none;
+            }
+    
+            .btn {
+                padding: 10px 20px;
+                border-radius: 5px;
+                border: none;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+    
+            .btn:hover {
+                transform: translateY(-1px);
+            }
+    
+            .btn-secondary {
+                background-color: #b2b5c3;
+                color: #fff;
+            }
+    
+            .btn-secondary:hover {
+                background-color: #a0a4b8;
+            }
+    
+            .btn-primary {
+                background-color: #667eea;
+                color: #fff;
+            }
+    
+            .btn-primary:hover {
+                background-color: #5668d4;
+            }
+    
+            .modal-footer {
+              display: flex;
+              justify-content: center; /* Center-align the content horizontally */
+              gap: 20px; /* Space between the buttons */
+          }
+          
+    
+            #map {
+                border-radius: 5px;
+                box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+            }
+    
+            /* Additional styles */
+            .form-row > div {
+                padding: 0 10px;
+            }
+    
+            .form-row > div:first-child {
+                padding-left: 0;
+            }
+    
+            .form-row > div:last-child {
+                padding-right: 0;
+            }
+            .search-container {
+              text-align: center;  /* Center-aligns the content of the container */
+          }
+          
+          .search-container .form-control {
+              margin-bottom: 10px;  /* Adds a margin to the bottom of the search input */
+          }
+
+          .modal-title {
+            text-align: center;
+            margin-left: 40%;
+        }
+
+
+        /* Modal main styles */
+.modal-content {
+  background-color: #96c1cf;  /* Soft blue-gray background */
+  border-radius: 10px;  /* Rounded corners for the modal */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);  /* Shadow for depth */
+}
+
+.modal-header {
+  background-color: #2E8BC0;  /* Darker blue-gray for header */
+  border-top-left-radius: 10px;  /* Rounded corners for the modal header */
+  border-top-right-radius: 10px;
+}
+
+.modal-title {
+  color: white;  /* Dark gray text for contrast */
+  font-weight: bold;
+}
+
+.close {
+  color: white;  /* Dark gray for the close button */
+  opacity: 0.8;
+}
+
+.close:hover {
+  color: #d9e4ff;  /* Darker gray on hover */
+  opacity: 1;
+}
+
+/* Adjusted button colors for better contrast with the new background */
+.btn-secondary {
+  background-color: #ccc;  /* Gray background */
+  color: #333;  /* Dark gray text */
+  font-weight: bold;
+}
+
+.btn-secondary:hover {
+  background-color: #b2b2b2;  /* Darker gray on hover */
+}
+
+.btn-primary {
+  background-color: #288ec9;  /* Blue background */
+  color: #fff;  /* White text */
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #5668d4;  /* Darker blue on hover */
+}
+
+/* Form Input Styles */
+.form-control {
+  background-color: #fff;  /* White background for clarity */
+  padding: 12px 15px;  /* Spacious padding */
+  border: 1px solid #e0e4e9;  /* Soft gray border */
+  border-radius: 5px;  /* Rounded edges */
+  font-size: 16px;  /* Slightly larger font for readability */
+  transition: border-color 0.3s, box-shadow 0.3s;  /* Smooth transition effects */
+}
+
+.form-control:focus {
+  border-color: #667eea;  /* Blue border on focus for better UX */
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);  /* Gentle glow effect */
+  outline: none;  /* Removing browser's default outline */
+}
+
+/* Textarea styles for a consistent look */
+textarea.form-control {
+  resize: vertical;  /* Allows only vertical resizing */
+  min-height: 100px;  /* Minimum height for better appearance */
+}
+
+/* Placeholder color adjustment */
+.form-control::placeholder {
+  color: #b0b8c5;  /* Soft gray color for placeholder text */
+}
+
+
+/* Custom CSS for responsiveness */
+
+/* Responsive styles for medium screens (tablets) */
+@media (max-width: 992px) {
+  .sidebar {
+      width: 80px;
+  }
+}
+
+/* Responsive styles for small screens (mobile) */
+@media (max-width: 768px) {
+  .sidebar {
+      width: 60px;
+  }
+  .sidebar a {
+      padding: 10px;
+  }
+
+  /* Adjust container padding for small screens */
+  .container {
+      padding: 10px;
+  }
+}
+
+/* Further adjustments for extra small screens (very small mobile devices) */
+@media (max-width: 576px) {
+  .sidebar {
+      width: 50px;
+  }
+  .sidebar a {
+      padding: 8px;
+  }
+
+  /* Adjust container padding for extra small screens */
+  .container {
+      padding: 8px;
+  }
+}
+
+        
+          
+
+
+
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <a href="/admin/dashboard">Dashboard</a>
-    <a href="/admin/organizationmanagement">Organization Management</a> 
-    <a href="/admin/droppointmanagement">Drop Point Management</a> 
-    <a href="/admin/managermanagement">Manager Management</a>
-    <a href="/admin/usermanagement">User Management</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
+      <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
+      <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
+      <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
+      <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
   </div>
 
   <!-- Main content -->
@@ -74,26 +388,31 @@
 
 
     <div class="container">
-      <!-- Add the content of the admin dashboard here -->
-      <h1>Drop Point Management</h1> 
-      
-      <!-- Button to open the drop point creation modal -->
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDropPointModal">
-        Create Drop Point
-      </button>
       <!-- Table to display created drop points --> 
       <table class="table mt-4">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Location</th>
-            <th>Operating Hours</th>
-            <th>Description</th>
-            <th>Assigned Manager</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+          <thead>
+              <!-- Additional table row for title and button -->
+              <tr>
+                  <th colspan="6">Drop Point Management</th> <!-- Spanning 6 columns for title -->
+                  <th>
+                      <!-- Button to open the drop point creation modal -->
+                      <button type="button" class="btn btn-primary reg-button" data-toggle="modal" data-target="#createDropPointModal">
+                        Create Drop Point
+                    </button>
+                    
+                  </th>
+              </tr>
+              <!-- Original table headers -->
+              <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>Operating Hours</th>
+                  <th>Description</th>
+                  <th>Assigned Manager</th>
+                  <th>Actions</th>
+              </tr>
+          </thead>
         <tbody>
           <% let counter = 1; %>
           <% dropPoints.forEach(dropPoint => { %>
@@ -122,7 +441,6 @@
                 <button type="button" class="btn btn-warning btn-sm mb-2" data-toggle="modal" data-target="#assignManagerModal" data-droppointid="<%= dropPoint.id %>">Assign Manager</button>
               <% } %>
             </td>
-            
           </tr>
           <% }) %>
         </tbody>
@@ -180,7 +498,7 @@
               <!-- Map container -->
               <div id="map" style="height: 400px"></div>
               <!-- Address display -->
-              <div class="mt-2">
+              <div class="search-container mt-2">
                 <small class="form-text text-muted">You can adjust the search location by clicking on the map.</small>
                 <input type="text" id="search" placeholder="Search for a location" title="Search for a location and adjust as needed."  class="form-control">
                 <button id="searchButton" class="btn btn-primary mt-2">Search</button>
@@ -317,9 +635,6 @@
         </div>
     </div>
   </div>
-
-
-
    
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -343,7 +658,6 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
             }).addTo(map);
-
             map.on('click', function(e) {
                 if (marker) {
                     map.removeLayer(marker); // Remove existing marker
@@ -508,6 +822,10 @@
           if (!updateMap) {
               updateMap = L.map('updateMap', {
                   // ... (options)
+                    fullscreenControl: true,
+                    fullscreenControlOptions: {
+                        position: 'topleft' // Adjust the position as needed
+                    }
               });
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                   maxZoom: 19
@@ -551,6 +869,10 @@
        if (!updateMap) {
         updateMap = L.map('updateMap', {
             // ... (options)
+                fullscreenControl: true,
+                fullscreenControlOptions: {
+                    position: 'topleft' // Adjust the position as needed
+                }
         });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
@@ -569,10 +891,8 @@
         });
     }
     });
-
-
-  </script>
  
+  </script>
   <script> 
   // assigned a manager to a droppoint
   $(document).ready(function() {

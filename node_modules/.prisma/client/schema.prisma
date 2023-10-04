@@ -13,7 +13,8 @@ model User {
   firstName    String
   lastName     String
   password     String 
-  city         String
+  city         City      @relation(fields: [cityId], references: [id]) // Made it mandatory
+  cityId       String    @map("city_id") @db.ObjectId
   gender       String
   contactNumber String
   profilePicture Bytes?    // Updated to Bytes data type
@@ -34,7 +35,8 @@ model Organization {
 
   type                  String
   profilePicture        Bytes?    // Updated to Bytes data type
-  donations    Donation[]
+  donations             Donation[]
+  advertisements        Advertisement[] // Added relation to Advertisements
   createdAt             DateTime  @default(now())
 }
 
@@ -101,4 +103,36 @@ model Peripheral {
   
   donation   Donation @relation(fields: [donationId], references: [id])
   donationId String  @map("donation_id") @db.ObjectId
+}
+
+model City {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  name           String         @unique // Ensuring city names are unique
+  requiredPoints Float?          // Fixed points required to advertise in this city
+  users          User[]         // Users in this city
+  advertisements Advertisement[] // Advertisements in this city
+}
+
+model Advertisement {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id") @db.ObjectId
+  city           City         @relation(fields: [cityId], references: [id])
+  cityId         String       @map("city_id") @db.ObjectId
+  title          String
+  content        String
+  pointsSpent    Float
+  link           String
+  imageUrl       Bytes
+  isActive       Boolean      // If the advertisement is currently active or not
+  startDate      DateTime
+  expiryDate     DateTime
+  interactions   AdInteraction[] // Relation to Advertisement Interactions
+}
+
+model AdInteraction {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  advertisement  Advertisement @relation(fields: [advertisementId], references: [id])
+  advertisementId String      @map("advertisement_id") @db.ObjectId
+  clickedAt      DateTime     @default(now()) // The time when the ad was clicked/interacted with
 }

@@ -1,74 +1,303 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Manager Management</title>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <!-- Link to Google's Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-      /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
+
+      body {
+        background-color: #c1e4fc;
+    }
+    
+        
+
+        /* Additional custom styles for the page */
+        .container {
+            max-width: 800px;
+            margin-left: 20%;
+            padding: 20px;
+            margin-top: 60px;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 60px; /* Initial width just for the icons */
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #6499E9; /* Main blue */
+            padding-top: 20px;
+            transition: 0.5s;
+            z-index: 2; /* Ensure the sidebar is above the main content */
+        }
+
+        .sidebar:hover {
+            width: 200px; /* Width when hovered */
+        }
+
+        .sidebar a {
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .sidebar a .material-icons {
+            margin-right: 10px; /* Space between icon and text */
+        }
+
+        /* Hide text labels by default */
+        .sidebar a::after {
+            content: attr(data-label);
+            display: none;
+        }
+
+        /* Show text labels on hover */
+        .sidebar:hover a::after {
+            display: inline;
+        }
+
+        .sidebar a:hover {
+            background-color: #4477CE; /* Darker blue on hover */
+        }
+
+        /* Main content styles */
+        .main-content {
+            padding-left: 70px; /* Adjusted to avoid overlap with sidebar */
+            padding-top: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            transition: 0.5s; /* Smooth transition */
+        }
+
+        /* TABLE STYLE */
+
+        .table {
+          width: 150%;  /* This will ensure the table takes up the full width of its container */
+          border-collapse: collapse;
+          font-family: Arial, sans-serif; /* Use any preferred font-family */
+          font-size: 18px;  /* Increase the font size */
+          margin-left: -120px;
+          font-family: 'Josefin Sans', sans-serif;
+     
       }
 
-      /* Sidebar styles */
-      .sidebar {
-        height: 100%;
-        width: 200px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background-color: #f0f0f0;
-        padding-top: 20px;
+    
+      .table th, .table td {
+         
+          padding: 15px 20px;  /* Increased padding for a larger appearance */
+          text-align: left;
+      }
+      
+      .table th {
+          background-color: #66C3F4;  /* Light blue header background */
+          /* Slightly darker blue border for headers */
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          text-align: center;  /* Center-align the header text */
       }
 
-      .sidebar a {
-        display: block;
-        padding: 10px 20px;
-        color: #333;
-        text-decoration: none;
+      
+      .table tbody tr:nth-child(odd) {
+          background-color: #f0f7ff;  /* Very light blue stripe */
+      }
+      
+      .table tbody tr:hover {
+          background-color: #a7dbfc;  /* Blueish hover effect */
+          cursor: pointer;
+      }
+      
+      .mt-4 {
+          margin-top: 2rem;  /* Adjust as needed */
       }
 
-      .sidebar a:hover {
-        background-color: #ddd;
+          /* Style for the Register Manager button */
+    .reg-button {
+      background-color: #3b93c7; /* Blue background color */
+      color: white; /* Text color */
+      border: none;
+      border-radius: 6px; /* Rounded corners */
+      padding: 10px 20px; /* Padding around the text */
+      font-size: 16px; /* Font size */
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+    }
+
+    /* Hover effect */
+    .reg-button:hover {
+      background-color: #8babf1; /* Darker blue on hover */
+    }
+
+    /* Style for the pagination */
+      .pagination {
+        position: relative;
+        left: 94%; /* Adjust the right property to move it further right */
+        padding: 10px; /* Add padding to the pagination table for spacing */
+        border-radius: 5px; /* Rounded corners for the pagination table */
+        font-family: 'Josefin Sans', sans-serif;
+        font-weight: bold;
       }
+
+/* Rest of your pagination styles... */
+
+  .pagination li a {
+      border: none;
+      font-size: 16px;
+      min-width: 30px;
+      min-height: 30px;
+      color: #999;
+      margin: 0 2px;
+      line-height: 30px;
+      border-radius: 2px !important;
+      text-align: center;
+      padding: 0 6px;
+  }
+  .pagination li a:hover {
+      color: #666;
+  }	
+  .pagination li.active a, .pagination li.active a.page-link {
+      background: #63bdf4;
+  }
+  .pagination li.active a:hover {        
+      background: #0397d6;
+  }
+  .pagination li.disabled i {
+      color: #ccc;
+  }
+  .pagination li i {
+      font-size: 16px;
+      padding-top: 6px
+  }
+
+       /* Style for the form labels */
+.form-group label {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Style for the form inputs */
+.form-control {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease;
+}
+
+/* Highlight the input field when focused */
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+
+/* Style for the submit button */
+#registerManagerButton {
+  background-color: #288ec9;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+/* Hover effect for the submit button */
+#registerManagerButton:hover {
+  background-color: #94ceea;
+}
+
+/* Custom styles for the modal dialog */
+.my-modal-dialog {
+  margin-top: 100px;
+}
+
+/* Style for the modal title */
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  margin-left: 35%;
+}
+
+.modal-content{
+  background-color: #96c1cf;
+  font-family: 'Josefin Sans', sans-serif;
+  border-radius: 10px 10px 0 0;
+}
+
+.modal-header {
+  background-color: #2E8BC0;
+  color: white; /* This
+
+
+/* Style for the close button */
+.close {
+  font-size: 28px;
+  color: white;
+}
+
+
+
     </style>
-  </head>
-  <body>
+   
+</head>
+
+<body>
     <!-- Sidebar -->
     <div class="sidebar">
-      <a href="/admin/dashboard">Dashboard</a>
-      <a href="/admin/organizationmanagement">Organization Management</a> 
-      <a href="/admin/droppointmanagement">Drop Point Management</a> 
-      <a href="/admin/managermanagement">Manager Management</a>
-      <a href="/admin/usermanagement">User Management</a>
+        <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
+        <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
+        <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
+        <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
+        <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
     </div>
-
-    <!-- Main content -->
     <div class="main-content ml-200">
-   
       <div class="container">
-        <!-- Add the content of the admin dashboard here -->
-        <h1>Manager Management</h1> 
-      
-        <!-- Button to open the drop point creation modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registerManagerModal">
-          Register a Manager
-        </button>
-        <!-- Table to display registererd managers -->
-        <table class="table mt-4">
-          <thead>
+          <table class="table mt-4">
+              <thead>
+                  <!-- Row for the Manager Management title and button -->
+                  <tr>
+                    <th colspan="4" style="padding-right: 400px;">Manager Management</th>
+                    <th class="text-right">
+                        <button type="button" class="btn btn-primary reg-button" data-toggle="modal" data-target="#registerManagerModal">
+                            Register a Manager
+                        </button>
+                      </th>
+                  </tr>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Contact Number</th>
+              <th>Contact No.</th>
               <th>Address</th>
               <th>Assigned Status</th> 
             </tr>
+            
           </thead>
+          
           <tbody>
             <!-- Populate table rows with drop point data -->
             <% let counter = 1; %>
@@ -84,12 +313,25 @@
             <% }) %>
           </tbody>
         </table>
+        <div class="clearfix">
+            <ul class="pagination">
+                <li class="page-item disabled"><a href="#">Previous</a></li>
+                <li class="page-item"><a href="#" class="page-link">1</a></li>
+                <li class="page-item"><a href="#" class="page-link">2</a></li>
+                <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                <li class="page-item"><a href="#" class="page-link">4</a></li>
+                <li class="page-item"><a href="#" class="page-link">5</a></li>
+                <li class="page-item"><a href="#" class="page-link">Next</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
       </div> 
     </div>
 
     <!-- Modal for creating drop points -->
     <div class="modal fade" id="registerManagerModal" tabindex="-1" role="dialog" aria-labelledby="registerManagerModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-dialog modal-lg my-modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="registerManagerModalLabel">Register a Manager</h5>
@@ -97,33 +339,42 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <h4>Manager Registration</h4>
+          <div class="modal-body" style="background-color: #96c1cf">
             <form action="/admin/managermanagement" method="post">
-              <div class="form-group">
-                <label for="managerFirstName">First Name</label>
-                <input type="text" name="firstName" class="form-control" id="managerFirstName" placeholder="Enter manager's first name">
-              </div>
-              <div class="form-group">
-                <label for="managerLastName">Last Name</label>
-                <input type="text" name="lastName" class="form-control" id="managerLastName" placeholder="Enter manager's last name">
-              </div>
-              <div class="form-group">
-                <label for="managerEmail">Email</label>
-                <input type="email" name="email" class="form-control" id="managerEmail" placeholder="Enter manager's email">
-              </div>
-              <div class="form-group">
-                <label for="managerPhone">Phone Number</label>
-                <input type="tel" name="phoneNumber" class="form-control" id="managerPhone" placeholder="Enter manager's phone number">
-              </div>
-              <div class="form-group">
-                <label for="managerAddress">Address</label>
-                <input type="text" name="address" class="form-control" id="managerAddress" placeholder="Enter manager's address">
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="registerManagerButton">Register Manager</button>
-              </div>
+                <div class="row">
+                    <!-- First Column -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="managerFirstName">First Name</label>
+                            <input type="text" name="firstName" class="form-control" id="managerFirstName" placeholder="Enter manager's first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="managerLastName">Last Name</label>
+                            <input type="text" name="lastName" class="form-control" id="managerLastName" placeholder="Enter manager's last name">
+                        </div>
+                        <div class="form-group">
+                            <label for="managerEmail">Email</label>
+                            <input type="email" name="email" class="form-control" id="managerEmail" placeholder="Enter manager's email">
+                        </div>
+                    </div>
+                    <!-- Second Column -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="managerPhone">Phone Number</label>
+                            <input type="tel" name="phoneNumber" class="form-control" id="managerPhone" placeholder="Enter manager's phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="managerAddress">Address</label>
+                            <input type="text" name="address" class="form-control" id="managerAddress" placeholder="Enter manager's address">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center"> <!-- Add these classes -->
+                  <button type="submit" class="btn btn-primary" id="registerManagerButton">Register Manager</button>
+                </div>
             </form>
+        </div>
+         
           </div> 
         </div>
       </div>

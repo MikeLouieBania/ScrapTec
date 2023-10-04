@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Link to Google's Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+    
     <style>
 
       body {
-        background-image: url('https://i.postimg.cc/MTnk8t9F/buee.png'); /* Adjust the path if necessary */
+        background: linear-gradient(45deg, #f2f2f2, #219ebc);
         background-size: cover;  /* Cover the entire viewport */
         background-repeat: no-repeat; /* Do not repeat the image */
         background-attachment: fixed; /* Background stays in place when scrolling */
@@ -22,17 +25,14 @@
         .container {
           width: 800px;  /* Fixed width. Adjust as needed */
           margin: 0 auto;  /* Center the container */
-          margin-top: 150px;
+          margin-top: 85px;
+          margin-bottom: 30px;  /* Adjust this value to control space at the bottom outside the container */
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);  /* Shadows around the container */
-          padding: 20px;  /* Inner spacing */
+          padding: 20px 20px 10px 20px;  /* Top, Right, Bottom, Left padding respectively. Reduced bottom padding. */
           background-color: #fff;  /* Background color */
           border-radius: 8px;  /* Rounded corners */
-        }
-
-        .profile-picture-preview {
-            max-width: 200px;
-            margin-top: 10px;
-        }
+      }
+      
             /* Center the tabs */
         .nav-tabs {
         display: flex;
@@ -172,6 +172,7 @@
 /* Center the button */
 .form-group.button-center {
   text-align: center;  /* Center the button using text alignment */
+  margin-top: 30px;
 }
     /* Responsiveness for smaller screens */
     @media (max-width: 767px) {
@@ -191,6 +192,91 @@
           font-size: 0.9rem;
       }
   }
+
+  .profile-picture-preview {
+    max-width: 100px;
+    max-height: 100px; /* Set the maximum height */
+    display: flex;     /* Use flexbox to center the image */
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    overflow: hidden;  /* Hide overflowing parts of the image */
+}
+
+.profile-picture-preview img {
+    max-width: 100%; /* Scale down the image if it's too wide */
+    max-height: 100%; /* Scale down the image if it's too tall */
+    width: auto;     /* Keep the original width if it's smaller than the container */
+    height: auto;    /* Keep the original height if it's smaller than the container */
+}
+
+
+.modal-content {
+    background-color: #96c1cf;
+    font-family: 'Josefin Sans', sans-serif;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-header {
+    display: flex;            /* Convert the header into a flex container */
+    justify-content: space-between;  /* Evenly distribute the space between the title and the close button */
+    align-items: center;      /* Vertically center-align the title and close button */
+    background-color: #2E8BC0;
+    color: white;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    margin: 0;                /* Reset the margin */
+    flex-grow: 1;             /* Allow the title to grow and take up available space */
+}
+
+.close {
+    font-size: 28px;
+    color: white;
+    margin-left: auto;        /* Push the close button to the right edge */
+}
+
+
+/* Additional styling for better appearance */
+.modal-body h6 {
+    font-weight: bold;
+    color: black;  /* Using the header color to highlight the subheadings */
+    margin-top: 20px;  /* Adding some space above each subheading for better readability */
+}
+
+.modal-body p {
+    font-size: 16px;  /* Slightly increasing font size for better readability */
+    margin-bottom: 20px;  /* Adding some space below each paragraph */
+}
+
+.modal-footer {
+    background-color: #2E8BC0;  /* Setting the same color as header for consistency */
+    display: flex;            /* Convert the footer into a flex container */
+    justify-content: center;  /* Center align the items horizontally */
+    align-items: center;      /* Center align the items vertically */
+}
+
+.modal-footer .btn {
+    padding: 9px 20px;  /* Adjusts the vertical and horizontal padding */
+    font-size: 1.2rem;   /* Adjusts the font size */
+    border-radius: 5px; /* Rounds the corners for a smoother appearance */
+}
+
+.btn-secondary {
+    background-color: #5668d4;  /* Using the content background color for the button */
+    border: none;  /* Removing the default border */
+    color: white;  /* Using the header color for the button text */
+}
+
+.btn-secondary:hover {
+    background-color: #B1D4E0;  /* Using the header color for the button on hover */
+    color: white;  /* White text on hover for contrast */
+}
+
 
       </style>
 </head>
@@ -213,64 +299,113 @@
         </ul>
         <!-- Tab content for registration forms -->
         <div class="tab-content mt-4">
-            <!-- Normal User Registration Form -->
-            <div class="tab-pane fade show active" id="normalUserForm">
-              <form action="/user-signup" method="POST" enctype="multipart/form-data">
-                <div class="row">
-                  <div class="col-lg-6 col-md-12">
-                    <div class="form-group">
-                      <label for="firstName">First Name:</label>
-                      <input type="text" class="form-control" id="firstName" name="firstName" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="lastName">Last Name:</label>
-                      <input type="text" class="form-control" id="lastName" name="lastName" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="email">Email:</label>
-                      <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="password">Password:</label>
-                      <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                  </div>
-                  <div class="col-lg-6 col-md-12">
-                    <div class="form-group">
-                      <label for="city">City:</label>
-                      <input type="text" class="form-control" id="city" name="city" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="gender">Gender:</label>
-                      <select class="form-control" id="gender" name="gender">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="contactNumber">Contact Number:</label>
-                      <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
-                    </div>
-                  </div>
-                </div>
-                    
-                <div class="form-group">
+         <!-- Normal User Registration Form -->
+<div class="tab-pane fade show active" id="normalUserForm">
+  <form action="/user-signup" method="POST" enctype="multipart/form-data">
+      <div class="row">
+          <!-- First Column -->
+          <div class="col-lg-6 col-md-12">
+              <div class="form-group">
+                  <label for="firstName">First Name:</label>
+                  <input type="text" class="form-control" id="firstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                  <label for="lastName">Last Name:</label>
+                  <input type="text" class="form-control" id="lastName" name="lastName" required>
+              </div>
+              <div class="form-group">
+                  <label for="email">Email:</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <div class="form-group">
+                  <label for="password">Password:</label>
+                  <input type="password" class="form-control" id="password" name="password" required>
+              </div>
+          </div>
+          
+          <!-- Second Column -->
+          <div class="col-lg-6 col-md-12">
+              <div class="form-group">
+                  <label for="city">City:</label>
+                  <input type="search" class="form-control" id="cityInput" name="city" required>
+                  <div id="suggestions" style="margin-top: 10px;"></div>
+              </div>
+              <div class="form-group">
+                  <label for="gender">Gender:</label>
+                  <select class="form-control" id="gender" name="gender">
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="contactNumber">Contact Number:</label>
+                  <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+              </div>
+              <div class="form-group">
                   <label for="profilePicture">Profile Picture:</label>
                   <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
-                  <div class="profile-picture-preview"></div> <!-- Preview container -->
-                </div>
-                <div class="form-group button-center">
-                  <button type="submit" class="btn btn-primary">Register as a User</button>
-              </div>              
-              </form>
+                  <div class="profile-picture-preview mt-2"></div> <!-- Preview container with some margin on top -->
+              </div>
+          </div>
+      </div>
+      
+      <!-- Submit Button -->
+      <div class="form-group button-center">
+          <button type="submit" class="btn btn-primary">Register as a User</button>
+      </div>         
+      <div class="form-group d-flex justify-content-between align-items-center">
+        <!-- Checkbox for Terms and Conditions -->
+        <div class="form-check ml-auto">
+            <input type="checkbox" class="form-check-input" id="termsCheck">
+            <label class="form-check-label" for="termsCheck">
+                I agree to the <a href="#" data-toggle="modal" data-target="#termsModal">Terms and Conditions</a>
+            </label>
+        </div>
+<!-- Modal for Terms and Conditions -->
+<div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <div class="modal-body">
+                <!-- Terms and Conditions Content -->
+                <h6>1. Acceptance of Terms</h6>
+                <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p>
+
+                <h6>2. Location Information</h6>
+                <p>We collect and use your location information to provide and improve our services. By using the site, you agree to the collection and use of this information.</p>
+
+                <h6>3. Sensitive Data</h6>
+                <p>You may be asked to submit sensitive files or information to verify your identity or for other verification purposes. All sensitive data is encrypted and stored securely. By providing such information, you consent to its collection and use for the said purposes.</p>
+
+                <h6>4. Data Protection</h6>
+                <p>We implement security measures to protect your personal information. However, no method of transmission or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your data, we cannot guarantee its absolute security.</p>
+
+                <!-- ... (You can continue to add more clauses as needed) -->
+            </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+      
+  </form>
+</div>
+
 
          <!-- Organization Registration Form -->
 <div class="tab-pane fade" id="organizationForm">
   <form action="/organization-signup" method="POST" enctype="multipart/form-data">
       <div class="row"> <!-- Start of Bootstrap row -->
-          <div class="col-md-6"> <!-- Start of first column -->
+
+          <!-- Start of first column -->
+          <div class="col-md-6"> 
               <div class="form-group">
                   <label for="organizationname">Organization Name:</label>
                   <input type="text" class="form-control" id="organizationname" name="organizationname" required>
@@ -283,9 +418,14 @@
                   <label for="address">Business Address:</label>
                   <input type="text" class="form-control" id="address" name="address" required>
               </div>
+              <div class="form-group">
+                  <label for="password">Password:</label>
+                  <input type="password" class="form-control" id="password" name="password" required>
+              </div>
           </div> <!-- End of first column -->
 
-          <div class="col-md-6"> <!-- Start of second column -->
+          <!-- Start of second column -->
+          <div class="col-md-6"> 
               <div class="form-group">
                   <label for="contactNumber">Contact Number:</label>
                   <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
@@ -301,23 +441,17 @@
                       <option value="NGO">NGO</option>
                   </select>
               </div>
+              <div class="form-group">
+                  <label for="documentUpload">Business Registration Documents and TIN:</label>
+                  <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
+                  <small class="form-text text-muted">
+                      Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
+                  </small>
+              </div>
           </div> <!-- End of second column -->
+
       </div> <!-- End of Bootstrap row -->
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-      </div>
-
-      <!-- This remains outside the columns since it might be wider and can span both columns -->
-      <div class="form-group">
-          <label for="documentUpload">Business Registration Documents and TIN:</label>
-          <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
-          <small class="form-text text-muted">
-              Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
-          </small>
-      </div>
-      
       <!-- Button -->
       <div class="form-group button-center">
           <button type="submit" class="btn btn-primary">Register as an Organization</button>
@@ -325,10 +459,37 @@
   </form>
 </div>
 
+
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <script>
+        const accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';  // Replace with your Mapbox Access Token
+
+        let input = document.getElementById('cityInput');
+        let suggestionsDiv = document.getElementById('suggestions');
+
+        input.addEventListener('keyup', function() {
+            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${input.value}.json?access_token=${accessToken}&country=PH&types=place`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsDiv.innerHTML = '';
+                    data.features.forEach(feature => {
+                        let cityName = feature.text;  // Only extracting the city name
+                        let cityDiv = document.createElement('div');
+                        cityDiv.innerHTML = cityName;
+                        cityDiv.style.cursor = 'pointer';
+                        cityDiv.onclick = function() {
+                            input.value = cityName;
+                            suggestionsDiv.innerHTML = '';
+                        };
+                        suggestionsDiv.appendChild(cityDiv);
+                    });
+                });
+        });
+    </script>
     <script>
         // Code for previewing profile picture (same as before)
         const profilePictureInput = document.getElementById('profilePicture');
@@ -357,6 +518,17 @@ $('#registrationTabs a').on('click', function (e) {
   $('.tab-pane.active').removeClass('active');
   $($(this).attr('href')).addClass('active');
 });
+
+
+    // Show the terms modal when the checkbox is clicked
+    document.getElementById('termsCheck').addEventListener('click', function() {
+        $('#termsModal').modal('show');
+    });
+
+    // Uncheck the checkbox when the modal is closed
+    $('#termsModal').on('hide.bs.modal', function() {
+        document.getElementById('termsCheck').checked = false;
+    });
 
 
 
