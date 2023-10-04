@@ -5,10 +5,11 @@
     <title>Manager Management</title>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
     <!-- Link to Google's Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
 
       body {
@@ -292,6 +293,7 @@
               <th>Email</th>
               <th>Contact No.</th>
               <th>Address</th>
+              <th>Assigned Status</th> 
             </tr>
             
           </thead>
@@ -305,7 +307,8 @@
               <td><%= manager.firstName %> <%= manager.firstName %></td>
               <td><%= manager.email %></td> 
               <td><%= manager.phoneNumber %></td>
-              <td><%= manager.address %></td>
+              <td><%= manager.address %></td> 
+              <td><%= manager.isAssigned ? "Assigned" : "Not Assigned" %></td>
             </tr>
             <% }) %>
           </tbody>

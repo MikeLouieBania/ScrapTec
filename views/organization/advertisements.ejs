@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Advertisements</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style> 
+      /* Custom CSS for enhanced city card */
+      .city-card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .city-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .city-details {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .city-actions {
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      /* Style the "Explore" button */
+      .city-actions a.btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .city-actions a.btn-primary:hover {
+        background-color: #0056b3;
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/faq">FAQ</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/account">Account</a>
+                </li>
+            </ul> 
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+    
+    <div class="container">
+      <!-- Points and Org Name -->
+      <h2 class="mb-4"><%= organization.organizationname %> <span class="badge badge-success">Total Spendable Points: <%= organization.totalPoints %></span></h2>
+      
+      <!-- Advertisements Content Here -->
+      <h3>Advertisements</h3>
+      <!-- Add your advertisements content here -->
+      <!-- You can customize this page further -->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

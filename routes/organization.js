@@ -9,7 +9,11 @@ router.post('/addDonation', organizationController.getAddDonation);
 router.get('/pledgeBasket', organizationController.getPledgeBasketPage);   
 router.post('/confirmDonation', organizationController.getConfirmDonation);
 router.get('/donationsList', organizationController.getDonationsList); 
+router.get('/faq', organizationController.getFAQ);  
 router.get('/account', organizationController.getAccount); 
+router.get('/advertisements', organizationController.getAdvertisements); 
+router.get('/spentPoints', organizationController.getSpentPoints);  
+router.get('/advertise/:cityId', organizationController.getAdCity);
 router.post('/logout', organizationController.logout); 
 
 module.exports = router;

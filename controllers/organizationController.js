@@ -1,56 +1,178 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
 
+async function calculatePoints(type, condition, quantity) {
+    let basePoints = 0;
+    let conditionPoints = 0;
+    let quantityBonus = 0;
+    
+    // Criteria for types
+    switch (type) {
+      case 'Input Devices':
+        basePoints += 0.5;
+        break;
+      case 'Storage Devices':
+        basePoints += 1;
+        break;
+      case 'Memory and Processing':
+        basePoints += 1.5;
+        break;
+      case 'Graphics and Video':
+        basePoints += 2;
+        break;
+      case 'Power and Cooling':
+        basePoints += 1;
+        break;
+      case 'Network and Sound':
+        basePoints += 1;
+        break;
+      case 'Whole Systems':
+        basePoints += 3;
+        break;
+      default:
+        break;
+    }
+  
+    // Criteria for condition
+    if (condition === 'New') {
+      conditionPoints += 1;
+    } else if (condition === 'Used but Working') {
+      conditionPoints += 0.5;
+    }
+  
+    // Criteria for quantity
+    if (quantity >= 10 && quantity <= 49) {
+      quantityBonus += 3;
+    } else if (quantity >= 50) {
+      quantityBonus += 5;
+    }
+  
+    const points = ((basePoints + conditionPoints) * quantity);
+    const totalPoints = points + quantityBonus;
+  
+    return totalPoints;
+  }
+
+  // Function to get total points for an organization
+async function getTotalPointsForOrganization(organizationId) {
+  try {
+    const donations = await prisma.donation.findMany({
+      where: {
+        organizationId: organizationId,
+        isSubmitted: true,
+        OR: [
+          { status: 'VERIFIED' },
+          { status: 'ACCEPTEDWITHISSUES' }
+        ]
+      },
+      select: {
+        points: true
+      }
+    });
+
+    let totalPoints = 0;
+    donations.forEach(donation => {
+      if (donation.points !== null) {
+        totalPoints += donation.points;
+      }
+    });
+
+    return totalPoints;
+  } catch (error) {
+    console.error("Error fetching total points:", error);
+    return 0; // Return 0 if an error occurs
+  }
+}
+
+// count registered users in a city
+async function getCitiesWithUserCounts() {
+  try {
+    // Retrieve a list of cities and their total user counts
+    const cities = await prisma.city.findMany({
+      select: {
+        name: true,
+        users: {
+          select: {
+            id: true, 
+          },
+        },
+      },
+    });
+
+    // Calculate the total user count for each city
+    const citiesWithCounts = cities.map((city) => ({
+      name: city.name,
+      usersCount: city.users.length,
+    }));
+
+    return citiesWithCounts;
+  } catch (error) {
+    console.error("Error fetching cities with user counts:", error);
+    return []; // Return an empty array if an error occurs
+  }
+} 
+
 module.exports = {
   async getDashboard(req, res) {
     try {
-        const organizationId = req.session.organizationId;
-
-        const dropPointsRaw = await prisma.dropPoint.findMany({
-            where: {
-                NOT: {
-                    managerId: null
-                }
-            },
+      const organizationId = req.session.organizationId;
+  
+      // Fetch drop points with managers
+      const dropPointsWithManagers = prisma.dropPoint.findMany({
+        where: {
+          NOT: {
+            managerId: null
+          }
+        },
+        select: {
+          id: true,
+          name: true,
+          location: true,
+          openingTime: true,
+          closingTime: true,
+          description: true,
+          manager: {
             select: {
-                id: true,
-                name: true,
-                location: true,
-                openingTime: true,
-                closingTime: true,
-                description: true,
-                manager: {
-                    select: {
-                        phoneNumber: true,
-                        email: true
-                    }
-                }
+              phoneNumber: true,
+              email: true
             }
-        });
-
-        // Now, for each drop point, check if the organization has a submitted donation
-        const dropPoints = await Promise.all(dropPointsRaw.map(async (point) => {
-            const hasPendingDonation = await prisma.donation.findFirst({
-                where: {
-                    organizationId: organizationId,
-                    dropPointId: point.id,
-                    isSubmitted: true
-                }
-            });
-
-            return {
-                ...point,
-                canDonate: !hasPendingDonation
-            };
-        }));
-        
-        res.render('organization/dashboard', { dropPoints: dropPoints });
+          }
+        }
+      });
+  
+      // Fetch donations for the organization in parallel
+      const donationsForOrganization = prisma.donation.findMany({
+        where: {
+          organizationId: organizationId,
+          isSubmitted: true,
+          NOT: {
+            status: {
+              in: ["VERIFIED", "ACCEPTEDWITHISSUES", "REJECTED"]
+            }
+          }
+        },
+        select: {
+          dropPointId: true
+        }
+      });
+  
+      // Run both queries in parallel
+      const [dropPointsRaw, organizationDonations] = await Promise.all([dropPointsWithManagers, donationsForOrganization]);
+  
+      const donatedDropPointIds = organizationDonations.map(donation => donation.dropPointId);
+  
+      // Map over the drop points and add the "canDonate" flag
+      const dropPoints = dropPointsRaw.map(point => ({
+        ...point,
+        canDonate: !donatedDropPointIds.includes(point.id)
+      }));
+  
+      res.render('organization/dashboard', { dropPoints: dropPoints });
     } catch (error) {
-        console.error("Error fetching drop points:", error);
-        res.status(500).send("Internal Server Error");
+      console.error("Error fetching drop points:", error);
+      res.status(500).send("Internal Server Error");
     }
-  },
-
+  }, 
   async getDonationForm(req, res) {
     try {
         const dropPointId = req.body.dropPointId;
@@ -71,8 +193,7 @@ module.exports = {
         console.error("Error fetching drop point:", error);
         res.status(500).send("Internal Server Error");
     }
-  },
-
+  }, 
   async getAddDonation(req, res) {
     try {
         const {
@@ -81,6 +202,7 @@ module.exports = {
         } = req.body;
 
         const organizationId = req.session.organization.id;
+        const points = await calculatePoints(type, condition, parseInt(quantity));
 
         // Find if there's an existing donation that hasn't been submitted yet for the given organization and drop point.
         const existingDonation = await prisma.donation.findFirst({
@@ -103,6 +225,13 @@ module.exports = {
                     donationId: existingDonation.id
                 }
             });
+
+            // Update the points in the existing donation
+            await prisma.donation.update({
+              where: { id: existingDonation.id },
+              data: { points: existingDonation.points + points }
+            });
+            
         } else {
             // If the donation doesn't exist, create a new one and then create the peripheral under it.
             const newDonation = await prisma.donation.create({
@@ -110,6 +239,7 @@ module.exports = {
                     dropPointId: dropPointId,
                     organizationId: organizationId, 
                     isSubmitted: false,
+                    points,
                     peripherals: {
                         create: {
                             type: type,
@@ -128,8 +258,7 @@ module.exports = {
         console.error("Error adding donation:", error);
         res.status(500).send("Internal Server Error");
     }
-  },
-
+  }, 
   async getPledgeBasketPage(req, res) {
     try {
         const organizationId = req.session.organization.id;
@@ -144,15 +273,14 @@ module.exports = {
                 dropPoint: true, // Include drop point details
                 peripherals: true // Include peripheral details
             }
-        });
+        }); 
 
         res.render('organization/pledgeBasket', { donations: donations });
     } catch (error) {
         console.error("Error fetching pledge basket items:", error);
         res.status(500).send("Internal Server Error");
     }
-  },
-
+  }, 
   async getConfirmDonation(req, res) {
     try {
         const { donationId, expectedDateOfArrival } = req.body;
@@ -178,8 +306,7 @@ module.exports = {
         console.error("Error confirming donation:", error);
         res.status(500).send("Internal Server Error");
     }
-  },
-
+  }, 
   async getDonationsList(req, res) {
     try {
       const organizationId = req.session.organization.id;
@@ -188,6 +315,7 @@ module.exports = {
       const donations = await prisma.donation.findMany({
         where: {
           organizationId: organizationId,
+          isSubmitted: true
         },
         include: {
             dropPoint: true, // Include drop point details
@@ -200,16 +328,70 @@ module.exports = {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal Server Error");
     }
+  },  
+  async getFAQ(req, res) { 
+     
+    res.render('organization/FAQ'); 
   },
-
   async getAccount(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
       where: {id: organizationId},
+    }); 
+    const cities = await prisma.city.findMany();
+
+    
+    const totalPoints = await getTotalPointsForOrganization(organizationId); 
+    
+    // Get cities with user counts
+    const citiesWithCounts = await getCitiesWithUserCounts();
+
+    res.render('organization/account', { organization, totalPoints, cities: citiesWithCounts, cities }); 
+  }, 
+  async getAdvertisements(req, res) { 
+    const organizationId = req.session.organization.id;
+    const organization = await prisma.organization.findUnique({
+      where: {id: organizationId},
+    }); 
+    
+    const totalPoints = await getTotalPointsForOrganization(organizationId);  
+    
+    // Get cities with user counts
+    const citiesWithCounts = await getCitiesWithUserCounts();
+
+    res.render('organization/advertisements', { organization, totalPoints, cities: citiesWithCounts, }); 
+  }, 
+  async getSpentPoints(req, res) { 
+    const organizationId = req.session.organization.id;
+    const organization = await prisma.organization.findUnique({
+      where: {id: organizationId},
     });
-    res.render('organization/account', { organization }); 
-  },
-     
+
+    
+    const totalPoints = await getTotalPointsForOrganization(organizationId); 
+
+    
+    // Get cities with user counts
+    const citiesWithCounts = await getCitiesWithUserCounts();
+
+    res.render('organization/spentPoints', { organization, totalPoints, cities: citiesWithCounts, }); 
+  },  
+  async getAdCity(req, res) { 
+    const cityId = req.params.cityId;
+  
+    // Fetch city details by ID
+    const city = await prisma.city.findUnique({
+      where: { id: cityId },
+    });
+  
+    if (!city) {
+      // City not found
+      return res.status(404).send('City not found');
+    }
+  
+    // Render the form for advertising in the chosen city
+    res.render('organization/adCity', { city }); 
+  }, 
   logout(req, res) {
     // Clear the session to log out the user
     req.session.organization = null;
