@@ -394,6 +394,7 @@
       </div>
     </div>
   </div>
+  </div>
       
   </form>
 </div>
@@ -426,10 +427,9 @@
 
           <!-- Start of second column -->
           <div class="col-md-6"> 
-
               <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                  <label for="contactNumber">Contact Number:</label>
+                  <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
               </div>
 
               <!-- This remains outside the columns since it might be wider and can span both columns -->
@@ -464,7 +464,7 @@
           <button type="submit" class="btn btn-primary">Register as an Organization</button>
       </div>
   </form>
-</div>
+</div> 
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -519,12 +519,13 @@
         });
 
       // Handle the tab switch without the sliding effect
+ 
 $('#registrationTabs a').on('click', function (e) {
-  e.preventDefault();
-  $('.tab-pane.active').removeClass('active');
-  $($(this).attr('href')).addClass('active');
-});
-
+    e.preventDefault();
+    $('.tab-pane.active').removeClass('active');
+    $($(this).attr('href')).addClass('active');
+  });
+  
 
     // Show the terms modal when the checkbox is clicked
     document.getElementById('termsCheck').addEventListener('click', function() {
