@@ -115,64 +115,110 @@ async function getCitiesWithUserCounts() {
 module.exports = {
   async getDashboard(req, res) {
     try {
-      const organizationId = req.session.organizationId;
-  
-      // Fetch drop points with managers
-      const dropPointsWithManagers = prisma.dropPoint.findMany({
-        where: {
-          NOT: {
-            managerId: null
-          }
-        },
-        select: {
-          id: true,
-          name: true,
-          location: true,
-          openingTime: true,
-          closingTime: true,
-          description: true,
-          manager: {
+        const organizationId = req.session.organizationId;
+
+        // Fetch drop points with managers
+        const dropPointsWithManagers = await prisma.dropPoint.findMany({
+            where: {
+                NOT: {
+                    managerId: null
+                }
+            },
             select: {
-              phoneNumber: true,
-              email: true
+                id: true,
+                name: true,
+                location: true,
+                openingTime: true,
+                closingTime: true,
+                description: true,
+                manager: {
+                    select: {
+                        phoneNumber: true,
+                        email: true
+                    }
+                }
             }
-          }
-        }
-      });
-  
-      // Fetch donations for the organization in parallel
-      const donationsForOrganization = prisma.donation.findMany({
-        where: {
-          organizationId: organizationId,
-          isSubmitted: true,
-          NOT: {
-            status: {
-              in: ["VERIFIED", "ACCEPTEDWITHISSUES", "REJECTED"]
+        });
+
+        // Fetch all donations for the organization and associated drop points
+        const donationsWithDropPoints = await prisma.donation.findMany({
+            where: {
+                organizationId: organizationId,
+                isSubmitted: true
+            },
+            select: {
+                id: true,
+                peripherals: true, // Include the peripherals property
+                dropPoint: {
+                    select: {
+                        id: true,
+                    },
+                },
+                status: true,
+                feedback: true,
             }
-          }
-        },
-        select: {
-          dropPointId: true
-        }
-      });
-  
-      // Run both queries in parallel
-      const [dropPointsRaw, organizationDonations] = await Promise.all([dropPointsWithManagers, donationsForOrganization]);
-  
-      const donatedDropPointIds = organizationDonations.map(donation => donation.dropPointId);
-  
-      // Map over the drop points and add the "canDonate" flag
-      const dropPoints = dropPointsRaw.map(point => ({
-        ...point,
-        canDonate: !donatedDropPointIds.includes(point.id)
-      }));
-  
-      res.render('organization/dashboard', { dropPoints: dropPoints });
+        });
+
+        // Group donations by dropPointId
+        const feedbackGroups = {};
+        donationsWithDropPoints.forEach(donation => {
+            if (!feedbackGroups[donation.dropPoint.id]) {
+                feedbackGroups[donation.dropPoint.id] = [];
+            }
+            feedbackGroups[donation.dropPoint.id].push(donation);
+        });
+
+        // Map over the drop points and add the "canDonate" flag and "shouldDisplayFeedbackForm" flag
+        const dropPoints = dropPointsWithManagers.map(point => {
+            const donationsForPoint = feedbackGroups[point.id] || [];
+            const pendingDonation = donationsForPoint.find(donation => !["VERIFIED", "ACCEPTEDWITHISSUES", "REJECTED"].includes(donation.status));
+            return {
+                ...point,
+                canDonate: !pendingDonation,
+                eligibleForFeedback: donationsForPoint,
+                shouldDisplayFeedbackForm: donationsForPoint.length > 0 && !pendingDonation,
+            };
+        });
+
+        res.render('organization/dashboard', { dropPoints: dropPoints });
     } catch (error) {
-      console.error("Error fetching drop points:", error);
-      res.status(500).send("Internal Server Error");
+        console.error("Error fetching drop points:", error);
+        res.status(500).send("Internal Server Error");
     }
-  }, 
+},
+
+
+
+  async submitFeedback(req, res) {
+    try {
+        const { rating, feedbackText } = req.body;
+        const organizationId = req.session.organization.id;
+
+        // Assuming you have the dropPointId and donationId stored in the session or passed in the form
+        const dropPointId = req.session.dropPointId;
+        const donationId = req.session.donationId;
+
+        if (!rating || !feedbackText || !dropPointId || !donationId) {
+            return res.status(400).send("Missing required fields");
+        }
+
+        // Create a new feedback record
+        await prisma.feedback.create({
+            data: {
+                content: feedbackText,
+                rating: parseInt(rating),
+                organizationId: organizationId,
+                dropPointId: dropPointId,
+                donationId: donationId
+            }
+        });
+
+        res.redirect('/organization/dashboard'); // Redirect to dashboard or any other page after successful submission
+    } catch (error) {
+        console.error("Error submitting feedback:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
   async getDonationForm(req, res) {
     try {
         const dropPointId = req.body.dropPointId;

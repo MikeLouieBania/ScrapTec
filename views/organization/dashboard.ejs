@@ -165,18 +165,6 @@
     margin-top: 5px;
 }
 
-const currentLocationIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', // This is an example blue marker icon. You can replace this with any suitable icon URL.
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41], // size of the icon
-    shadowSize: [41, 41], // size of the shadow
-    iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
-    shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-});
-
-
-       
     </style>
 </head>
 
@@ -345,7 +333,7 @@ const currentLocationIcon = L.icon({
             <div class="row" id="dropPointsContainer">
                 <% dropPoints.forEach(point => { %>
                     <div class="col-md-4">
-                        <div class="card mb-3" data-toggle="modal" data-target="#detailsModal-<%= point.id %>"> 
+                        <div class="card mb-3"> 
                             <div class="card-body">
                                 <h5 class="card-title"><%= point.name %></h5>
 
@@ -379,8 +367,7 @@ const currentLocationIcon = L.icon({
                                 <p class="alert alert-warning">You have a pending donation. Please complete it before donating again.</p>
                             <% } %>    
                             
-                                </div>
-                        
+                        </div> 
                         <!-- Details Modal for this particular point -->
                         <div class="modal fade" id="detailsModal-<%= point.id %>" data-point-id="<%= point.id %>" data-location="<%= point.location %>"  data-description="<%= point.description %>">
                             <div class="modal-dialog modal-xl">
@@ -394,22 +381,62 @@ const currentLocationIcon = L.icon({
                                         <div class="col-md-6">
                                             <p><strong>Location:</strong> <%= point.location %></p>
                                             <p><strong>Description:</strong> <%= point.description %></p> 
-                                            <input id="startAddress-<%= point.id %>" type="text" placeholder="Start Address">
-                                            <button onclick="getDirections('<%= point.id %>')">Show Directions</button>
-                                            <button onclick="getCurrentAddress('<%= point.id %>')" class="btn btn-sm btn-primary">Use Current Address</button>
+                                            <input id="startAddress-<%= point.id %>" type="text" placeholder="Start Address" class="form-control mb-2">
+                                            <button onclick="getDirections('<%= point.id %>')" class="btn btn-primary mb-2">Show Directions</button>
+                                            <button onclick="getCurrentAddress('<%= point.id %>')" class="btn btn-sm btn-secondary mb-2">Use Current Address</button>
                                             <p id="currentAddress-<%= point.id %>"></p> <!-- Element to display the current address -->
-                                        </div>
+                                            
+                                            <% if(point.shouldDisplayFeedbackForm) { %> 
+                                                <h5 class="mb-3 text-success">You have verified donations to this drop point! 🎉</h5>
+                                                <p>Select a donation to provide feedback:</p>
+                                                <select id="donationSelect-<%= point.id %>" class="form-control mb-3">
+                                                    <% point.eligibleForFeedback.forEach(donation => { %>
+                                                        <option value="<%= donation.id %>">
+                                                            Donated:
+                                                            <% donation.peripherals.forEach(peripheral => { %>
+                                                                Type: <%= peripheral.type %> - Amount: <%= peripheral.quantity %><br>
+                                                            <% }); %>
+                                                        </option>
+                                                    <% }); %>
+                                                </select>
+                                                <form action="/organization/submit-feedback" method="post">
+                                                    <div class="feedback-rating mb-2">
+                                                        <label><input type="radio" name="rating" value="5"> ★★★★★</label><br>
+                                                        <label><input type="radio" name="rating" value="4"> ★★★★</label><br>
+                                                        <label><input type="radio" name="rating" value="3"> ★★★</label><br>
+                                                        <label><input type="radio" name="rating" value="2"> ★★</label><br>
+                                                        <label><input type="radio" name="rating" value="1"> ★</label>
+                                                    </div>
+                                                    <textarea placeholder="Write your feedback here..." class="form-control mb-2" name="feedbackText"></textarea>
+                                                    <button type="submit" class="btn btn-success mb-2">Submit Feedback</button>
+                                                </form>
+                                                <!-- Button to view other feedbacks --> 
+                                                <button class="btn btn-sm btn-info mt-3" data-toggle="modal" data-target="#feedbackModal-<%= point.id %>">View Other Feedbacks</button>
+                                            <% } else { %>
+                                                <!-- Button to view other feedbacks --> 
+                                                <button class="btn btn-sm btn-info mt-3" data-toggle="modal" data-target="#feedbackModal-<%= point.id %>">View Other Feedbacks</button>
+                                            <% } %>
+                                            
+                                            <!-- Feedback Modal (You can populate this with feedback data) -->
+                                            <div class="modal fade" id="feedbackModal-<%= point.id %>">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content"> 
 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                        </div>
                                         <!-- Right Side - Map Placeholder -->
                                         <div class="col-md-6">
-                                            <div class="modal-map-container" id="map-<%= point.id %>" style="height: 400px;"></div>
+                                            <div class="modal-map-container mb-2" id="map-<%= point.id %>" style="height: 400px;"></div>
                                             <button class="btn btn-sm btn-info refresh-map" data-map-id="map-<%= point.id %>">Refresh Map</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-    
+                        </div> 
                     </div>
                 <% }); %>
             </div>
@@ -548,46 +575,46 @@ const currentLocationIcon = L.icon({
     }).addTo(map);
 }
 
-async function getCurrentAddress(pointId) {
-    try { 
-        const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
+            async function getCurrentAddress(pointId) {
+                try { 
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject);
+                    });
 
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
 
-        // Reverse geocoding to get the address from the coordinates
-        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-        const data = await response.json();
+                    // Reverse geocoding to get the address from the coordinates
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    const data = await response.json();
 
-        if (data && data.address) {
-            // Construct the address string, checking for undefined properties
-            const road = data.address.road || "";
-            const city = data.address.city || data.address.town || ""; 
-            const state = data.address.state || "";
-            const country = data.address.country || "";
-            const address = `${road}, ${city}, ${state}, ${country}`.replace(/ ,/g, ",");
+                    if (data && data.address) {
+                        // Construct the address string, checking for undefined properties
+                        const road = data.address.road || "";
+                        const city = data.address.city || data.address.town || ""; 
+                        const state = data.address.state || "";
+                        const country = data.address.country || "";
+                        const address = `${road}, ${city}, ${state}, ${country}`.replace(/ ,/g, ",");
 
-            document.getElementById(`startAddress-${pointId}`).value = address.trim(); 
+                        document.getElementById(`startAddress-${pointId}`).value = address.trim(); 
 
-            // Remove any existing current address marker before adding a new one
-            if (currentAddressMarker[pointId]) {
-                currentAddressMarker[pointId].remove();
-                delete currentAddressMarker[pointId];
+                        // Remove any existing current address marker before adding a new one
+                        if (currentAddressMarker[pointId]) {
+                            currentAddressMarker[pointId].remove();
+                            delete currentAddressMarker[pointId];
+                        }
+
+                        currentAddressMarker[pointId] = L.marker([lat, lon], { icon: currentLocationIcon })
+                            .addTo(maps[`map-${pointId}`])
+                            .bindPopup("Current Address")
+                            .openPopup();
+                    } else {
+                        alert("Unable to fetch current address.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching current address:", error);
+                }
             }
-
-            currentAddressMarker[pointId] = L.marker([lat, lon], { icon: currentLocationIcon })
-                .addTo(maps[`map-${pointId}`])
-                .bindPopup("Current Address")
-                .openPopup();
-        } else {
-            alert("Unable to fetch current address.");
-        }
-    } catch (error) {
-        console.error("Error fetching current address:", error);
-    }
-}
 
             async function filterByDistance() {
                 try {
@@ -621,6 +648,13 @@ async function getCurrentAddress(pointId) {
                     });
         
                     $("#dropPointsContainer").empty().append(dropPoints);
+                    dropPoints.forEach(point => {
+                        $(point).find('.card').attr({
+                            'data-toggle': 'modal',
+                            'data-target': `#detailsModal-${$(point).find('.modal').data('point-id')}`
+                        });
+                    });
+
         
                     // Initialize all modal maps after sorting
                     initializeAllModalMaps();
@@ -700,7 +734,7 @@ async function getCurrentAddress(pointId) {
                     }
                 });
             }
-             
+ 
        </script>
         
         <script>
