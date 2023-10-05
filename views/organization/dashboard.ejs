@@ -388,18 +388,19 @@
                                             
                                             <% if(point.shouldDisplayFeedbackForm) { %> 
                                                 <h5 class="mb-3 text-success">You have verified donations to this drop point! 🎉</h5>
-                                                <p>Select a donation to provide feedback:</p>
-                                                <select id="donationSelect-<%= point.id %>" class="form-control mb-3">
-                                                    <% point.eligibleForFeedback.forEach(donation => { %>
-                                                        <option value="<%= donation.id %>">
-                                                            Donated:
-                                                            <% donation.peripherals.forEach(peripheral => { %>
-                                                                Type: <%= peripheral.type %> - Amount: <%= peripheral.quantity %><br>
-                                                            <% }); %>
-                                                        </option>
-                                                    <% }); %>
-                                                </select>
+                                                <p>Select a donation to provide feedback:</p> 
                                                 <form action="/organization/submit-feedback" method="post">
+                                                    <input type="hidden" name="dropPointId" value="<%= point.id %>">
+                                                    <select id="donationSelect-<%= point.id %>" name="donationId" class="form-control mb-3">
+                                                        <% point.eligibleForFeedback.forEach(donation => { %>
+                                                            <option value="<%= donation.id %>">
+                                                                Donated:
+                                                                <% donation.peripherals.forEach(peripheral => { %>
+                                                                    Type: <%= peripheral.type %> - Amount: <%= peripheral.quantity %><br>
+                                                                <% }); %>
+                                                            </option>
+                                                        <% }); %>
+                                                    </select>
                                                     <div class="feedback-rating mb-2">
                                                         <label><input type="radio" name="rating" value="5"> ★★★★★</label><br>
                                                         <label><input type="radio" name="rating" value="4"> ★★★★</label><br>
@@ -407,7 +408,7 @@
                                                         <label><input type="radio" name="rating" value="2"> ★★</label><br>
                                                         <label><input type="radio" name="rating" value="1"> ★</label>
                                                     </div>
-                                                    <textarea placeholder="Write your feedback here..." class="form-control mb-2" name="feedbackText"></textarea>
+                                                    <textarea placeholder="Write your feedback here..." class="form-control mb-2" name="content"></textarea>
                                                     <button type="submit" class="btn btn-success mb-2">Submit Feedback</button>
                                                 </form>
                                                 <!-- Button to view other feedbacks --> 

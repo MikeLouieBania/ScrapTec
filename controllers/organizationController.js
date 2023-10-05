@@ -115,7 +115,7 @@ async function getCitiesWithUserCounts() {
 module.exports = {
   async getDashboard(req, res) {
     try {
-        const organizationId = req.session.organizationId;
+        const organizationId = req.session.organizationId;  
 
         // Fetch drop points with managers
         const dropPointsWithManagers = await prisma.dropPoint.findMany({
@@ -192,15 +192,25 @@ module.exports = {
         // Map over the drop points and add the "canDonate" flag and "shouldDisplayFeedbackForm" flag
         const dropPoints = dropPointsWithManagers.map(point => {
             const donationsForPoint = feedbackGroups[point.id] || [];
-            const pendingDonation = donationsForPoint.find(donation => !["VERIFIED", "ACCEPTEDWITHISSUES", "REJECTED"].includes(donation.status));
+            const feedbackForPoint = feedbackGroupsByDropPoint[point.id] || [];
+            
+            const pendingDonation = donationsForPoint.find(donation => 
+              !["VERIFIED", "ACCEPTEDWITHISSUES", "REJECTED"].includes(donation.status)
+            );
+    
+            // Find donations eligible for feedback, i.e., they don't have feedback yet
+            const eligibleForFeedback = donationsForPoint.filter(donation => 
+                !feedbackForPoint.find(feedback => feedback.donationId === donation.id)
+            );
             return {
-                ...point,
-                canDonate: !pendingDonation,
-                eligibleForFeedback: donationsForPoint,
-                shouldDisplayFeedbackForm: donationsForPoint.length > 0 && !pendingDonation,
-                feedbacks: feedbackForPoint
+              ...point,
+              canDonate: !pendingDonation,
+              eligibleForFeedback: eligibleForFeedback,  // Updated logic
+              shouldDisplayFeedbackForm: eligibleForFeedback.length > 0 && !pendingDonation, // Updated logic
+              feedbacks: feedbackForPoint
             };
-        });
+        }); 
+      
 
         res.render('organization/dashboard', { dropPoints: dropPoints });
     } catch (error) {
@@ -210,21 +220,17 @@ module.exports = {
   }, 
   async submitFeedback(req, res) {
     try {
-        const { rating, feedbackText } = req.body;
+        const { rating, content, donationId, dropPointId } = req.body;
         const organizationId = req.session.organization.id;
 
-        // Assuming you have the dropPointId and donationId stored in the session or passed in the form
-        const dropPointId = req.session.dropPointId;
-        const donationId = req.session.donationId;
-
-        if (!rating || !feedbackText || !dropPointId || !donationId) {
+        if (!rating || !content || !dropPointId || !donationId) {
             return res.status(400).send("Missing required fields");
         }
 
         // Create a new feedback record
         await prisma.feedback.create({
             data: {
-                content: feedbackText,
+                content: content,
                 rating: parseInt(rating),
                 organizationId: organizationId,
                 dropPointId: dropPointId,
