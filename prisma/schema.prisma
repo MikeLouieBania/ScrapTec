@@ -38,6 +38,7 @@ model Organization {
   donations             Donation[]
   advertisements        Advertisement[] // Added relation to Advertisements
   createdAt             DateTime  @default(now())
+  feedbacksGiven Feedback[] // Feedbacks given by the organization
 }
 
 model Document {
@@ -62,6 +63,7 @@ model DropPoint {
   managerId     String?   @map("manager_id") @db.ObjectId  // removed @unique
   password      String?   // This password is used when assigning a manager to a drop point
   donations       Donation[] 
+  feedbacksGiven Feedback[] // Feedbacks given by the organization
 }
 
 model Manager {
@@ -85,12 +87,26 @@ model Donation {
   confirmedByName       String?
   confirmedByEmail      String?
   status                String?
-  isSubmitted  Boolean  @default(false)  // Indicates if the donation has been submitted or it's just in "cart"
-  points                Float? 
+  isSubmitted           Boolean  @default(false)
+  points                Float?  
+  feedback              Feedback? 
   
   organization          Organization @relation(fields: [organizationId], references: [id])
   dropPoint             DropPoint    @relation(fields: [dropPointId], references: [id])
-  peripherals           Peripheral[] // Only peripherals now
+  peripherals           Peripheral[]  
+}
+
+model Feedback {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  content       String       
+  rating        Int          
+  createdAt     DateTime     @default(now())
+  organization  Organization @relation(fields: [organizationId], references: [id])
+  organizationId String      @map("organization_id") @db.ObjectId
+  dropPoint     DropPoint    @relation(fields: [dropPointId], references: [id])
+  dropPointId   String       @map("drop_point_id") @db.ObjectId  
+  donation      Donation     @relation(fields: [donationId], references: [id])
+  donationId    String       @map("donation_id") @db.ObjectId @unique
 }
 
 model Peripheral {
