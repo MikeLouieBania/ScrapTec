@@ -159,6 +159,17 @@ module.exports = {
             }
         });
 
+        // Fetch all feedbacks for the organization and associated drop points
+        const feedbacksForOrganization = await prisma.feedback.findMany({
+          where: {
+              organizationId: organizationId
+          },
+          include: {
+              donation: true
+          }
+        });
+
+
         // Group donations by dropPointId
         const feedbackGroups = {};
         donationsWithDropPoints.forEach(donation => {
@@ -167,6 +178,16 @@ module.exports = {
             }
             feedbackGroups[donation.dropPoint.id].push(donation);
         });
+
+        // Group feedbacks by dropPointId
+        const feedbackGroupsByDropPoint = {};
+        feedbacksForOrganization.forEach(feedback => {
+            if (!feedbackGroupsByDropPoint[feedback.dropPointId]) {
+                feedbackGroupsByDropPoint[feedback.dropPointId] = [];
+            }
+            feedbackGroupsByDropPoint[feedback.dropPointId].push(feedback);
+        });
+
 
         // Map over the drop points and add the "canDonate" flag and "shouldDisplayFeedbackForm" flag
         const dropPoints = dropPointsWithManagers.map(point => {
@@ -177,6 +198,7 @@ module.exports = {
                 canDonate: !pendingDonation,
                 eligibleForFeedback: donationsForPoint,
                 shouldDisplayFeedbackForm: donationsForPoint.length > 0 && !pendingDonation,
+                feedbacks: feedbackForPoint
             };
         });
 
@@ -185,10 +207,7 @@ module.exports = {
         console.error("Error fetching drop points:", error);
         res.status(500).send("Internal Server Error");
     }
-},
-
-
-
+  }, 
   async submitFeedback(req, res) {
     try {
         const { rating, feedbackText } = req.body;
