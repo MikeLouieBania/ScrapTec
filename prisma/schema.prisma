@@ -31,6 +31,7 @@ model Organization {
   secRegistrationNumber String?  @unique
   verificationStatus    String @default("PENDING")
   submittedDocuments    Document[]
+  lifetimePoints        Float   @default(0)
   totalPoints           Float     @default(0)
 
   type                  String
@@ -123,8 +124,7 @@ model Peripheral {
 
 model City {
   id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  name           String         @unique // Ensuring city names are unique
-  requiredPoints Float?          // Fixed points required to advertise in this city
+  name           String         @unique // Ensuring city names are unique 
   users          User[]         // Users in this city
   advertisements Advertisement[] // Advertisements in this city
 }
