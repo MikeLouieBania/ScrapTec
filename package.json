@@ -27,7 +27,7 @@
     "otp-generator": "^4.0.1",
     "path": "^0.12.7",
     "pdfjs-dist": "^3.10.111",
-    "sharp": "^0.32.5"
+    "sharp": "^0.32.6"
   },
   "devDependencies": {
     "prisma": "^4.16.2"

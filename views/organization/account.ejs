@@ -72,8 +72,12 @@
     
     <div class="container">
       <!-- Points and Org Name -->
-      <h2 class="mb-4"><%= organization.organizationname %> <span class="badge badge-success">Total Spendable Points: <%= organization.totalPoints %></span></h2>
-      
+      <h2 class="mb-4">
+        <%= organization.organizationname %> 
+        <span class="badge badge-success">Spendable Points: <%= organization.totalPoints %></span> 
+        <span class="badge badge-warning">Lifetime Points: <%= organization.lifetimePoints %></span>
+     </h2>
+     
       <!-- Nav tabs -->
       <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -161,7 +165,10 @@
                       <li><strong>City Selection:</strong> Choose the city where you want your ad to be displayed.</li>
                       <li><strong>Automatic Ranking:</strong> Ads will be automatically ranked and displayed based on total donation points in the selected city.</li>
                     </ul>
-                    <p>Your current ranking points in donations: <span class="badge badge-info"><%= totalPoints %></span></p>
+                    <p>
+                      Your current ranking based on donations: 
+                      <span class="badge badge-info"><%= organization.lifetimePoints %></span> points
+                    </p>
                   </div>
                 </div>
               </div> 
@@ -189,35 +196,48 @@
               <!-- City Cards Section -->
               <div class="card mt-3">
                 <div class="card-header">
-                  <h4 class="mb-0">
-                    Cities
-                  </h4>
+                    <h4 class="mb-0">
+                        Cities
+                    </h4> 
                 </div>
                 <div class="card-body">
                   <div class="row">
                     <!-- Loop through cities and display as cards -->
-                    <% cities.forEach((city) => { %>
-                      <div class="col-md-4">
+                    <% citiesWithCounts.forEach((city) => {
+                        let percentage = (organization.lifetimePoints / city.requiredPoints) * 100;
+                        if (percentage > 100) percentage = 100; // Ensures the percentage doesn't exceed 100
+                    %>
+                    <div class="col-md-4">
                         <!-- Enhanced city card -->
                         <div class="card mb-4 city-card">
-                          <div class="card-body">
-                            <h5 class="card-title"><%= city.name %></h5>
-                            <p class="card-text">Total Users: <%= city.usersCount %></p>
-                            <!-- Additional design elements -->
-                            <div class="city-details">
-                              <span class="badge badge-info">Required Points: <%= city.requiredPoints %></span>
-                              <!-- Add more details as needed -->
-                            </div> 
-                            <div class="city-actions"> 
-                              <a href="/organization/advertise/<%= city.id %>" class="btn btn-primary">Advertise in <%= city.name %></a>
+                            <div class="card-body">
+                                <h5 class="card-title"><%= city.name %></h5>
+                                <p class="card-text">Total Users: <%= city.usersCount %></p> 
+                
+                                <!-- Progress bar indicating points towards advertising in this city -->
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar" style="width: <%= percentage %>%;" aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <p><%= organization.lifetimePoints %> / <%= city.requiredPoints %> points</p>
+                
+                                <div class="city-actions"> 
+                                    <% if (organization.lifetimePoints >= city.requiredPoints) { %>
+                                        <a href="/organization/advertise/<%= city.id %>" class="btn btn-primary">Advertise in <%= city.name %></a>
+                                    <% } else { %>
+                                        <button class="btn btn-secondary" disabled>Insufficient Points</button>
+                                    <% } %> 
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                    <% }); %>
-                  </div>
+                    </div>
+                    <% }); %>                                      
                 </div>
-              </div> 
+                
+              </div>
+              
+              </div>
+
+
             </div>
           </div>
         </div> 

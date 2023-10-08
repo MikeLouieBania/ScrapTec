@@ -8,25 +8,47 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    <!-- Add Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-        .advertisement {
-            background: #f2f2f2;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+<style>
+    body, h2, h4, p, a {
+        font-family: 'Poppins', sans-serif;
+    }
 
-        .advertisement img {
-            max-width: 100%;
-        }
+    .navbar {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
 
-    </style>
+    .navbar-brand, .nav-link {
+        font-weight: 600;
+    }
+
+    .btn-outline-success {
+        border-color: #4CAF50;
+        color: #4CAF50;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .advertisement {
+        transition: all 0.4s ease-in-out; /* Animation for ad transition */
+        transform: scale(1);
+    }
+
+    .advertisement:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .advertisement img {
+        border-radius: 8px;
+    }
+</style>
+
 </head>
 
 <body>
@@ -54,6 +76,11 @@
     <div class="container mt-4">
         <!-- Advertisement Section -->
         <div class="container mt-4">
+            <div class="text-center mb-4">
+                <h2>Welcome, <%= user.firstName %>!</h2>
+                <p>Here are some of the latest advertisements for you:</p>
+            </div>
+            
             <!-- Advertisement Section -->
             <div class="advertisement"></div>
             <!-- Your Other Content Here -->
@@ -64,35 +91,26 @@
     </div>
 
     <script>
-        // Example array of advertisements
-        const ads = [
-            {
-                image: "https://via.placeholder.com/728x90.png?text=Advertisement+1",
-                link: "https://shopee.ph/fairycasing.ph?categoryId=100013&entryPoint=ShopByPDP&itemId=21218626927",
-                text: "Visit Sponsor 1!"
-            },
-            {
-                image: "https://via.placeholder.com/728x90.png?text=Advertisement+2",
-                link: "https://www.sponsor2.com",
-                text: "Check out Sponsor 2!"
-            }
-        ];
+        const ads = <%- JSON.stringify(advertisements) %>;
 
-        // Function to display a random ad
         function displayRandomAd() {
             const adContainer = document.querySelector('.advertisement');
-            const randomAd = ads[Math.floor(Math.random() * ads.length)];
-
-            adContainer.innerHTML = `
-                <a href="${randomAd.link}" target="_blank">
-                    <img src="${randomAd.image}" alt="Advertisement Image">
-                    <p>${randomAd.text}</p>
-                </a>
-            `;
+            if (ads.length > 0) { // Check if there are ads to display
+                const randomAd = ads[Math.floor(Math.random() * ads.length)];
+                adContainer.innerHTML = `
+                    <a href="${randomAd.link}" target="_blank">
+                        <img src="${randomAd.imageUrl}" alt="Advertisement Image">
+                        <p>${randomAd.title}</p>
+                    </a>
+                `;
+            } else {
+                adContainer.innerHTML = '<p>No active advertisements at the moment.</p>';
+            }
         }
 
         // Call the function when the document is ready
         document.addEventListener("DOMContentLoaded", displayRandomAd);
+
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
