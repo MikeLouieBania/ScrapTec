@@ -459,7 +459,75 @@ button[type="submitz"]:focus {
                       background-color: #ecf0f1; /* Change this color to your liking */
                     }
 
-                              
+                    /* modal  window */
+                    .custom-modal .modal-dialog {
+                      max-width: 50%;  /* Adjust this value to your preference */
+                  }
+              
+                  .custom-modal .modal-content {
+                      background-color: #f8f8f8;  /* Adjust this value to your preference */
+                      border-radius: 15px;        /* Rounded corners */
+                  }
+                  /* Custom styles for centered modal content and buttons */
+                  .custom-modal .modal-body,
+                  .custom-modal .modal-footer {
+                      text-align: center;
+                  }
+
+                  .custom-modal .modal-footer {
+                      display: flex;
+                      justify-content: center; /* Horizontally center buttons */
+                  }
+
+                  #productModalImage {
+                    width: 80%; /* Adjust this value as desired */
+                    margin: 0 auto; /* Centers the image if it's display is block */
+                    display: block; /* Ensures the image takes the entire width defined */
+                }
+                
+                   /* Custom sizes for different screens */
+                @media (max-width: 576px) { /* Small devices like smartphones */
+                  .custom-modal .modal-dialog {
+                      max-width: 90%;
+                  }
+                }
+
+                @media (min-width: 577px) and (max-width: 768px) { /* Medium devices like tablets */
+                  .custom-modal .modal-dialog {
+                      max-width: 70%;
+                  }
+                }
+
+                @media (min-width: 769px) { /* Large devices like desktops */
+                  .custom-modal .modal-dialog {
+                      max-width: 50%;
+                  }
+                }
+
+                /* By default, the pagination items are displayed horizontally */
+.pager {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping onto next line if necessary */
+  justify-content: center; /* Center the items */
+}
+
+.pager li {
+  margin: 5px; /* Some spacing between pagination items */
+}
+
+/* For smaller screens */
+@media (max-width: 576px) {
+  .pager {
+      flex-direction: column; /* Stack the items vertically */
+  }
+
+  .pager li a {
+      font-size: 0.9rem; /* Adjust font size for smaller screens */
+  }
+}
+
+         
+                
         
     </style>
 </head>
@@ -569,48 +637,73 @@ button[type="submitz"]:focus {
        <div class="row">
         <!-- Sample Product -->
         <div class="col-md-3 mb-4">
-            <div class="card">
+            <div class="card" data-product-id="1">
                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">Product 1</h5>
                     <p class="card-text">$100</p>
-                    <a href="#" class="btn btn-primary">View Details</a>
-                </div>
+                    <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 1)">View Details</a>
+                  </div>
             </div>
         </div>
 
-                  <!-- Sample Product -->
-                  <div class="col-md-3 mb-4">
-                      <div class="card">
-                          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                          <div class="card-body">
-                              <h5 class="card-title">Product 2</h5>
-                              <p class="card-text">$100</p>
-                              <a href="#" class="btn btn-primary">View Details</a>
-                          </div>
+        <div class="modal fade custom-modal" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true" data-backdrop="false">          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="productModalLabel">Product Details</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <img id="productModalImage" src="https://via.placeholder.com/150" alt="Product Image" class="img-fluid mb-3">
+                      <p id="productModalPrice" class="card-text">$100</p>
+                      <p id="productModalDescription">Description of the product goes here.</p>
+                      <div class="form-group">
+                          <label for="messageBox">Message to Seller:</label>
+                          <textarea class="form-control" id="messageBox" rows="3"></textarea>
                       </div>
                   </div>
-
-                            <!-- Sample Product -->
-        <div class="col-md-3 mb-4">
-          <div class="card">
-              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title">Product 3</h5>
-                  <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary">View Details</a>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Send Message</button>
+                  </div>
               </div>
           </div>
       </div>
+      
+
+                  <!-- Sample Product -->
+                  <div class="col-md-3 mb-4">
+                    <div class="card" data-product-id="2">
+                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Product 2</h5>
+                            <p class="card-text">$100</p>
+                            <button type="button" class="btn btn-primary" onclick="showProductDetails(event, 2)">View Details</button>
+                        </div>
+                    </div>
+                </div>
+                
+                            <!-- Sample Product -->
+                            <div class="col-md-3 mb-4">
+                              <div class="card" data-product-id="3">
+                                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                                  <div class="card-body">
+                                      <h5 class="card-title">Product 3</h5>
+                                      <p class="card-text">$100</p>
+                                      <button type="button" class="btn btn-primary" onclick="showProductDetails(event, 3)">View Details</button>
+                                  </div>
+                              </div>
+                          </div>
+                          
 
                 <!-- Sample Product -->
                 <div class="col-md-3 mb-4">
-                  <div class="card">
+                  <div class="card" data-product-id="4">
                       <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
                       <div class="card-body">
                           <h5 class="card-title">Product 4</h5>
                           <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary">View Details</a>
+                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 4)">View Details</a>
                       </div>
                   </div>
               </div>
@@ -618,96 +711,96 @@ button[type="submitz"]:focus {
 
                         <!-- Sample Product -->
         <div class="col-md-3 mb-4">
-          <div class="card">
+          <div class="card" data-product-id="5">
               <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
               <div class="card-body">
                   <h5 class="card-title">Product 5</h5>
                   <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary">View Details</a>
+                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 5)">View Details</a>
               </div>
           </div>
       </div>
 
                 <!-- Sample Product -->
                 <div class="col-md-3 mb-4">
-                  <div class="card">
+                  <div class="card" data-product-id="6">
                       <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
                       <div class="card-body">
                           <h5 class="card-title">Product 6</h5>
                           <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary">View Details</a>
+                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 6)">View Details</a>
                       </div>
                   </div>
               </div>
 
                         <!-- Sample Product -->
         <div class="col-md-3 mb-4">
-          <div class="card">
+          <div class="card" data-product-id="7">
               <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
               <div class="card-body">
                   <h5 class="card-title">Product 7</h5>
                   <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary">View Details</a>
+                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 7)">View Details</a>
               </div>
           </div>
       </div>
 
                 <!-- Sample Product -->
                 <div class="col-md-3 mb-4">
-                  <div class="card">
+                  <div class="card" data-product-id="8">
                       <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
                       <div class="card-body">
                           <h5 class="card-title">Product 8</h5>
                           <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary">View Details</a>
+                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 8)">View Details</a>
                       </div>
                   </div>
               </div>
 
                         <!-- Sample Product -->
         <div class="col-md-3 mb-4">
-          <div class="card">
+          <div class="card" data-product-id="9">
               <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
               <div class="card-body">
                   <h5 class="card-title">Product 9</h5>
                   <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary">View Details</a>
+                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 9)">View Details</a>
               </div>
           </div>
       </div>
 
                 <!-- Sample Product -->
                 <div class="col-md-3 mb-4">
-                  <div class="card">
+                  <div class="card" data-product-id="10">
                       <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
                       <div class="card-body">
                           <h5 class="card-title">Product 10</h5>
                           <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary">View Details</a>
+                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 10)">View Details</a>
                       </div>
                   </div>
               </div>
 
                         <!-- Sample Product -->
         <div class="col-md-3 mb-4">
-          <div class="card">
+          <div class="card" data-product-id="11">
               <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
               <div class="card-body">
                   <h5 class="card-title">Product 11</h5>
                   <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary">View Details</a>
+                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 11)">View Details</a>
               </div>
           </div>
       </div>
 
                 <!-- Sample Product -->
                 <div class="col-md-3 mb-4">
-                  <div class="card">
+                  <div class="card" data-product-id="12">
                       <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
                       <div class="card-body">
                           <h5 class="card-title">Product 12</h5>
                           <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary">View Details</a>
+                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 12)">View Details</a>
                       </div>
                   </div>
         <!-- You can replicate the above div for more products -->
@@ -721,7 +814,7 @@ button[type="submitz"]:focus {
         <li class="active"><a href="#">1</a></li>
         <li><a href="#">2</a></li>
         <li><a href="#">3</a></li>
-        <li><a style="color: white;">..................................................</a></li>
+        <li><a style="color: white;">............</a></li>
         <li><a href="#">Next &raquo;</a></li>
         <!-- Add more page numbers as needed -->
     </ul>
@@ -732,9 +825,6 @@ button[type="submitz"]:focus {
     <!-- Use .container only for inner content, not for the entire footer -->
     <div class="container relative">
 
-        <div class="sofa-img">
-            <img src="https://cdn-icons-png.flaticon.com/512/2913/2913447.png" alt="Earthify Logo" class="img-fluid" style="height: 50%; width: 50%; float: right">
-        </div>
 
         <div class="row g-5 mb-5">
             <div class="col-lg-4">
@@ -817,6 +907,8 @@ button[type="submitz"]:focus {
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 <script>
@@ -852,6 +944,22 @@ document.querySelector(".btn-search").addEventListener("click", function() {
  document.getElementById("priceSlider").oninput = function() {
   document.getElementById("priceLabel").innerHTML = this.value;
   // Here you can also call a function to sort your products based on the selected price
+}
+
+function showProductDetails(event, productId) {
+  event.preventDefault();  // Get the product card using the data attribute
+  let productCard = document.querySelector(`[data-product-id="${productId}"]`);
+  
+  // Populate the modal fields
+  document.getElementById('productModalImage').src = productCard.querySelector('img').src;
+  document.getElementById('productModalPrice').textContent = productCard.querySelector('.card-text').textContent;
+  document.getElementById('productModalDescription').textContent = `Description for ${productCard.querySelector('.card-title').textContent}`;
+
+  // Show the modal without the backdrop
+  let productModal = new bootstrap.Modal(document.getElementById('productModal'), {
+      backdrop: false
+  });
+  productModal.show();
 }
 
 
