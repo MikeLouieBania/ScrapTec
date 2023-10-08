@@ -136,12 +136,16 @@ module.exports = {
         }
 
         const newTotalPoints = (organization.totalPoints || 0) + (donation.points || 0);
-       
+        const newLifetimePoints = (organization.lifetimePoints || 0) + (donation.points || 0); // Added this line
+
 
         // Update the organization's totalPoints
         await prisma.organization.update({
           where: { id: donation.organizationId },
-          data: { totalPoints: newTotalPoints }
+          data: {
+             totalPoints: newTotalPoints,
+             lifetimePoints: newLifetimePoints 
+            }
         });
       }
   
@@ -152,7 +156,6 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
-    
   async getManagerAccount(req, res) {
     try {
       // Fetch the manager's profile and associated drop point using the ID stored in the session
