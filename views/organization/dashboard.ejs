@@ -204,9 +204,7 @@
             <button type="button" class="btn btn-secondary btn-enhanced mb-3" data-toggle="modal" data-target="#donationGuideModal">
                 View Donation Points Guide
             </button>
-            
-            
-
+             
             <!-- Modal Structure Starts Here -->
             <div class="modal fade" id="donationGuideModal" tabindex="-1" role="dialog" aria-labelledby="donationGuideModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -284,6 +282,24 @@
                                     </div>
                                     </div>
                                 </div> 
+                                <!-- Feedback Points Section -->
+                                <div class="card">
+                                    <div class="card-header" id="headingFeedback">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFeedback" aria-expanded="false" aria-controls="collapseFeedback">
+                                        Feedback Points
+                                        </button>
+                                    </h2>
+                                    </div>
+                                    <div id="collapseFeedback" class="collapse" aria-labelledby="headingFeedback" data-parent="#pointsAccordion">
+                                    <div class="card-body">
+                                        <p>Earn points simply by providing feedback after your donation is verified!</p>
+                                        <ul>
+                                        <li><strong>Feedback Submission:</strong> <span class="badge badge-primary">1 point</span></li>
+                                        </ul>
+                                    </div>
+                                    </div>
+                                </div> 
                             </div> 
                             <!-- Penalty Alert -->
                             <div class="alert alert-danger" role="alert">
@@ -312,7 +328,7 @@
                                     <li>If you are donating 5 'Whole Systems' that are 'Used but Working', your points would be calculated as follows: <br> <code>(3 (Base for Whole Systems) + 0.5 (Condition Bonus)) x 5 (Quantity) = 17.5</code></li>
                                     <li>If you are donating 10 'Input Devices' that are 'New', your points would be calculated as follows: <br> <code>(0.5 (Base for Input Devices) + 1 (Condition Bonus)) x 10 (Quantity) + 3 (Quantity Bonus) = 28</code></li>
                                 </ul>
-                            </section> 
+                            </section>  
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -320,22 +336,21 @@
                     </div>
                 </div>
                 </div>
-            </div>
-            <!-- Modal Structure Ends Here -->
-    
+            </div> 
 
             <!-- Search Bar -->
             <input type="text" id="search" aria-label="Search Drop Points" placeholder="Search Drop Points..." class="form-control mb-3">
-    
-
-
+     
             <!-- Drop Points rendering using a loop -->
             <div class="row" id="dropPointsContainer">
                 <% dropPoints.forEach(point => { %>
                     <div class="col-md-4">
                         <div class="card mb-3"> 
                             <div class="card-body">
-                                <h5 class="card-title"><%= point.name %></h5>
+                                <h5 class="card-title">
+                                    <%= point.name %>  
+                                    <small class="text-muted">(<%= point.averageRating.toFixed(1) %> ★)</small>
+                                </h5>
 
                                 
                                 
@@ -367,12 +382,13 @@
                                 <p class="alert alert-warning">You have a pending donation. Please complete it before donating again.</p>
                             <% } %>    
                             
+                            
                         </div> 
                         <!-- Details Modal for this particular point -->
                         <div class="modal fade" id="detailsModal-<%= point.id %>" data-point-id="<%= point.id %>" data-location="<%= point.location %>"  data-description="<%= point.description %>">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
-                                    <div class="modal-header">
+                                    <div class="modal-header bg-primary text-white">
                                         <h4 class="modal-title"><%= point.name %></h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
@@ -408,39 +424,79 @@
                                                         <label><input type="radio" name="rating" value="2"> ★★</label><br>
                                                         <label><input type="radio" name="rating" value="1"> ★</label>
                                                     </div>
-                                                    <textarea placeholder="Write your feedback here..." class="form-control mb-2" name="content"></textarea>
+                                                    <textarea placeholder="Write your feedback here (max 500 characters)..." class="form-control mb-2" name="content" maxlength="500"></textarea>
+                                                    <small class="d-block text-right mb-2"><span id="charCount">0</span>/500</small>
+
                                                     <button type="submit" class="btn btn-success mb-2">Submit Feedback</button>
+
+                                                    <script>
+                                                        $(document).ready(function() {
+                                                            // When the textarea content changes
+                                                            $("textarea[name='content']").on('input', function() {
+                                                                var maxLength = 500;
+                                                                var currentLength = $(this).val().length;
+
+                                                                // Update the count on the page
+                                                                $("#charCount").text(currentLength);
+
+                                                                // Optionally, you can also prevent more characters from being typed once the max limit is reached
+                                                                if(currentLength >= maxLength) {
+                                                                    $(this).val($(this).val().substr(0, maxLength));
+                                                                }
+                                                            });
+                                                        });
+
+                                                    </script>
                                                 </form>
                                                 <!-- Button to view other feedbacks --> 
                                                 <button class="btn btn-sm btn-info mt-3" data-toggle="modal" data-target="#feedbackModal-<%= point.id %>">View Other Feedbacks</button>
                                             <% } else { %>
+                                                
                                                 <!-- Button to view other feedbacks --> 
                                                 <button class="btn btn-sm btn-info mt-3" data-toggle="modal" data-target="#feedbackModal-<%= point.id %>">View Other Feedbacks</button>
                                             <% } %>
                                             
                                             <!-- Feedback Modal -->
-                                            <div class="modal fade" id="feedbackModal-<%= point.id %>">
-                                                <div class="modal-dialog">
+                                            <div class="modal fade" id="feedbackModal-<%= point.id %>" tabindex="-1">
+                                                <div class="modal-dialog modal-xl">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Feedback for <%= point.name %></h5>
+                                                        <div class="modal-header bg-light border-bottom">
+                                                            <h5 class="modal-title font-weight-bold">Feedback for <%= point.name %></h5>
                                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                         </div>
-                                                        <div class="modal-body">
+                                                        <div class="modal-body bg-light py-4">
                                                             <% if(point.feedbacks && point.feedbacks.length > 0) { %> 
                                                                 <% point.feedbacks.forEach(feedback => { %>
-                                                                    <div class="feedback-item mb-3">
-                                                                        <h6>Rating: <%= "★".repeat(feedback.rating) %></h6>
-                                                                        <p><%= feedback.content %></p>
+                                                                    <!-- Organization Profile Picture and Name --> 
+                                                                    <% if(feedback.organization && feedback.organization.profilePicture) { %>
+                                                                        <img src="data:image/jpeg;base64,<%= feedback.organization.profilePicture %>" alt="<%= feedback.organization.organizationname %>" class="rounded-circle mr-3" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #e0e0e0;">
+                                                                    <% } %>
+                                                                    <h6>Feedback by <%= feedback.organization ? feedback.organization.organizationname : 'Anonymous' %></h6>
+                                                                    <div class="feedback-item mb-4 p-4 bg-white border rounded shadow-sm">
+                                                                        <!-- Feedback Rating -->
+                                                                        <div class="mb-3">
+                                                                            <span class="text-warning"><%= "★".repeat(feedback.rating) %></span> <span class="text-muted"><%= "☆".repeat(5 - feedback.rating) %></span>
+                                                                        </div>
+                                                                        <!-- Feedback Content -->
+                                                                        <p class="mb-0 text-dark"><%= feedback.content %></p>
                                                                     </div>
                                                                 <% }); %>
                                                             <% } else { %>
-                                                                <p>No feedbacks yet for this drop point.</p>
+                                                                <div class="text-center">
+                                                                    <img src="/path/to/empty-feedback-icon.svg" alt="No Feedbacks" style="width: 60px;">
+                                                                    <p class="mt-3 text-muted">No feedbacks yet for this drop point.</p>
+                                                                </div>
                                                             <% } %>
+                                                        </div>
+                                                        <div class="modal-footer bg-white border-top py-3">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
+                                            
+
+
                                         </div>
                                         <!-- Right Side - Map Placeholder -->
                                         <div class="col-md-6">
@@ -454,11 +510,9 @@
                     </div>
                 <% }); %>
             </div>
-
-
+ 
         </div> 
-        
-        
+          
         <!-- Scripts - In Order -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -801,8 +855,7 @@
 
 
         </script>  
-
-    
+ 
     </body>
 
     </html>
