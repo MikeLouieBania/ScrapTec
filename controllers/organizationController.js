@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
+const sharp = require('sharp');
 
 async function calculatePoints(type, condition, quantity) {
     let basePoints = 0;
@@ -87,10 +88,11 @@ async function getTotalPointsForOrganization(organizationId) {
 // count registered users in a city
 async function getCitiesWithUserCounts() {
   try {
-    // Retrieve a list of cities and their total user counts
+    // Retrieve a list of cities and their total user counts 
     const cities = await prisma.city.findMany({
       select: {
         name: true,
+        id: true,  // Add this 
         users: {
           select: {
             id: true, 
@@ -99,11 +101,12 @@ async function getCitiesWithUserCounts() {
       },
     });
 
-    // Calculate the total user count for each city
+    // Calculate the total user count for each city 
     const citiesWithCounts = cities.map((city) => ({
       name: city.name,
+      id: city.id, // Include the ID 
       usersCount: city.users.length,
-    }));
+    })); 
 
     return citiesWithCounts;
   } catch (error) {
@@ -111,6 +114,20 @@ async function getCitiesWithUserCounts() {
     return []; // Return an empty array if an error occurs
   }
 } 
+
+/**
+ * Compute the average rating for feedbacks of a given drop point.
+ * 
+ * @param {Array} feedbacks - An array of feedback objects associated with the drop point.
+ * @returns {number} - The average rating.
+ */
+function computeAverageRating(feedbacks) {
+  if (!feedbacks || feedbacks.length === 0) return 0;
+
+  const totalRating = feedbacks.reduce((sum, feedback) => sum + feedback.rating, 0);
+  return totalRating / feedbacks.length;
+}
+
 
 module.exports = {
   async getDashboard(req, res) {
@@ -159,16 +176,18 @@ module.exports = {
             }
         });
 
-        // Fetch all feedbacks for the organization and associated drop points
-        const feedbacksForOrganization = await prisma.feedback.findMany({
-          where: {
-              organizationId: organizationId
-          },
+        // Fetch feedbacks
+        const allFeedbacks = await prisma.feedback.findMany({
           include: {
-              donation: true
+              donation: true,
+              organization: {
+                  select: {
+                      organizationname: true
+                  }
+              }
           }
-        });
-
+        });   
+        
 
         // Group donations by dropPointId
         const feedbackGroups = {};
@@ -181,12 +200,13 @@ module.exports = {
 
         // Group feedbacks by dropPointId
         const feedbackGroupsByDropPoint = {};
-        feedbacksForOrganization.forEach(feedback => {
-            if (!feedbackGroupsByDropPoint[feedback.dropPointId]) {
-                feedbackGroupsByDropPoint[feedback.dropPointId] = [];
-            }
-            feedbackGroupsByDropPoint[feedback.dropPointId].push(feedback);
+        allFeedbacks.forEach(feedback => {
+          if (!feedbackGroupsByDropPoint[feedback.dropPointId]) {
+              feedbackGroupsByDropPoint[feedback.dropPointId] = [];
+          }
+          feedbackGroupsByDropPoint[feedback.dropPointId].push(feedback);
         });
+      
 
 
         // Map over the drop points and add the "canDonate" flag and "shouldDisplayFeedbackForm" flag
@@ -194,6 +214,8 @@ module.exports = {
             const donationsForPoint = feedbackGroups[point.id] || [];
             const feedbackForPoint = feedbackGroupsByDropPoint[point.id] || [];
             
+            const averageRating = computeAverageRating(feedbackForPoint);
+        
             const pendingDonation = donationsForPoint.find(donation => 
               !["VERIFIED", "ACCEPTEDWITHISSUES", "REJECTED"].includes(donation.status)
             );
@@ -207,12 +229,13 @@ module.exports = {
               canDonate: !pendingDonation,
               eligibleForFeedback: eligibleForFeedback,  // Updated logic
               shouldDisplayFeedbackForm: eligibleForFeedback.length > 0 && !pendingDonation, // Updated logic
-              feedbacks: feedbackForPoint
+              feedbacks: feedbackForPoint,
+              averageRating: averageRating 
             };
         }); 
       
 
-        res.render('organization/dashboard', { dropPoints: dropPoints });
+        res.render('organization/dashboard', { dropPoints: dropPoints});
     } catch (error) {
         console.error("Error fetching drop points:", error);
         res.status(500).send("Internal Server Error");
@@ -237,6 +260,24 @@ module.exports = {
                 donationId: donationId
             }
         });
+
+        // Award 1 point to the organization for submitting the feedback
+        const organization = await prisma.organization.findUnique({
+            where: {
+                id: organizationId
+            }
+        });
+
+        if (organization) {
+            await prisma.organization.update({
+                where: {
+                    id: organizationId
+                },
+                data: {
+                    totalPoints: organization.totalPoints + 1
+                }
+            });
+        }
 
         res.redirect('/organization/dashboard'); // Redirect to dashboard or any other page after successful submission
     } catch (error) {
@@ -405,19 +446,36 @@ module.exports = {
     res.render('organization/FAQ'); 
   },
   async getAccount(req, res) { 
-    const organizationId = req.session.organization.id;
-    const organization = await prisma.organization.findUnique({
-      where: {id: organizationId},
-    }); 
-    const cities = await prisma.city.findMany();
-
-    
-    const totalPoints = await getTotalPointsForOrganization(organizationId); 
-    
-    // Get cities with user counts
-    const citiesWithCounts = await getCitiesWithUserCounts();
-
-    res.render('organization/account', { organization, totalPoints, cities: citiesWithCounts, cities }); 
+    try {
+      const organizationId = req.session.organization.id;
+      // Directly fetch the organization's data, including totalPoints and lifetimePoints
+      const organization = await prisma.organization.findUnique({
+        where: { id: organizationId },
+      }); 
+  
+      // Get cities with user counts
+      let citiesWithCounts = await getCitiesWithUserCounts();
+      citiesWithCounts = citiesWithCounts.map(city => {
+          let requiredPoints;
+          if (city.usersCount > 1000) {
+              requiredPoints = 2500; // Tier 1
+          } else if (city.usersCount >= 500) {
+              requiredPoints = 2000;  // Tier 2
+          } else {
+              requiredPoints = 1500;  // Tier 3
+          }
+          return {...city, requiredPoints};
+      });
+  
+      // Render the view with the organization's data
+      res.render('organization/account', { 
+        organization, 
+        citiesWithCounts
+      }); 
+    } catch (error) {
+      console.error("Error fetching account data:", error);
+      res.status(500).send("Internal Server Error");
+    }
   }, 
   async getAdvertisements(req, res) { 
     const organizationId = req.session.organization.id;
@@ -450,9 +508,16 @@ module.exports = {
   async getAdCity(req, res) { 
     const cityId = req.params.cityId;
   
-    // Fetch city details by ID
+    // Fetch city details by ID along with its related advertisements
     const city = await prisma.city.findUnique({
       where: { id: cityId },
+      include: { 
+        advertisements: {
+          orderBy: {
+            startDate: "desc" // Get the latest advertisements first
+          }
+        } 
+      }
     });
   
     if (!city) {
@@ -462,7 +527,73 @@ module.exports = {
   
     // Render the form for advertising in the chosen city
     res.render('organization/adCity', { city }); 
-  }, 
+  },
+
+  async submitAdvertisement(req, res) {
+    try {
+        const { title, content, link, adPlan, cityId } = req.body;
+        const organizationId = req.session.organization.id;
+
+        const organization = await prisma.organization.findUnique({ where: { id: organizationId } });
+
+        // Deduct points based on the adPlan chosen
+        let pointsSpent = adPlan === "basic" ? 10 : 20;
+
+        // Validate if the organization has enough points
+        if (organization.totalPoints < pointsSpent) {
+            return res.status(400).send("Insufficient points to create this advertisement.");
+        }
+
+        // Determine the duration of the advertisement based on the plan
+        let duration = adPlan === "basic" ? 7 : 14;
+        const expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + duration);
+
+        // Check if an image file was uploaded
+        let imageUrl = '';  // Initializing imageUrl as an empty string
+        if (req.file) {
+            // Compress and resize the image using sharp
+            const compressedImageBuffer = await sharp(req.file.buffer)
+                .resize(800) // Width of 800px
+                .jpeg({ quality: 70 }) 
+                .toBuffer();
+
+            // Convert it to a base64 string to save as URL
+            // imageUrl = `data:image/jpeg;base64,${compressedImageBuffer.toString('base64')}`;
+            imageUrl = compressedImageBuffer;
+
+        }
+
+        // Create the advertisement with the processed imageUrl
+        await prisma.advertisement.create({
+            data: {
+                title,
+                content,
+                pointsSpent,
+                link,
+                imageUrl,  // Use the processed imageUrl here
+                isActive: true,
+                startDate: new Date(),
+                expiryDate,
+                organization: { connect: { id: organizationId } },
+                city: { connect: { id: cityId } },
+            }
+        });
+
+        // Deduct the points from the organization's total points
+        await prisma.organization.update({
+            where: { id: organizationId },
+            data: { totalPoints: organization.totalPoints - pointsSpent }
+        });
+
+        res.redirect('/organization/account'); // Redirect to the success page
+
+    } catch (error) {
+        console.error("Error creating advertisement:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
+
   logout(req, res) {
     // Clear the session to log out the user
     req.session.organization = null;
