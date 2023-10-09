@@ -5,20 +5,22 @@ const sharp = require('sharp');
 
 module.exports = {
   async getDashboard(req, res) { 
-    try {
-        const dropPoints = await prisma.dropPoint.findMany({
-          where: {
-            NOT: {
-              managerId: null
-            }
-          },
-          include: {
-              manager: true
-          }
+    try { 
+        // Fetch active advertisements
+        const advertisements = await prisma.advertisement.findMany({
+            where: {
+                isActive: true,
+            },
         });
-        res.render('user/dashboard', { user: req.session.user, dropPoints });
+
+        // Convert image buffer to base64 string for all advertisements
+        advertisements.forEach(ad => {
+            ad.imageUrl = `data:image/jpeg;base64,${ad.imageUrl.toString('base64')}`;
+        });
+
+        res.render('user/dashboard', { user: req.session.user, advertisements });
     } catch(error) {
-        console.error("Error fetching drop points:", error);
+        console.error("Error fetching advertisements:", error);
         res.status(500).send("Internal Server Error");
     }
   },
