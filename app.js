@@ -6,7 +6,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var { PrismaClient } = require('@prisma/client');
 
-
+// asd
 // Initialize Prisma client
 const prisma = new PrismaClient(); 
 
