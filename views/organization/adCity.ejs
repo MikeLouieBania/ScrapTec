@@ -34,60 +34,38 @@
     
     <div class="container mt-4">
         <div class="row">
+            <!-- Advertisement Form -->
             <div class="col-md-8">
                 <h2>Advertise in <%= city.name %></h2>
                 <p class="lead">Reach out to potential users by advertising in this city!</p>
-        
-                <!-- Required Points Display -->
-                <p class="text-info">Required Points to Advertise: <%= city.requiredPoints %></p>
-                
-                <form action="/submitAdvertisement" method="post" enctype="multipart/form-data">
+                <form action="/organization/submitAdvertisement" method="post" enctype="multipart/form-data">
+                    <!-- Hidden Field -->
                     <input type="hidden" name="cityId" value="<%= city.id %>">
                     
-                    <!-- Title -->
-                    <div class="form-group">
-                        <label for="adTitle">Advertisement Title:</label>
+                    <!-- Fields -->
+                    <div class="mb-3">
+                        <label for="adTitle" class="form-label">Advertisement Title:</label>
                         <input type="text" class="form-control" id="adTitle" name="title" required>
-                    </div>
-                
-                    <!-- Content -->
-                    <div class="form-group">
-                        <label for="adContent">Advertisement Content:</label>
-                        <textarea class="form-control" id="adContent" name="content" required></textarea>
-                    </div>
-                
-                    <!-- Points Spent -->
-                    <div class="form-group">
-                        <label for="pointsSpent">Points Spent:</label>
-                        <input type="number" class="form-control" id="pointsSpent" name="pointsSpent" required>
-                    </div>
-                
-                    <!-- Link -->
-                    <div class="form-group">
-                        <label for="adLink">Link:</label>
-                        <input type="url" class="form-control" id="adLink" name="link">
-                    </div>
-                
-                    <!-- Image Upload -->
-                    <div class="form-group">
-                        <label for="adImage">Advertisement Image:</label>
-                        <input type="file" class="form-control-file" id="adImage" name="imageUrl">
                     </div> 
-                
-                    <!-- Advertisement Plan -->
-                    <div class="form-group">
-                        <label for="adPlan">Advertisement Plan:</label>
+                    <div class="mb-3">
+                        <label for="adLink" class="form-label">Link:</label>
+                        <input type="url" class="form-control" id="adLink" name="link" placeholder="URL for your advertisements">
+                    </div>
+                    <div class="mb-3">
+                        <label for="adImage" class="form-label">Advertisement Image:</label>
+                        <input type="file" class="form-control-file" id="adImage" name="imageUrl">
+                    </div>
+                    <div class="mb-3">
+                        <label for="adPlan" class="form-label">Advertisement Plan:</label>
                         <select class="form-control" id="adPlan" name="adPlan" required>
                             <option value="basic">Basic Ad (1 week) - 10 points</option>
                             <option value="premium">Premium Ad (2 weeks with featured placement) - 20 points</option>
-                        </select>
+                        </select>                        
                     </div>
-                
                     <button type="submit" class="btn btn-primary">Submit Advertisement</button>
                 </form>
-                
             </div>
-            
+   
             <div class="col-md-4">
                 <h4>Previous Advertisements:</h4>
                 <% if(city.advertisements && city.advertisements.length > 0) { %>
