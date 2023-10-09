@@ -527,11 +527,10 @@ module.exports = {
   
     // Render the form for advertising in the chosen city
     res.render('organization/adCity', { city }); 
-  },
-
+  }, 
   async submitAdvertisement(req, res) {
     try {
-        const { title, content, link, adPlan, cityId } = req.body;
+        const { title, link, adPlan, cityId } = req.body;
         const organizationId = req.session.organization.id;
 
         const organization = await prisma.organization.findUnique({ where: { id: organizationId } });
@@ -567,8 +566,7 @@ module.exports = {
         // Create the advertisement with the processed imageUrl
         await prisma.advertisement.create({
             data: {
-                title,
-                content,
+                title, 
                 pointsSpent,
                 link,
                 imageUrl,  // Use the processed imageUrl here

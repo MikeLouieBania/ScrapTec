@@ -204,7 +204,7 @@
                   <div class="row">
                     <!-- Loop through cities and display as cards -->
                     <% citiesWithCounts.forEach((city) => {
-                        let percentage = (organization.lifetimePoints / city.requiredPoints) * 100;
+                        let percentage = (organization.totalPoints / city.requiredPoints) * 100;
                         if (percentage > 100) percentage = 100; // Ensures the percentage doesn't exceed 100
                     %>
                     <div class="col-md-4">
@@ -218,10 +218,10 @@
                                 <div class="progress mb-2">
                                     <div class="progress-bar" role="progressbar" style="width: <%= percentage %>%;" aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <p><%= organization.lifetimePoints %> / <%= city.requiredPoints %> points</p>
+                                <p><%= organization.totalPoints %> / <%= city.requiredPoints %> points</p>
                 
                                 <div class="city-actions"> 
-                                    <% if (organization.lifetimePoints >= city.requiredPoints) { %>
+                                    <% if (organization.totalPoints >= city.requiredPoints) { %>
                                         <a href="/organization/advertise/<%= city.id %>" class="btn btn-primary">Advertise in <%= city.name %></a>
                                     <% } else { %>
                                         <button class="btn btn-secondary" disabled>Insufficient Points</button>

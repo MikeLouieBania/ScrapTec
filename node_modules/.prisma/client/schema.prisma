@@ -135,8 +135,7 @@ model Advertisement {
   organizationId String       @map("organization_id") @db.ObjectId
   city           City         @relation(fields: [cityId], references: [id])
   cityId         String       @map("city_id") @db.ObjectId
-  title          String
-  content        String
+  title          String 
   pointsSpent    Float
   link           String
   imageUrl       Bytes
