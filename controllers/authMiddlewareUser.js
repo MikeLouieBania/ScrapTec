@@ -7,7 +7,7 @@ module.exports = {
     },
     checkLoggedInRedirect: (req, res, next) => {
       if (req.session.user) {
-        return res.redirect('/user/dashboard'); // Redirect logged-in users to the dashboard
+        return res.redirect('/user/marketplace'); // Redirect logged-in users to the dashboard
       }
       next(); // Proceed to the next middleware/route handler
     },

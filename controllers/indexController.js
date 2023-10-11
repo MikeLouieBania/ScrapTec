@@ -279,7 +279,7 @@ module.exports = {
             req.session.user = user;
 
             // Redirect to the user dashboard
-            return res.redirect('/user/dashboard');
+            return res.redirect('/user/marketplace');
         }
 
         if (organization) {

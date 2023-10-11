@@ -20,6 +20,7 @@
 
         body {
             padding-top: 60px;  /* Adjusted the padding for navbar */
+            overflow-x: hidden;
             margin-bottom: 60px;
             background-color: #8babf1;
         }
@@ -411,8 +412,9 @@ button[type="submitz"]:focus {
                     
                             .card:hover {
                                 transform: translateY(-5px);
+                                cursor: pointer;
                             }
-                    
+                  
                             .card-title {
                                 font-size: 1.2rem;
                                 margin-bottom: 0.5rem;
@@ -526,9 +528,197 @@ button[type="submitz"]:focus {
   }
 }
 
-         
-                
+.menu {
+    width: 25%;
+    height: 300px;
+    background-color: #246aec00;
+    color: #fff;
+    position: relative;
+    top: 5%;
+    right: 25%;
+}
+
+
+        .menu-item {
+            padding: 20px; /* Increased padding for more space */
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none; /* Remove default underline for anchor tags */
+            color: inherit; /* Use parent color, in this case white */
+            display: block; /* Make the whole item clickable */
+            font-size: 27px; /* Increase font size */
+            line-height: 1.5; /* Adjust line height for better spacing between lines of text */
+
+            --c: #1095c1; /* the color */
+  --b: .1em;    /* border length*/
+  --d: 20px;    /* the cube depth */
+  
+  --_s: calc(var(--d) + var(--b));
+  
+  border: solid #0000;
+  border-width: var(--b) var(--b) var(--_s) var(--_s);
+  background:
+    conic-gradient(at left var(--d)  bottom var(--d),
+      #0000 90deg, rgb(255 255 255 /0.3) 0 225deg,rgb(255 255 255 /0.6) 0) border-box,
+    conic-gradient(at left var(--_s) bottom var(--_s),
+      #0000 90deg,var(--c) 0) 0 100%/calc(100% - var(--b)) calc(100% - var(--b))  border-box;
+  transform: translate(calc(var(--d)/-1),var(--d));
+  clip-path: 
+    polygon(
+     var(--d) 0%, 
+     var(--d) 0%, 
+     100% 0%, 
+     100% calc(100% - var(--d)),
+     100% calc(100% - var(--d)),
+     var(--d) calc(100% - var(--d))
+    );
+  transition: 0.5s;
+        }
+
+
+        .menu-item:hover {
+          transform: translate(0,0);
+  clip-path: 
+    polygon(
+     0% var(--d), 
+     var(--d) 0%, 
+     100% 0%, 
+     100% calc(100% - var(--d)), 
+     calc(100% - var(--d)) 100%, 
+     0% 100%
+   );
+        } 
+ 
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .icon.notification {
+            background-image: url('https://icons.veryicon.com/png/o/object/material-design-icons/notifications-1.png');
+            background-size: cover;
+        }
+
+        .icon.inbox {
+            background-image: url('https://freepngimg.com/thumb/email_marketing/142734-symbol-vector-email-free-photo.png');
+            background-size: cover;
+        }
+
+        .icon.buying {
+            background-image: url('https://www.freeiconspng.com/thumbs/buy-icon-png/buy-icon-32.png');
+            background-size: cover;
+        }
+
+        .icon.selling {
+            background-image: url('https://icons.veryicon.com/png/o/miscellaneous/newstock/sell-out.png');
+            background-size: cover;
+        }        
+
+        .icon.location {
+            background-image: url('https://cdn-icons-png.flaticon.com/512/2775/2775994.png');
+            background-size: cover;
+        }    
         
+        .icon.lists {
+            background-image: url('https://cdn.icon-icons.com/icons2/2346/PNG/512/add_insert_new_plus_button_icon_142943.png');
+            background-size: cover;
+        }     
+
+
+        .container-Products {
+    position: relative; /* or absolute, depending on your needs */
+    width: 100%; /* Adjust width as required */
+    left: 350px;
+    bottom: 15.5%;
+    z-index: 1; /* Ensures the container stays above other elements */
+    margin-bottom: -457px;
+    /* Adjust top, right, bottom, left properties if using position: absolute; */
+        }
+
+
+        .mapslocations {
+          position: absolute; 
+          left: 81%;
+          bottom: -300px;
+        }
+
+   .modal-maps {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+      }
+
+   .modalmaps-y {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 720px;
+        height: 520px;
+        padding: 20px;
+        background: #ffffff;
+        z-index: 10000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+
+      .listahan {
+  align-items: center;
+  background-color: #0a66c2bd;
+  border: 0;
+  border-radius: 100px;
+  margin-top: 7%;
+  width: 95%;
+  height: 15%; 
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 20px;
+  max-width: 480px;
+  min-height: 40px;
+  min-width: 0px;
+  overflow: hidden;
+  padding: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+  touch-action: manipulation;
+  transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+}
+
+.listahan:hover,
+.button-18:focus { 
+  background-color: #16437E;
+  color: #ffffff;
+}
+
+.listahan:active {
+  background: #09223b;
+  color: rgb(255, 255, 255, .7);
+}
+
+.listahan:disabled { 
+  cursor: not-allowed;
+  background: rgba(0, 0, 0, .08);
+  color: rgba(0, 0, 0, .3);
+}
     </style>
 </head>
 
@@ -551,7 +741,9 @@ button[type="submitz"]:focus {
                     <a class="nav-link" href="#">My Account</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Logout</a>
+                  <form action="/user/logout" method="POST">
+                    <button type="submit" class="nav-link">LOGOUT</button>
+                  </form> 
                 </li>
             </ul>
         </div>
@@ -568,16 +760,6 @@ button[type="submitz"]:focus {
   </div>
   <div class="jumbotron-bg"></div>
 </section>
-
-
-<div class="d-flex justify-content-center align-items-center" style="height: 10vh;"> <!-- Assuming you want to center it in the viewport height -->
-  
-  <!-- Search Bar -->
-  <div class="search-box">
-      <input type="text" class="input-search" placeholder="Search for products...">
-      <button class="btn-search" type="button">&#128269;</button> <!-- The Unicode character represents a magnifying glass icon -->
-  </div>
-</div>
 
       
 
@@ -632,183 +814,159 @@ button[type="submitz"]:focus {
 </div>
 
 
-      <!-- Start of Product Section -->
-       <!-- Products -->
-       <div class="row">
-        <!-- Sample Product -->
-        <div class="col-md-3 mb-4">
-            <div class="card" data-product-id="1">
-                <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Product 1</h5>
-                    <p class="card-text">$100</p>
-                    <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 1)">View Details</a>
-                  </div>
-            </div>
-        </div>
+     <!-- Start of Product Section -->
+<!-- Products -->
+<div class="row">
 
-        <div class="modal fade custom-modal" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true" data-backdrop="false">          <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="productModalLabel">Product Details</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                      <img id="productModalImage" src="https://via.placeholder.com/150" alt="Product Image" class="img-fluid mb-3">
-                      <p id="productModalPrice" class="card-text">$100</p>
-                      <p id="productModalDescription">Description of the product goes here.</p>
-                      <div class="form-group">
-                          <label for="messageBox">Message to Seller:</label>
-                          <textarea class="form-control" id="messageBox" rows="3"></textarea>
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">Send Message</button>
-                  </div>
-              </div>
-          </div>
+  <!-- Search Bar -->
+<div class="row mb-4"> <!-- Added row here -->
+  <div class="col-md-3"> <!-- Using col-md-3 for the search bar -->
+      <div class="search-box">
+          <input type="text" class="input-search" placeholder="Search for products...">
+          <button class="btn-search" type="button">&#128269;</button> <!-- The Unicode character represents a magnifying glass icon -->
       </div>
-      
-
-                  <!-- Sample Product -->
-                  <div class="col-md-3 mb-4">
-                    <div class="card" data-product-id="2">
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 2</h5>
-                            <p class="card-text">$100</p>
-                            <button type="button" class="btn btn-primary" onclick="showProductDetails(event, 2)">View Details</button>
-                        </div>
-                    </div>
-                </div>
-                
-                            <!-- Sample Product -->
-                            <div class="col-md-3 mb-4">
-                              <div class="card" data-product-id="3">
-                                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                                  <div class="card-body">
-                                      <h5 class="card-title">Product 3</h5>
-                                      <p class="card-text">$100</p>
-                                      <button type="button" class="btn btn-primary" onclick="showProductDetails(event, 3)">View Details</button>
-                                  </div>
-                              </div>
-                          </div>
-                          
-
-                <!-- Sample Product -->
-                <div class="col-md-3 mb-4">
-                  <div class="card" data-product-id="4">
-                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                      <div class="card-body">
-                          <h5 class="card-title">Product 4</h5>
-                          <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 4)">View Details</a>
-                      </div>
-                  </div>
-              </div>
-
-
-                        <!-- Sample Product -->
-        <div class="col-md-3 mb-4">
-          <div class="card" data-product-id="5">
-              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title">Product 5</h5>
-                  <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 5)">View Details</a>
-              </div>
-          </div>
-      </div>
-
-                <!-- Sample Product -->
-                <div class="col-md-3 mb-4">
-                  <div class="card" data-product-id="6">
-                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                      <div class="card-body">
-                          <h5 class="card-title">Product 6</h5>
-                          <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 6)">View Details</a>
-                      </div>
-                  </div>
-              </div>
-
-                        <!-- Sample Product -->
-        <div class="col-md-3 mb-4">
-          <div class="card" data-product-id="7">
-              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title">Product 7</h5>
-                  <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 7)">View Details</a>
-              </div>
-          </div>
-      </div>
-
-                <!-- Sample Product -->
-                <div class="col-md-3 mb-4">
-                  <div class="card" data-product-id="8">
-                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                      <div class="card-body">
-                          <h5 class="card-title">Product 8</h5>
-                          <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 8)">View Details</a>
-                      </div>
-                  </div>
-              </div>
-
-                        <!-- Sample Product -->
-        <div class="col-md-3 mb-4">
-          <div class="card" data-product-id="9">
-              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title">Product 9</h5>
-                  <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 9)">View Details</a>
-              </div>
-          </div>
-      </div>
-
-                <!-- Sample Product -->
-                <div class="col-md-3 mb-4">
-                  <div class="card" data-product-id="10">
-                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                      <div class="card-body">
-                          <h5 class="card-title">Product 10</h5>
-                          <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 10)">View Details</a>
-                      </div>
-                  </div>
-              </div>
-
-                        <!-- Sample Product -->
-        <div class="col-md-3 mb-4">
-          <div class="card" data-product-id="11">
-              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title">Product 11</h5>
-                  <p class="card-text">$100</p>
-                  <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 11)">View Details</a>
-              </div>
-          </div>
-      </div>
-
-                <!-- Sample Product -->
-                <div class="col-md-3 mb-4">
-                  <div class="card" data-product-id="12">
-                      <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                      <div class="card-body">
-                          <h5 class="card-title">Product 12</h5>
-                          <p class="card-text">$100</p>
-                          <a href="#" class="btn btn-primary" onclick="showProductDetails(event, 12)">View Details</a>
-                      </div>
-                  </div>
-        <!-- You can replicate the above div for more products -->
     </div>
 
+<div class="mapslocations"> 
+  <a href="#Locations" class="maps">
+    <span class="icon location"></span>
+    Click here please
+</a>
+</div>
+
+<div class="modal-maps" id="MapModals">
+  <div class="modalmaps-y">
+    <h2>Modal Title</h2>
+    <p>This is an empty modal.</p>
+    <button id="closeModal">Close</button>
+  </div>
+</div>
+
+
+
+
+
+  <div class="menu">
+    <a href="#notifications" class="menu-item">
+        <span class="icon notification"></span>
+        Notifications
+    </a>
+    <a href="#inbox" class="menu-item">
+        <span class="icon inbox"></span>
+        Inbox
+    </a>
+    <a href="#buying" class="menu-item">
+        <span class="icon buying"></span>
+        Buying
+    </a>
+    <a href="#selling" class="menu-item">
+        <span class="icon selling"></span>
+        Selling
+    </a> 
+    <a href="#listings" class="listahan">
+      <span class="icon lists"></span>
+      Create new Listings
+  </a>
+</div>
+
+<div class="container-Products"> 
+
+  <div class="row">
+  <!-- Sample Product -->
+  <div class="col-md-3 mb-4">
+      <div class="card" onclick="showProductDetails(event, 1)" data-product-id="1">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">Product 1</h5>
+              <p class="card-text">$100</p>
+          </div>
+      </div>
+  </div>
+
+  <!-- Sample Product -->
+  <div class="col-md-3 mb-4">
+      <div class="card" onclick="showProductDetails(event, 2)" data-product-id="2">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">Product 2</h5>
+              <p class="card-text">$100</p>
+          </div>
+      </div>
+  </div>
+
+  <!-- Sample Product -->
+  <div class="col-md-3 mb-4">
+      <div class="card" onclick="showProductDetails(event, 3)" data-product-id="3">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">Product 3</h5>
+              <p class="card-text">$100</p>
+          </div>
+      </div>
+  </div>
+
+  <!-- Empty column for space -->
+  <div class="col-md-3"></div>
+
+  <!-- Sample Product -->
+  <div class="col-md-3 mb-4">
+      <div class="card" onclick="showProductDetails(event, 4)" data-product-id="4">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">Product 4</h5>
+              <p class="card-text">$100</p>
+          </div>
+      </div>
+  </div>
+
+  <!-- Sample Product -->
+  <div class="col-md-3 mb-4">
+      <div class="card" onclick="showProductDetails(event, 5)" data-product-id="5">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">Product 5</h5>
+              <p class="card-text">$100</p>
+          </div>
+      </div>
+  </div>
+
+  <!-- Sample Product -->
+  <div class="col-md-3 mb-4">
+      <div class="card" onclick="showProductDetails(event, 6)" data-product-id="6">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">Product 6</h5>
+              <p class="card-text">$100</p>
+          </div>
+      </div>
+  </div>
+
+  </div>
+  <div class="modal fade custom-modal" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true" data-backdrop="false">          <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="productModalLabel">Product Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <img id="productModalImage" src="https://via.placeholder.com/150" alt="Product Image" class="img-fluid mb-3">
+            <p id="productModalPrice" class="card-text">$100</p>
+            <p id="productModalDescription">Description of the product goes here.</p>
+            <div class="form-group">
+                <label for="messageBox">Message to Seller:</label>
+                <textarea class="form-control" id="messageBox" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Send Message</button>
+        </div>
+    </div>
+</div>
+</div>
+</div>
 
     
-		
       <ul class="pager">
         <li><a href="#">&laquo; Previous</a></li>
         <li class="active"><a href="#">1</a></li>
@@ -898,7 +1056,7 @@ button[type="submitz"]:focus {
         </div>
         <!-- Add more categories similarly -->
       </div>
-      <button type="submitz" style="width: 150px; left: 100%;">Apply Filter</button>	
+      <button type="submitz" style="width: 150px; left: 100%;">Apply Filter</button>  
   </div>
 </div>
           
@@ -961,6 +1119,28 @@ function showProductDetails(event, productId) {
   });
   productModal.show();
 }
+
+document.addEventListener('click', function(event) {
+  var isClickInsideModal = document.querySelector('.modal-content').contains(event.target);
+  var modalIsOpen = document.querySelector('.modal.show');
+
+  if (modalIsOpen && !isClickInsideModal) {
+      var modalElement = document.querySelector('.modal');
+      var bootstrapModal = bootstrap.Modal.getInstance(modalElement);
+      bootstrapModal.hide();
+  }
+});
+
+document.querySelector('.maps').addEventListener('click', function(event) {
+  event.preventDefault();
+  document.getElementById('MapModals').style.display = 'block';
+});
+
+document.getElementById('closeModal').addEventListener('click', function() {
+  document.getElementById('MapModals').style.display = 'none';
+});
+
+
 
 
 </script>
