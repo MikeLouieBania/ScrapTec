@@ -151,3 +151,37 @@ model AdInteraction {
   advertisementId String      @map("advertisement_id") @db.ObjectId
   clickedAt      DateTime     @default(now()) // The time when the ad was clicked/interacted with
 }
+
+model Listing {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  photos       Photo[]      // One listing can have multiple photos
+  title        String
+  price        Float
+  category     Category     @relation(fields: [categoryId], references: [id])
+  categoryId   String       @map("category_id") @db.ObjectId
+  condition    Condition    @relation(fields: [conditionId], references: [id])
+  conditionId  String       @map("condition_id") @db.ObjectId
+  description  String
+  location     String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Photo {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  imageUrl    String
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  listingId   String   @map("listing_id") @db.ObjectId
+}
+
+model Category {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String    @unique
+  listings  Listing[]
+}
+
+model Condition {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String    @unique
+  listings  Listing[]
+}

@@ -23,14 +23,14 @@ module.exports = {
       const { firstName, lastName, email, password, city, gender, contactNumber } = req.body;
   
       // Check if email is already used by an organization
-      const existingOrganization = await prisma.organization.findUnique({
+      const existingOrganization = await prisma.user.findUnique({
         where: {
           email: email,
         },
       });
       
       if (existingOrganization) {
-        return res.status(400).json({ message: 'Email is already used by an organization.' });
+        return res.render('signup', { message: 'Email is already used.' });
       }
       const otp = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false }); // Generate OTP
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -67,10 +67,10 @@ module.exports = {
   
       await transporter.sendMail(mailOptions);
   
-      res.render('verify-otp', { message: 'An OTP has been sent to your email. Enter it below.' });
+      return res.render('verify-otp', { message: 'An OTP has been sent to your email. Enter it below.' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'An error occurred' });
+      return res.render('verify-otp',{ message: 'An error occurred' });
     }
   },
   async verifyOTP(req, res) {
@@ -134,7 +134,7 @@ module.exports = {
       res.render('login', { message: 'User registered successfully. You can now log in.' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'An error occurred' });
+      return res.render('login',{ message: 'An error occurred' });
     }
   },
   
@@ -154,14 +154,14 @@ module.exports = {
       } = req.body; 
       
       // Check if email is already used by a user
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await prisma.organization.findUnique({
         where: {
           email: email,
         },
       });
 
       if (existingUser) {
-        return res.status(400).json({ message: 'Email is already used by a user.' });
+        return res.render('signup',{ message: 'Email is already used by a user.' });
       }
       
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -233,7 +233,7 @@ module.exports = {
       res.render('login', { message: 'Organization registered successfully.' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'An error occurred' });
+      res.render('login',{ message: 'An error occurred' });
     }
   },
   async login(req, res) {
@@ -272,7 +272,7 @@ module.exports = {
             const passwordMatch = await bcrypt.compare(password, user.password);
 
             if (!passwordMatch) {
-                return res.render('login', { message: 'Invalid email or password.' });
+                return res.render('login', { message: 'Password Incorrect.' });
             }
 
             // Set user session after successful login
@@ -288,7 +288,7 @@ module.exports = {
                 const passwordMatch = await bcrypt.compare(password, organization.password);
 
                 if (!passwordMatch) {
-                    return res.render('login', { message: 'Invalid email or password.' });
+                    return res.render('login', { message: 'Password Incorrect.' });
                 }
 
                 // Set organization session after successful login
@@ -297,14 +297,14 @@ module.exports = {
                 // Redirect to the organization dashboard
                 return res.redirect('/organization/dashboard');
             } else if (organization.verificationStatus === 'PENDING') {
-                return res.render('login', { message: 'Your organization is pending approval.' });
+                return res.render('login', { message: 'Your organization is pending for approval.' });
             } else {
                 return res.render('login', { message: 'Your organization has been rejected.' });
             }
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'An error occurred' });
+        res.render('login',{ message: 'An error occurred' });
     }
   },
 };

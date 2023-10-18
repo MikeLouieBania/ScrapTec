@@ -192,6 +192,9 @@
           font-size: 0.9rem;
       }
   }
+  .red-border {
+    color: brown;
+    }
 
   .profile-picture-preview {
     max-width: 100px;
@@ -283,11 +286,6 @@
 <body>
     <!-- Add a Bootstrap container for better layout -->
     <div class="container">
-        <br>
-        <% if (typeof message !== 'undefined') { %>
-        <p><%= message %></p>
-        <% } %>
-
         <!-- Tabbed interface for registration -->
         <ul class="nav nav-tabs" id="registrationTabs">
             <li class="nav-item">
@@ -302,6 +300,9 @@
          <!-- Normal User Registration Form -->
 <div class="tab-pane fade show active" id="normalUserForm">
   <form action="/user-signup" method="POST" enctype="multipart/form-data">
+        <% if (typeof message !== 'undefined') { %>
+            <p class="red-border"><%= message %></p>
+        <% } %>
       <div class="row">
           <!-- First Column -->
           <div class="col-lg-6 col-md-12">
@@ -319,7 +320,14 @@
               </div>
               <div class="form-group">
                   <label for="password">Password:</label>
-                  <input type="password" class="form-control" id="password" name="password" required>
+                  <input type="password" class="form-control" id="password" name="password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+                  <small class="form-text text-muted">
+                    Password must have at least one of the following: 
+                    (1) 8 characters minimum
+                    (2) uppercase
+                    (3) number
+                    (4) special character
+                  </small>
               </div>
           </div>
           
@@ -340,7 +348,10 @@
               </div>
               <div class="form-group">
                   <label for="contactNumber">Contact Number:</label>
-                  <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+                  <input type="text" class="form-control" id="contactNumber" name="contactNumber" pattern="^\d{11}$" required>
+                  <small class="form-text text-muted">
+                    Please enter 11 digit number
+                  </small>
               </div>
               <div class="form-group">
                   <label for="profilePicture">Profile Picture:</label>
@@ -425,16 +436,26 @@
               </div>
               <div class="form-group">
                   <label for="password">Password:</label>
-                  <input type="password" class="form-control" id="password" name="password" required>
+                  <input type="password" class="form-control" id="password" name="password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+                  <small class="form-text text-muted">
+                    Password must have at least one of the following: 
+                    (1) 8 characters minimum
+                    (2) uppercase
+                    (3) number
+                    (4) special character
+                  </small>
               </div>
           </div> <!-- End of first column -->
 
           <!-- Start of second column -->
           <div class="col-md-6"> 
-              <div class="form-group">
-                  <label for="contactNumber">Contact Number:</label>
-                  <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
-              </div>
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number:</label>
+                    <input type="text" class="form-control" id="contactNumber" name="contactNumber" pattern="^\d{11}$" required>
+                    <small class="form-text text-muted">
+                      Please enter 11 digit number
+                    </small>
+                </div>
               <div class="form-group">
                   <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
                   <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
@@ -538,8 +559,6 @@ $('#registrationTabs a').on('click', function (e) {
     $('#termsModal').on('hide.bs.modal', function() {
         document.getElementById('termsCheck').checked = false;
     });
-
-
 
     </script>
 </body>

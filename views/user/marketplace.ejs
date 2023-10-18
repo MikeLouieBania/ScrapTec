@@ -719,6 +719,12 @@ button[type="submitz"]:focus {
   background: rgba(0, 0, 0, .08);
   color: rgba(0, 0, 0, .3);
 }
+
+.carousel-inner img {
+    height: 300px; /* You can adjust this value to the desired height */
+    width: 100%;
+    object-fit: cover; /* Ensures the images cover the space without distortion */
+}
     </style>
 </head>
 
@@ -807,11 +813,42 @@ button[type="submitz"]:focus {
       </div> <!-- End of row for filters -->
 
 
-  <!-- Advertisement -->
+ <!-- Advertisement -->
 <div class="mt-4">
   <h4>Advertisement</h4>
-  <img src="https://via.placeholder.com/468x60?text=Ad+Banner" alt="Advertisement" style="width: 100%; height: auto;">
+  <div id="adCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000"> <!-- data-bs-interval sets the time for each slide, here it's 3 seconds -->
+      <div class="carousel-inner">
+          <!-- The advertisements will be populated here -->
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#adCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#adCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+      </button>
+  </div>
 </div>
+
+  <script>
+    const ads = JSON.parse('<%- JSON.stringify(advertisement) %>');
+
+    ads.forEach((ad, index) => {
+        const isActive = index === 0 ? 'active' : ''; 
+
+        const adHTML = `
+            <div class="carousel-item ${isActive}">
+                <a href="${ad.link}" target="_blank">
+                    <img src="data:image/jpeg;base64,${ad.imageUrl}" class="d-block w-100" alt="${ad.title}">
+                </a>
+            </div>
+        `;
+
+        document.querySelector('.carousel-inner').insertAdjacentHTML('beforeend', adHTML);
+    });
+
+  </script>
 
 
      <!-- Start of Product Section -->
@@ -821,18 +858,20 @@ button[type="submitz"]:focus {
   <!-- Search Bar -->
 <div class="row mb-4"> <!-- Added row here -->
   <div class="col-md-3"> <!-- Using col-md-3 for the search bar -->
+    <div class="mapslocations"> 
+      <a href="#Locations" class="maps">
+        <span class="icon location"></span>
+        Click here please
+      </a>
+    </div>
       <div class="search-box">
           <input type="text" class="input-search" placeholder="Search for products...">
           <button class="btn-search" type="button">&#128269;</button> <!-- The Unicode character represents a magnifying glass icon -->
       </div>
     </div>
+    
 
-<div class="mapslocations"> 
-  <a href="#Locations" class="maps">
-    <span class="icon location"></span>
-    Click here please
-</a>
-</div>
+
 
 <div class="modal-maps" id="MapModals">
   <div class="modalmaps-y">
