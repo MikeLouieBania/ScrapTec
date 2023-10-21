@@ -114,8 +114,13 @@ module.exports = {
         where: { email }
       });
 
+<<<<<<< Updated upstream
       if (!user) {
         return res.render('login', { message: 'Invalid email or password.' });
+=======
+      if (existingUser) {
+        return res.render('signup',{ message: 'Email is already used.' });
+>>>>>>> Stashed changes
       }
 
       const passwordMatch = await bcrypt.compare(password, user.password);
@@ -127,8 +132,21 @@ module.exports = {
       // Set user session after successful login
       req.session.user = user;
 
+<<<<<<< Updated upstream
       // Redirect to the user dashboard
       res.redirect('/user/dashboard');
+=======
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Email could not be sent:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+    
+      // Redirect to a success page or take any other necessary actions
+      res.render('login', { message: 'Your Registration is now being processed. Please wait for an update on your email.' });
+>>>>>>> Stashed changes
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'An error occurred' });

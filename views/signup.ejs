@@ -13,11 +13,240 @@
       margin: 0 auto;
       padding: 20px;
     }
+<<<<<<< Updated upstream
     .profile-picture-preview {
       max-width: 200px;
       margin-top: 10px;
     }
   </style>
+=======
+      /* Ensure the nav-tabs take up the full width */
+    .nav-tabs {
+    width: 100%;
+    }
+
+/* Make each nav-item take equal width */
+    .nav-tabs .nav-item {
+    flex: 1;
+    text-align: center; /* Center the text within each tab */
+    }
+    /* Set the background color for the tabs */
+.nav-tabs .nav-link {
+  background-color: #3498db; /* Example color: a shade of blue */
+  color: #fff; /* Setting the text color to white for contrast */
+}
+
+/* Set a different background color for the active tab and on hover */
+.nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
+  background-color: #2980b9; /* A slightly darker shade of blue */
+  color: #fff; /* Keeping the text color white for contrast */
+}
+/* Add space between the tabs */
+.nav-tabs .nav-item {
+  margin-right: 10px; /* Adds space to the right of each tab */
+}
+
+/* Remove the margin from the last tab so there's no extra space on the far right */
+.nav-tabs .nav-item:last-child {
+  margin-right: 0;
+}
+    /* Enhancing the labels */
+.form-group label {
+  font-size: 1.1rem; /* Slightly larger font */
+  color: #333;      /* Darker font color for better contrast */
+  margin-bottom: 10px; /* Space between label and input */
+}
+
+/* Enhancing the labels */
+.form-group label, p {
+  font-size: 1.1rem; 
+  color: #333;      
+  margin-bottom: 10px;
+}
+
+/* Styling the input fields, select dropdown, and file input */
+/* Styling the select dropdown */
+.form-group select {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 0.375rem 0.75rem;  /* Default Bootstrap padding for select elements */
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  appearance: none;  /* To ensure consistent appearance across browsers */
+  background-color: #fff;  /* Setting a white background color */
+}
+
+.form-group input,
+.form-group .form-control-file {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+/* Adjusting file input style to maintain uniformity */
+.form-group .form-control-file {
+  padding: 0.5rem 1rem;
+}
+
+/* Hover effect for input fields and select dropdown */
+.form-group input:hover,
+.form-group select:hover {
+  border-color: #3498db;
+}
+
+/* Space between form groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Additional styling for textareas if any are added in the future */
+.form-group textarea {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group textarea:hover {
+  border-color: #3498db;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: #3498db;  /* Base color */
+  border: none;
+  border-radius: 15px;  /* Rounded corners */
+  padding: 12px 25px;  /* Padding for a larger button */
+  font-size: 1rem;  /* Font size */
+  font-weight: bold;
+  transition: background-color 0.3s;  /* Transition for a smooth color change */
+}
+
+.btn-primary:hover {
+  background-color: #2c3e50;  /* Dark blue color */
+  border-color: #2c3e50;
+}
+
+
+/* Center the button */
+.form-group.button-center {
+  text-align: center;  /* Center the button using text alignment */
+  margin-top: 10px;
+}
+    /* Responsiveness for smaller screens */
+    @media (max-width: 767px) {
+      .container {
+          width: 100%;
+          padding: 20px;
+          margin-top: 50px;
+      }
+
+      .nav-tabs .nav-item {
+          margin-right: 0; /* Reset the margin for tabs on small screens */
+      }
+
+      /* Adjust padding for the button on smaller screens */
+      .btn-primary {
+          padding: 8px 15px;
+          font-size: 0.9rem;
+      }
+    }
+    .red-border {
+    color: brown;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .profile-picture-preview {
+    max-width: 100px;
+    max-height: 100px; /* Set the maximum height */
+    display: flex;     /* Use flexbox to center the image */
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    overflow: hidden;  /* Hide overflowing parts of the image */
+    }
+
+    .profile-picture-preview img {
+        max-width: 100%; /* Scale down the image if it's too wide */
+        max-height: 100%; /* Scale down the image if it's too tall */
+        width: auto;     /* Keep the original width if it's smaller than the container */
+        height: auto;    /* Keep the original height if it's smaller than the container */
+    }
+
+
+    .modal-content {
+        background-color: #96c1cf;
+        font-family: 'Josefin Sans', sans-serif;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .modal-header {
+        display: flex;            /* Convert the header into a flex container */
+        justify-content: space-between;  /* Evenly distribute the space between the title and the close button */
+        align-items: center;      /* Vertically center-align the title and close button */
+        background-color: #2E8BC0;
+        color: white;
+    }
+
+    .modal-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        margin: 0;                /* Reset the margin */
+        flex-grow: 1;             /* Allow the title to grow and take up available space */
+    }
+
+    .close {
+        font-size: 28px;
+        color: white;
+        margin-left: auto;        /* Push the close button to the right edge */
+    }
+
+
+    /* Additional styling for better appearance */
+    .modal-body h6 {
+        font-weight: bold;
+        color: black;  /* Using the header color to highlight the subheadings */
+        margin-top: 20px;  /* Adding some space above each subheading for better readability */
+    }
+
+    .modal-body p {
+        font-size: 16px;  /* Slightly increasing font size for better readability */
+        margin-bottom: 20px;  /* Adding some space below each paragraph */
+    }
+
+    .modal-footer {
+        background-color: #2E8BC0;  /* Setting the same color as header for consistency */
+        display: flex;            /* Convert the footer into a flex container */
+        justify-content: center;  /* Center align the items horizontally */
+        align-items: center;      /* Center align the items vertically */
+    }
+
+    .modal-footer .btn {
+        padding: 9px 20px;  /* Adjusts the vertical and horizontal padding */
+        font-size: 1.2rem;   /* Adjusts the font size */
+        border-radius: 5px; /* Rounds the corners for a smoother appearance */
+    }
+
+    .btn-secondary {
+        background-color: #5668d4;  /* Using the content background color for the button */
+        border: none;  /* Removing the default border */
+        color: white;  /* Using the header color for the button text */
+    }
+
+    .btn-secondary:hover {
+        background-color: #B1D4E0;  /* Using the header color for the button on hover */
+        color: white;  /* White text on hover for contrast */
+    }
+</style>
+>>>>>>> Stashed changes
 </head>
 <body>
   <!-- Add a Bootstrap container for better layout -->
@@ -40,6 +269,7 @@
     <!-- Registration Form -->
     <form action="/signup" method="POST" enctype="multipart/form-data">
       <div class="row">
+<<<<<<< Updated upstream
         <div class="col-md-6">
           <div class="form-group">
             <label for="firstName">First Name:</label>
@@ -56,6 +286,62 @@
           <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" name="password" required>
+=======
+          <!-- First Column -->
+          <div class="col-lg-6 col-md-12">
+              <div class="form-group">
+                  <label for="firstName">First Name: *</label>
+                  <input type="text" class="form-control" id="firstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                  <label for="lastName">Last Name: *</label>
+                  <input type="text" class="form-control" id="lastName" name="lastName" required>
+              </div>
+              <div class="form-group">
+                  <label for="email">Email: *</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <div class="form-group">
+                  <label for="password">Password: *</label>
+                  <input type="password" class="form-control" id="password" name="password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+                  <small class="form-text text-muted">
+                    Password must have at least one of the following: 
+                    (1) 8 characters minimum
+                    (2) uppercase
+                    (3) number
+                    (4) special character
+                  </small>
+              </div>
+          </div>
+          
+          <!-- Second Column -->
+          <div class="col-lg-6 col-md-12">
+              <div class="form-group">
+                  <label for="city">City: *</label>
+                  <input type="search" class="form-control" id="cityInput" name="city" required>
+                  <div id="suggestions" style="margin-top: 10px;"></div>
+              </div>
+              <div class="form-group">
+                  <label for="gender">Gender: *</label>
+                  <select class="form-control" id="gender" name="gender">
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="contactNumber">Contact Number: *</label>
+                  <input type="text" class="form-control" id="contactNumber" name="contactNumber" pattern="^\d{11}$" placeholder="e.g., 09682319282" required>
+                  <small class="form-text text-muted">
+                    Please enter 11 digit number
+                  </small>
+              </div>
+              <div class="form-group">
+                  <label for="profilePicture">Profile Picture:</label>
+                  <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
+                  <div class="profile-picture-preview mt-2"></div> <!-- Preview container with some margin on top -->
+              </div>
+>>>>>>> Stashed changes
           </div>
         </div>
         <div class="col-md-6">
@@ -77,11 +363,88 @@
           </div>
         </div>
       </div>
+<<<<<<< Updated upstream
           
       <div class="form-group">
         <label for="profilePicture">Profile Picture:</label>
         <input type="file" class="form-control-file" id="profilePicture" name="profilePicture" accept="image/*">
         <div class="profile-picture-preview"></div> <!-- Preview container -->
+=======
+    </div>
+  </div>
+  </div>
+      
+  </form>
+</div>
+
+
+         <!-- Organization Registration Form -->
+<div class="tab-pane fade" id="organizationForm">
+  <form action="/organization-signup" method="POST" enctype="multipart/form-data">
+      <div class="row"> <!-- Start of Bootstrap row -->
+
+          <!-- Start of first column -->
+          <div class="col-md-6"> 
+              <div class="form-group">
+                  <label for="organizationname">Organization Name: *</label>
+                  <input type="text" class="form-control" id="organizationname" name="organizationname" required>
+              </div>
+              <div class="form-group">
+                  <label for="email">Business Email: *</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <div class="form-group">
+                  <label for="address">Business Address: *</label>
+                  <input type="text" class="form-control" id="address" name="address" required>
+              </div>
+              <div class="form-group">
+                  <label for="password">Password: *</label>
+                  <input type="password" class="form-control" id="password" name="password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+                  <small class="form-text text-muted">
+                    Password must have at least one of the following: 
+                    (1) 8 characters minimum
+                    (2) uppercase
+                    (3) number
+                    (4) special character
+                  </small>
+              </div>
+          </div> <!-- End of first column -->
+
+          <!-- Start of second column -->
+          <div class="col-md-6"> 
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number: *</label>
+                    <input type="text" class="form-control" id="contactNumber" name="contactNumber" pattern="^\d{11}$" required>
+                    <small class="form-text text-muted">
+                      Please enter 11 digit number
+                    </small>
+                </div>
+              <div class="form-group">
+                  <label for="secRegistrationNumber">SEC Registration Number (If-Applicable):</label>
+                  <input type="text" class="form-control" id="secRegistrationNumber" name="secRegistrationNumber" placeholder="e.g., SEC123456">
+              </div>
+              <div class="form-group">
+                  <label for="organizationType">Organization Type:</label>
+                  <select class="form-control" id="organizationType" name="type">
+                      <option value="COMPANY">Company</option>
+                      <option value="NGO">NGO</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="documentUpload">Business Registration Documents and TIN: *</label>
+                  <input type="file" class="form-control-file" id="documentUpload" name="documentUpload" accept=".pdf, .doc, .docx">
+                  <small class="form-text text-muted">
+                      Upload SEC Certificate of Registration (for corporations) or DTI Certificate of Business Name Registration (for sole proprietorships and partnerships), along with your Tax Identification Number (TIN) registration document to verify tax compliance.
+                  </small>
+              </div>
+          </div> <!-- End of second column -->
+
+      </div> <!-- End of Bootstrap row -->
+
+      <!-- Button -->
+      <div class="form-group button-center">
+          <button type="submit" class="btn btn-primary">Register as an Organization</button>
+>>>>>>> Stashed changes
       </div>
 
       <button type="submit" class="btn btn-primary">Register</button>
