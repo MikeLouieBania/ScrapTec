@@ -19,6 +19,8 @@ model User {
   contactNumber String
   profilePicture Bytes?    // Updated to Bytes data type
   createdAt    DateTime  @default(now()) 
+  listings      Listing[]    // Listings posted by the user
+  purchases     Sale[]       // Sales where the user is a buyer
 }
 
 model Organization {
@@ -165,11 +167,25 @@ model Listing {
   location     String
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+  user         User         @relation(fields: [userId], references: [id])
+  userId       String       @map("user_id") @db.ObjectId
+  status       String     @default("AVAILABLE")
+  sales        Sale[]       // Sales related to this listing
+}
+
+model Sale {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  buyer         User         @relation(fields: [buyerId], references: [id])
+  buyerId       String       @map("buyer_id") @db.ObjectId
+  listing       Listing      @relation(fields: [listingId], references: [id])
+  listingId     String       @map("listing_id") @db.ObjectId
+  salePrice     Float
+  saleDate      DateTime     @default(now())
 }
 
 model Photo {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  imageUrl    String
+  imageUrl    Bytes
   listing     Listing  @relation(fields: [listingId], references: [id])
   listingId   String   @map("listing_id") @db.ObjectId
 }
