@@ -161,7 +161,11 @@ module.exports = {
       });
 
       if (existingUser) {
+<<<<<<< Updated upstream
         return res.status(400).json({ message: 'Email is already used by a user.' });
+=======
+        return res.render('signup',{ message: 'Email is already used.' });
+>>>>>>> Stashed changes
       }
       
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -230,7 +234,7 @@ module.exports = {
       });
     
       // Redirect to a success page or take any other necessary actions
-      res.render('login', { message: 'Organization registered successfully.' });
+      res.render('login', { message: 'Your Registration is now being processed. Please wait for an update on your email.' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'An error occurred' });

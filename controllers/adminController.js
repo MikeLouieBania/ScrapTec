@@ -1,6 +1,9 @@
+require('dotenv').config();
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient(); 
-const nodemailer = require("nodemailer");
+const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
 
 function isPDF(filename) {
   return filename.toLowerCase().endsWith('.pdf');
@@ -10,9 +13,49 @@ function isDOCX(filename) {
 } 
 
 module.exports = {
-  async getDashboard(req, res) {
-    res.render('admin/dashboard');
+  async getAdminLogin(req, res) {
+    res.render('admin/login');
   }, 
+  async postAdminLogin(req, res) {
+    try {
+      const { email, password } = req.body;
+
+      // Run both queries concurrently
+      const [admin] = await Promise.all([
+          prisma.admin.findUnique({
+              where: { email },
+              select: {
+                  id: true,
+                  email: true,
+                  password: true,
+                  //...other fields you need
+              }
+          })
+        ]);
+
+      if (!admin) {
+          return res.render('admin/login', { message: 'Invalid email or password.' });
+      }
+
+      if (admin) {
+          // User login
+          const passwordMatch = await bcrypt.compare(password, admin.password);
+
+          if (!passwordMatch) {
+              return res.render('admin/login', { message: 'Password Incorrect.' });
+          }
+
+          // Set user session after successful login
+          req.session.adminId = admin;
+
+          // Redirect to the user dashboard
+          return res.redirect('/admin/dashboard');
+      }
+  } catch (error) {
+      console.error(error);
+      res.render('admin/login',{ message: 'An error occurred' });
+  }
+  },
   async getOrganizationManagement(req, res) {
     try {
       const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
@@ -499,5 +542,18 @@ module.exports = {
       console.error("Error while updating drop point:", error);
       res.status(500).send("Internal Server Error");
     }
+  },
+
+  async getAccount(req, res) { 
+    const admin = await prisma.admin.findUnique({
+      where: {id: req.session.adminId.id},
+    });
+    res.render('admin/dashboard', { admin }); 
+  },  
+
+  adminLogout(req, res) {
+    // Clear the session to log out the user
+    req.session.adminId = null;
+    res.redirect('/admin/login');
   },
 };
