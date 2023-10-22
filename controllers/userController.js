@@ -5,15 +5,15 @@ const sharp = require('sharp');
 
 function getMimeType(extension) {
   switch ((extension || "").toLowerCase()) {
-      case 'jpg':
-      case 'jpeg':
-          return 'data:image/jpeg;base64,';
-      case 'png':
-          return 'data:image/png;base64,';
-      case 'gif':
-          return 'data:image/gif;base64,';
-      default:
-          return 'data:image/png;base64,'; // default to PNG or any other type you prefer
+    case 'jpg':
+    case 'jpeg':
+      return 'data:image/jpeg;base64,';
+    case 'png':
+      return 'data:image/png;base64,';
+    case 'gif':
+      return 'data:image/gif;base64,';
+    default:
+      return 'data:image/png;base64,'; // default to PNG or any other type you prefer
   }
 }
 
@@ -24,6 +24,7 @@ module.exports = {
     try {
       // Get user's city from the session
       const userCityId = req.session.user.cityId;
+      const currentUserId = req.session.user.id;
 
       // Fetch N active advertisements for the user's city
       const advertisements = await prisma.advertisement.findMany({
@@ -72,7 +73,33 @@ module.exports = {
         weightedAds = weightedAds.filter(ad => ad.id !== weightedAds[randomIndex].id);
       }
 
-      res.render('user/marketplace', { user: req.session.user, advertisement: selectedAds });
+
+      // Fetch all listings except for the ones made by the currently logged-in user
+      const listings = await prisma.listing.findMany({
+        where: {
+          NOT: {
+            userId: currentUserId,
+          },
+        },
+        include: {
+          photos: true, // Include photos of the listings
+        },
+      });
+
+      // Convert each listing's photos' imageUrl to Base64. 
+      listings.forEach(listing => {
+        if (listing.photos && listing.photos.length > 0) {
+          listing.photos.forEach(photo => {
+            if (photo.url) {
+              // Get the MIME type based on the extension (assuming photo has a property 'extension')
+              const mimeType = getMimeType(photo.extension);
+              photo.url = mimeType + photo.url.toString('base64');
+            }
+          });
+        }
+      });
+
+      res.render('user/marketplace', { user: req.session.user, advertisement: selectedAds, listings: listings });
 
     } catch (error) {
       console.error("Error fetching marketplace:", error);
@@ -138,7 +165,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
- 
+
   async getSellingListings(req, res) {
     try {
       const userId = req.session.user.id;
@@ -152,27 +179,25 @@ module.exports = {
           condition: true,
         },
       });
-  
+
       sellingListings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
           listing.photos.forEach(photo => {
             if (photo.imageUrl) {
               // Assuming you store the image extension in the photo object
-              const mimeType = getMimeType(photo.extension); 
+              const mimeType = getMimeType(photo.extension);
               photo.imageUrl = mimeType + photo.imageUrl.toString('base64');
             }
           });
         }
       });
-      
+
       res.render('user/sellListing', { sellingListings, getMimeType });
     } catch (error) {
       console.error('Error fetching selling listings:', error);
       res.status(500).send('Internal Server Error');
     }
   },
-  
-  
 
 
   async getAccount(req, res) {

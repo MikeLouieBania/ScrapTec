@@ -1005,83 +1005,37 @@
               <span class="icon lists"></span>
               Create new Listings
             </a>
-          </div> 
+          </div>
 
           <div class="container-Products">
-
             <div class="row">
-              <!-- Sample Product -->
+              <% listings.forEach(listing => { %>
               <div class="col-md-3 mb-4">
-                <div class="card" onclick="showProductDetails(event, 1)" data-product-id="1">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">Product 1</h5>
-                    <p class="card-text">$100</p>
+                  <div class="card" onclick="showProductDetails(event, <%= listing.id %>)" data-product-id="<%= listing.id %>">
+          
+                      <!-- Image Slider for listing images -->
+                      <div id="carousel<%= listing.id %>" class="carousel slide image-slider" data-ride="carousel">
+                          <div class="carousel-inner">
+                              <% listing.photos.forEach(function(photo, index) { %>
+                                  <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                      <img class="d-block w-100 slider-image" src="<%= photo.url %>" alt="<%= listing.title %>">
+                                  </div>
+                              <% }) %>
+                          </div>
+                      </div>
+          
+                      <div class="card-body">
+                          <h5 class="card-title"><%= listing.title %></h5>
+                          <p class="card-text">$<%= listing.price %></p>
+                      </div>
                   </div>
-                </div>
               </div>
+              <% }); %>
+          </div>
+          
+          
 
-              <!-- Sample Product -->
-              <div class="col-md-3 mb-4">
-                <div class="card" onclick="showProductDetails(event, 2)" data-product-id="2">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">Product 2</h5>
-                    <p class="card-text">$100</p>
-                  </div>
-                </div>
-              </div>
 
-              <!-- Sample Product -->
-              <div class="col-md-3 mb-4">
-                <div class="card" onclick="showProductDetails(event, 3)" data-product-id="3">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">Product 3</h5>
-                    <p class="card-text">$100</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Empty column for space -->
-              <div class="col-md-3"></div>
-
-              <!-- Sample Product -->
-              <div class="col-md-3 mb-4">
-                <div class="card" onclick="showProductDetails(event, 4)" data-product-id="4">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">Product 4</h5>
-                    <p class="card-text">$100</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Sample Product -->
-              <div class="col-md-3 mb-4">
-                <div class="card" onclick="showProductDetails(event, 5)" data-product-id="5">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">Product 5</h5>
-                    <p class="card-text">$100</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Sample Product -->
-              <div class="col-md-3 mb-4">
-                <div class="card" onclick="showProductDetails(event, 6)" data-product-id="6">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title">Product 6</h5>
-                    <p class="card-text">$100</p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            
             <div class="modal fade custom-modal" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
               aria-hidden="true" data-backdrop="false">
               <div class="modal-dialog">
@@ -1120,96 +1074,96 @@
             <!-- Add more page numbers as needed -->
           </ul>
 
-        <!-- Start Footer Section -->
-        <footer class="footer-section">
+          <!-- Start Footer Section -->
+          <footer class="footer-section">
 
-          <!-- Use .container only for inner content, not for the entire footer -->
-          <div class="container relative">
+            <!-- Use .container only for inner content, not for the entire footer -->
+            <div class="container relative">
 
 
-            <div class="row g-5 mb-5">
-              <div class="col-lg-4">
-                <header class="mb-4 footer-logo-wrap">
-                  <a href="#" class="footer-logo">E-Waste Zero<span>.</span></a>
-                </header>
-                <p class="mb-4">Donec facilisis quam ut purus rutrum lobortis... Pellentesque habitant</p>
+              <div class="row g-5 mb-5">
+                <div class="col-lg-4">
+                  <header class="mb-4 footer-logo-wrap">
+                    <a href="#" class="footer-logo">E-Waste Zero<span>.</span></a>
+                  </header>
+                  <p class="mb-4">Donec facilisis quam ut purus rutrum lobortis... Pellentesque habitant</p>
+                </div>
+              </div>
+
+              <div class="border-top copyright">
+                <div class="row pt-4">
+                  <div class="col-lg-6">
+                    <p class="mb-2 text-center text-lg-start">Copyright &copy; <span id="currentYear"></span>...</p>
+                  </div>
+
+                  <div class="col-lg-6 text-center text-lg-end">
+                    <nav>
+                      <ul class="list-unstyled d-inline-flex ms-auto">
+                        <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="border-top copyright">
-              <div class="row pt-4">
-                <div class="col-lg-6">
-                  <p class="mb-2 text-center text-lg-start">Copyright &copy; <span id="currentYear"></span>...</p>
-                </div>
-
-                <div class="col-lg-6 text-center text-lg-end">
-                  <nav>
-                    <ul class="list-unstyled d-inline-flex ms-auto">
-                      <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
-                      <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </footer>
-        <!-- End Footer Section -->
-      </div>
-
-
-
-      <!-- Modal -->
-      <div id="myModal" class="modal">
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <!-- Your categories and conditions code here -->
-          <!-- Condition -->
-          <!-- Category Selector -->
-          <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Categories</h4>
-          <div class="categories-list">
-            <div class="categories-item">
-              <input type="checkbox" id="action">
-              <label for="action">Action</label>
-            </div>
-            <div class="categories-item">
-              <input type="checkbox" id="action-adventure">
-              <label for="action-adventure">Action & Adventure</label>
-            </div>
-            <div class="categories-item">
-              <input type="checkbox" id="adventure">
-              <label for="adventure">Adventure</label>
-            </div>
-            <!-- Add more categories similarly -->
-          </div>
-
-          <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Condition</h4>
-          <div class="categories-list">
-            <div class="categories-item">
-              <input type="checkbox" id="action">
-              <label for="action">Action</label>
-            </div>
-            <div class="categories-item">
-              <input type="checkbox" id="action-adventure">
-              <label for="action-adventure">Action & Adventure</label>
-            </div>
-            <div class="categories-item">
-              <input type="checkbox" id="adventure">
-              <label for="adventure">Adventure</label>
-            </div>
-            <!-- Add more categories similarly -->
-          </div>
-          <button type="submitz" style="width: 150px; left: 100%;">Apply Filter</button>
+          </footer>
+          <!-- End Footer Section -->
         </div>
-      </div>
 
 
 
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Modal -->
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <!-- Your categories and conditions code here -->
+            <!-- Condition -->
+            <!-- Category Selector -->
+            <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Categories</h4>
+            <div class="categories-list">
+              <div class="categories-item">
+                <input type="checkbox" id="action">
+                <label for="action">Action</label>
+              </div>
+              <div class="categories-item">
+                <input type="checkbox" id="action-adventure">
+                <label for="action-adventure">Action & Adventure</label>
+              </div>
+              <div class="categories-item">
+                <input type="checkbox" id="adventure">
+                <label for="adventure">Adventure</label>
+              </div>
+              <!-- Add more categories similarly -->
+            </div>
+
+            <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Condition</h4>
+            <div class="categories-list">
+              <div class="categories-item">
+                <input type="checkbox" id="action">
+                <label for="action">Action</label>
+              </div>
+              <div class="categories-item">
+                <input type="checkbox" id="action-adventure">
+                <label for="action-adventure">Action & Adventure</label>
+              </div>
+              <div class="categories-item">
+                <input type="checkbox" id="adventure">
+                <label for="adventure">Adventure</label>
+              </div>
+              <!-- Add more categories similarly -->
+            </div>
+            <button type="submitz" style="width: 150px; left: 100%;">Apply Filter</button>
+          </div>
+        </div>
+
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
