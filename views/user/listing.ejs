@@ -4,74 +4,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= listing.title %></title>
-    <!-- Bootstrap CSS for carousel slider and other styles. You can replace it with your own styles if necessary. -->
+    <title>
+        <%= listing.title %>
+    </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
 </head>
 
 <body>
-
-<div class="container mt-5">
-    <h2 class="mb-3"><%= listing.title %></h2>
-    <p class="mb-4">Price: $<%= listing.price %></p>
-    <p>Category: <%= listing.category.name %></p>
-    <p>Condition: <%= listing.condition.name %></p>
-    <p>Location: <%= listing.location %></p>
-    <p>Status: <%= listing.status %></p>
-    <p>Seller: <%= listing.user.firstName %> <%= listing.user.lastName %></p>
-    <p>Contact Number: <%= listing.user.contactNumber %></p>
-
-    <!-- Image Slider for listing images -->
-    <div id="carousel<%= listing.id %>" class="carousel slide mb-4" data-ride="carousel">
-        <div class="carousel-inner">
-            <% listing.photos.forEach(function(photo, index) { %>
-                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                    <img class="d-block w-100" style="max-height: 400px;" src="<%= photo.imageUrl %>" alt="<%= listing.title %>">
+    <div class="container mt-5">
+        <h2 class="mb-3">
+            <%= listing.title %>
+        </h2>
+        <div class="row">
+            <div class="col-md-6">
+                <p>Price: $<%= listing.price %>
+                </p>
+                <p>Category: <%= listing.category.name %>
+                </p>
+                <p>Condition: <%= listing.condition.name %>
+                </p>
+                <p>Location: <%= listing.location %>
+                </p>
+                <div id='map' style='width: 100%; height: 300px;'></div>
+                <p>Status: <%= listing.status %>
+                </p>
+                <p>Seller: <%= listing.user.firstName %>
+                        <%= listing.user.lastName %>
+                </p>
+                <p>Contact Number: <%= listing.user.contactNumber %>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div id="carousel<%= listing.id %>" class="carousel slide mb-4" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <% listing.photos.forEach(function(photo, index) { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <img class="d-block w-100" style="max-height: 400px;" src="<%= photo.imageUrl %>"
+                                    alt="<%= listing.title %>">
+                            </div>
+                            <% }) %>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel<%= listing.id %>" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel<%= listing.id %>" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
-            <% }) %>
+                <div class="listing-description mb-4">
+                    <h5>Description</h5>
+                    <p>
+                        <%= listing.description %>
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <a class="carousel-control-prev" href="#carousel<%= listing.id %>" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carousel<%= listing.id %>" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
+        <!-- Send seller a message -->
+        <div class="contact-seller">
+            <h5>Contact Seller</h5>
+            <div class="suggested-messages mb-2">
+                <p>Send seller a message:</p>
+                <button class="btn btn-sm btn-outline-primary suggest-btn"
+                    data-message="Is this item still available?">Is this available?</button>
+                <!-- Add more buttons for other suggested messages -->
+            </div>
 
-    <!-- Listing description -->
-    <div class="listing-description mb-4">
-        <h5>Description</h5>
-        <p><%= listing.description %></p>
-    </div>
+            <form action="/send_message" method="POST">
+                <input type="hidden" name="listing_id" value="<%= listing.id %>">
+                <textarea name="message" rows="4" class="form-control mb-3"
+                    placeholder="Type your message to the seller..."></textarea>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+            <script>
+                const suggestButtons = document.querySelectorAll('.suggest-btn');
+                const messageTextarea = document.querySelector('textarea[name="message"]');
 
-    <!-- Send seller a message -->
-    <div class="contact-seller">
-        <h5>Contact Seller</h5>
-        <div class="suggested-messages mb-2">
-            <p>Suggested messages:</p>
-            <button class="btn btn-sm btn-outline-primary suggest-btn" data-message="Is this item still available?">Is this available?</button>
-            <button class="btn btn-sm btn-outline-primary suggest-btn" data-message="Can I get a discount?">Any discount?</button>
-            <!-- Add more buttons for other suggested messages -->
+                suggestButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const suggestedMessage = this.getAttribute('data-message');
+                        messageTextarea.value = suggestedMessage;
+                    });
+                });
+            </script>
         </div>
-        
-        <form action="/send_message" method="POST">
-            <input type="hidden" name="listing_id" value="<%= listing.id %>">
-            <textarea name="message" rows="4" class="form-control mb-3" placeholder="Type your message to the seller..."></textarea>
-            <button type="submit" class="btn btn-primary">Send Message</button>
-        </form>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            function computeCircleSizeFromBbox(bbox) {
+                if (!bbox || bbox.length !== 4) {
+                    return 5; // default circle size in case bbox is not available
+                }
+                const width = Math.abs(bbox[2] - bbox[0]);
+                const height = Math.abs(bbox[3] - bbox[1]);
+                const diagonalLength = Math.sqrt(width * width + height * height);
+                return diagonalLength / 2; // This is a rough estimate for the radius
+            }
+
+
+            function updateMapAndPreview(coordinates, bbox) {
+                map.flyTo({ center: coordinates, zoom: 15 });
+
+                if (map.getLayer('location-circle')) {
+                    map.removeLayer('location-circle');
+                    map.removeSource('location-circle');
+                }
+
+                const circleRadius = computeCircleSizeFromBbox(bbox);
+
+                map.addLayer({
+                    'id': 'location-circle',
+                    'type': 'circle',
+                    'source': {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'FeatureCollection',
+                            'features': [{
+                                'type': 'Feature',
+                                'geometry': {
+                                    'type': 'Point',
+                                    'coordinates': coordinates
+                                }
+                            }]
+                        }
+                    },
+                    'paint': {
+                        'circle-radius': circleRadius,
+                        'circle-color': '#007cbf',
+                        'circle-opacity': 0.5
+                    }
+                });
+            }
+
+            function getDistance(lat1, lon1, lat2, lon2) {
+                const p = 0.017453292519943295;    // Math.PI / 180
+                const c = Math.cos;
+                const a = 0.5 - c((lat2 - lat1) * p) / 2 +
+                    c(lat1 * p) * c(lat2 * p) *
+                    (1 - c((lon2 - lon1) * p)) / 2;
+                return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+            }
+
+            function geocodeLocation(location, callback) {
+                fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.features && data.features[0] && data.features[0].center) {
+                            callback(null, data.features[0].center, data.features[0].bbox);
+                        } else {
+                            callback(new Error("Failed to geocode location"));
+                        }
+                    })
+                    .catch(error => {
+                        callback(error);
+                    });
+            }
+
+            geocodeLocation('<%= listing.location %>', function (error, coordinates, bbox) {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+
+                mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: coordinates,
+                    zoom: 14
+                });
+
+                map.on('load', function () {
+                    updateMapAndPreview(coordinates, bbox);
+                });
+            });
+        </script>
+
     </div>
-
-    <!-- You can add more listing details here as needed -->
-
-</div>
-
-<!-- Bootstrap JS and jQuery for carousel functionality -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 
 </html>
