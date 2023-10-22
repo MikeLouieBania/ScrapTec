@@ -90,10 +90,10 @@ module.exports = {
       listings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
           listing.photos.forEach(photo => {
-            if (photo.url) {
+            if (photo.imageUrl) {
               // Get the MIME type based on the extension (assuming photo has a property 'extension')
               const mimeType = getMimeType(photo.extension);
-              photo.url = mimeType + photo.url.toString('base64');
+              photo.imageUrl = mimeType + photo.imageUrl.toString('base64');
             }
           });
         }
