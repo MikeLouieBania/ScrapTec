@@ -173,6 +173,7 @@ model Listing {
   userId       String       @map("user_id") @db.ObjectId
   status       String       @default("AVAILABLE")
   sales        Sale[]       // Sales related to this listing
+  messages Message[]
 }
 
 model Sale {
@@ -211,5 +212,9 @@ model Message {
   senderId     String   @map("sender_id") @db.ObjectId
   recipient    User     @relation("MessageRecipientRelation", fields: [recipientId], references: [id])
   recipientId  String   @map("recipient_id") @db.ObjectId
+  listing      Listing  @relation(fields: [listingId], references: [id])
+  listingId    String   @map("listing_id") @db.ObjectId
+  read         Boolean  @default(false)
   createdAt    DateTime @default(now())
 }
+
