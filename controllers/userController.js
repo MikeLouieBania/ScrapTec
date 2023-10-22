@@ -107,6 +107,40 @@ module.exports = {
     }
   },
 
+  async getListing(req, res) {
+    try {
+      const listingId = req.params.id;  // Get the listing ID from the URL parameter
+
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        include: { 
+          photos: true,
+          category: true,  // Include category details
+          condition: true,  // Include condition details
+          user: true  // Include user details
+         }  // Include photos of the listing
+      });
+
+      if (!listing) {
+        return res.status(404).send("Listing not found");
+      }
+
+      // Convert photo URLs to Base64 (just like you did in the marketplace controller)
+      listing.photos.forEach(photo => {
+        if (photo.imageUrl) {
+          const mimeType = getMimeType(photo.extension);
+          photo.imageUrl = mimeType + photo.imageUrl.toString('base64');
+        }
+      });
+
+      res.render('user/listing', { user: req.session.user, listing: listing });
+
+    } catch (error) {
+      console.error("Error fetching listing:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
   async getCreateListing(req, res) {
     try {
       // Fetch categories and conditions to populate the dropdowns
