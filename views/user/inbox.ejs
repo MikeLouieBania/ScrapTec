@@ -89,17 +89,20 @@
                 <!-- Selling Tab Content -->
                 <div id="sellingTab" class="tab-pane fade show active">
                     <% sellingConversations.forEach(conversation=> { %>
-                        <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].isRead) { %>unread<% } %>"
-                            onclick="markAsRead(this)">
-                            <h5>
-                                <%= conversation.listing.title %>
-                            </h5>
-                            <p>
-                                <%= conversation.messages[conversation.messages.length - 1].content %>
-                            </p>
-                        </div>
+                        <a href="/user/sellConversation/<%= conversation.listing.id %>">
+                            <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].read) { %>unread<% } %>"
+                                onclick="markAsRead(this)">
+                                <h5>
+                                    <%= conversation.listing.title %>
+                                </h5>
+                                <p>
+                                    <%= conversation.messages[conversation.messages.length - 1].content %>
+                                </p>
+                            </div>
+                        </a>
                         <% }); %>
                 </div>
+
                 <!-- Buying Tab Content -->
                 <div id="buyingTab" class="tab-pane fade">
                     <% buyingConversations.forEach(conversation=> { %>
@@ -116,7 +119,6 @@
                         </a>
                         <% }); %>
                 </div>
-
             </div>
         </div>
     </div>

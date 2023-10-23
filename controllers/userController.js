@@ -245,7 +245,7 @@ module.exports = {
     }
   },
 
-  async postSendMessage(req, res) {
+  async postSendMessageBuyer(req, res) {
     try {
       // Validation - Ensure content is provided and not empty
       if (!req.body.message || req.body.message.trim() === '') {
@@ -297,10 +297,83 @@ module.exports = {
           conversationId: conversation.id,
           read: false // initially, the message is not read
         }
-      }); 
-    
+      });
+
 
       res.redirect('/user/buyConversation/' + listingId);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  async postSendMessageSeller(req, res) {
+    try {
+      // Validation - Ensure content is provided and not empty
+      if (!req.body.message || req.body.message.trim() === '') {
+        return res.status(400).json({ error: 'Message content cannot be empty.' });
+      }
+
+      const senderId = req.session.user.id;  // This will be the seller
+      const listingId = req.body.listing_id;
+      const recipientId = req.body.buyer_id;  // Assuming you provide the buyer's ID when the seller wants to send a message.
+
+      if (!recipientId) {
+        return res.status(400).json({ error: 'Buyer ID is required to send a message.' });
+      }
+
+      // Check if the listing exists and belongs to the seller
+      const listing = await prisma.listing.findUnique({
+        where: {
+          id: listingId,
+          userId: senderId  // Ensure the listing belongs to the seller
+        }
+      });
+
+      if (!listing) {
+        return res.status(404).json({ error: 'Listing not found or you do not have permission to send a message for this listing.' });
+      }
+
+      // Attempt to find an existing conversation
+      let conversation = await prisma.conversation.findFirst({
+        where: {
+          AND: [
+            {
+              listingId: listingId
+            },
+            {
+              OR: [
+                { user1Id: senderId, user2Id: recipientId },
+                { user1Id: recipientId, user2Id: senderId }
+              ]
+            }
+          ]
+        }
+      });
+
+
+      // If the conversation doesn't exist, create it
+      if (!conversation) {
+        conversation = await prisma.conversation.create({
+          data: {
+            user1Id: senderId,
+            user2Id: recipientId,
+            listingId: listingId
+          }
+        });
+      }
+
+      // Save the message
+      const newMessage = await prisma.message.create({
+        data: {
+          content: req.body.message,
+          senderId: senderId,
+          conversationId: conversation.id,
+          read: false // initially, the message is not read
+        }
+      });
+
+      res.redirect('/user/sellConversation/' + listingId);  // Redirect to the relevant conversation page for the seller. You may need to create this endpoint.
     } catch (error) {
       console.error('Error sending message:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -405,6 +478,52 @@ module.exports = {
 
     } catch (error) {
       console.error("Error fetching buy conversation:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getSellConversation(req, res) {
+    try {
+      const userId = req.session.user.id;
+      const listingId = req.params.listingId;
+
+      // Fetch the conversation related to the selling listing
+      const conversation = await prisma.conversation.findFirst({
+        where: {
+          AND: [
+            { listingId: listingId },
+            {
+              OR: [
+                { user1Id: userId },
+                { user2Id: userId }
+              ]
+            }
+          ]
+        },
+        include: {
+          messages: {     // include the messages in the conversation
+            include: {
+              sender: true // <-- Include sender details here
+            }
+          },
+          listing: true,   // include the listing details
+          user1: true,      // include user1 details
+          user2: true       // include user2 details
+        }
+      });
+
+      if (!conversation) {
+        return res.status(404).send("Sell Conversation not found.");
+      }
+
+      res.render('user/sellConversation', {
+        user: req.session.user,
+        userId: req.session.user.id,
+        conversation
+      });
+
+    } catch (error) {
+      console.error("Error fetching sell conversation:", error);
       res.status(500).send("Internal Server Error");
     }
   },

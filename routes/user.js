@@ -10,10 +10,12 @@ router.get('/marketplace', userController.getMarketplace);
 router.get('/listing/:id', userController.getListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
-router.get('/sellListing', userController.getSellingListings);
-router.post('/send_message', userController.postSendMessage);  
+router.get('/sellListing', userController.getSellingListings); 
 router.get('/inbox', userController.getInbox);
+router.post('/send_message_buyer', userController.postSendMessageBuyer); 
 router.get('/buyConversation/:listingId', userController.getBuyConversation);
+router.post('/send_message_seller', userController.postSendMessageSeller); 
+router.get('/sellConversation/:listingId', userController.getSellConversation);
 router.get('/useraccount', userController.getAccount) 
 router.post('/logout', userController.logout); 
 
