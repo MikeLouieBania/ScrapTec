@@ -113,12 +113,12 @@ module.exports = {
 
       const listing = await prisma.listing.findUnique({
         where: { id: listingId },
-        include: { 
+        include: {
           photos: true,
           category: true,  // Include category details
           condition: true,  // Include condition details
           user: true  // Include user details
-         }  // Include photos of the listing
+        }  // Include photos of the listing
       });
 
       if (!listing) {
@@ -233,6 +233,123 @@ module.exports = {
     }
   },
 
+  async postSendMessage(req, res) {
+    try {
+      // Validation - Ensure content is provided and not empty
+      if (!req.body.message || req.body.message.trim() === '') {
+        return res.status(400).json({ error: 'Message content cannot be empty.' });
+      }
+
+      const senderId = req.session.user.id;
+      const listingId = req.body.listing_id;
+
+      // Fetch the listing to get the seller's ID
+      const listing = await prisma.listing.findUnique({
+        where: {
+          id: listingId,
+        }
+      });
+
+      if (!listing) {
+        return res.status(404).json({ error: 'Listing not found.' });
+      }
+
+      const recipientId = listing.userId;
+
+      // Attempt to find an existing conversation
+      let conversation = await prisma.conversation.findFirst({
+        where: {
+          OR: [
+            { user1Id: senderId, user2Id: recipientId, listingId: listingId },
+            { user1Id: recipientId, user2Id: senderId, listingId: listingId }
+          ]
+        }
+      });
+
+      // If the conversation doesn't exist, create it
+      if (!conversation) {
+        conversation = await prisma.conversation.create({
+          data: {
+            user1Id: senderId,
+            user2Id: recipientId,
+            listingId: listingId
+          }
+        });
+      }
+
+      // Save the message
+      const newMessage = await prisma.message.create({
+        data: {
+          content: req.body.message,
+          senderId: senderId,
+          conversationId: conversation.id,
+          read: false // initially, the message is not read
+        }
+      });
+
+      res.redirect('/user/marketplace');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+ 
+  async getInbox(req, res) {
+    try {
+      const userId = req.session.user.id;
+
+      // Fetch conversations where the user is the seller
+      const sellingConversations = await prisma.conversation.findMany({
+        where: {
+          OR: [
+            { user1Id: userId },
+            { user2Id: userId }
+          ],
+          listing: {
+            userId: userId
+          }
+        },
+        include: {
+          messages: true, // include the messages in the conversation
+          listing: true   // include the listing details
+        },
+        orderBy: {
+          createdAt: 'desc' // order by the last updated date to show recent conversations first
+        }
+      });
+
+      // Fetch conversations where the user is the buyer
+      const buyingConversations = await prisma.conversation.findMany({
+        where: {
+          OR: [
+            { user1Id: userId },
+            { user2Id: userId }
+          ],
+          NOT: {
+            listing: {
+              userId: userId
+            }
+          }
+        },
+        include: {
+          messages: true, // include the messages in the conversation
+          listing: true   // include the listing details
+        },
+        orderBy: {
+          createdAt: 'desc' // order by the last updated date to show recent conversations first
+        }
+      });
+
+      res.render('user/inbox', {
+        user: req.session.user,
+        sellingConversations,
+        buyingConversations
+      });
+    } catch (error) {
+      console.error("Error fetching inbox:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 
   async getAccount(req, res) {
     const userId = req.session.user.id;

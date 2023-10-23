@@ -74,7 +74,7 @@
                 <!-- Add more buttons for other suggested messages -->
             </div>
 
-            <form action="/send_message" method="POST">
+            <form action="/user/send_message" method="POST">
                 <input type="hidden" name="listing_id" value="<%= listing.id %>">
                 <textarea name="message" rows="4" class="form-control mb-3"
                     placeholder="Type your message to the seller..."></textarea>

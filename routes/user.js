@@ -11,6 +11,8 @@ router.get('/listing/:id', userController.getListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
 router.get('/sellListing', userController.getSellingListings);
+router.post('/send_message', userController.postSendMessage);  
+router.get('/inbox', userController.getInbox);
 router.get('/useraccount', userController.getAccount) 
 router.post('/logout', userController.logout); 
 

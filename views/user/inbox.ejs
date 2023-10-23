@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 10px 15px 10px 30px;
+            text-decoration: none;
+            font-size: 25px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .conversation {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .conversation:hover {
+            background-color: #f7f7f7;
+            cursor: pointer;
+        }
+
+        .unread {
+            font-weight: bold;
+        }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="marketplace">Home</a>
+        <a href="inbox">Inbox</a>
+        <a href="buyListing">Buying</a>
+        <a href="sellListing">Selling</a>
+    </div>
+
+    <div id="main">
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+        <!-- Inbox Page Content -->
+        <div class="container mt-5">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#sellingTab">Selling</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#buyingTab">Buying</a>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-3">
+                <!-- Selling Tab Content -->
+                <div id="sellingTab" class="tab-pane fade show active">
+                    <% sellingConversations.forEach(conversation => { %>
+                        <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].isRead) { %>unread<% } %>" onclick="markAsRead(this)">
+                            <h5><%= conversation.listing.title %></h5>
+                            <p><%= conversation.messages[conversation.messages.length - 1].content %></p>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <!-- Buying Tab Content -->
+                <div id="buyingTab" class="tab-pane fade">
+                    <% buyingConversations.forEach(conversation => { %>
+                        <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].isRead) { %>unread<% } %>" onclick="markAsRead(this)">
+                            <h5><%= conversation.listing.title %></h5>
+                            <p><%= conversation.messages[conversation.messages.length - 1].content %></p>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS for tabs and navigation toggling -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+
+        function markAsRead(element) {
+            element.classList.remove('unread');
+        }
+    </script>
+
+</body>
+
+</html>
