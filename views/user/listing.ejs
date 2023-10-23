@@ -63,130 +63,134 @@
                 </div>
             </div>
         </div>
+        <% if (existingConversation) { %>
+            <!-- View Conversation Button -->
+            <a href="/user/buyConversation/<%= listing.id %>" class="btn btn-info">View Conversation</a>
+            <% } else { %>
+                <!-- Send seller a message -->
+                <div class="contact-seller">
+                    <h5>Contact Seller</h5>
+                    <div class="suggested-messages mb-2">
+                        <p>Send seller a message:</p>
+                        <button class="btn btn-sm btn-outline-primary suggest-btn"
+                            data-message="Is this item still available?">Is this available?</button>
+                        <!-- Add more buttons for other suggested messages -->
+                    </div>
 
-        <!-- Send seller a message -->
-        <div class="contact-seller">
-            <h5>Contact Seller</h5>
-            <div class="suggested-messages mb-2">
-                <p>Send seller a message:</p>
-                <button class="btn btn-sm btn-outline-primary suggest-btn"
-                    data-message="Is this item still available?">Is this available?</button>
-                <!-- Add more buttons for other suggested messages -->
-            </div>
+                    <form action="/user/send_message" method="POST">
+                        <input type="hidden" name="listing_id" value="<%= listing.id %>">
+                        <textarea name="message" rows="4" class="form-control mb-3"
+                            placeholder="Type your message to the seller..."></textarea>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                    <script>
+                        const suggestButtons = document.querySelectorAll('.suggest-btn');
+                        const messageTextarea = document.querySelector('textarea[name="message"]');
 
-            <form action="/user/send_message" method="POST">
-                <input type="hidden" name="listing_id" value="<%= listing.id %>">
-                <textarea name="message" rows="4" class="form-control mb-3"
-                    placeholder="Type your message to the seller..."></textarea>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </form>
-            <script>
-                const suggestButtons = document.querySelectorAll('.suggest-btn');
-                const messageTextarea = document.querySelector('textarea[name="message"]');
+                        suggestButtons.forEach(button => {
+                            button.addEventListener('click', function () {
+                                const suggestedMessage = this.getAttribute('data-message');
+                                messageTextarea.value = suggestedMessage;
+                            });
+                        });
+                    </script>
+                </div>
+                <% } %>
 
-                suggestButtons.forEach(button => {
-                    button.addEventListener('click', function () {
-                        const suggestedMessage = this.getAttribute('data-message');
-                        messageTextarea.value = suggestedMessage;
-                    });
-                });
-            </script>
-        </div>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
-        <script>
-            var map;
+                    <script>
+                        var map;
 
-            function computeCircleSizeFromBbox(bbox) {
-                if (!bbox || bbox.length !== 4) {
-                    return 5; // default circle size
-                }
-                const width = Math.abs(bbox[2] - bbox[0]);
-                const height = Math.abs(bbox[3] - bbox[1]);
-                const diagonalLength = Math.sqrt(width * width + height * height);
-                return diagonalLength * 300;
-            }
+                        function computeCircleSizeFromBbox(bbox) {
+                            if (!bbox || bbox.length !== 4) {
+                                return 5; // default circle size
+                            }
+                            const width = Math.abs(bbox[2] - bbox[0]);
+                            const height = Math.abs(bbox[3] - bbox[1]);
+                            const diagonalLength = Math.sqrt(width * width + height * height);
+                            return diagonalLength * 300;
+                        }
 
-            function updateMapAndPreview(coordinates, bbox) {
-                map.flyTo({ center: coordinates, zoom: 15 });
+                        function updateMapAndPreview(coordinates, bbox) {
+                            map.flyTo({ center: coordinates, zoom: 15 });
 
-                // Check if the circle layer already exists, if it does, remove it
-                if (map.getLayer('location-circle')) {
-                    map.removeLayer('location-circle');
-                    map.removeSource('location-circle');
-                }
+                            // Check if the circle layer already exists, if it does, remove it
+                            if (map.getLayer('location-circle')) {
+                                map.removeLayer('location-circle');
+                                map.removeSource('location-circle');
+                            }
 
-                // Compute circle size from bounding box
-                const circleSize = computeCircleSizeFromBbox(bbox);
+                            // Compute circle size from bounding box
+                            const circleSize = computeCircleSizeFromBbox(bbox);
 
-                // Add the circle layer at the selected location
-                map.addLayer({
-                    'id': 'location-circle',
-                    'type': 'circle',
-                    'source': {
-                        'type': 'geojson',
-                        'data': {
-                            'type': 'FeatureCollection',
-                            'features': [{
-                                'type': 'Feature',
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': coordinates
+                            // Add the circle layer at the selected location
+                            map.addLayer({
+                                'id': 'location-circle',
+                                'type': 'circle',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'FeatureCollection',
+                                        'features': [{
+                                            'type': 'Feature',
+                                            'geometry': {
+                                                'type': 'Point',
+                                                'coordinates': coordinates
+                                            },
+                                            'properties': {
+                                                'radius': circleSize
+                                            }
+                                        }]
+                                    }
                                 },
-                                'properties': {
-                                    'radius': circleSize
+                                'paint': {
+                                    'circle-radius': ['get', 'radius'], // Use a data-driven style for the circle radius
+                                    'circle-color': '#007cbf',
+                                    'circle-opacity': 0.5
                                 }
-                            }]
+                            });
                         }
-                    },
-                    'paint': {
-                        'circle-radius': ['get', 'radius'], // Use a data-driven style for the circle radius
-                        'circle-color': '#007cbf',
-                        'circle-opacity': 0.5
-                    }
-                });
-            }
 
-            function geocodeLocation(location, callback) {
-                fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data && data.features && data.features[0]) {
-                            const coordinates = data.features[0].center;
-                            const bbox = data.features[0].bbox;
-                            callback(null, coordinates, bbox);
-                        } else {
-                            callback(new Error("Failed to geocode location"));
+                        function geocodeLocation(location, callback) {
+                            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data && data.features && data.features[0]) {
+                                        const coordinates = data.features[0].center;
+                                        const bbox = data.features[0].bbox;
+                                        callback(null, coordinates, bbox);
+                                    } else {
+                                        callback(new Error("Failed to geocode location"));
+                                    }
+                                })
+                                .catch(error => {
+                                    callback(error);
+                                });
                         }
-                    })
-                    .catch(error => {
-                        callback(error);
-                    });
-            }
 
-            geocodeLocation('<%= listing.location %>', function (error, coordinates, bbox) {
-                if (error) {
-                    console.error(error);
-                    return;
-                }
+                        geocodeLocation('<%= listing.location %>', function (error, coordinates, bbox) {
+                            if (error) {
+                                console.error(error);
+                                return;
+                            }
 
-                mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';
-                map = new mapboxgl.Map({
-                    container: 'map',
-                    style: 'mapbox://styles/mapbox/streets-v11',
-                    center: coordinates,
-                    zoom: 14
-                });
+                            mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';
+                            map = new mapboxgl.Map({
+                                container: 'map',
+                                style: 'mapbox://styles/mapbox/streets-v11',
+                                center: coordinates,
+                                zoom: 14
+                            });
 
-                map.on('load', function () {
-                    updateMapAndPreview(coordinates, bbox);
-                });
-            });
+                            map.on('load', function () {
+                                updateMapAndPreview(coordinates, bbox);
+                            });
+                        });
 
-        </script>
+                    </script>
 
     </div>
 </body>

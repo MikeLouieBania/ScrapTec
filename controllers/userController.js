@@ -110,6 +110,7 @@ module.exports = {
   async getListing(req, res) {
     try {
       const listingId = req.params.id;  // Get the listing ID from the URL parameter
+      const userId = req.session.user.id;  // Get the current user's ID from the session
 
       const listing = await prisma.listing.findUnique({
         where: { id: listingId },
@@ -133,7 +134,18 @@ module.exports = {
         }
       });
 
-      res.render('user/listing', { user: req.session.user, listing: listing });
+      const existingConversation = await prisma.conversation.findFirst({
+        where: {
+          OR: [
+            { user1Id: userId, user2Id: listing.userId, listingId: listingId },
+            { user1Id: listing.userId, user2Id: userId, listingId: listingId }
+          ]
+        }
+      });
+
+
+
+      res.render('user/listing', { user: req.session.user, listing: listing, existingConversation: existingConversation });
 
     } catch (error) {
       console.error("Error fetching listing:", error);
@@ -285,9 +297,10 @@ module.exports = {
           conversationId: conversation.id,
           read: false // initially, the message is not read
         }
-      });
+      }); 
+    
 
-      res.redirect('/user/marketplace');
+      res.redirect('/user/buyConversation/' + listingId);
     } catch (error) {
       console.error('Error sending message:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -369,7 +382,7 @@ module.exports = {
             }
           ]
         },
-        include: { 
+        include: {
           messages: {     // include the messages in the conversation
             include: {
               sender: true // <-- Include sender details here
