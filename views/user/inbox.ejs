@@ -65,10 +65,10 @@
         <a href="inbox">Inbox</a>
         <a href="buyListing">Buying</a>
         <a href="sellListing">Selling</a>
-        
+
         <form action="/user/logout" method="POST">
             <button type="submit" class="nav-link">LOGOUT</button>
-          </form>
+        </form>
     </div>
 
     <div id="main">
@@ -88,25 +88,38 @@
             <div class="tab-content mt-3">
                 <!-- Selling Tab Content -->
                 <div id="sellingTab" class="tab-pane fade show active">
-                    <% sellingConversations.forEach(conversation => { %>
-                        <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].isRead) { %>unread<% } %>" onclick="markAsRead(this)">
-                            <h5><%= conversation.listing.title %></h5>
-                            <p><%= conversation.messages[conversation.messages.length - 1].content %></p>
+                    <% sellingConversations.forEach(conversation=> { %>
+                        <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].isRead) { %>unread<% } %>"
+                            onclick="markAsRead(this)">
+                            <h5>
+                                <%= conversation.listing.title %>
+                            </h5>
+                            <p>
+                                <%= conversation.messages[conversation.messages.length - 1].content %>
+                            </p>
                         </div>
-                    <% }); %>
+                        <% }); %>
                 </div>
-
                 <!-- Buying Tab Content -->
                 <div id="buyingTab" class="tab-pane fade">
-                    <% buyingConversations.forEach(conversation => { %>
-                        <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].isRead) { %>unread<% } %>" onclick="markAsRead(this)">
-                            <h5><%= conversation.listing.title %></h5>
-                            <p><%= conversation.messages[conversation.messages.length - 1].content %></p>
-                        </div>
-                    <% }); %>
+                    <% buyingConversations.forEach(conversation=> { %>
+                        <a href="/user/buyConversation/<%= conversation.listing.id %>">
+                            <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].read) { %>unread<% } %>"
+                                onclick="markAsRead(this)">
+                                <h5>
+                                    <%= conversation.listing.title %>
+                                </h5>
+                                <p>
+                                    <%= conversation.messages[conversation.messages.length - 1].content %>
+                                </p>
+                            </div>
+                        </a>
+                        <% }); %>
                 </div>
+
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Bootstrap JS for tabs and navigation toggling -->

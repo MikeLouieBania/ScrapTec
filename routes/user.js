@@ -13,6 +13,7 @@ router.post('/createListing', upload, userController.postCreateListing);
 router.get('/sellListing', userController.getSellingListings);
 router.post('/send_message', userController.postSendMessage);  
 router.get('/inbox', userController.getInbox);
+router.get('/buyConversation/:listingId', userController.getBuyConversation);
 router.get('/useraccount', userController.getAccount) 
 router.post('/logout', userController.logout); 
 

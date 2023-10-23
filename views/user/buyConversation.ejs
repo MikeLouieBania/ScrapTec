@@ -6,6 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buying Conversation</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 10px 15px 10px 30px;
+            text-decoration: none;
+            font-size: 25px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+        }
+
+        .my-message {
+            background-color: #e6f7ff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px 0 10px 10px;
+        }
+
+        .their-message {
+            background-color: #ffebcc;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: gray;
+            float: right;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,9 +68,8 @@
         <a href="inbox">Inbox</a>
         <a href="buyListing">Buying</a>
         <a href="sellListing">Selling</a>
-        
         <form action="/user/logout" method="POST">
-            <button type="submit" class="nav-link">LOGOUT</button>
+            <button type="submit" class="btn btn-dark mt-2">LOGOUT</button>
         </form>
     </div>
 
@@ -27,21 +78,47 @@
 
         <!-- Buying Conversation Content -->
         <div class="container mt-5">
-            <h3>Conversation for: <%= listing.title %></h3>
+            <h3>Conversation about: <%= conversation.listing.title %></h3>
+
+            <% if(conversation.user1 && conversation.user2) { %>
+                <p>
+                    Participants:
+                    <%= conversation.user1.firstName %>
+                        <%= conversation.user1.lastName %>
+                            and
+                            <%= conversation.user2.firstName %>
+                                <%= conversation.user2.lastName %>
+                </p>
+            <% } else { %>
+                <p>Participants data missing.</p>
+            <% } %>
+
             <hr>
-            <div class="messages">
-                <% messages.forEach(message => { %>
-                    <div class="message">
-                        <strong><%= message.sender %>:</strong> <%= message.content %>
-                    </div>
-                <% }); %>
-            </div>
+
+            <% conversation.messages.forEach(function(message) { %>
+                <div class="message <%= message.senderId === user.id ? 'my-message' : 'their-message' %>">
+                  <strong>
+                    <% if(message.sender) { %>
+                      <%= message.sender.firstName %> <%= message.sender.lastName %>:
+                    <% } else { %>
+                      Unknown:
+                    <% } %>
+                  </strong>
+                  <%= message.content %>
+                  <span class="timestamp">
+                    <%= new Date(message.createdAt).toLocaleString() %>
+                  </span>
+                </div>
+            <% }); %>
 
             <!-- Message Input -->
-            <div class="mt-4">
-                <textarea class="form-control" placeholder="Type your message..."></textarea>
-                <button class="btn btn-primary mt-2">Send</button>
-            </div>
+            <form action="/send-message/<%= conversation.id %>" method="POST">
+                <div class="mt-4">
+                    <textarea name="messageContent" class="form-control"
+                        placeholder="Type your message..."></textarea>
+                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+                </div>
+            </form>
         </div>
     </div>
 

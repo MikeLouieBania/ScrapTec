@@ -293,7 +293,7 @@ module.exports = {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   },
- 
+
   async getInbox(req, res) {
     try {
       const userId = req.session.user.id;
@@ -347,6 +347,51 @@ module.exports = {
       });
     } catch (error) {
       console.error("Error fetching inbox:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getBuyConversation(req, res) {
+    try {
+      const userId = req.session.user.id;
+      const listingId = req.params.listingId;
+
+      // Fetch the conversation related to the listing
+      const conversation = await prisma.conversation.findFirst({
+        where: {
+          AND: [
+            { listingId: listingId },
+            {
+              OR: [
+                { user1Id: userId },
+                { user2Id: userId }
+              ]
+            }
+          ]
+        },
+        include: { 
+          messages: {     // include the messages in the conversation
+            include: {
+              sender: true // <-- Include sender details here
+            }
+          },
+          listing: true,   // include the listing details
+          user1: true,      // include user1 details
+          user2: true       // include user2 details
+        }
+      });
+
+      if (!conversation) {
+        return res.status(404).send("Conversation not found.");
+      }
+
+      res.render('user/buyConversation', {
+        user: req.session.user,
+        conversation
+      });
+
+    } catch (error) {
+      console.error("Error fetching buy conversation:", error);
       res.status(500).send("Internal Server Error");
     }
   },
