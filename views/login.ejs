@@ -38,6 +38,9 @@
             height: auto;    /* Keep the image aspect ratio */
         }
         
+        .red-border {
+            color: brown;
+        }
 
         .login-container, 
         .login-container label, 
@@ -183,6 +186,9 @@
                 <h1>Sign In</h1>
                 <!-- Login Form -->
                 <form action="/login" method="POST">
+                    <% if (typeof message !== 'undefined') { %>
+                        <p class="red-border"><%= message %></p>
+                    <% } %>
                     <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" class="form-control" id="email" name="email" required>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buying Conversation</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a, .sidenav button {
+            padding: 10px 15px 10px 30px;
+            text-decoration: none;
+            font-size: 25px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+            background-color: transparent;
+            border: none;
+        }
+
+        .sidenav a:hover, .sidenav button:hover {
+            color: #f1f1f1;
+            background-color: transparent;
+        }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+        }
+
+        .my-message {
+            background-color: #e6f7ff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 0 10px 10px 0;
+            float: right;
+            clear: both;
+            max-width: 80%;
+        }
+
+        .their-message {
+            background-color: #ffebcc;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px 0 0 10px;
+            clear: both;
+            max-width: 80%;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: gray;
+            float: right;
+        }
+
+        .message-buttons {
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="marketplace">Home</a>
+        <a href="inbox">Inbox</a>
+        <a href="buyListing">Buying</a>
+        <a href="sellListing">Selling</a>
+
+        <form action="/user/logout" method="POST">
+            <button type="submit" class="nav-link">LOGOUT</button>
+        </form>
+    </div>
+
+    <div id="main">
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+        <div class="container mt-5">
+            <h3>Conversation about: <%= conversation.listing.title %></h3>
+
+            <% if(conversation.user1 && conversation.user2) { %>
+            <p>Participants: <%= conversation.user1.firstName %> <%= conversation.user1.lastName %> and <%= conversation.user2.firstName %> <%= conversation.user2.lastName %></p>
+            <% } else { %>
+            <p>Participants data missing.</p>
+            <% } %>
+
+            <hr>
+
+            <% conversation.messages.forEach(function(message) { %>
+            <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>">
+                <strong>
+                    <% if(message.sender) { %>
+                    <%= message.sender.firstName %> <%= message.sender.lastName %>:
+                    <% } else { %>
+                    Unknown:
+                    <% } %>
+                </strong>
+                <%= message.content %>
+                <span class="timestamp">
+                    <%= new Date(message.createdAt).toLocaleString() %>
+                </span>
+            </div>
+            <% }); %>
+
+            <form action="/user/send_message_buyer" method="POST" class="mt-4">
+                <input type="hidden" name="listing_id" value="<%= conversation.listing.id %>">
+
+                <textarea name="message" class="form-control" placeholder="Type your message..."></textarea>
+                <div class="message-buttons mt-3">
+                    
+                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+            
+                    <!-- Dropdown for More Options -->
+                    <div class="btn-group mt-2">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More Options
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">See Details</a>
+            
+                            <!-- Sub-dropdown for Price Offer -->
+                            <div class="dropdown-divider"></div>
+                            <h6 class="dropdown-header">Price Offer</h6>
+                            <!-- Placeholder dropdown items for price offers. Update with actual options -->
+                            <a class="dropdown-item" href="#">Offer 1</a>
+                            <a class="dropdown-item" href="#">Offer 2</a>
+                            <a class="dropdown-item" href="#">Offer 3</a>
+                        </div>
+                    </div>
+                    <!-- End of Dropdown for More Options -->
+            
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+
+</body>
+
+</html>
