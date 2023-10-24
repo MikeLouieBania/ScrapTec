@@ -11,7 +11,6 @@ router.get('/listing/:id', userController.getListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
 router.get('/sellListing', userController.getSellingListings); 
-router.get('/buyConversation', userController.getBuyConversation); 
 router.get('/inbox', userController.getInbox);
 router.post('/send_message_buyer', userController.postSendMessageBuyer); 
 router.get('/buyConversation/:listingId', userController.getBuyConversation);
