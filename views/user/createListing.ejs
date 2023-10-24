@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a New Listing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
+    <script
+        src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet'
+        href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css'
+        type='text/css' />
+
+    <style>
+        /* Additional styles for the preview pane */
+        #preview-pane {
+            border: 1px solid #e5e5e5;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        #location-map {
+            width: 100%;
+            height: 150px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shift">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My Account</a>
+                </li>
+                <li class="nav-item">
+                    <form action="/user/logout" method="POST">
+                        <button type="submit" class="nav-link btn-logout">LOGOUT</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Create Listing Form and Preview Pane -->
+    <div class="container mt-5 pt-5">
+        <h2>Create New Listing</h2>
+        <div class="row">
+            <!-- Left side: Form -->
+            <div class="col-md-6">
+                <form action="/user/createListing" method="post" enctype="multipart/form-data">
+                    <!-- Hidden Input for User ID -->
+                    <input type="hidden" name="userId" value="<%= userId %>">
+
+                    <!-- For Photos -->
+                    <div class="mb-3">
+                        <label for="photos" class="form-label">Photos:</label>
+                        <input type="file" class="form-control" name="photos" id="photos" multiple
+                            accept=".jpg,.jpeg,.png,.gif" onchange="handleFileChange()">
+                        <small class="text-danger" id="file-error"></small>
+                    </div>
+
+                    <!-- For Title -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title:</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+
+                    <!-- For Price -->
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price:</label>
+                        <input type="number" step="0.01" class="form-control" name="price" required>
+                    </div>
+
+                    <!-- For Category -->
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category:</label>
+                        <select name="categoryId" class="form-control" required>
+                            <option value="" selected disabled>Select Category</option>
+                            <% categories.forEach(function(category) { %>
+                                <option value="<%= category.id %>">
+                                    <%= category.name %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+
+                    <!-- For Condition -->
+                    <div class="mb-3">
+                        <label for="condition" class="form-label">Condition:</label>
+                        <select name="conditionId" class="form-control" required>
+                            <option value="" selected disabled>Select Condition</option>
+                            <% conditions.forEach(function(condition) { %>
+                                <option value="<%= condition.id %>">
+                                    <%= condition.name %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+
+                    <!-- For Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea name="description" class="form-control" required></textarea>
+                    </div>
+                    <!-- For Location -->
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location:</label>
+                        <input type="search" class="form-control" name="location" id="location-input" required>
+                        <div id="suggestions" style="margin-top: 10px;"></div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Submit Listing</button>
+                        <a href="marketplace" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right side: Preview -->
+            <div class="col-md-6">
+                <div id="preview-pane">
+                    <h4 class="mb-4">Preview</h4>
+                    <div class="row">
+                        <!-- Image preview -->
+                        <div class="col-md-6">
+                            <div id="image-previews"></div> <!-- Container for multiple images -->
+                        </div>
+                        <!-- Details preview -->
+                        <div class="col-md-6">
+                            <h5 id="preview-title">Title</h5>
+                            <p id="preview-price">Price</p>
+                            <p id="preview-category">Category</p>
+                            <p id="preview-condition">Condition</p>
+                            <p id="preview-description">Description</p>
+                            <p id="preview-location">Location</p>
+                            <div id="location-map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mapbox initialization
+        mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw'; // Replace with your Mapbox access token
+        const map = new mapboxgl.Map({
+            container: 'location-map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [120.9842, 14.5995], // Default longitude and latitude set to Manila
+            zoom: 10
+        });
+
+
+        // Get input, suggestions div, and selected location
+        const input = document.getElementById('location-input');
+        const suggestionsDiv = document.getElementById('suggestions');
+        let selectedLocation = null;
+
+        // Function to fetch location suggestions
+        function fetchLocationSuggestions(query) {
+            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${mapboxgl.accessToken}&country=PH`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsDiv.innerHTML = '';
+                    data.features.forEach(feature => {
+                        let placeName = feature.place_name;
+                        let suggestionDiv = document.createElement('div');
+                        suggestionDiv.textContent = placeName;
+                        suggestionDiv.style.cursor = 'pointer';
+                        suggestionDiv.onclick = function () {
+                            input.value = placeName;
+                            suggestionsDiv.innerHTML = '';
+                            selectedLocation = feature.geometry.coordinates;
+                            updateMapAndPreview(selectedLocation, placeName);
+                        };
+                        suggestionsDiv.appendChild(suggestionDiv);
+                    });
+                });
+        }
+
+        // Event listener for input changes
+        input.addEventListener('input', function () {
+            const query = this.value.trim();
+            if (query.length >= 2) {
+                fetchLocationSuggestions(query);
+            } else {
+                suggestionsDiv.innerHTML = '';
+            }
+        });
+
+        function computeCircleSizeFromBbox(bbox) {
+            if (!bbox || bbox.length !== 4) {
+                return 5; // default circle size
+            }
+            const width = Math.abs(bbox[2] - bbox[0]);
+            const height = Math.abs(bbox[3] - bbox[1]);
+            const diagonalLength = Math.sqrt(width * width + height * height);
+
+            // Adjust this calculation as needed
+            return diagonalLength * 5;  // Increased scale factor
+        }
+
+        // Function to update the map location and preview
+        function updateMapAndPreview(coordinates, placeName) {
+            map.flyTo({ center: coordinates, zoom: 15 });  // Adjusted zoom level to 15
+            document.getElementById('preview-location').textContent = placeName; // Display the selected location in the preview
+
+            // Check if the circle layer already exists, if it does, remove it
+            if (map.getLayer('location-circle')) {
+                map.removeLayer('location-circle');
+                map.removeSource('location-circle');
+            }
+
+            // Add the circle layer at the selected location
+            map.addLayer({
+                'id': 'location-circle',
+                'type': 'circle',
+                'source': {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'FeatureCollection',
+                        'features': [{
+                            'type': 'Feature',
+                            'geometry': {
+                                'type': 'Point',
+                                'coordinates': coordinates
+                            }
+                        }]
+                    }
+                },
+                'paint': {
+                    'circle-radius': [
+                        "interpolate",
+                        ["linear"],
+                        ["zoom"],
+                        7, 10,    // Adjusted values for smaller circle
+                        15, 150  // Adjusted values for smaller circle
+                    ],
+                    'circle-color': '#007cbf',
+                    'circle-opacity': 0.5 // 50% opacity to make the circle semi-transparent
+                }
+            });
+        }
+
+        // Photos preview
+        function handleFileChange() {
+            const photosInput = document.getElementById('photos');
+            const previewsContainer = document.getElementById('image-previews');
+            previewsContainer.innerHTML = ''; // Clear previews first
+
+            if (photosInput.files.length > 5) {
+                photosInput.setCustomValidity('You can only upload a maximum of 5 photos.');
+                document.getElementById('file-error').textContent = 'You can only upload a maximum of 5 photos.';
+                photosInput.value = ''; // Reset the input if more than 5 files
+            } else {
+                photosInput.setCustomValidity('');
+                document.getElementById('file-error').textContent = '';
+            }
+
+            displayImagePreview(photosInput);
+        }
+
+        function displayImagePreview(input) {
+            const previewsContainer = document.getElementById('image-previews');
+
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.setAttribute('src', e.target.result);
+                    img.setAttribute('alt', 'Preview Image');
+                    img.classList.add('img-fluid');
+                    img.style.maxHeight = '100px';
+                    img.style.marginRight = '5px';
+                    previewsContainer.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Event Listeners for previews
+        document.querySelector('input[name="title"]').addEventListener('input', function () {
+            document.getElementById('preview-title').textContent = this.value;
+        });
+
+        document.querySelector('input[name="price"]').addEventListener('input', function () {
+            document.getElementById('preview-price').textContent = `$${this.value}`;
+        });
+
+        document.querySelector('select[name="category"]').addEventListener('change', function () {
+            document.getElementById('preview-category').textContent = this.options[this.selectedIndex].text;
+        });
+
+        document.querySelector('select[name="condition"]').addEventListener('change', function () {
+            document.getElementById('preview-condition').textContent = this.options[this.selectedIndex].text;
+        });
+
+        document.querySelector('textarea[name="description"]').addEventListener('input', function () {
+            document.getElementById('preview-description').textContent = this.value;
+        });
+    </script>
+
+</body>
+
+</html>
