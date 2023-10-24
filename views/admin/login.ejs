@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Manager Login</title>
+    <title>Admin Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <!-- Include Font Awesome icons -->
@@ -11,9 +11,14 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #B9D9EB;
+            background-color: #c0c0d5;
             height: 50vh;
             margin: 0;
+        }
+
+        .red-border {
+            color: brown;
+            text-align: center;
         }
         
         .login-container {
@@ -93,20 +98,18 @@
 <body>
     <div class="login-container">
         <span class="icon-lock">lock</span> <!-- Material Symbols Outlined lock icon -->
-        <h2 class="text-center">Manager Login</h2>
-        <% if (typeof error === 'string' && error) { %>
-            <div class="alert alert-danger" role="alert">
-                <%= error %>
-            </div>
+        <h2 class="text-center">Admin Login</h2>
+        <% if (typeof message !== 'undefined') { %>
+            <p class="red-border"><%= message %></p>
         <% } %>
-        <form action="/manager/login" method="post">
+        <form action="/admin/login" method="post">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                     </div>
-                    <input type="text" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email" required>
                 </div>
             </div>
             <div class="form-group">
