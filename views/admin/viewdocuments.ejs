@@ -4,19 +4,31 @@
     <title>View Documents</title>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .full-height {
+            height: 100%;
+        }
+        ul.full-height, ul.full-height li {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Organization Documents</h1>
-        <h2>Organization Name: <%= organization.organizationname %></h2>
-
-        <h3>Documents:</h3>
-        <ul>
+    <div class="full-height">
+        <ul class="full-height">
           <% documents.forEach((document) => { %>
-            <li>
+            <li class="full-height">
               <% if (isPDF(document.filename)) { %>
                 <!-- Display PDF using an embed element -->
-                <embed src="<%= document.url %>" type="application/pdf" width="100%" height="600"></embed>
+                <embed src="<%= document.url %>" type="application/pdf" width="100%" height="100%"></embed>
               <% } else if (isDOCX(document.filename)) { %>
                 <!-- Display DOCX documents as links for download -->
                 <a href="<%= document.url %>" download="<%= document.filename %>"><%= document.filename %></a>

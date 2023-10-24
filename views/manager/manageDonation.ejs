@@ -6,11 +6,183 @@
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+       /* Additional custom styles for the page */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      
+      .navbar .navbar-brand,
+      .navbar .nav-link {
+          color: #fff;
+          font-family: 'Roboto Slab', serif,;
+          font-weight: bold;
+          font-size: 16px;
+          margin-top: 15px;
+      }
+      
+      body {
+          padding-top: 0px;
+          margin-bottom: 60px;
+      }
+
+      .jumbotron {
+          background-color: #3498db;
+          color: #fff;
+          margin-bottom: 0;
+      }
+
+      .navbar {
+          background-color: #219ebc;
+          padding: 10px 0;
+      }
+
+      nav ul {
+          list-style: none;
+          text-align: center;
+      }
+        
+      nav ul li {
+          display: inline-block;
+      }
+        
+      nav ul li a {
+          display: block;
+          padding: 15px;
+          text-decoration: none;
+          color: #aaa;
+          font-weight: 800;
+          text-transform: uppercase;
+          margin: 0 10px;
+          position: relative;
+          transition: all .5s; 
+      }
+        
+      nav ul li a:hover {
+          color: #555;
+      }
+        
+      nav ul li a::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-color: #8ecae6;
+          transform: scaleX(0);
+          transition: transform 0.5s;
+      }
+        
+      nav ul li a:hover::after {
+          transform: scaleX(1);
+      }
+
+      /* Custom Logout Button Style */
+      .btn-logout {
+        background-color: #002244;  /* Reddish color for the button */
+        border: none;
+        padding: 10px 20px;  /* Larger padding for a bigger button */
+        border-radius: 5px;  /* Rounded corners */
+        transition: background-color 0.3s;  /* Smooth transition for hover effect */
+        margin-right: 20px;
+        font-weight: bold;
+        color: white;
+        font-family: 'Roboto Slab', serif,;
+      
+      }
+
+      .btn-logout:hover {
+        background-color: #6082B6;  /* Darker shade when hovered */
+        color: #fff;  /* White text color */
+        text-decoration: none;
+      }
+
+       /* Basic table styles */
+    .table-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 50px; /* Adds some space between the search bar and the table */
+    }
+
+    .table-custom th, .table-custom td {
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+        text-align: left;
+    }
+
+    /* Zebra striping for rows */
+    .table-custom tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Hover effect for rows (excluding header) */
+    .table-custom tbody tr:hover {
+        background-color: #ddd;
+    }
+
+    /* Table header styling */
+    .table-custom thead tr {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    /* Action button styling (using Font Awesome icons as an example) */
+    .action-btn {
+        border: none;
+        background: none;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    .action-btn:hover {
+        color: #007BFF;
+    }
+
+    /* Search bar styling */
+    .search-input {
+        position: absolute;
+        top: -45px; /* Adjusted position to account for the added margin */
+        right: 0;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-bottom: 10px; /* New margin added to the bottom of the search bar */
+    }
+
+     /* Pagination styling */
+     .pagination {
+        display: flex;
+        justify-content: center;  /* Aligns pagination to the center */
+        margin: 20px 0;           /* Adds space above and below the pagination */
+    }
+
+    .pagination a {
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: 1px solid #007BFF;
+        color: #007BFF;
+        text-decoration: none;
+        border-radius: 3px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    .pagination a.active {
+        background-color: #007BFF;
+        color: white;
+    }
     </style>
 </head>
 
@@ -18,41 +190,74 @@
     
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/manager/dashboard">Manager</a>
+    <nav class="navbar navbar-expand-lg">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
                 <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
-            </li>
+            </li> 
             <li class="nav-item">
                 <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
-            </li>
+            </li> 
             <li class="nav-item">
                 <a class="nav-link" href="/manager/managerAccount">Account</a>
-            </li>
+            </li> 
         </ul>
         <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+          <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
         </form>
     </nav>
+
     <div class="container">
         <h2>Manage Donations</h2>
+       
+        <div class="table-wrapper">
+            <!-- Table to List Donations -->
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Organization</th>
+                        <th scope="col">Expected Date of Arrival</th>
+                        <th scope="col">Peripherals</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example row with action buttons -->
+                    <tr>
+                        <td>1</td>
+                        <td>Org Name</td>
+                        <td>DD-MM-YYYY</td>
+                        <td>Peripheral Details</td>
+                        <td>Status Info</td>
+                        <td>
+                            <!-- Font Awesome icons for edit and delete actions as an example -->
+                            <button class="action-btn"><i class="fa fa-pencil"></i></button>
+                            <button class="action-btn"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <!-- Add other rows as needed -->
+                </tbody>
+            </table>
+        
+            <!-- Search bar placed above the table on the right -->
+            <input type="text" class="search-input" placeholder="Search...">
 
-        <!-- Table to List Donations -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Organization</th>
-                    <th scope="col">Expected Date of Arrival</th>
-                    <th scope="col">Peripherals</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
+            <!-- Pagination -->
+        <div class="pagination">
+        <a href="#">&laquo;</a> <!-- Previous page -->
+        <a href="#" class="active">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">5</a>
+        <a href="#">&raquo;</a> <!-- Next page -->
+    </div>
+</div>
             
             <tbody>
                 <% donations.forEach(function(donation, index) { %>
