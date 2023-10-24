@@ -8,62 +8,67 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  email        String    @unique
-  firstName    String
-  lastName     String
-  password     String 
-  city         City      @relation(fields: [cityId], references: [id]) // Made it mandatory
-  cityId       String    @map("city_id") @db.ObjectId
-  gender       String
-  contactNumber String
-  profilePicture Bytes?    // Updated to Bytes data type
-  createdAt    DateTime  @default(now()) 
+  id                     String         @id @default(auto()) @map("_id") @db.ObjectId
+  email                  String         @unique
+  firstName              String
+  lastName               String
+  password               String
+  city                   City           @relation(fields: [cityId], references: [id]) // Made it mandatory
+  cityId                 String         @map("city_id") @db.ObjectId
+  gender                 String
+  contactNumber          String
+  profilePicture         Bytes? // Updated to Bytes data type
+  createdAt              DateTime       @default(now())
+  listings               Listing[] // Listings posted by the user
+  purchases              Sale[] // Sales where the user is a buyer 
+  conversationsInitiated Conversation[] @relation("ConversationUser1")
+  conversationsReceived  Conversation[] @relation("ConversationUser2")
+  sentMessages           Message[]      @relation("MessageSenderRelation")
 }
 
 model Organization {
-  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
-  organizationname      String    @unique
-  email                 String    @unique
-  password              String 
-  address               String 
-  contactNumber         String    @unique
-  secRegistrationNumber String?  @unique
-  verificationStatus    String @default("PENDING")
+  id                    String     @id @default(auto()) @map("_id") @db.ObjectId
+  organizationname      String     @unique
+  email                 String     @unique
+  password              String
+  address               String
+  contactNumber         String     @unique
+  secRegistrationNumber String?    @unique
+  verificationStatus    String     @default("PENDING")
   submittedDocuments    Document[]
-  lifetimePoints        Float   @default(0)
-  totalPoints           Float     @default(0)
+  lifetimePoints        Float      @default(0)
+  totalPoints           Float      @default(0)
 
-  type                  String
-  profilePicture        Bytes?    // Updated to Bytes data type
-  donations             Donation[]
-  advertisements        Advertisement[] // Added relation to Advertisements
-  createdAt             DateTime  @default(now())
+  type           String
+  profilePicture Bytes? // Updated to Bytes data type
+  donations      Donation[]
+  advertisements Advertisement[] // Added relation to Advertisements
+  createdAt      DateTime        @default(now())
   feedbacksGiven Feedback[] // Feedbacks given by the organization
 }
 
 model Document {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  filename    String
-  url         String    
-  uploadedBy  String  
-  organization  Organization?  @relation(fields: [organizationId], references: [id])
-  organizationId String? 
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  filename       String
+  url            String
+  uploadedBy     String
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
 
-  createdAt   DateTime  @default(now())
+  createdAt DateTime @default(now())
 }
 
 model DropPoint {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  location      String 
-  openingTime   String
-  closingTime   String
-  description   String 
-  manager       Manager?  @relation(fields: [managerId], references: [id])
-  managerId     String?   @map("manager_id") @db.ObjectId  // removed @unique
-  password      String?   // This password is used when assigning a manager to a drop point
-  donations       Donation[] 
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  location       String
+  openingTime    String
+  closingTime    String
+  description    String
+  manager        Manager?   @relation(fields: [managerId], references: [id])
+  managerId      String?    @map("manager_id") @db.ObjectId // removed @unique
+  password       String? // This password is used when assigning a manager to a drop point
+  donations      Donation[]
   feedbacksGiven Feedback[] // Feedbacks given by the organization
 }
 
@@ -74,86 +79,161 @@ model Admin {
 }
 
 model Manager {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  firstName    String   
-  lastName     String    
-  email        String   @unique 
-  phoneNumber  String?   
-  address      String?  
-  createdAt    DateTime @default(now())   
-  updatedAt    DateTime @updatedAt  
-  dropPoint DropPoint[]
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  firstName   String
+  lastName    String
+  email       String      @unique
+  phoneNumber String?
+  address     String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  dropPoint   DropPoint[]
 }
 
 model Donation {
-  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
-  organizationId        String   @map("organization_id") @db.ObjectId
-  dropPointId           String   @map("drop_point_id") @db.ObjectId
-  createdAt             DateTime @default(now())
-  expectedDateOfArrival DateTime?  
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId        String    @map("organization_id") @db.ObjectId
+  dropPointId           String    @map("drop_point_id") @db.ObjectId
+  createdAt             DateTime  @default(now())
+  expectedDateOfArrival DateTime?
   confirmedByName       String?
   confirmedByEmail      String?
   status                String?
-  isSubmitted           Boolean  @default(false)
-  points                Float?  
-  feedback              Feedback? 
-  
-  organization          Organization @relation(fields: [organizationId], references: [id])
-  dropPoint             DropPoint    @relation(fields: [dropPointId], references: [id])
-  peripherals           Peripheral[]  
+  isSubmitted           Boolean   @default(false)
+  points                Float?
+  feedback              Feedback?
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  dropPoint    DropPoint    @relation(fields: [dropPointId], references: [id])
+  peripherals  Peripheral[]
 }
 
 model Feedback {
-  id            String       @id @default(auto()) @map("_id") @db.ObjectId
-  content       String       
-  rating        Int          
-  createdAt     DateTime     @default(now())
-  organization  Organization @relation(fields: [organizationId], references: [id])
-  organizationId String      @map("organization_id") @db.ObjectId
-  dropPoint     DropPoint    @relation(fields: [dropPointId], references: [id])
-  dropPointId   String       @map("drop_point_id") @db.ObjectId  
-  donation      Donation     @relation(fields: [donationId], references: [id])
-  donationId    String       @map("donation_id") @db.ObjectId @unique
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  content        String
+  rating         Int
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id") @db.ObjectId
+  dropPoint      DropPoint    @relation(fields: [dropPointId], references: [id])
+  dropPointId    String       @map("drop_point_id") @db.ObjectId
+  donation       Donation     @relation(fields: [donationId], references: [id])
+  donationId     String       @unique @map("donation_id") @db.ObjectId
 }
 
 model Peripheral {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  type       String   // e.g., Mouse, Keyboard, RAM, HDD, SSD, Graphic Card, etc.
-  brand      String
-  model      String
-  condition  String  
-  quantity   Int     @default(1)
-  
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  type      String // e.g., Mouse, Keyboard, RAM, HDD, SSD, Graphic Card, etc.
+  brand     String
+  model     String
+  condition String
+  quantity  Int    @default(1)
+
   donation   Donation @relation(fields: [donationId], references: [id])
-  donationId String  @map("donation_id") @db.ObjectId
+  donationId String   @map("donation_id") @db.ObjectId
 }
 
 model City {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
-  name           String         @unique // Ensuring city names are unique 
-  users          User[]         // Users in this city
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String          @unique // Ensuring city names are unique 
+  users          User[] // Users in this city
   advertisements Advertisement[] // Advertisements in this city
 }
 
 model Advertisement {
-  id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String       @map("organization_id") @db.ObjectId
-  city           City         @relation(fields: [cityId], references: [id])
-  cityId         String       @map("city_id") @db.ObjectId
-  title          String 
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  organizationId String          @map("organization_id") @db.ObjectId
+  city           City            @relation(fields: [cityId], references: [id])
+  cityId         String          @map("city_id") @db.ObjectId
+  title          String
   pointsSpent    Float
   link           String
   imageUrl       Bytes
-  isActive       Boolean      // If the advertisement is currently active or not
-  startDate      DateTime     @default(now())
+  isActive       Boolean // If the advertisement is currently active or not
+  startDate      DateTime        @default(now())
   expiryDate     DateTime
   interactions   AdInteraction[] // Relation to Advertisement Interactions
 }
 
 model AdInteraction {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  advertisement   Advertisement @relation(fields: [advertisementId], references: [id])
+  advertisementId String        @map("advertisement_id") @db.ObjectId
+  clickedAt       DateTime      @default(now()) // The time when the ad was clicked/interacted with
+}
+
+model Listing {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  photos        Photo[] // One listing can have multiple photos
+  title         String
+  price         Float
+  category      Category       @relation(fields: [categoryId], references: [id])
+  categoryId    String         @map("category_id") @db.ObjectId
+  condition     Condition      @relation(fields: [conditionId], references: [id])
+  conditionId   String         @map("condition_id") @db.ObjectId
+  description   String
+  location      String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String         @map("user_id") @db.ObjectId
+  status        String         @default("AVAILABLE")
+  sales         Sale[] // Sales related to this listing
+  conversations Conversation[]
+}
+
+model Sale {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  buyer     User    @relation(fields: [buyerId], references: [id])
+  buyerId   String  @map("buyer_id") @db.ObjectId
+  listing   Listing @relation(fields: [listingId], references: [id])
+  listingId String  @map("listing_id") @db.ObjectId
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  conversationId String?       @map("conversation_id") @db.ObjectId
+  salePrice      Float
+  saleDate       DateTime      @default(now())
+}
+
+model Photo {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  imageUrl  Bytes
+  listing   Listing @relation(fields: [listingId], references: [id])
+  listingId String  @map("listing_id") @db.ObjectId
+}
+
+model Category {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String    @unique
+  listings Listing[]
+}
+
+model Condition {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String    @unique
+  listings Listing[]
+}
+
+model Conversation {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  user1     User      @relation("ConversationUser1", fields: [user1Id], references: [id])
+  user1Id   String    @map("user1_id") @db.ObjectId
+  user2     User      @relation("ConversationUser2", fields: [user2Id], references: [id])
+  user2Id   String    @map("user2_id") @db.ObjectId
+  listing   Listing   @relation(fields: [listingId], references: [id])
+  listingId String    @map("listing_id") @db.ObjectId
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  Sale      Sale[]
+}
+
+model Message {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  advertisement  Advertisement @relation(fields: [advertisementId], references: [id])
-  advertisementId String      @map("advertisement_id") @db.ObjectId
-  clickedAt      DateTime     @default(now()) // The time when the ad was clicked/interacted with
+  content        String
+  sender         User         @relation("MessageSenderRelation", fields: [senderId], references: [id])
+  senderId       String       @map("sender_id") @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String       @map("conversation_id") @db.ObjectId
+  read           Boolean      @default(false)
+  createdAt      DateTime     @default(now())
 }
