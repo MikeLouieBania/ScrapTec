@@ -440,12 +440,12 @@ module.exports = {
   async getBuyConversation(req, res) {
     try {
       const userId = req.session.user.id;
-      const listingId = req.params.listingId;
+      const listingId = req.params.listingId; 
 
       // Fetch the conversation related to the listing
       const conversation = await prisma.conversation.findFirst({
         where: {
-          AND: [
+          AND: [ 
             { listingId: listingId },
             {
               OR: [
@@ -485,20 +485,14 @@ module.exports = {
   async getSellConversation(req, res) {
     try {
       const userId = req.session.user.id;
-      const listingId = req.params.listingId;
+      const listingId = req.params.listingId; 
+      const conversationId = req.params.conversationId; 
 
       // Fetch the conversation related to the selling listing
       const conversation = await prisma.conversation.findFirst({
         where: {
-          AND: [
-            { listingId: listingId },
-            {
-              OR: [
-                { user1Id: userId },
-                { user2Id: userId }
-              ]
-            }
-          ]
+          id: conversationId,
+          listingId: listingId
         },
         include: {
           messages: {     // include the messages in the conversation
