@@ -17,8 +17,6 @@ function getMimeType(extension) {
   }
 }
 
-
-
 module.exports = {
   async getMarketplace(req, res) {
     try {
@@ -142,8 +140,6 @@ module.exports = {
           ]
         }
       });
-
-
 
       res.render('user/listing', { user: req.session.user, listing: listing, existingConversation: existingConversation });
 

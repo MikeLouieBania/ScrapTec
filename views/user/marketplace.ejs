@@ -7,6 +7,9 @@
   <title>E-Waste Zero</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css">
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     /* Custom Styles from previous code */
@@ -23,7 +26,7 @@
       /* Adjusted the padding for navbar */
       overflow-x: hidden;
       margin-bottom: 60px;
-      background-color: #8babf1;
+      background-color:  #E4EBF5;
     }
 
     .navbar {
@@ -260,10 +263,10 @@
       transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
     }
 
-
+    /* Footer Customization */
     .footer-section {
       padding: 80px 0;
-      background: #8babf1;
+      background: #E4EBF5;
     }
 
     .footer-section .relative {
@@ -305,7 +308,7 @@
     .footer-section .subscription-form .form-control {
       height: 50px;
       border-radius: 10px;
-      font-family: "Inter", sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     .footer-section .subscription-form .form-control:active,
@@ -368,6 +371,7 @@
       font-weight: 500;
       text-decoration: none;
       color: #3b5d50;
+      font-family: 'Poppins', sans-serif;
     }
 
     .footer-section .custom-social li {
@@ -397,7 +401,10 @@
 
     .footer-section .border-top.copyright {
       font-size: 14px !important;
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;    
     }
+        
 
     .untree_co-section {
       padding: 7rem 0;
@@ -508,14 +515,14 @@
 
     /* Change color of "Sort by Price" label */
     .sort-price-section label {
-      color: white;
+      color: black;
       /* Change this color to your liking */
       font-weight: bold;
     }
 
     /* Change color of price label (e.g., 5000) */
     .sort-price-section #priceLabel {
-      color: white;
+      color: black;
       /* Change this color to your liking */
       font-weight: bold;
     }
@@ -527,7 +534,7 @@
     }
 
     .sort-price-section input[type="range"]::-webkit-slider-runnable-track {
-      background-color: #ecf0f1;
+      background-color: #72A0C1;
       /* Change this color to your liking */
     }
 
@@ -632,73 +639,105 @@
       width: 25%;
       height: 300px;
       background-color: #246aec00;
-      color: #fff;
+      color: #ae1ef5;
       position: relative;
       top: 5%;
       right: 25%;
     }
 
-    .menu-item {
-      padding: 20px;
-      /* Increased padding for more space */
-      cursor: pointer;
-      transition: background-color 0.2s;
-      text-decoration: none;
-      /* Remove default underline for anchor tags */
-      color: inherit;
-      /* Use parent color, in this case white */
-      display: block;
-      /* Make the whole item clickable */
-      font-size: 27px;
-      /* Increase font size */
-      line-height: 1.5;
-      /* Adjust line height for better spacing between lines of text */
-
-      --c: #1095c1;
-      /* the color */
-      --b: .1em;
-      /* border length*/
-      --d: 20px;
-      /* the cube depth */
-
-      --_s: calc(var(--d) + var(--b));
-
-      border: solid #0000;
-      border-width: var(--b) var(--b) var(--_s) var(--_s);
-      background:
-        conic-gradient(at left var(--d) bottom var(--d),
-          #0000 90deg, rgb(255 255 255 /0.3) 0 225deg, rgb(255 255 255 /0.6) 0) border-box,
-        conic-gradient(at left var(--_s) bottom var(--_s),
-          #0000 90deg, var(--c) 0) 0 100%/calc(100% - var(--b)) calc(100% - var(--b)) border-box;
-      transform: translate(calc(var(--d)/-1), var(--d));
-      clip-path:
-        polygon(var(--d) 0%,
-          var(--d) 0%,
-          100% 0%,
-          100% calc(100% - var(--d)),
-          100% calc(100% - var(--d)),
-          var(--d) calc(100% - var(--d)));
-      transition: 0.5s;
-    }
-
-    .menu-item:hover {
-      transform: translate(0, 0);
-      clip-path:
-        polygon(0% var(--d),
-          var(--d) 0%,
-          100% 0%,
-          100% calc(100% - var(--d)),
-          calc(100% - var(--d)) 100%,
-          0% 100%);
-    }
-
-    .icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-      display: inline-block;
-      vertical-align: middle;
-    }
+        /* search bar */
+       
+        :root {
+            --greyDark: #9baacf;
+            --greyLight-3: #bec8e4;
+            --inner-shadow: inset -2px -2px 5px #ffffff, inset 2px 2px 5px #aeaead;
+            --shadow: -1px -1px 3px #ffffff, 1px 1px 3px #aeaead;
+            --primary: #6d5dfc;
+        }
+        
+        .search-box {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-icon {
+            height: 1.5rem;
+            position: absolute;
+            font-size: 1.5rem;
+            padding: 0 0.8rem;  /* Padding added to the icon */
+            display: flex;
+            color: var(--greyDark);
+            transition: .3s ease;
+            align-items: center;  /* Vertically align the icon in the center */
+            left: 0;  /* Position the icon to the start of the input field */
+        }
+        
+        
+        .input-search {
+            width: 18rem;
+            height: 3.5rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            padding-left: 2.5rem;
+            box-shadow: var(--inner-shadow);
+            background: none;
+            font-family: inherit;
+            color: var(--greyDark);
+        }
+        
+        .input-search::placeholder {
+            color: var(--greyLight-3);
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+        }
+        
+        .input-search:focus {
+            outline: none;
+            box-shadow: var(--shadow);
+        }
+        .search-box:focus-within .search-icon {
+            color: var(--primary);
+        }
+        .menu-item {
+            padding: 15px 15px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;  /* Adjusted for better visibility on Neumorphic design */
+            background-color: #E4EBF5;
+            border: none;  /* Removing the border for Neumorphism */
+            border-radius: 5px;
+            display: block;
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px; 
+            transition: box-shadow 0.3s ease, transform 0.3s ease;  /* Adjusted transitions for Neumorphism */
+            text-align: left;
+            box-shadow: 8px 8px 16px #bfc5d2, -8px -8px 16px #ffffff;  /* Soft extrusion effect */
+            outline: none;
+            margin: 10px;
+        }
+        
+        .menu-item:hover {
+            box-shadow: 4px 4px 8px #bfc5d2, -4px -4px 8px #ffffff;  /* Reduced shadow for hover effect */
+        }
+        
+        .menu-item:active {
+            box-shadow: inset 4px 4px 8px #bfc5d2, inset -4px -4px 8px #ffffff;  /* Inset shadow for pressed effect */
+            transform: translateY(2px);  /* Slight downward movement when pressed */
+        }
+        
+        
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
 
     .icon.notification {
       background-image: url('https://icons.veryicon.com/png/o/object/material-design-icons/notifications-1.png');
@@ -775,63 +814,55 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .listahan {
-      align-items: center;
-      background-color: #0a66c2bd;
-      border: 0;
-      border-radius: 100px;
-      margin-top: 7%;
-      width: 95%;
-      height: 15%;
-      box-sizing: border-box;
-      text-decoration: none;
-      color: #ffffff;
-      cursor: pointer;
-      display: inline-flex;
-      font-size: 16px;
-      font-weight: 600;
-      justify-content: center;
-      line-height: 20px;
-      max-width: 480px;
-      min-height: 40px;
-      min-width: 0px;
-      overflow: hidden;
-      padding: 0px;
-      padding-left: 20px;
-      padding-right: 20px;
-      text-align: center;
-      touch-action: manipulation;
-      transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
-      user-select: none;
-      -webkit-user-select: none;
-      vertical-align: middle;
-    }
-
-    .listahan:hover,
-    .button-18:focus {
-      background-color: #16437E;
-      color: #ffffff;
-    }
-
-    .listahan:active {
-      background: #09223b;
-      color: rgb(255, 255, 255, .7);
-    }
-
-    .listahan:disabled {
-      cursor: not-allowed;
-      background: rgba(0, 0, 0, .08);
-      color: rgba(0, 0, 0, .3);
-    }
-
-    .carousel-inner img {
-      height: 300px;
-      /* You can adjust this value to the desired height */
-      width: 100%;
-      object-fit: cover;
-      /* Ensures the images cover the space without distortion */
-    }
-  </style>
+        .listahan {
+            align-items: center;
+            background-color: #E4EBF5;  /* Neutral background color */
+            border: none;
+            border-radius: 100px;
+            margin-top: 7%;
+            width: 95%;
+            height: 15%;
+            box-sizing: border-box;
+            text-decoration: none;
+            color: #333;  /* Adjusted for visibility on Neumorphic design */
+            cursor: pointer;
+            display: inline-flex;
+            font-size: 16px;
+            font-weight: 600;
+            justify-content: center;
+            line-height: 20px;
+            max-width: 480px;
+            min-height: 40px;
+            min-width: 0px;
+            overflow: hidden;
+            padding: 0px;
+            padding-left: 20px;
+            padding-right: 20px;
+            text-align: center;
+            touch-action: manipulation;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;  /* Adjusted transitions for Neumorphism */
+            user-select: none;
+            -webkit-user-select: none;
+            vertical-align: middle;
+            box-shadow: 8px 8px 16px #bfc5d2, -8px -8px 16px #ffffff;  /* Soft extrusion effect */
+        }
+        
+        .listahan:hover {
+            box-shadow: 4px 4px 8px #bfc5d2, -4px -4px 8px #ffffff;  /* Reduced shadow for hover effect */
+        }
+        
+        .listahan:active {
+            box-shadow: inset 4px 4px 8px #bfc5d2, inset -4px -4px 8px #ffffff;  /* Inset shadow for pressed effect */
+        }
+        
+        .listahan:disabled {
+            cursor: not-allowed;
+            background-color: rgba(228, 235, 245, .5);  /* Slightly transparent background for disabled state */
+            box-shadow: none;  /* Remove shadow for disabled state */
+            color: rgba(0, 0, 0, .3);
+        }
+        
+    </style>
 </head>
 
 <body>
@@ -957,8 +988,8 @@
               </a>
             </div>
             <div class="search-box">
+              <ion-icon name="search" class="search-icon"></ion-icon>
               <input type="text" class="input-search" placeholder="Search for products...">
-              <button class="btn-search" type="button">&#128269;</button>
               <!-- The Unicode character represents a magnifying glass icon -->
             </div>
           </div>
@@ -1199,7 +1230,5 @@
   document.getElementById('closeModal').addEventListener('click', function () {
     document.getElementById('MapModals').style.display = 'none';
   });
-
 </script>
-
 </html>
