@@ -61,10 +61,10 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="marketplace">Home</a>
-        <a href="inbox">Inbox</a>
-        <a href="buyListing">Buying</a>
-        <a href="sellListing">Selling</a>
+        <a href="/user/marketplace">Home</a>
+        <a href="/user/inbox">Inbox</a>
+        <a href="/user/buyListing">Buying</a>
+        <a href="/user/sellListing">Selling</a>
 
         <form action="/user/logout" method="POST">
             <button type="submit" class="nav-link">LOGOUT</button>
@@ -89,7 +89,9 @@
                 <!-- Selling Tab Content -->
                 <div id="sellingTab" class="tab-pane fade show active">
                     <% sellingConversations.forEach(conversation=> { %>
-                        <a href="/user/sellConversation/<%= conversation.listing.id %>">
+                        <a href="/user/sellConversation/<%= conversation.listing.id %>/<%= conversation.id %>"> 
+
+
                             <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].read) { %>unread<% } %>"
                                 onclick="markAsRead(this)">
                                 <h5>
@@ -106,7 +108,8 @@
                 <!-- Buying Tab Content -->
                 <div id="buyingTab" class="tab-pane fade">
                     <% buyingConversations.forEach(conversation=> { %>
-                        <a href="/user/buyConversation/<%= conversation.listing.id %>">
+                        <a href="/user/buyConversation/<%= conversation.listing.id %>"> 
+
                             <div class="conversation <% if (!conversation.messages[conversation.messages.length - 1].read) { %>unread<% } %>"
                                 onclick="markAsRead(this)">
                                 <h5>
