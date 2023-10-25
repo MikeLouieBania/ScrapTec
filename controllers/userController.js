@@ -369,7 +369,7 @@ module.exports = {
         }
       });
 
-      res.redirect('/user/sellConversation/' + listingId);  // Redirect to the relevant conversation page for the seller. You may need to create this endpoint.
+      res.redirect('/user/sellConversation/' + listingId + '/' + conversation.id);  // Redirect to the relevant conversation page for the seller. You may need to create this endpoint.
     } catch (error) {
       console.error('Error sending message:', error);
       res.status(500).json({ error: 'Internal Server Error' });
