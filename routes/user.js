@@ -7,13 +7,14 @@ const upload = multer({ storage: storage }).array('photos', 5); // allow up to 5
 const uploadImageSeller = multer({ storage: storage }).single('image');
 const uploadImageBuyer = multer({ storage: storage }).single('image');
 
-
  
 router.get('/marketplace', userController.getMarketplace); 
 router.get('/listing/:id', userController.getListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
 router.get('/sellListing', userController.getSellingListings); 
+router.get('/listing/:listingId/users', userController.getListingUsers);
+router.post('/mark-as-sold/:listingId', userController.postMarkAsSold);
 router.get('/inbox', userController.getInbox);
 router.post('/send_message_buyer', uploadImageBuyer, userController.postSendMessageBuyer); 
 router.get('/buyConversation/:listingId', userController.getBuyConversation);

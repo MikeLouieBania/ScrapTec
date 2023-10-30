@@ -24,6 +24,8 @@ model User {
   conversationsInitiated Conversation[] @relation("ConversationUser1")
   conversationsReceived  Conversation[] @relation("ConversationUser2")
   sentMessages           Message[]      @relation("MessageSenderRelation")
+  givenBuyerRatings      BuyerRating[]  @relation("GivenBuyerRatings")
+  receivedSellerRatings  SellerRating[] @relation("ReceivedSellerRatings")
 }
 
 model Organization {
@@ -73,9 +75,9 @@ model DropPoint {
 }
 
 model Admin {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId 
-  email        String   @unique 
-  password      String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  email    String @unique
+  password String
 }
 
 model Manager {
@@ -184,15 +186,41 @@ model Listing {
 }
 
 model Sale {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  buyer     User    @relation(fields: [buyerId], references: [id])
-  buyerId   String  @map("buyer_id") @db.ObjectId
-  listing   Listing @relation(fields: [listingId], references: [id])
-  listingId String  @map("listing_id") @db.ObjectId
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  buyer          User          @relation(fields: [buyerId], references: [id])
+  buyerId        String        @map("buyer_id") @db.ObjectId
+  listing        Listing       @relation(fields: [listingId], references: [id])
+  listingId      String        @map("listing_id") @db.ObjectId
   conversation   Conversation? @relation(fields: [conversationId], references: [id])
   conversationId String?       @map("conversation_id") @db.ObjectId
   salePrice      Float
   saleDate       DateTime      @default(now())
+  buyerRatingId  String?
+  sellerRatingId String?
+  buyerRating    BuyerRating?  @relation(fields: [buyerRatingId], references: [id])
+  sellerRating   SellerRating? @relation(fields: [sellerRatingId], references: [id])
+}
+
+model BuyerRating {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  value     Int      @default(0)
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  giverId   String
+  giver     User     @relation("GivenBuyerRatings", fields: [giverId], references: [id])
+  Sale      Sale[]
+}
+
+model SellerRating {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  value      Int      @default(0)
+  comment    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  receiverId String
+  receiver   User     @relation("ReceivedSellerRatings", fields: [receiverId], references: [id])
+  Sale       Sale[]
 }
 
 model Photo {
