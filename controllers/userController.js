@@ -73,13 +73,13 @@ module.exports = {
         weightedAds = weightedAds.filter(ad => ad.id !== weightedAds[randomIndex].id);
       }
 
-
       // Fetch all listings except for the ones made by the currently logged-in user
       const listings = await prisma.listing.findMany({
         where: {
           NOT: {
             userId: currentUserId,
           },
+          status: 'SOLD',
         },
         include: {
           photos: true, // Include photos of the listings
@@ -221,6 +221,11 @@ module.exports = {
           photos: true,
           category: true,
           condition: true,
+          sales: {
+            include: {
+              buyer: true
+            }
+          }
         },
       });
 
@@ -243,8 +248,110 @@ module.exports = {
     }
   },
 
+  async getListingUsers(req, res) {
+    try {
+      const listingId = req.params.listingId;
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+      });
+      if (!listing) {
+        return res.status(404).json({ message: 'Listing not found' });
+      }
+      const sellerId = listing.userId; // Get the seller's user ID
+
+      const conversations = await prisma.conversation.findMany({
+        where: {
+          listingId: listingId,
+          OR: [
+            { user1Id: { not: sellerId } },
+            { user2Id: { not: sellerId } },
+          ],
+        },
+        include: {
+          user1: true,
+          user2: true,
+        },
+      });
+
+      const buyers = conversations.map(conv => {
+        const user = (conv.user1Id !== sellerId ? conv.user1 : conv.user2);
+        return { ...user, conversationId: conv.id };  // Include the conversation ID
+      });
+      res.json(buyers);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async postMarkAsSold(req, res) {
+    try {
+      const { listingId } = req.params;
+      const { buyerId, conversationId } = req.body;
+
+      if (!buyerId || !conversationId) {
+        return res.status(400).json({ message: 'Missing required fields: buyerId or conversationId' });
+      }
+
+      // Start a transaction to ensure data consistency
+      const result = await prisma.$transaction(async (prisma) => {
+        // Find the listing with the associated user
+        const listing = await prisma.listing.findUnique({
+          where: { id: listingId },
+          include: { user: true }
+        });
+
+        if (!listing) {
+          return res.status(404).json({ message: 'Listing not found' });
+        }
+
+        if (listing.status === "SOLD") {
+          return res.status(400).json({ message: 'Listing is already sold' });
+        }
+
+        // Ensure that the logged-in user is the seller of the listing
+        const userId = req.session.user.id;
+        if (listing.userId !== userId) {
+          return res.status(403).json({ message: 'You are not authorized to mark this listing as sold' });
+        }
+
+        // Find the buyer
+        const buyer = await prisma.user.findUnique({
+          where: { id: buyerId }
+        });
+
+        if (!buyer) {
+          return res.status(404).json({ message: 'Buyer not found' });
+        }
+
+        // Create a sale record
+        const sale = await prisma.sale.create({
+          data: {
+            buyer: { connect: { id: buyerId } },
+            listing: { connect: { id: listingId } },
+            salePrice: listing.price,
+            conversation: { connect: { id: conversationId } }
+          }
+        });
+
+        // Update the listing's status
+        await prisma.listing.update({
+          where: { id: listingId },
+          data: { status: "SOLD" }
+        });
+
+        return { sale, buyer };
+      });
+
+      res.json(result);
+    } catch (error) {
+      console.error('Error marking listing as sold:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
   async postSendMessageBuyer(req, res) {
-    try { 
+    try {
       const senderId = req.session.user.id;
       const listingId = req.body.listing_id;
 
@@ -281,7 +388,7 @@ module.exports = {
           }
         });
       }
-      
+
 
       // Handling the image upload
       let imageFileId = null;
@@ -564,14 +671,14 @@ module.exports = {
     try {
       const fileId = req.params.id;
       console.log('Retrieving image with fileId:', fileId);
-  
+
       const downloadStream = await gridfsService.getFileStreamById(fileId);
-  
+
       downloadStream.on('file', (file) => {
         const mimeType = getMimeType(file.filename.split('.').pop());
         res.contentType(mimeType);
       });
-  
+
       downloadStream.pipe(res);
     } catch (err) {
       console.error('Error retrieving image from GridFS:', err);
