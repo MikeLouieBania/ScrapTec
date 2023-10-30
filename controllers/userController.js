@@ -17,8 +17,6 @@ function getMimeType(extension) {
   }
 }
 
-
-
 module.exports = {
   async getMarketplace(req, res) {
     try {
@@ -142,8 +140,6 @@ module.exports = {
           ]
         }
       });
-
-
 
       res.render('user/listing', { user: req.session.user, listing: listing, existingConversation: existingConversation });
 
@@ -373,7 +369,7 @@ module.exports = {
         }
       });
 
-      res.redirect('/user/sellConversation/' + listingId);  // Redirect to the relevant conversation page for the seller. You may need to create this endpoint.
+      res.redirect('/user/sellConversation/' + listingId + '/' + conversation.id);  // Redirect to the relevant conversation page for the seller. You may need to create this endpoint.
     } catch (error) {
       console.error('Error sending message:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -440,12 +436,12 @@ module.exports = {
   async getBuyConversation(req, res) {
     try {
       const userId = req.session.user.id;
-      const listingId = req.params.listingId;
+      const listingId = req.params.listingId; 
 
       // Fetch the conversation related to the listing
       const conversation = await prisma.conversation.findFirst({
         where: {
-          AND: [
+          AND: [ 
             { listingId: listingId },
             {
               OR: [
@@ -485,20 +481,14 @@ module.exports = {
   async getSellConversation(req, res) {
     try {
       const userId = req.session.user.id;
-      const listingId = req.params.listingId;
+      const listingId = req.params.listingId; 
+      const conversationId = req.params.conversationId; 
 
       // Fetch the conversation related to the selling listing
       const conversation = await prisma.conversation.findFirst({
         where: {
-          AND: [
-            { listingId: listingId },
-            {
-              OR: [
-                { user1Id: userId },
-                { user2Id: userId }
-              ]
-            }
-          ]
+          id: conversationId,
+          listingId: listingId
         },
         include: {
           messages: {     // include the messages in the conversation
