@@ -248,6 +248,105 @@ module.exports = {
     }
   },
 
+  async getBuyListings(req, res) {
+    try {
+      const userId = req.session.user.id;
+
+      // Fetch listings bought by the user
+      const userPurchases = await prisma.user.findUnique({
+        where: {
+          id: userId
+        },
+        select: {
+          purchases: {
+            select: {
+              id: true,  // Fetching the sale.id
+              sellerRatingId: true,  // Fetching the rating id if exists
+              listing: {
+                include: {
+                  photos: true,
+                  category: true,
+                  condition: true,
+                  user: {
+                    select: {
+                      id: true,
+                      firstName: true,
+                      lastName: true
+                    }
+                  }
+                }
+              },
+              sellerRating: true  // Add this line to include the sellerRating
+            }
+          }
+        }
+      });
+
+      const boughtListings = userPurchases.purchases.map(purchase => {
+        const listing = purchase.listing;
+        listing.saleId = purchase.id.toString(); // Ensure it's a string if necessary
+        listing.sellerRatingId = purchase.sellerRatingId;
+        listing.rating = purchase.sellerRating; 
+        return listing;
+      });
+
+      // Convert image bytes to base64 string
+      boughtListings.forEach(listing => {
+        if (listing.photos && listing.photos.length > 0) {
+          listing.photos.forEach(photo => {
+            if (photo.imageUrl) {
+              photo.imageUrl = "data:image/png;base64," + photo.imageUrl.toString('base64');
+            }
+          });
+        }
+      });
+
+      res.render('user/buyListing', { boughtListings });
+    } catch (error) {
+      console.error('Error fetching bought listings:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async postRateSeller(req, res) {
+    try {
+      const { value, comment, sellerId, saleId } = req.body;
+
+      console.log(req.body);
+      if (!value || !comment || !sellerId || !saleId) {
+        return res.status(400).send('All fields are required');
+      }
+
+      const newRating = await prisma.sellerRating.create({
+        data: {
+          value: parseInt(value),
+          comment: comment.trim(),
+          receiverId: sellerId,
+        }
+      });
+
+      const sale = await prisma.sale.findUnique({ where: { id: saleId } });
+      if (!sale) {
+        return res.status(404).send('Sale not found');
+      }
+
+
+      await prisma.sale.update({
+        where: {
+          id: saleId
+        },
+        data: {
+          sellerRatingId: newRating.id
+        }
+      });
+
+      res.redirect('/user/buyListing');
+    } catch (error) {
+      console.error('Error submitting seller rating:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
   async getListingUsers(req, res) {
     try {
       const listingId = req.params.listingId;

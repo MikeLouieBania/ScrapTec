@@ -13,6 +13,8 @@ router.get('/listing/:id', userController.getListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
 router.get('/sellListing', userController.getSellingListings); 
+router.get('/buyListing', userController.getBuyListings); 
+router.post('/rateSeller', userController.postRateSeller);
 router.get('/listing/:listingId/users', userController.getListingUsers);
 router.post('/mark-as-sold/:listingId', userController.postMarkAsSold);
 router.get('/inbox', userController.getInbox);
