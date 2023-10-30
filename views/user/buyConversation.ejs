@@ -110,17 +110,31 @@
                     Unknown:
                     <% } %>
                 </strong>
-                <%= message.content %>
+
+                <% if (message.content) { %>
+                    <p>
+                        <%= message.content %>
+                    </p>
+                    <% } %>
+
+                        <% if (message.imageFileId) { %>
+                            <div>
+                                <img src="/user/image/<%= message.imageFileId %>" alt="<%= message.imageFileId %>"
+                                    style="max-width: 300px; max-height: 300px;">
+                            </div>
+                            <% } %>
                 <span class="timestamp">
                     <%= new Date(message.createdAt).toLocaleString() %>
                 </span>
             </div>
             <% }); %>
+ 
+            <form action="/user/send_message_buyer" method="POST" enctype="multipart/form-data" class="mt-4">
 
-            <form action="/user/send_message_buyer" method="POST" class="mt-4">
                 <input type="hidden" name="listing_id" value="<%= conversation.listing.id %>">
 
                 <textarea name="message" class="form-control" placeholder="Type your message..."></textarea>
+                <input type="file" name="image" accept="image/*">
                 <div class="message-buttons mt-3">
                     
                     <button type="submit" class="btn btn-primary mt-2">Send</button>

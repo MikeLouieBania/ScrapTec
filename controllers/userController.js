@@ -2,6 +2,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const fs = require('fs');
 const sharp = require('sharp');
+const gridfsService = require('./gridfsService');
+
 
 function getMimeType(extension) {
   switch ((extension || "").toLowerCase()) {
@@ -242,12 +244,7 @@ module.exports = {
   },
 
   async postSendMessageBuyer(req, res) {
-    try {
-      // Validation - Ensure content is provided and not empty
-      if (!req.body.message || req.body.message.trim() === '') {
-        return res.status(400).json({ error: 'Message content cannot be empty.' });
-      }
-
+    try { 
       const senderId = req.session.user.id;
       const listingId = req.body.listing_id;
 
@@ -284,16 +281,41 @@ module.exports = {
           }
         });
       }
+      
+
+      // Handling the image upload
+      let imageFileId = null;
+      if (req.file) {
+        try {
+          const fileId = await gridfsService.uploadFile(req.file.buffer, req.file.originalname);
+          imageFileId = fileId.toString();
+        } catch (err) {
+          console.error('Error uploading image to GridFS:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+      }
+
+      // Ensure either message content or image is provided
+      if (!req.body.message && !imageFileId) {
+        return res.status(400).json({ error: 'Message content cannot be empty if no image is provided.' });
+      }
 
       // Save the message
-      const newMessage = await prisma.message.create({
-        data: {
-          content: req.body.message,
-          senderId: senderId,
-          conversationId: conversation.id,
-          read: false // initially, the message is not read
-        }
-      });
+      let messageData = {
+        senderId: senderId,
+        conversationId: conversation.id,
+        read: false // initially, the message is not read
+      };
+
+      if (req.body.message) {
+        messageData.content = req.body.message;
+      }
+
+      if (imageFileId) {
+        messageData.imageFileId = imageFileId;
+      }
+
+      const newMessage = await prisma.message.create({ data: messageData });
 
 
       res.redirect('/user/buyConversation/' + listingId);
@@ -305,14 +327,11 @@ module.exports = {
 
   async postSendMessageSeller(req, res) {
     try {
-      // Validation - Ensure content is provided and not empty
-      if (!req.body.message || req.body.message.trim() === '') {
-        return res.status(400).json({ error: 'Message content cannot be empty.' });
-      }
 
       const senderId = req.session.user.id;  // This will be the seller
       const listingId = req.body.listing_id;
       const recipientId = req.body.buyer_id;  // Assuming you provide the buyer's ID when the seller wants to send a message.
+
 
       if (!recipientId) {
         return res.status(400).json({ error: 'Buyer ID is required to send a message.' });
@@ -359,15 +378,39 @@ module.exports = {
         });
       }
 
-      // Save the message
-      const newMessage = await prisma.message.create({
-        data: {
-          content: req.body.message,
-          senderId: senderId,
-          conversationId: conversation.id,
-          read: false // initially, the message is not read
+      // Handling the image upload
+      let imageFileId = null;
+      if (req.file) {
+        try {
+          const fileId = await gridfsService.uploadFile(req.file.buffer, req.file.originalname);
+          imageFileId = fileId.toString();
+        } catch (err) {
+          console.error('Error uploading image to GridFS:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
         }
-      });
+      }
+
+      // Ensure either message content or image is provided
+      if (!req.body.message && !imageFileId) {
+        return res.status(400).json({ error: 'Message content cannot be empty if no image is provided.' });
+      }
+
+      // Save the message
+      let messageData = {
+        senderId: senderId,
+        conversationId: conversation.id,
+        read: false // initially, the message is not read
+      };
+
+      if (req.body.message) {
+        messageData.content = req.body.message;
+      }
+
+      if (imageFileId) {
+        messageData.imageFileId = imageFileId;
+      }
+
+      const newMessage = await prisma.message.create({ data: messageData });
 
       res.redirect('/user/sellConversation/' + listingId + '/' + conversation.id);  // Redirect to the relevant conversation page for the seller. You may need to create this endpoint.
     } catch (error) {
@@ -436,12 +479,12 @@ module.exports = {
   async getBuyConversation(req, res) {
     try {
       const userId = req.session.user.id;
-      const listingId = req.params.listingId; 
+      const listingId = req.params.listingId;
 
       // Fetch the conversation related to the listing
       const conversation = await prisma.conversation.findFirst({
         where: {
-          AND: [ 
+          AND: [
             { listingId: listingId },
             {
               OR: [
@@ -481,8 +524,8 @@ module.exports = {
   async getSellConversation(req, res) {
     try {
       const userId = req.session.user.id;
-      const listingId = req.params.listingId; 
-      const conversationId = req.params.conversationId; 
+      const listingId = req.params.listingId;
+      const conversationId = req.params.conversationId;
 
       // Fetch the conversation related to the selling listing
       const conversation = await prisma.conversation.findFirst({
@@ -515,6 +558,24 @@ module.exports = {
     } catch (error) {
       console.error("Error fetching sell conversation:", error);
       res.status(500).send("Internal Server Error");
+    }
+  },
+  async getImage(req, res) {
+    try {
+      const fileId = req.params.id;
+      console.log('Retrieving image with fileId:', fileId);
+  
+      const downloadStream = await gridfsService.getFileStreamById(fileId);
+  
+      downloadStream.on('file', (file) => {
+        const mimeType = getMimeType(file.filename.split('.').pop());
+        res.contentType(mimeType);
+      });
+  
+      downloadStream.pipe(res);
+    } catch (err) {
+      console.error('Error retrieving image from GridFS:', err);
+      res.status(500).send('Internal Server Error');
     }
   },
 

@@ -105,7 +105,6 @@
                     <% } %>
 
                         <hr>
-
                         <% conversation.messages.forEach(function(message) { %>
                             <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>">
                                 <strong>
@@ -116,14 +115,29 @@
                                                     Unknown:
                                                     <% } %>
                                 </strong>
-                                <%= message.content %>
-                                    <span class="timestamp">
-                                        <%= new Date(message.createdAt).toLocaleString() %>
-                                    </span>
+
+                                <% if (message.content) { %>
+                                    <p>
+                                        <%= message.content %>
+                                    </p>
+                                    <% } %>
+
+                                        <% if (message.imageFileId) { %>
+                                            <div>
+                                                <img src="/user/image/<%= message.imageFileId %>" alt="<%= message.imageFileId %>"
+                                                    style="max-width: 300px; max-height: 300px;">
+                                            </div>
+                                            <% } %>
+
+                                                <span class="timestamp">
+                                                    <%= new Date(message.createdAt).toLocaleString() %>
+                                                </span>
                             </div>
                             <% }); %>
 
-                                <form action="/user/send_message_seller" method="POST" class="mt-4">
+                                <form action="/user/send_message_seller" method="POST" class="mt-4"
+                                    enctype="multipart/form-data">
+
                                     <input type="hidden" name="listing_id" value="<%= conversation.listing.id %>">
 
                                     <% const buyerId=(conversation.user1Id===userId) ? conversation.user2Id :
@@ -131,9 +145,10 @@
 
 
                                         <input type="hidden" name="buyer_id" value="<%= buyerId %>">
-
                                         <textarea name="message" class="form-control"
                                             placeholder="Type your message..."></textarea>
+
+                                        <input type="file" name="image" accept="image/*">
                                         <div class="message-buttons mt-3">
 
                                             <button type="submit" class="btn btn-primary mt-2">Send</button>
@@ -161,7 +176,7 @@
                                         </div>
                                 </form>
         </div>
-        
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
