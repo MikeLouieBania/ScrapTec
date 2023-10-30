@@ -10,7 +10,6 @@ module.exports = {
     try {
       const { email, password } = req.body;
   
-      
       // Fetch the drop point associated with the manager's email
       const dropPoint = await prisma.dropPoint.findFirst({
         where: {
@@ -22,7 +21,7 @@ module.exports = {
   
       // If the manager has no associated drop point or the password doesn't match, render the login page with an error
       if (!dropPoint || dropPoint.password !== password) {
-        return res.render('manager/login', { error: "Invalid credentials." });
+        return res.render('manager/login', { message: "Invalid credentials." });
       }
 
       // Store manager's ID in session for future requests
@@ -32,11 +31,12 @@ module.exports = {
       res.redirect('/manager/dashboard');
     } catch (error) {
       console.error("Error during manager login:", error);
-      res.render('manager/login', { error: "Internal Server Error." });
+      res.render('manager/login', { message: "Internal Server Error." });
     }
   },
   async getDashboard(req, res) {
     try {
+
       // Fetch the manager's profile and associated drop point using the ID stored in the session
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: {
@@ -49,7 +49,7 @@ module.exports = {
   
       // Check if managerWithDropPoint or managerWithDropPoint.dropPoint is null
       if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
-        return res.status(404).send("Manager or associated drop point not found");
+        return res.render('manager/login', { message: "Manager or associated drop point not found" });
       }
   
       // Extract the drop point name or provide a default value if it's not available  

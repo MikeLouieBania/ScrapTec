@@ -12,5 +12,4 @@ router.post('/updateDonationStatus', authMiddlewareManager.requireLogin, manager
 router.get('/managerAccount', authMiddlewareManager.requireLogin, managerController.getManagerAccount);  
 router.post('/logout', managerController.managerLogout);
 
-
 module.exports = router;
