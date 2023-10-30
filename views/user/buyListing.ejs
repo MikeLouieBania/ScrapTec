@@ -67,8 +67,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Marketplace</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -94,26 +93,18 @@
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card">
                         <div class="card-image-container mx-auto mt-3">
-                            <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>"
-                                class="card-img-top">
+                            <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>" class="card-img-top">
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">
                                 <%= listing.title %>
                             </h5>
-                            <p class="card-text">Price: $<%= listing.price %>
-                            </p>
-                            <p class="card-text">Category: <%= listing.category.name %>
-                            </p>
-                            <p class="card-text">Condition: <%= listing.condition.name %>
-                            </p>
-                            <p class="card-text">Location: <%= listing.location %>
-                            </p>
-                            <p class="card-text">Status: <%= listing.status %>
-                            </p>
-                            <p class="card-text">Sold by: <%= listing.user.firstName %>
-                                    <%= listing.user.lastName %>
-                            </p>
+                            <p class="card-text">Price: $<%= listing.price %></p>
+                            <p class="card-text">Category: <%= listing.category.name %></p>
+                            <p class="card-text">Condition: <%= listing.condition.name %></p>
+                            <p class="card-text">Location: <%= listing.location %></p>
+                            <p class="card-text">Status: <%= listing.status %></p>
+                            <p class="card-text">Sold by: <%= listing.user.firstName %> <%= listing.user.lastName %></p>
                             <% if (!listing.sellerRatingId) { %>
                                 <form action="/user/rateSeller" method="POST">
                                     <div class="rating">
@@ -132,29 +123,24 @@
                                     </div>
                                     <button type="submit" class="btn btn-primary rate-button mt-3">Submit Rating</button>
                                 </form>
-                               
-                                </div>
-                                <% } else { %>
-                                    <div class="rating">
-                                        <% for(var i=0; i < 5; i++) { %>
-                                            <% if(i < listing.rating.value) { %>
-                                                <span>★</span>
-                                                <% } else { %>
-                                                    <span>☆</span>
-                                                    <% } %>
-                                                        <% } %>
-                                                            <p class="rating-comment">
-                                                                <%= listing.rating.comment %>
-                                                            </p>
-                                                                       
-
+                            <% } else { %>
+                                <div class="rating">
+                                    <% for(var i=0; i < 5; i++) { %>
+                                        <% if(i < listing.rating.value) { %>
+                                            <span>★</span>
+                                        <% } else { %>
+                                            <span>☆</span>
+                                        <% } %>
                                     <% } %>
-
-
+                                    <p class="rating-comment">
+                                        <%= listing.rating.comment %>
+                                    </p>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
-                <% }) %>
+            <% }) %>
         </div>
     </main>
 
@@ -172,7 +158,6 @@
                 autoplaySpeed: 2000
             });
         });
- 
     </script>
 </body>
 
