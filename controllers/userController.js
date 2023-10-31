@@ -76,10 +76,10 @@ module.exports = {
       // Fetch all listings except for the ones made by the currently logged-in user
       const listings = await prisma.listing.findMany({
         where: {
-          NOT: {
-            userId: currentUserId,
-          },
-          status: 'SOLD',
+          NOT: [
+            { userId: currentUserId },
+            { status: "SOLD" },
+          ],
         },
         include: {
           photos: true, // Include photos of the listings
@@ -223,11 +223,22 @@ module.exports = {
           condition: true,
           sales: {
             include: {
-              buyer: true
+              buyer: true,
+              buyerRating: true // Include buyerRating
             }
           }
         },
       });
+
+
+      const enhancedListings = sellingListings.map(listing => {
+        const sales = listing.sales.map(sale => ({
+          ...sale,
+          buyerRatingId: sale.buyerRating?.id
+        }));
+        return { ...listing, sales };
+      });
+
 
       sellingListings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
@@ -241,9 +252,47 @@ module.exports = {
         }
       });
 
-      res.render('user/sellListing', { sellingListings, getMimeType });
+      res.render('user/sellListing', { sellingListings: enhancedListings, getMimeType });
     } catch (error) {
       console.error('Error fetching selling listings:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async postRateBuyer(req, res) {
+    try {
+      const { value, comment, saleId } = req.body;
+      const { buyerId } = req.params;
+
+      if (!value || !comment || !buyerId || !saleId) {
+        return res.status(400).send('All fields are required');
+      }
+
+      const newRating = await prisma.buyerRating.create({
+        data: {
+          value: parseInt(value),
+          comment: comment.trim(),
+          giverId: req.session.user.id, // Assuming the seller is the one logged in
+        }
+      });
+
+      const sale = await prisma.sale.findUnique({ where: { id: saleId } });
+      if (!sale) {
+        return res.status(404).send('Sale not found');
+      }
+
+      await prisma.sale.update({
+        where: {
+          id: saleId
+        },
+        data: {
+          buyerRatingId: newRating.id
+        }
+      });
+
+      res.redirect('/user/sellListing');
+    } catch (error) {
+      console.error('Error submitting buyer rating:', error);
       res.status(500).send('Internal Server Error');
     }
   },
@@ -286,7 +335,7 @@ module.exports = {
         const listing = purchase.listing;
         listing.saleId = purchase.id.toString(); // Ensure it's a string if necessary
         listing.sellerRatingId = purchase.sellerRatingId;
-        listing.rating = purchase.sellerRating; 
+        listing.rating = purchase.sellerRating;
         return listing;
       });
 
@@ -329,7 +378,6 @@ module.exports = {
       if (!sale) {
         return res.status(404).send('Sale not found');
       }
-
 
       await prisma.sale.update({
         where: {
@@ -766,6 +814,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async getImage(req, res) {
     try {
       const fileId = req.params.id;
@@ -787,10 +836,42 @@ module.exports = {
 
   async getAccount(req, res) {
     const userId = req.session.user.id;
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-    res.render('user/useraccount', { user });
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          city: true,
+          receivedSellerRatings: {
+            include: {
+              giver: true,  // Include the user who gave the rating
+            }
+          },
+          givenBuyerRatings: {
+            include: {
+              receiver: true  // Include the user who received the rating
+            }
+          }
+        }
+      });
+      
+  
+      // Calculate average seller rating
+      const averageSellerRating = user.receivedSellerRatings.reduce((acc, rating) => acc + rating.value, 0) / user.receivedSellerRatings.length;
+      
+      // Calculate average buyer rating
+      const averageBuyerRating = user.givenBuyerRatings.reduce((acc, rating) => acc + rating.value, 0) / user.givenBuyerRatings.length;
+  
+      res.render('user/useraccount', { 
+        user,
+        receivedSellerRatings: user.receivedSellerRatings,
+        givenBuyerRatings: user.givenBuyerRatings,
+        averageSellerRating,
+        averageBuyerRating
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
   },
 
   logout(req, res) {

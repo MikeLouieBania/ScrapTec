@@ -118,11 +118,17 @@
                                         <input type="hidden" name="sellerId" value="<%= listing.user.id %>">
                                     </div>
                                     <div class="feedback">
-                                        <label for="comment">What went well?</label>
-                                        <textarea name="comment" id="comment" rows="3" class="form-control" required></textarea>
+                                        <label for="predefined-comments">What went well?</label>
+                                        <select name="comment" id="predefined-comments" class="form-control" required>
+                                            <option value="Excellent Communication">Excellent Communication</option>
+                                            <option value="Very Punctual">Very Punctual</option>
+                                            <option value="Fair Pricing">Fair Pricing</option>
+                                            <option value="Accurate Listing Description">Accurate Listing Description</option>
+                                            <option value="other">Other</option>
+                                        </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary rate-button mt-3">Submit Rating</button>
-                                </form>
+                                </form>                                
                             <% } else { %>
                                 <div class="rating">
                                     <% for(var i=0; i < 5; i++) { %>
@@ -133,7 +139,8 @@
                                         <% } %>
                                     <% } %>
                                     <p class="rating-comment">
-                                        <%= listing.rating.comment %>
+                                        
+                                        <p>Comment: <%= listing.rating.comment || "No comment provided" %></p>
                                     </p>
                                 </div>
                             <% } %>

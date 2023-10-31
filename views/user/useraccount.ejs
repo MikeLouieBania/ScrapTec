@@ -1,59 +1,107 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>My Account</title>
-    <!-- Link to Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-    <style>
-      /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/user/dashboard">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto"> 
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/marketplace">Marketplace</a>
-                </li> 
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/useraccount">My Account</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" method="post" action="/user/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-            </form>
-        </div>
-    </nav>
-    <div class="container">   
-      <div>
-        <h3>Account Settings</h3> 
-        <p><strong>Name:</strong> <%= user.firstName %> <%= user.lastName %></p>
-        <p><strong>Email:</strong> <%= user.email %></p>
-        <p><strong>City:</strong> <%= user.city %></p>
-        <p><strong>Contact Number:</strong> <%= user.contactNumber %></p>
-        <p><strong>Gender:</strong> <%= user.gender %></p>
-        <% if (user.profilePicture) { %>
-          <p><strong>Profile Picture:</strong></p>
-          <img src="data:image/jpeg;base64, <%= user.profilePicture.toString('base64') %>" alt="Profile Picture" style="max-width: 200px;"/>
+
+<head>
+  <title>My Account</title>
+  <!-- Link to Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <style>
+    /* Additional custom styles for the page */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/user/dashboard">Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/user/marketplace">Marketplace</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/useraccount">My Account</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0" method="post" action="/user/logout">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <div>
+      <h3>Account Settings</h3>
+      <p><strong>Name:</strong>
+        <%= user.firstName %>
+          <%= user.lastName %>
+      </p>
+      <p><strong>Email:</strong>
+        <%= user.email %>
+      </p>
+      <p><strong>City:</strong>
+        <%= user.city.name %>
+      </p>
+      <p><strong>Contact Number:</strong>
+        <%= user.contactNumber %>
+      </p>
+      <p><strong>Gender:</strong>
+        <%= user.gender %>
+      </p>
+      <% if (user.profilePicture) { %>
+        <p><strong>Profile Picture:</strong></p>
+        <img src="data:image/jpeg;base64, <%= user.profilePicture.toString('base64') %>" alt="Profile Picture"
+          style="max-width: 200px;" />
         <% } else { %>
           <p><strong>No Profile Picture</strong></p>
-        <% } %>
-      </div>
+          <% } %>
+    </div>
+    <!-- For Seller Ratings -->
+    <div>
+      <h4>Average Seller Rating: <%= averageSellerRating.toFixed(2) %>
+      </h4>
+      <ul>
+        <% receivedSellerRatings.forEach(rating=> { %>
+          <li>
+            <strong>
+              <%= rating.giver ? (rating.giver.firstName + ' ' + rating.giver.lastName) : 'Unknown User' %>:
+            </strong>
+            <%= rating.value %> - <%= rating.comment || 'No comment' %>
+          </li>
+          <% }) %>
+      </ul>
     </div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+    <!-- For Buyer Ratings -->
+    <div>
+      <h4>Average Buyer Rating: <%= averageBuyerRating.toFixed(2) %>
+      </h4>
+      <ul>
+        <% givenBuyerRatings.forEach(rating=> { %>
+          <li>
+            <strong>
+              <%= rating.receiver ? (rating.receiver.firstName + ' ' + rating.receiver.lastName) : 'Unknown User' %>:
+            </strong>
+            <%= rating.value %> - <%= rating.comment || 'No comment' %>
+          </li>
+          <% }) %>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
 </html>

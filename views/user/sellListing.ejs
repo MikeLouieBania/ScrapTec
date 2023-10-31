@@ -188,16 +188,24 @@
                         <a href="/editListing/<%= listing.id %>" class="btn btn-primary edit-button">Edit</a>
                         <a href="/deleteListing/<%= listing.id %>" class="btn btn-danger delete-button">Delete</a>
                         <!-- Mark as Sold Button -->
-
-                        <% if (listing.sales && listing.sales.length> 0) { %>
-                            <p class="card-text">Sold to: <%= listing.sales[0].buyer.firstName %>
-                                    <%= listing.sales[0].buyer.lastName %>
-                            </p>
-                            <% } else if (listing.status.toLowerCase()==='available' ) { %>
-                                <button class="btn btn-success mark-sold-button" data-toggle="modal"
-                                    data-target="#markAsSoldModal" data-listing-id="<%= listing.id %>">Mark as
-                                    Sold</button>
+                        <% if (listing.sales && listing.sales.length > 0) { %>
+                            <p class="card-text">
+                                Sold to: <%= listing.sales[0].buyer.firstName %> <%= listing.sales[0].buyer.lastName %>
+                                <% if (listing.sales[0].buyerRating) { %>
+                                    <button class="btn btn-secondary" disabled>Buyer Rated: <%= listing.sales[0].buyerRating.value %> Stars</button>
+                                    <p>Comment: <%= listing.sales[0].buyerRating.comment || "No comment provided" %></p>
+                                <% } else { %>
+                                    <button class="btn btn-primary rate-buyer-button" data-toggle="modal"
+                                        data-target="#rateBuyerModal"
+                                        data-buyer-id="<%= listing.sales[0].buyer.id %>"
+                                        data-sale-id="<%= listing.sales[0].id %>">Rate Buyer</button>
                                 <% } %>
+                            </p>
+                        <% } else if (listing.status.toLowerCase() === 'available') { %>
+                            <button class="btn btn-success mark-sold-button" data-toggle="modal"
+                                data-target="#markAsSoldModal" data-listing-id="<%= listing.id %>">Mark as Sold</button>
+                        <% } %>
+                        
 
                     </div>
                 </div>
@@ -225,6 +233,48 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Rate Buyer Modal -->
+                    <div class="modal fade" id="rateBuyerModal" tabindex="-1" role="dialog"
+                        aria-labelledby="rateBuyerModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="rateBuyerModalLabel">Rate Buyer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Rating input form -->
+                                    <form id="rate-buyer-form">
+                                        <div class="form-group">
+                                            <label for="rating">Rating</label>
+                                            <select class="form-control" id="rating" required>
+                                                <option value="5">5 - Excellent</option>
+                                                <option value="4">4 - Very Good</option>
+                                                <option value="3">3 - Good</option>
+                                                <option value="2">2 - Fair</option>
+                                                <option value="1">1 - Poor</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="predefined-comments">What went well?</label>
+                                            <select class="form-control" id="predefined-comments" required>
+                                                <option value="Excellent Communication">Excellent Communication</option>
+                                                <option value="Very Punctual">Very Punctual</option>
+                                                <option value="Fair Pricing">Fair Pricing</option>
+                                                <option value="Accurate Listing Description">Accurate Listing Description</option> 
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                                    </form>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
         </div>
     </main>
@@ -279,6 +329,41 @@
                     }
                 });
             });
+
+            $('#rateBuyerModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                const buyerId = button.data('buyer-id');
+                const saleId = button.data('sale-id');
+                const modal = $(this);
+                modal.data('buyer-id', buyerId);
+                modal.data('sale-id', saleId);
+            });
+
+
+            $('#rate-buyer-form').submit(function (event) {
+                event.preventDefault();
+                const buyerId = $('#rateBuyerModal').data('buyer-id');
+                const saleId = $('#rateBuyerModal').data('sale-id');
+                const rating = $('#rating').val();
+                const comment = $('#predefined-comments').val();
+
+                // Send a request to the server to submit the rating
+                $.ajax({
+                    url: `/user/rate-buyer/${buyerId}`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ value: rating, comment, buyerId, saleId }),
+                    success: function (response) {
+                        alert('Rating submitted successfully!');
+                        $('#rateBuyerModal').modal('hide');
+                        location.reload(); // Reload the page to reflect changes
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error submitting rating:', error);
+                        alert('Error submitting rating. Please try again.');
+                    }
+                });
+            });
         });
 
 
@@ -291,10 +376,6 @@
             }
             // Assuming you have stored the listing ID in a data attribute of the modal
             const listingId = $('#markAsSoldModal').data('listing-id');
-
-            // Log the values to help debug
-            console.log('Listing ID:', listingId);
-            console.log('Buyer ID:', buyerId);
 
             // Send a request to the server to mark the listing as sold
             $.ajax({
