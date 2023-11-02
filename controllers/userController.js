@@ -236,7 +236,7 @@ module.exports = {
           buyerRatings: sale.rating.filter(r => r.type === "SELLER_TO_BUYER") || [] // Filter for SELLER_TO_BUYER ratings
         }));
         return { ...listing, sales };
-      });               
+      });
 
       sellingListings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
@@ -258,19 +258,19 @@ module.exports = {
   },
 
   async postRateBuyer(req, res) {
-    try { 
+    try {
       const { value, comment, saleId, buyerId } = req.body;
       const sellerId = req.session.user.id;
-  
+
       if (!value || !comment || !buyerId || !saleId) {
         return res.status(400).send('All fields are required');
       }
-  
+
       const numericValue = parseInt(value);
       if (isNaN(numericValue) || numericValue < 1 || numericValue > 5) {
         return res.status(400).send('Invalid rating value');
       }
-  
+
       const sale = await prisma.sale.findUnique({
         where: { id: saleId },
         include: { rating: true, listing: true } // Include the related listing
@@ -278,17 +278,17 @@ module.exports = {
       if (!sale) {
         return res.status(404).send('Sale not found');
       }
-  
+
       const actualSellerId = sale.listing.userId; // Get the seller ID from the related listing
       if (actualSellerId !== sellerId) {
         return res.status(403).send('You are not authorized to rate this buyer');
       }
-  
+
       const alreadyRated = sale.rating.some(rating => rating.raterId === sellerId && rating.type === "SELLER_TO_BUYER");
       if (alreadyRated) {
         return res.status(400).send('You have already rated this buyer for this transaction');
       }
-  
+
       const newRating = await prisma.rating.create({
         data: {
           value: numericValue,
@@ -299,7 +299,7 @@ module.exports = {
           type: "SELLER_TO_BUYER"
         }
       });
-  
+
       res.redirect('/user/sellListing');
     } catch (error) {
       console.error('Error submitting buyer rating:', error);
@@ -310,7 +310,7 @@ module.exports = {
   async getBuyListings(req, res) {
     try {
       const userId = req.session.user.id;
-  
+
       // Fetch listings bought by the user
       const userPurchases = await prisma.user.findUnique({
         where: {
@@ -339,14 +339,14 @@ module.exports = {
           }
         }
       });
-  
+
       const boughtListings = userPurchases.purchases.map(purchase => {
         const listing = purchase.listing;
         listing.saleId = purchase.id.toString();
         listing.ratings = purchase.rating.filter(rating => rating.type === "BUYER_TO_SELLER");
         return listing;
       });
-  
+
       // Convert image bytes to base64 string
       boughtListings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
@@ -357,49 +357,49 @@ module.exports = {
           });
         }
       });
-  
+
       res.render('user/buyListing', { boughtListings, userId });
     } catch (error) {
       console.error('Error fetching bought listings:', error);
       res.status(500).send('Internal Server Error');
     }
   },
-   
+
   async postRateSeller(req, res) {
     try {
       const { value, comment, sellerId, saleId } = req.body;
       const buyerId = req.session.user.id; // Assuming you have the buyer's ID in the session
-   
+
       if (!value || !comment || !sellerId || !saleId) {
         return res.status(400).send('All fields are required');
       }
-  
+
       // Validate rating value
       const numericValue = parseInt(value);
       if (isNaN(numericValue) || numericValue < 1 || numericValue > 5) {
         return res.status(400).send('Invalid rating value');
       }
-  
+
       const sale = await prisma.sale.findUnique({
         where: { id: saleId },
         include: { rating: true } // Include existing ratings to check if already rated
       });
-  
+
       if (!sale) {
         return res.status(404).send('Sale not found');
       }
-  
+
       // Verify the sale belongs to the logged-in buyer
       if (sale.buyerId !== buyerId) {
         return res.status(403).send('You are not authorized to rate this seller');
       }
-  
+
       // Check if buyer has already rated the seller for this sale
       const alreadyRated = sale.rating.some(rating => rating.raterId === buyerId);
       if (alreadyRated) {
         return res.status(400).send('You have already rated this seller for this transaction');
       }
-  
+
       const newRating = await prisma.rating.create({
         data: {
           value: numericValue,
@@ -410,7 +410,7 @@ module.exports = {
           type: "BUYER_TO_SELLER" // Specify the type of rating
         }
       });
-  
+
       res.redirect('/user/buyListing');
     } catch (error) {
       console.error('Error submitting seller rating:', error);
@@ -877,6 +877,18 @@ module.exports = {
         }
       });
   
+      // Convert image binary data to data URL
+      profileUser.listings.forEach(listing => {
+        if (listing.photos && listing.photos.length > 0) {
+          listing.photos.forEach(photo => {
+            if (photo.imageUrl) {
+              const mimeType = getMimeType(photo.extension);
+              photo.imageUrl = `${mimeType}${photo.imageUrl.toString('base64')}`;
+            }
+          });
+        }
+      });
+  
       if (!profileUser) {
         return res.status(404).send('User not found');
       }
@@ -914,7 +926,7 @@ module.exports = {
           },
         }
       });
-  
+
       const averageReceivedRating = await prisma.rating.aggregate({
         _avg: {
           value: true,
@@ -923,8 +935,8 @@ module.exports = {
           rateeId: userId,
         },
       });
-  
-      res.render('user/useraccount', { 
+
+      res.render('user/useraccount', {
         user: userWithSalesAndRatings,
         averageReceivedRating: averageReceivedRating._avg.value || 0,
       });
@@ -933,7 +945,7 @@ module.exports = {
       res.status(500).send('Internal Server Error');
     }
   },
-  
+
   logout(req, res) {
     // Clear the session to log out the user
     req.session.user = null;
