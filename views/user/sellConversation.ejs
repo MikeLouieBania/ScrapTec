@@ -99,7 +99,11 @@
                 <p>Participants: <%= conversation.user1.firstName %>
                         <%= conversation.user1.lastName %> and <%= conversation.user2.firstName %>
                                 <%= conversation.user2.lastName %>
-                </p>
+                </p> 
+                <!-- Link to view buyer's profile -->
+                <a href="/user/profile/<%= conversation.listing.userId %>" class="btn btn-primary btn-sm ml-2">View
+                    Buyer's Profile</a>
+
                 <% } else { %>
                     <p>Participants data missing.</p>
                     <% } %>

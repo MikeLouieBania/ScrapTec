@@ -111,8 +111,9 @@
                             </p>
                             <p class="card-text">Status: <%= listing.status %>
                             </p>
-                            <p class="card-text">Sold by: <%= listing.user.firstName %>
-                                    <%= listing.user.lastName %>
+                            <p class="card-text">Sold by: <a href="/user/profile/<%= listing.user.id %>">
+                                <%= listing.user.firstName %> <%= listing.user.lastName %>
+                            </a>
                             </p>
                             <% if (listing.ratings && listing.ratings.length > 0) { %>
                                 <% listing.ratings.forEach(rating => { %>

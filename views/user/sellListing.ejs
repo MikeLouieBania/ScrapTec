@@ -191,8 +191,9 @@
                         <% if (listing.sales && listing.sales.length> 0) { %>
                             <% listing.sales.forEach(sale=> { %>
                                 <p class="card-text">
-                                    Sold to: <%= sale.buyer.firstName %>
-                                        <%= sale.buyer.lastName %>
+                                    Sold to: <a href="/user/profile/<%= sale.buyer.id %>">
+                                        <%= sale.buyer.firstName %> <%= sale.buyer.lastName %>
+                                    </a>
                                             <% if (sale.buyerRatings && sale.buyerRatings.length> 0) { %>
                                                 <% sale.buyerRatings.forEach(rating=> { %>
                                                     <button class="btn btn-secondary" disabled>Rated Buyer: <%=

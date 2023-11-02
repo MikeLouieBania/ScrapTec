@@ -92,8 +92,12 @@
     <!-- Profile Header -->
     <div class="container">
         <div class="profile-header">
-            <img src="data:image/jpeg;base64, <%= profileUser.profilePicture.toString('base64') %>"
-                alt="<%= profileUser.firstName %>" class="profile-picture mx-auto">
+            <% if (profileUser.profilePicture) { %>
+                <img src="data:image/jpeg;base64, <%= profileUser.profilePicture.toString('base64') %>"
+                    alt="<%= profileUser.firstName %>" class="profile-picture mx-auto">
+            <% } else { %>
+                <small>No Profile Picture</small>
+            <% } %>
             <h1>
                 <%= profileUser.firstName %>
                     <%= profileUser.lastName %>
