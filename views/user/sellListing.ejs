@@ -188,25 +188,32 @@
                         <a href="/editListing/<%= listing.id %>" class="btn btn-primary edit-button">Edit</a>
                         <a href="/deleteListing/<%= listing.id %>" class="btn btn-danger delete-button">Delete</a>
                         <!-- Mark as Sold Button -->
-                        <% if (listing.sales && listing.sales.length > 0) { %>
-                            <p class="card-text">
-                                Sold to: <%= listing.sales[0].buyer.firstName %> <%= listing.sales[0].buyer.lastName %>
-                                <% if (listing.sales[0].buyerRating) { %>
-                                    <button class="btn btn-secondary" disabled>Buyer Rated: <%= listing.sales[0].buyerRating.value %> Stars</button>
-                                    <p>Comment: <%= listing.sales[0].buyerRating.comment || "No comment provided" %></p>
-                                <% } else { %>
-                                    <button class="btn btn-primary rate-buyer-button" data-toggle="modal"
-                                        data-target="#rateBuyerModal"
-                                        data-buyer-id="<%= listing.sales[0].buyer.id %>"
-                                        data-sale-id="<%= listing.sales[0].id %>">Rate Buyer</button>
-                                <% } %>
-                            </p>
-                        <% } else if (listing.status.toLowerCase() === 'available') { %>
-                            <button class="btn btn-success mark-sold-button" data-toggle="modal"
-                                data-target="#markAsSoldModal" data-listing-id="<%= listing.id %>">Mark as Sold</button>
-                        <% } %>
-                        
+                        <% if (listing.sales && listing.sales.length> 0) { %>
+                            <% listing.sales.forEach(sale=> { %>
+                                <p class="card-text">
+                                    Sold to: <%= sale.buyer.firstName %>
+                                        <%= sale.buyer.lastName %>
+                                            <% if (sale.buyerRatings && sale.buyerRatings.length> 0) { %>
+                                                <% sale.buyerRatings.forEach(rating=> { %>
+                                                    <button class="btn btn-secondary" disabled>Rated Buyer: <%=
+                                                            rating.value %> Stars</button>
+                                                    <p>Comment: <%= rating.comment || "No comment provided" %>
+                                                    </p>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <button class="btn btn-primary rate-buyer-button"
+                                                                data-toggle="modal" data-target="#rateBuyerModal"
+                                                                data-buyer-id="<%= sale.buyer.id %>"
+                                                                data-sale-id="<%= sale.id %>">Rate Buyer</button>
 
+                                                            <% } %>
+                                </p>
+                                <% }) %>
+                                    <% } else if (listing.status.toLowerCase()==='available' ) { %>
+                                        <button class="btn btn-success mark-sold-button" data-toggle="modal"
+                                            data-target="#markAsSoldModal" data-listing-id="<%= listing.id %>">Mark as
+                                            Sold</button>
+                                        <% } %>
                     </div>
                 </div>
                 <% }) %>
@@ -264,12 +271,13 @@
                                                 <option value="Excellent Communication">Excellent Communication</option>
                                                 <option value="Very Punctual">Very Punctual</option>
                                                 <option value="Fair Pricing">Fair Pricing</option>
-                                                <option value="Accurate Listing Description">Accurate Listing Description</option> 
+                                                <option value="Accurate Listing Description">Accurate Listing
+                                                    Description</option>
                                             </select>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Submit Rating</button>
                                     </form>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -298,6 +306,7 @@
 
 
         $(document).ready(function () {
+            let currentBuyerId, currentSaleId;
             $('#markAsSoldModal').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget); // Button that triggered the modal
                 const listingId = button.data('listing-id'); // Extract info from data-* attributes
@@ -330,29 +339,25 @@
                 });
             });
 
+
             $('#rateBuyerModal').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget);
-                const buyerId = button.data('buyer-id');
-                const saleId = button.data('sale-id');
-                const modal = $(this);
-                modal.data('buyer-id', buyerId);
-                modal.data('sale-id', saleId);
+                currentBuyerId = button.data('buyer-id');
+                currentSaleId = button.data('sale-id'); 
             });
 
 
             $('#rate-buyer-form').submit(function (event) {
                 event.preventDefault();
-                const buyerId = $('#rateBuyerModal').data('buyer-id');
-                const saleId = $('#rateBuyerModal').data('sale-id');
                 const rating = $('#rating').val();
                 const comment = $('#predefined-comments').val();
 
                 // Send a request to the server to submit the rating
                 $.ajax({
-                    url: `/user/rate-buyer/${buyerId}`,
+                    url: `/user/rate-buyer/${currentBuyerId}`,
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ value: rating, comment, buyerId, saleId }),
+                    data: JSON.stringify({ value: rating, comment, saleId: currentSaleId, buyerId: currentBuyerId }), // Include buyerId in the request body
                     success: function (response) {
                         alert('Rating submitted successfully!');
                         $('#rateBuyerModal').modal('hide');
@@ -364,6 +369,8 @@
                     }
                 });
             });
+
+
         });
 
 

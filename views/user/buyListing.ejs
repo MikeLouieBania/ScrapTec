@@ -67,7 +67,8 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Marketplace</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -93,61 +94,74 @@
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card">
                         <div class="card-image-container mx-auto mt-3">
-                            <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>" class="card-img-top">
+                            <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>"
+                                class="card-img-top">
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">
                                 <%= listing.title %>
                             </h5>
-                            <p class="card-text">Price: $<%= listing.price %></p>
-                            <p class="card-text">Category: <%= listing.category.name %></p>
-                            <p class="card-text">Condition: <%= listing.condition.name %></p>
-                            <p class="card-text">Location: <%= listing.location %></p>
-                            <p class="card-text">Status: <%= listing.status %></p>
-                            <p class="card-text">Sold by: <%= listing.user.firstName %> <%= listing.user.lastName %></p>
-                            <% if (!listing.sellerRatingId) { %>
-                                <form action="/user/rateSeller" method="POST">
+                            <p class="card-text">Price: $<%= listing.price %>
+                            </p>
+                            <p class="card-text">Category: <%= listing.category.name %>
+                            </p>
+                            <p class="card-text">Condition: <%= listing.condition.name %>
+                            </p>
+                            <p class="card-text">Location: <%= listing.location %>
+                            </p>
+                            <p class="card-text">Status: <%= listing.status %>
+                            </p>
+                            <p class="card-text">Sold by: <%= listing.user.firstName %>
+                                    <%= listing.user.lastName %>
+                            </p>
+                            <% if (listing.ratings && listing.ratings.length > 0) { %>
+                                <% listing.ratings.forEach(rating => { %>
+                                  <% if (rating.type === "BUYER_TO_SELLER") { %>
+                                    <!-- Display buyer to seller ratings -->
                                     <div class="rating">
-                                        <% for(let i=1; i <= 5; i++) { %>
-                                            <label>
-                                                <input type="radio" name="value" value="<%= i %>" required>
-                                                <span class="star">☆</span>
-                                            </label>
-                                        <% } %>
-                                        <input type="hidden" name="saleId" value="<%= listing.saleId %>">
-                                        <input type="hidden" name="sellerId" value="<%= listing.user.id %>">
-                                    </div>
-                                    <div class="feedback">
-                                        <label for="predefined-comments">What went well?</label>
-                                        <select name="comment" id="predefined-comments" class="form-control" required>
-                                            <option value="Excellent Communication">Excellent Communication</option>
-                                            <option value="Very Punctual">Very Punctual</option>
-                                            <option value="Fair Pricing">Fair Pricing</option>
-                                            <option value="Accurate Listing Description">Accurate Listing Description</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary rate-button mt-3">Submit Rating</button>
-                                </form>                                
-                            <% } else { %>
-                                <div class="rating">
-                                    <% for(var i=0; i < 5; i++) { %>
-                                        <% if(i < listing.rating.value) { %>
-                                            <span>★</span>
+                                      <% for(var i = 0; i < 5; i++) { %>
+                                        <% if(i < rating.value) { %>
+                                          <span>★</span>
                                         <% } else { %>
-                                            <span>☆</span>
+                                          <span>☆</span>
                                         <% } %>
+                                      <% } %>
+                                      <p class="rating-comment">Comment: <%= rating.comment || "No comment provided" %></p>
+                                    </div>
+                                  <% } %>
+                                <% }) %>
+                              <% } %>
+                              
+                              <% if (!listing.ratings || listing.ratings.every(rating => rating.raterId !== userId || rating.type !== "BUYER_TO_SELLER")) { %>
+                                <form action="/user/rateSeller" method="POST">
+                                  <div class="rating">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                      <label>
+                                        <input type="radio" name="value" value="<%= i %>" required>
+                                        <span class="star">☆</span>
+                                      </label>
                                     <% } %>
-                                    <p class="rating-comment">
-                                        
-                                        <p>Comment: <%= listing.rating.comment || "No comment provided" %></p>
-                                    </p>
-                                </div>
-                            <% } %>
+                                  </div>
+                                  <input type="hidden" name="saleId" value="<%= listing.saleId %>">
+                                  <input type="hidden" name="sellerId" value="<%= listing.user.id %>">
+                                  <div class="feedback">
+                                    <label for="predefined-comments">What went well?</label>
+                                    <select name="comment" id="predefined-comments" class="form-control" required>
+                                      <option value="Excellent Communication">Excellent Communication</option>
+                                      <option value="Very Punctual">Very Punctual</option>
+                                      <option value="Fair Pricing">Fair Pricing</option>
+                                      <option value="Accurate Listing Description">Accurate Listing Description</option>
+                                      <option value="other">Other</option>
+                                    </select>
+                                  </div>
+                                  <button type="submit" class="btn btn-primary rate-button mt-3">Submit Rating</button>
+                                </form>
+                              <% } %>
+                              
                         </div>
                     </div>
                 </div>
-            <% }) %>
+                <% }) %>
         </div>
     </main>
 

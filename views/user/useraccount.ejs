@@ -64,15 +64,17 @@
           <p><strong>No Profile Picture</strong></p>
           <% } %>
     </div>
-    <!-- For Seller Ratings -->
+
+    <!-- For Received Ratings -->
     <div>
-      <h4>Average Seller Rating: <%= averageSellerRating.toFixed(2) %>
+      <h4>Average Received Rating: <%= averageReceivedRating.toFixed(2) %>
       </h4>
       <ul>
-        <% receivedSellerRatings.forEach(rating=> { %>
+        <% user.receivedRatings.forEach(rating=> { %>
           <li>
             <strong>
-              <%= rating.giver ? (rating.giver.firstName + ' ' + rating.giver.lastName) : 'Unknown User' %>:
+              <%= rating.rater.firstName %>
+                <%= rating.rater.lastName %>:
             </strong>
             <%= rating.value %> - <%= rating.comment || 'No comment' %>
           </li>
@@ -80,21 +82,7 @@
       </ul>
     </div>
 
-    <!-- For Buyer Ratings -->
-    <div>
-      <h4>Average Buyer Rating: <%= averageBuyerRating.toFixed(2) %>
-      </h4>
-      <ul>
-        <% givenBuyerRatings.forEach(rating=> { %>
-          <li>
-            <strong>
-              <%= rating.receiver ? (rating.receiver.firstName + ' ' + rating.receiver.lastName) : 'Unknown User' %>:
-            </strong>
-            <%= rating.value %> - <%= rating.comment || 'No comment' %>
-          </li>
-          <% }) %>
-      </ul>
-    </div>
+
 
   </div>
 

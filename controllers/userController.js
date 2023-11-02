@@ -224,21 +224,19 @@ module.exports = {
           sales: {
             include: {
               buyer: true,
-              buyerRating: true // Include buyerRating
+              rating: true // Include ratings
             }
           }
         },
       });
 
-
       const enhancedListings = sellingListings.map(listing => {
         const sales = listing.sales.map(sale => ({
           ...sale,
-          buyerRatingId: sale.buyerRating?.id
+          buyerRatings: sale.rating.filter(r => r.type === "SELLER_TO_BUYER") || [] // Filter for SELLER_TO_BUYER ratings
         }));
         return { ...listing, sales };
-      });
-
+      });               
 
       sellingListings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
@@ -260,36 +258,48 @@ module.exports = {
   },
 
   async postRateBuyer(req, res) {
-    try {
-      const { value, comment, saleId } = req.body;
-      const { buyerId } = req.params;
-
+    try { 
+      const { value, comment, saleId, buyerId } = req.body;
+      const sellerId = req.session.user.id;
+  
       if (!value || !comment || !buyerId || !saleId) {
         return res.status(400).send('All fields are required');
       }
-
-      const newRating = await prisma.buyerRating.create({
-        data: {
-          value: parseInt(value),
-          comment: comment.trim(),
-          giverId: req.session.user.id, // Assuming the seller is the one logged in
-        }
+  
+      const numericValue = parseInt(value);
+      if (isNaN(numericValue) || numericValue < 1 || numericValue > 5) {
+        return res.status(400).send('Invalid rating value');
+      }
+  
+      const sale = await prisma.sale.findUnique({
+        where: { id: saleId },
+        include: { rating: true, listing: true } // Include the related listing
       });
-
-      const sale = await prisma.sale.findUnique({ where: { id: saleId } });
       if (!sale) {
         return res.status(404).send('Sale not found');
       }
-
-      await prisma.sale.update({
-        where: {
-          id: saleId
-        },
+  
+      const actualSellerId = sale.listing.userId; // Get the seller ID from the related listing
+      if (actualSellerId !== sellerId) {
+        return res.status(403).send('You are not authorized to rate this buyer');
+      }
+  
+      const alreadyRated = sale.rating.some(rating => rating.raterId === sellerId && rating.type === "SELLER_TO_BUYER");
+      if (alreadyRated) {
+        return res.status(400).send('You have already rated this buyer for this transaction');
+      }
+  
+      const newRating = await prisma.rating.create({
         data: {
-          buyerRatingId: newRating.id
+          value: numericValue,
+          comment: comment.trim(),
+          saleId: saleId,
+          raterId: sellerId,
+          rateeId: buyerId,
+          type: "SELLER_TO_BUYER"
         }
       });
-
+  
       res.redirect('/user/sellListing');
     } catch (error) {
       console.error('Error submitting buyer rating:', error);
@@ -300,7 +310,7 @@ module.exports = {
   async getBuyListings(req, res) {
     try {
       const userId = req.session.user.id;
-
+  
       // Fetch listings bought by the user
       const userPurchases = await prisma.user.findUnique({
         where: {
@@ -310,7 +320,6 @@ module.exports = {
           purchases: {
             select: {
               id: true,  // Fetching the sale.id
-              sellerRatingId: true,  // Fetching the rating id if exists
               listing: {
                 include: {
                   photos: true,
@@ -325,20 +334,19 @@ module.exports = {
                   }
                 }
               },
-              sellerRating: true  // Add this line to include the sellerRating
+              rating: true  // Include ratings related to the sale
             }
           }
         }
       });
-
+  
       const boughtListings = userPurchases.purchases.map(purchase => {
         const listing = purchase.listing;
-        listing.saleId = purchase.id.toString(); // Ensure it's a string if necessary
-        listing.sellerRatingId = purchase.sellerRatingId;
-        listing.rating = purchase.sellerRating;
+        listing.saleId = purchase.id.toString();
+        listing.ratings = purchase.rating.filter(rating => rating.type === "BUYER_TO_SELLER");
         return listing;
       });
-
+  
       // Convert image bytes to base64 string
       boughtListings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
@@ -349,45 +357,60 @@ module.exports = {
           });
         }
       });
-
-      res.render('user/buyListing', { boughtListings });
+  
+      res.render('user/buyListing', { boughtListings, userId });
     } catch (error) {
       console.error('Error fetching bought listings:', error);
       res.status(500).send('Internal Server Error');
     }
   },
-
+   
   async postRateSeller(req, res) {
     try {
       const { value, comment, sellerId, saleId } = req.body;
-
-      console.log(req.body);
+      const buyerId = req.session.user.id; // Assuming you have the buyer's ID in the session
+   
       if (!value || !comment || !sellerId || !saleId) {
         return res.status(400).send('All fields are required');
       }
-
-      const newRating = await prisma.sellerRating.create({
-        data: {
-          value: parseInt(value),
-          comment: comment.trim(),
-          receiverId: sellerId,
-        }
+  
+      // Validate rating value
+      const numericValue = parseInt(value);
+      if (isNaN(numericValue) || numericValue < 1 || numericValue > 5) {
+        return res.status(400).send('Invalid rating value');
+      }
+  
+      const sale = await prisma.sale.findUnique({
+        where: { id: saleId },
+        include: { rating: true } // Include existing ratings to check if already rated
       });
-
-      const sale = await prisma.sale.findUnique({ where: { id: saleId } });
+  
       if (!sale) {
         return res.status(404).send('Sale not found');
       }
-
-      await prisma.sale.update({
-        where: {
-          id: saleId
-        },
+  
+      // Verify the sale belongs to the logged-in buyer
+      if (sale.buyerId !== buyerId) {
+        return res.status(403).send('You are not authorized to rate this seller');
+      }
+  
+      // Check if buyer has already rated the seller for this sale
+      const alreadyRated = sale.rating.some(rating => rating.raterId === buyerId);
+      if (alreadyRated) {
+        return res.status(400).send('You have already rated this seller for this transaction');
+      }
+  
+      const newRating = await prisma.rating.create({
         data: {
-          sellerRatingId: newRating.id
+          value: numericValue,
+          comment: comment.trim(),
+          sale: { connect: { id: saleId } }, // Connect the sale
+          rater: { connect: { id: buyerId } }, // Connect the buyer who is giving the rating
+          ratee: { connect: { id: sellerId } }, // Connect the seller receiving the rating
+          type: "BUYER_TO_SELLER" // Specify the type of rating
         }
       });
-
+  
       res.redirect('/user/buyListing');
     } catch (error) {
       console.error('Error submitting seller rating:', error);
@@ -834,46 +857,83 @@ module.exports = {
     }
   },
 
-  async getAccount(req, res) {
-    const userId = req.session.user.id;
+  async getViewUserProfile(req, res) {
     try {
-      const user = await prisma.user.findUnique({
+      const userId = req.params.userId;
+      const profileUser = await prisma.user.findUnique({
         where: { id: userId },
         include: {
-          city: true,
-          receivedSellerRatings: {
+          listings: {
+            where: { status: 'AVAILABLE' },
             include: {
-              giver: true,  // Include the user who gave the rating
+              photos: true
             }
           },
-          givenBuyerRatings: {
+          receivedRatings: {
             include: {
-              receiver: true  // Include the user who received the rating
+              rater: true
             }
           }
         }
       });
-      
   
-      // Calculate average seller rating
-      const averageSellerRating = user.receivedSellerRatings.reduce((acc, rating) => acc + rating.value, 0) / user.receivedSellerRatings.length;
-      
-      // Calculate average buyer rating
-      const averageBuyerRating = user.givenBuyerRatings.reduce((acc, rating) => acc + rating.value, 0) / user.givenBuyerRatings.length;
+      if (!profileUser) {
+        return res.status(404).send('User not found');
+      }
+  
+      const averageRating = profileUser.receivedRatings.reduce((acc, rating) => acc + rating.value, 0) / profileUser.receivedRatings.length;
+  
+      res.render('user/viewUserProfile', { profileUser, averageRating: isNaN(averageRating) ? 0 : averageRating });
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async getAccount(req, res) {
+    const userId = req.session.user.id;
+    try {
+      const userWithSalesAndRatings = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          city: true,
+          purchases: {
+            include: {
+              listing: {
+                include: {
+                  user: true, // Include the seller of the listing
+                }
+              },
+              rating: true, // Include the ratings related to the sale
+            }
+          },
+          receivedRatings: {
+            include: {
+              rater: true, // Include the user who gave the rating
+            }
+          },
+        }
+      });
+  
+      const averageReceivedRating = await prisma.rating.aggregate({
+        _avg: {
+          value: true,
+        },
+        where: {
+          rateeId: userId,
+        },
+      });
   
       res.render('user/useraccount', { 
-        user,
-        receivedSellerRatings: user.receivedSellerRatings,
-        givenBuyerRatings: user.givenBuyerRatings,
-        averageSellerRating,
-        averageBuyerRating
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0,
       });
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
     }
   },
-
+  
   logout(req, res) {
     // Clear the session to log out the user
     req.session.user = null;
