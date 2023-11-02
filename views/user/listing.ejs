@@ -30,8 +30,10 @@
                 <div id='map' style='width: 100%; height: 300px;'></div>
                 <p>Status: <%= listing.status %>
                 </p>
-                <p>Seller: <%= listing.user.firstName %>
-                        <%= listing.user.lastName %>
+                <p>Seller: 
+                    <a href="/user/profile/<%= listing.user.id %>">
+                        <%= listing.user.firstName %> <%= listing.user.lastName %>
+                    </a>
                 </p>
                 <p>Contact Number: <%= listing.user.contactNumber %>
                 </p>
