@@ -4,7 +4,6 @@ const fs = require('fs');
 const sharp = require('sharp');
 const gridfsService = require('./gridfsService');
 
-
 function getMimeType(extension) {
   switch ((extension || "").toLowerCase()) {
     case 'jpg':
@@ -594,8 +593,26 @@ module.exports = {
 
       const newMessage = await prisma.message.create({ data: messageData });
 
+      // Fetch the sender's name from the database
+      const sender = await prisma.user.findUnique({
+        where: {
+            id: senderId
+        }
+      });
 
-      res.redirect('/user/buyConversation/' + listingId);
+      // Emit the message event to the WebSocket server
+      req.io.to(`conversation_${conversation.id}`).emit('new_message', {
+        message: newMessage,
+        senderId: senderId,
+        senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown',
+        conversationId: conversation.id,
+        imageFileId: imageFileId // This should not be null
+      });
+       
+      console.log(`Message sent to room: conversation_${conversation.id}`);
+
+      // res.redirect('/user/buyConversation/' + listingId);
+      res.json({ success: true, message: 'Message sent successfully.', newMessage });
     } catch (error) {
       console.error('Error sending message:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -659,8 +676,8 @@ module.exports = {
       let imageFileId = null;
       if (req.file) {
         try {
-          const fileId = await gridfsService.uploadFile(req.file.buffer, req.file.originalname);
-          imageFileId = fileId.toString();
+          // Wait for the image upload to complete and get the file ID
+          imageFileId = await gridfsService.uploadFile(req.file.buffer, req.file.originalname);
         } catch (err) {
           console.error('Error uploading image to GridFS:', err);
           return res.status(500).json({ error: 'Internal Server Error' });
@@ -687,9 +704,34 @@ module.exports = {
         messageData.imageFileId = imageFileId;
       }
 
+      // After the image upload and message save
+      if (imageFileId) {
+        messageData.imageFileId = imageFileId;
+      }
+
       const newMessage = await prisma.message.create({ data: messageData });
 
-      res.redirect('/user/sellConversation/' + listingId + '/' + conversation.id);  // Redirect to the relevant conversation page for the seller. You may need to create this endpoint.
+      // Fetch the sender's name from the database
+      const sender = await prisma.user.findUnique({
+        where: {
+          id: senderId
+        }
+      });
+
+      // Emit the message event to the WebSocket server
+      // After saving the message and uploading the image
+      req.io.to(`conversation_${conversation.id}`).emit('new_message', {
+        message: newMessage,
+        senderId: senderId,
+        senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown', // Use the sender's name from the database
+        conversationId: conversation.id,
+        imageFileId: imageFileId // This should not be null
+      });
+
+      console.log(`Message sent to room: conversation_${conversation.id}`);
+
+      // res.redirect('/user/sellConversation/' + listingId + '/' + conversation.id);
+      res.json({ success: true, message: 'Message sent successfully.', newMessage });
     } catch (error) {
       console.error('Error sending message:', error);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -876,7 +918,7 @@ module.exports = {
           }
         }
       });
-  
+
       // Convert image binary data to data URL
       profileUser.listings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
@@ -888,13 +930,13 @@ module.exports = {
           });
         }
       });
-  
+
       if (!profileUser) {
         return res.status(404).send('User not found');
       }
-  
+
       const averageRating = profileUser.receivedRatings.reduce((acc, rating) => acc + rating.value, 0) / profileUser.receivedRatings.length;
-  
+
       res.render('user/viewUserProfile', { profileUser, averageRating: isNaN(averageRating) ? 0 : averageRating });
     } catch (error) {
       console.error('Error fetching user profile:', error);

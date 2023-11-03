@@ -36,7 +36,10 @@ async function uploadFile(buffer, filename) {
         console.error('Error uploading file to GridFS:', err);
         reject(err);
       })
-      .on('finish', () => resolve(uploadStream.id));
+      .on('finish', () => {
+        // Resolve with the file ID as a string
+        resolve(uploadStream.id.toString());
+      });
   });
 }
 
