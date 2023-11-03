@@ -81,12 +81,24 @@
             <% savedListings.forEach(function(listing) { %>
                 <div class="col-md-6 col-lg-4">
                     <div class="listing-card">
-                        <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>" class="listing-image">
+                        <% if (listing.photos && listing.photos.length > 0) { %>
+                            <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>" class="listing-image">
+                        <% } else { %>
+                            <img src="/path/to/default/image.jpg" alt="Default Image" class="listing-image">
+                        <% } %>
                         <div class="listing-details">
                             <h5><%= listing.title %></h5>
                             <p>Price: $<%= listing.price %></p>
-                            <p>Category: <%= listing.category.name %></p>
-                            <p>Condition: <%= listing.condition.name %></p>
+                            <% if (listing.category) { %>
+                                <p>Category: <%= listing.category.name %></p>
+                            <% } else { %>
+                                <p>Category: Not specified</p>
+                            <% } %>
+                            <% if (listing.condition) { %>
+                                <p>Condition: <%= listing.condition.name %></p>
+                            <% } else { %>
+                                <p>Condition: Not specified</p>
+                            <% } %>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <button class="btn btn-view">View</button>
                                 <button class="btn btn-remove">Remove</button>
@@ -95,6 +107,7 @@
                     </div>
                 </div>
             <% }) %>
+                       
         </div>
     </div>
 
