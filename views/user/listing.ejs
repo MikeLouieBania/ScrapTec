@@ -25,9 +25,8 @@
                         <button type="submit" class="btn btn-success">Save Listing</button>
                     </form>
                 <% } else { %>
-                    <form action="/user/unsaveListing/<%= listing.id %>" method="POST">
-                        <button type="submit" class="btn btn-danger">Unsave Listing</button>
-                    </form>
+                    <!-- Use a button to trigger AJAX call to unsave a listing -->
+                    <button onclick="unsaveListing('<%= listing.id %>')" class="btn btn-danger">Unsave Listing</button>
                 <% } %>
 
                 <p>Price: $<%= listing.price %>
@@ -113,7 +112,23 @@
 
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+                    <script>
+                        function unsaveListing(listingId) {
+                            $.ajax({
+                                url: `/user/unsaveListing/${listingId}`,
+                                method: 'POST',
+                                success: function(response) {
+                                alert('Listing unsaved successfully!');
+                                location.reload(); // Reload the page to reflect changes
+                                // Optionally remove the listing from the DOM or update the button state here
+                                },
+                                error: function(xhr, status, error) {
+                                console.error('Error unsaving listing:', error);
+                                alert('Error unsaving listing. Please try again.');
+                                }
+                            });
+                            } 
+                    </script>
 
                     <script>
                         var map;

@@ -110,7 +110,7 @@ module.exports = {
     try {
       const listingId = req.params.id;  // Get the listing ID from the URL parameter
       const userId = req.session.user.id;  // Get the current user's ID from the session
-  
+
       const listing = await prisma.listing.findUnique({
         where: { id: listingId },
         include: {
@@ -120,11 +120,11 @@ module.exports = {
           user: true  // Include user details
         }  // Include photos of the listing
       });
-  
+
       if (!listing) {
         return res.status(404).send("Listing not found");
       }
-  
+
       // Convert photo URLs to Base64 (just like you did in the marketplace controller)
       listing.photos.forEach(photo => {
         if (photo.imageUrl) {
@@ -132,7 +132,7 @@ module.exports = {
           photo.imageUrl = mimeType + photo.imageUrl.toString('base64');
         }
       });
-  
+
       const existingConversation = await prisma.conversation.findFirst({
         where: {
           OR: [
@@ -141,7 +141,7 @@ module.exports = {
           ]
         }
       });
-  
+
       // Check if the listing has been saved by the current user
       const existingSavedListing = await prisma.savedListing.findFirst({
         where: {
@@ -149,20 +149,20 @@ module.exports = {
           listingId: listingId
         }
       });
-  
+
       res.render('user/listing', {
         user: req.session.user,
         listing: listing,
         existingConversation: existingConversation,
         existingSavedListing: existingSavedListing // Pass this to the view to determine whether to show the save button
       });
-  
+
     } catch (error) {
       console.error("Error fetching listing:", error);
       res.status(500).send("Internal Server Error");
     }
   },
-  
+
 
   async getCreateListing(req, res) {
     try {
@@ -610,7 +610,7 @@ module.exports = {
       // Fetch the sender's name from the database
       const sender = await prisma.user.findUnique({
         where: {
-            id: senderId
+          id: senderId
         }
       });
 
@@ -622,7 +622,7 @@ module.exports = {
         conversationId: conversation.id,
         imageFileId: imageFileId // This should not be null
       });
-       
+
       console.log(`Message sent to room: conversation_${conversation.id}`);
 
       // res.redirect('/user/buyConversation/' + listingId);
@@ -961,7 +961,7 @@ module.exports = {
   async postSaveListing(req, res) {
     const userId = req.session.user.id; // Assuming the user ID is stored in the session
     const listingId = req.params.id; // Get the listing ID from the URL parameter
-  
+
     try {
       // Check if the listing is already saved by the user
       const existingSavedListing = await prisma.savedListing.findUnique({
@@ -972,11 +972,11 @@ module.exports = {
           }
         }
       });
-  
+
       if (existingSavedListing) {
         return res.status(400).send("You have already saved this listing.");
       }
-  
+
       // Save the listing for the user
       const savedListing = await prisma.savedListing.create({
         data: {
@@ -984,7 +984,7 @@ module.exports = {
           listing: { connect: { id: listingId } }
         }
       });
-  
+
       res.redirect('/user/savedListings'); // Redirect to the saved listings page
     } catch (error) {
       console.error("Error saving listing:", error);
@@ -992,11 +992,39 @@ module.exports = {
     }
   },
 
+  async postUnsaveListing(req, res) {
+    const userId = req.session.user.id; // Assuming the user ID is stored in the session
+    const listingId = req.params.id; // Get the listing ID from the URL parameter
+
+    try {
+      // Delete the saved listing for the user
+      await prisma.savedListing.delete({
+        where: {
+          userId_listingId: {
+            userId: userId,
+            listingId: listingId
+          }
+        }
+      });
+
+      // Send a JSON response indicating success
+      res.json({ success: true, message: 'Listing unsaved successfully.' });
+    } catch (error) {
+      console.error("Error unsaving listing:", error);
+      if (error.code === 'P2025') { // Check if the error code indicates a missing record
+        res.status(404).send("The saved listing was not found.");
+      } else {
+        res.status(500).send("Internal Server Error");
+      }
+    }
+  },
+
+
   async getSavedListings(req, res) {
     const userId = req.session.user.id; // Assuming the user ID is stored in the session
     try {
       // Fetch saved listings for the user
-      const savedListings = await prisma.user.findUnique({
+      const userWithSavedListings = await prisma.user.findUnique({
         where: { id: userId },
         include: {
           savedListings: {
@@ -1005,26 +1033,30 @@ module.exports = {
                 include: {
                   photos: true, // Include photos of the listing
                   category: true, // Include category of the listing
-                  condition: true, // Include condition of the listing
+                  condition: true, // Include condition of the listing 
                 }
               }
             }
           }
         }
       });
-  
+
       // Convert image binary data to data URL for each photo
-      savedListings.savedListings.forEach(savedListing => {
-        savedListing.listing.photos.forEach(photo => {
-          if (photo.imageUrl) {
-            const mimeType = getMimeType(photo.extension);
-            photo.imageUrl = `${mimeType}${photo.imageUrl.toString('base64')}`;
+      if (userWithSavedListings && userWithSavedListings.savedListings) {
+        userWithSavedListings.savedListings.forEach(savedListing => {
+          if (savedListing.listing && savedListing.listing.photos) {
+            savedListing.listing.photos.forEach(photo => {
+              if (photo.imageUrl) {
+                const mimeType = getMimeType(photo.extension);
+                photo.imageUrl = `${mimeType}${photo.imageUrl.toString('base64')}`;
+              }
+            });
           }
         });
-      });
-  
+      }
+
       // Render the saved listings page with the fetched data
-      res.render('user/savedListings', { savedListings: savedListings.savedListings });
+      res.render('user/savedListings', { savedListings: userWithSavedListings ? userWithSavedListings.savedListings : [] });
     } catch (error) {
       console.error('Error fetching saved listings:', error);
       res.status(500).send('Internal Server Error');

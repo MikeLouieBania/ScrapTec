@@ -26,6 +26,7 @@ router.get('/sellConversation/:listingId/:conversationId', userController.getSel
 router.get('/image/:id', userController.getImage);
 router.get('/profile/:userId', userController.getViewUserProfile);
 router.post('/saveListing/:id', userController.postSaveListing);
+router.post('/unsaveListing/:id', userController.postUnsaveListing);
 router.get('/savedListings', userController.getSavedListings);
 router.get('/useraccount', userController.getAccount) 
 router.post('/logout', userController.logout); 

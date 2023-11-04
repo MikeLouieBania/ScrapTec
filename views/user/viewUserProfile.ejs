@@ -95,27 +95,28 @@
             <% if (profileUser.profilePicture) { %>
                 <img src="data:image/jpeg;base64, <%= profileUser.profilePicture.toString('base64') %>"
                     alt="<%= profileUser.firstName %>" class="profile-picture mx-auto">
-            <% } else { %>
-                <small>No Profile Picture</small>
-            <% } %>
-            <h1>
-                <%= profileUser.firstName %>
-                    <%= profileUser.lastName %>
-            </h1>
-            <p>Average Rating:
-                <% for (let i=1; i <=5; i++) { %>
-                    <% if (i <=averageRating) { %>
-                        <i class="bi bi-star-fill rating-star"></i>
-                        <% } else if (i - averageRating < 1) { %>
-                            <i class="bi bi-star-half rating-star"></i>
-                            <% } else { %>
-                                <i class="bi bi-star rating-star"></i>
-                                <% } %>
-                                    <% } %>
-                                        (<%= averageRating %>)
-            </p>
+                <% } else { %>
+                    <small>No Profile Picture</small>
+                    <% } %>
+                        <h1>
+                            <%= profileUser.firstName %>
+                                <%= profileUser.lastName %>
+                        </h1>
+                        <p>Average Rating:
+                            <% for (let i=1; i <=5; i++) { %>
+                                <% if (i <=averageRating) { %>
+                                    <i class="bi bi-star-fill rating-star"></i>
+                                    <% } else if (i - averageRating < 1) { %>
+                                        <i class="bi bi-star-half rating-star"></i>
+                                        <% } else { %>
+                                            <i class="bi bi-star rating-star"></i>
+                                            <% } %>
+                                                <% } %>
+                                                    (<%= averageRating %>)
+                        </p>
         </div>
     </div>
+    
     <!-- Profile Content -->
     <div class="container profile-content">
         <h3>Available Listings:</h3>

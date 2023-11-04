@@ -78,42 +78,63 @@
     <div class="container">
         <h2 class="mb-4">Saved Listings</h2>
         <div class="row">
-            <% savedListings.forEach(function(listing) { %>
-                <div class="col-md-6 col-lg-4">
-                    <div class="listing-card">
-                        <% if (listing.photos && listing.photos.length > 0) { %>
-                            <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>" class="listing-image">
-                        <% } else { %>
-                            <img src="/path/to/default/image.jpg" alt="Default Image" class="listing-image">
-                        <% } %>
-                        <div class="listing-details">
-                            <h5><%= listing.title %></h5>
-                            <p>Price: $<%= listing.price %></p>
-                            <% if (listing.category) { %>
-                                <p>Category: <%= listing.category.name %></p>
-                            <% } else { %>
-                                <p>Category: Not specified</p>
-                            <% } %>
-                            <% if (listing.condition) { %>
-                                <p>Condition: <%= listing.condition.name %></p>
-                            <% } else { %>
-                                <p>Condition: Not specified</p>
-                            <% } %>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <button class="btn btn-view">View</button>
-                                <button class="btn btn-remove">Remove</button>
-                            </div>
-                        </div>
+            <% savedListings.forEach(function(savedListing) { %>
+              <% const listing = savedListing.listing; %>
+              <div class="col-md-6 col-lg-4">
+                <div class="listing-card">
+                  <% if (listing.photos && listing.photos.length > 0) { %>
+                    <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>" class="listing-image">
+                  <% } else { %>
+                    <img src="/path/to/default/image.jpg" alt="Default Image" class="listing-image">
+                  <% } %>
+                  <div class="listing-details">
+                    <h5><%= listing.title %></h5>
+                    <p>Price: $<%= listing.price %></p>
+                    <p>Status: <%= listing.status %></p>
+                    <% if (listing.category) { %>
+                      <p>Category: <%= listing.category.name %></p>
+                    <% } else { %>
+                      <p>Category: Not specified</p>
+                    <% } %>
+                    <% if (listing.condition) { %>
+                      <p>Condition: <%= listing.condition.name %></p>
+                    <% } else { %>
+                      <p>Condition: Not specified</p>
+                    <% } %> 
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                      <a href="/user/listing/<%= listing.id %>" class="btn btn-view">View</a>
+                      <!-- Use a button to trigger AJAX call to unsave a listing -->
+                      <button onclick="unsaveListing('<%= listing.id %>')" class="btn btn-remove">Remove</button>
                     </div>
+                  </div>
                 </div>
+              </div>
             <% }) %>
-                       
-        </div>
+          </div>
+          
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <script>
+        function unsaveListing(listingId) {
+            $.ajax({
+                url: `/user/unsaveListing/${listingId}`,
+                method: 'POST',
+                success: function(response) {
+                alert('Listing unsaved successfully!');
+                location.reload(); // Reload the page to reflect changes
+                // Optionally remove the listing from the DOM or update the button state here
+                },
+                error: function(xhr, status, error) {
+                console.error('Error unsaving listing:', error);
+                alert('Error unsaving listing. Please try again.');
+                }
+            });
+            } 
+    </script>
 </body>
 
 </html>
