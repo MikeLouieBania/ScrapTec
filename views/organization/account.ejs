@@ -3,49 +3,387 @@
   <head>
     <title>My Account</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+
     <style> 
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden; /* Prevent horizontal scrollbar */
+      }
+      
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      
     /* Custom CSS for enhanced city card */
     .city-card {
+      background-color: #fff; /* Light background for the card */
+      border-radius: 8px; /* Rounded corners for the card */
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease-in-out;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      padding: 20px; /* Internal padding for content */
+      margin: 10px 0; /* Add some margin to the top and bottom of each card */
     }
-
+    
     .city-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
     }
-
+    
     .city-details {
       margin-top: 10px;
       display: flex;
       justify-content: space-between;
+      align-items: center; /* Align items vertically */
     }
-
+    
     .city-actions {
       margin-top: 15px;
       text-align: center;
     }
+    
+    .city-name {
+      font-size: 1.25rem; /* Increase the font size for city name */
+      font-weight: 600; /* Make the city name bolder */
+    }
+    
+    .city-info {
+      color: #666; /* Slightly muted color for less important info */
+      font-size: 0.9rem; /* Adjust font size for details */
+    }
+    
 
     /* Style the "Explore" button */
     .city-actions a.btn-primary {
-      background-color: #007bff;
+      background-color: #5072A7;
       color: #fff;
       border: none;
       padding: 8px 16px;
       border-radius: 4px;
       text-decoration: none;
       transition: background-color 0.3s ease;
+      font-weight: bold;      
     }
 
     .city-actions a.btn-primary:hover {
-      background-color: #0056b3;
+      background-color: #6699CC;
     }
+
+    .progress-bar {
+      background-color:#6CB4EE; /* Replace with your desired hex color code */
+    }
+    
+    /* Navigation Bar Styles */
+.navbar.navbar-expand-lg.navbar-light.bg-light {
+  background-color: #219ebc !important;
+  padding: 10px 0;
+}
+
+.navbar .nav-link {
+  color: white !important;
+  font-family: 'Roboto Slab', serif,;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 15px;
+  display: block;
+  padding: 15px;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0 10px;
+  position: relative;
+  transition: all .5s;
+}
+
+.navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #8ecae6;
+  transform: scaleX(0);
+  transition: transform 0.5s;
+}
+
+.navbar .nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.navbar-brand {
+  color: white !important;
+  font-family: 'Roboto Slab', serif,;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: -9px; /* Align with .nav-link */
+  margin-left: 15px;
+}
+
+.navbar-light .navbar-toggler-icon {
+  background-color: white;
+}
+
+/* Custom Logout Button Style */
+.btn-outline-success {
+  background-color: #002244 !important;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin-right: 20px;
+  font-weight: bold;
+  color: white !important;
+  font-family: 'Roboto Slab', serif,;
+}
+
+.btn-outline-success:hover {
+  background-color: #6082B6 !important;
+  color: #fff !important;
+  text-decoration: none;
+}
+
+/* Body */
+body {
+  padding-top: 0px;
+  margin-bottom: 60px;  
+}
+
+/* Reduce Bottom Spacing of Navbar */
+.navbar {
+  padding-bottom: 1px !important;
+}
+
+
+    /* Nav Tabs */
+    .tab-pane {
+      margin-left: 100px; /* Adjust the value as needed for your design */
+      margin-right: 100px; /* Adjust the value as needed for your design */
+    }
+    
+
+    /* This CSS will center the nav-tabs */
+    .nav-tabs {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    }
+
+    .nav-tabs .nav-item .nav-link {
+      border: none !important;
+    }
+    
+    .nav-tabs .nav-item .nav-link.active {
+      background-color: transparent !important;
+      color: #6699CC !important;
+      position: relative;
+      border: none !important;
+      border-bottom: 4px solid transparent !important; /* To maintain the height of the tab */
+    }
+    
+    .nav-tabs .nav-item .nav-link.active::after {
+      content: "";
+      border-bottom: 4px solid #6699CC;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      border-radius: 5px 5px 0 0;
+    }
+    
+    .card {
+      padding: 15px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+      padding: 0;
+      border: none;
+    }
+    
+    .btn-link {
+      color: #5072A7;
+      font-weight: bold;
+      padding: 10px 15px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-link:hover {
+      color: #002D62;
+      text-decoration: none;
+    }
+    
+    .card-body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    
+    ul {
+      padding-left: 20px;
+    }
+    
+    li {
+      margin-bottom: 10px;
+    }
+    
+    strong {
+      font-weight: bold;
+    }
+
+    .container h2 {
+      margin-top: 20px; /* Adjust the value according to your preference */
+      color: #333;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }    
+
+    #citySearch {
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px 40px 10px 50px;  /* Adjust padding to make room for the icon */
+      font-size: 1rem;
+      line-height: 1.5;
+      width: 100%;
+      outline: none; /* Removes the outline to use a custom border style */
+      position: relative; /* To position the icon absolutely inside the input */
+    }
+    
+    #citySearch::placeholder {
+      color: #aaa; /* Placeholder text color */
+    }
+    
+    .input-group-text {
+      border-radius: 10px;
+      border: none;
+      box-shadow: none;
+      background-color: transparent;
+      position: absolute;
+      z-index: 10;
+      left: 8px; /* Adjust as needed based on actual size of the icon */
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa; /* Icon color */
+    }
+    
+    .input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    
+    .input-group-prepend .input-group-text {
+      background: none;
+      border: none;
+    }
+    
+    /* Focus state for the input */
+    #citySearch:focus {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .list-group {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .list-group-item {
+      border: none;
+      padding: 15px 20px;
+      color: #333;
+    }
+    
+    .list-group-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .list-group-item-action.active, .list-group-item-action:active {
+      background-color: #007bff;
+      color: #fff;
+    }
+    
+    .list-group-item:first-child {
+      border-top-right-radius: 15px;
+      border-top-left-radius: 15px;
+    }
+    
+    .list-group-item:last-child {
+      border-bottom-right-radius: 15px;
+      border-bottom-left-radius: 15px;
+    }
+    
+    .mt-3 {
+      margin-top: 1rem !important;
+    }
+    
+    .mt-4 {
+      margin-top: 1.5rem !important;
+    }
+    
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .container {
+      padding-right: 0;
+      padding-left: 0;
+      margin-right: auto;
+      margin-left: auto;
+      max-width: 100%;
+    }
+    
+    
+    
+    #specific-section {
+      background-image: url('https://i.postimg.cc/BQTWxf6C/vivid-blurred-colorful-wallpaper-background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0; /* Ensure no margin is applied */
+      padding: 40px 0; /* Adjust top and bottom padding only */
+      height: 300px;
+      text-align: center;
+      color: white;
+      display: block; /* This will take the full width available */
+    }
+    
+    
+    .points-container {
+      /* Styles specific to the points container */
+    }
+    
+    .badge-success, .badge-warning {
+      /* Styles for badges */
+    }
+    
+    
+    
+    
+    
 
     </style>
   </head>
   <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -65,19 +403,21 @@
                 </li>
             </ul> 
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
             </form>
         </div>
     </nav>
     
-    <div class="container">
+    <div class="container" >
       <!-- Points and Org Name -->
-      <h2 class="mb-4">
+      <h2 class="mb-4" id="specific-section"> 
         <%= organization.organizationname %> 
-        <span class="badge badge-success">Spendable Points: <%= organization.totalPoints %></span> 
-        <span class="badge badge-warning">Lifetime Points: <%= organization.lifetimePoints %></span>
-     </h2>
-     
+        <div class="points-container">
+          <span class="badge badge-success">Spendable Points: <%= organization.totalPoints %></span> 
+          <span class="badge badge-warning">Lifetime Points: <%= organization.lifetimePoints %></span>
+        </div>
+      </h2>
+      
       <!-- Nav tabs -->
       <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -115,7 +455,11 @@
             <!-- Side Navigation -->
             <div class="col-md-3">
               <h4>Filter by Points</h4>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span></div>
               <input type="text" id="citySearch" class="form-control" placeholder="Search Cities">
+              </div>
               <div class="list-group mt-3">
                 <a href="#" class="list-group-item list-group-item-action">Highest Points Required</a>
                 <a href="#" class="list-group-item list-group-item-action">Lowest Points Required</a>
