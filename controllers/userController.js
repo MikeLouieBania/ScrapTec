@@ -18,6 +18,19 @@ function getMimeType(extension) {
   }
 }
 
+async function handleImageUpload(req) {
+  if (req.file) {
+    try {
+      const fileId = await gridfsService.uploadFile(req.file.buffer, req.file.originalname);
+      return fileId.toString(); // Return the file ID as a string
+    } catch (err) {
+      console.error('Error uploading image to GridFS:', err);
+      throw new Error('Internal Server Error'); // Throw an error to be caught by the caller
+    }
+  }
+  return null; // Return null if no file was uploaded
+}
+
 module.exports = {
   async getMarketplace(req, res) {
     try {
@@ -575,14 +588,10 @@ module.exports = {
 
       // Handling the image upload
       let imageFileId = null;
-      if (req.file) {
-        try {
-          const fileId = await gridfsService.uploadFile(req.file.buffer, req.file.originalname);
-          imageFileId = fileId.toString();
-        } catch (err) {
-          console.error('Error uploading image to GridFS:', err);
-          return res.status(500).json({ error: 'Internal Server Error' });
-        }
+      try {
+        imageFileId = await handleImageUpload(req); // Use the new function to handle the upload
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
       }
 
       // Ensure either message content or image is provided
@@ -688,14 +697,10 @@ module.exports = {
 
       // Handling the image upload
       let imageFileId = null;
-      if (req.file) {
-        try {
-          // Wait for the image upload to complete and get the file ID
-          imageFileId = await gridfsService.uploadFile(req.file.buffer, req.file.originalname);
-        } catch (err) {
-          console.error('Error uploading image to GridFS:', err);
-          return res.status(500).json({ error: 'Internal Server Error' });
-        }
+      try {
+        imageFileId = await handleImageUpload(req); // Use the new function to handle the upload
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
       }
 
       // Ensure either message content or image is provided
