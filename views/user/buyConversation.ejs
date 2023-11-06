@@ -216,7 +216,7 @@
                         $('#messages-container').append(createMessageDiv(message));
                     });
 
-// Update the visibility of the "Load Older Messages" button
+                    // Update the visibility of the "Load Older Messages" button
                     if (direction === 'older') {
                         $('#load-older-messages').toggle(response.hasMoreOlder);
                         // If we are loading older messages, ensure the "Load Newer Messages" button is shown
@@ -321,9 +321,21 @@
 
                 // Append the new message div to the messages container
                 messagesContainer.appendChild(newMessageDiv);
+ 
+                // Ensure that only the latest 10 messages are displayed
+                while (messagesContainer.children.length > 10) {
+                    messagesContainer.removeChild(messagesContainer.firstChild);
+                }
 
                 // Scroll to the bottom of the messages container
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // Check if "Load Older Messages" button should be visible
+                if (messagesContainer.children.length >= 10) {
+                    $('#load-older-messages').show();
+                } else {
+                    $('#load-older-messages').hide();
+                }
             }
         });
 

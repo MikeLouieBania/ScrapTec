@@ -90,12 +90,41 @@
                         <!-- Add more buttons for other suggested messages -->
                     </div>
 
-                    <form action="/user/send_message_buyer" method="POST">
+                    <form id="send-message-form">
                         <input type="hidden" name="listing_id" value="<%= listing.id %>">
                         <textarea name="message" rows="4" class="form-control mb-3"
                             placeholder="Type your message to the seller..."></textarea>
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
+
+                    <script>
+                        document.getElementById('send-message-form').addEventListener('submit', function(e) {
+                            e.preventDefault(); // Prevent the default form submission
+                        
+                            var formData = new FormData(this);
+                        
+                            fetch('/user/send_message_buyer', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.success) {
+                                    // Redirect to the conversation page
+                                    window.location.href = '/user/buyConversation/' + formData.get('listing_id');
+                                } else {
+                                    // Handle the error, show message to the user
+                                    alert(data.error || 'An error occurred while sending the message.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while sending the message.');
+                            });
+                        });
+                    </script>
+
+
                     <script>
                         const suggestButtons = document.querySelectorAll('.suggest-btn');
                         const messageTextarea = document.querySelector('textarea[name="message"]');
