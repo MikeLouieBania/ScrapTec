@@ -216,15 +216,15 @@
                         $('#messages-container').append(createMessageDiv(message));
                     });
 
-                    // Update the visibility of the "Load Older Messages" button
-                    $('#load-older-messages').toggle(response.hasMoreOlder);
-
-                    // If we are loading older messages, show the "Load Newer Messages" button
+// Update the visibility of the "Load Older Messages" button
                     if (direction === 'older') {
+                        $('#load-older-messages').toggle(response.hasMoreOlder);
+                        // If we are loading older messages, ensure the "Load Newer Messages" button is shown
                         $('#load-newer-messages').show();
                     } else if (direction === 'newer') {
-                        // If we are loading newer messages and there are no more newer messages, hide the button
                         $('#load-newer-messages').toggle(response.hasMoreNewer);
+                        // If we are loading newer messages, ensure the "Load Older Messages" button is shown
+                        $('#load-older-messages').show();
                     }
                 },
                 error: function (error) {
