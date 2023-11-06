@@ -23,7 +23,8 @@
         .listing-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px; /* Adjust the gap between listing items as needed */
+            gap: 20px;
+            /* Adjust the gap between listing items as needed */
         }
 
         /* Add styles for each listing card */
@@ -32,8 +33,10 @@
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            width: 100%; /* Adjust the width based on your layout */
-            max-width: 350px; /* Limit the maximum card width */
+            width: 100%;
+            /* Adjust the width based on your layout */
+            max-width: 350px;
+            /* Limit the maximum card width */
         }
 
         /* Add styles for the card body */
@@ -74,6 +77,48 @@
             max-width: 100%;
             height: auto;
         }
+
+        /* Adding hover effect to listing cards */
+        .listing-card:hover {
+            transform: scale(1.05);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        /* Styling the Mark as Sold button */
+        .mark-sold-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 5px 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .mark-sold-button:hover {
+            background-color: #218838;
+        }
+
+        /* Adding styles for the loading spinner */
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #000;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -83,12 +128,12 @@
         <!-- Include your header content or navigation menu here -->
         <nav>
             <ul>
-                <li><a href="/user/marketplace">Home</a></li> 
+                <li><a href="/user/marketplace">Home</a></li>
                 <li><a href="/user/sellListing">Selling</a></li>
-                
-          <form action="/user/logout" method="POST">
-            <button type="submit" class="nav-link">LOGOUT</button>
-          </form>
+
+                <form action="/user/logout" method="POST">
+                    <button type="submit" class="nav-link">LOGOUT</button>
+                </form>
             </ul>
         </nav>
     </header>
@@ -107,15 +152,18 @@
                         <div class="carousel-inner">
                             <% listing.photos.forEach(function(photo, index) { %>
                                 <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                    <img class="d-block w-100 slider-image" src="<%= photo.imageUrl %>" alt="<%= listing.title %>">
+                                    <img class="d-block w-100 slider-image" src="<%= photo.imageUrl %>"
+                                        alt="<%= listing.title %>">
                                 </div>
-                            <% }) %>
+                                <% }) %>
                         </div>
-                        <a class="carousel-control-prev" href="#carousel<%= listing.id %>" role="button" data-slide="prev">
+                        <a class="carousel-control-prev" href="#carousel<%= listing.id %>" role="button"
+                            data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                         </a>
-                        <a class="carousel-control-next" href="#carousel<%= listing.id %>" role="button" data-slide="next">
+                        <a class="carousel-control-next" href="#carousel<%= listing.id %>" role="button"
+                            data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                         </a>
@@ -123,16 +171,120 @@
 
                     <!-- Card body -->
                     <div class="card-body">
-                        <h2 class="card-title"><%= listing.title %></h2>
-                        <p class="card-text">Price: $<%= listing.price %></p>
-                        <p class="card-text">Category: <%= listing.category.name %></p>
-                        <p class="card-text">Condition: <%= listing.condition.name %></p>
-                        <p class="card-text">Location: <%= listing.location %></p>
+                        <h2 class="card-title">
+                            <%= listing.title %>
+                        </h2>
+                        <p class="card-text">Price: $<%= listing.price %>
+                        </p>
+                        <p class="card-text">Category: <%= listing.category.name %>
+                        </p>
+                        <p class="card-text">Condition: <%= listing.condition.name %>
+                        </p>
+                        <p class="card-text">Location: <%= listing.location %>
+                        </p>
+
+                        <p class="card-text">Status: <%= listing.status %>
+                        </p>
                         <a href="/editListing/<%= listing.id %>" class="btn btn-primary edit-button">Edit</a>
                         <a href="/deleteListing/<%= listing.id %>" class="btn btn-danger delete-button">Delete</a>
+                        <!-- Mark as Sold Button -->
+                        <% if (listing.sales && listing.sales.length> 0) { %>
+                            <% listing.sales.forEach(sale=> { %>
+                                <p class="card-text">
+                                    Sold to: <a href="/user/profile/<%= sale.buyer.id %>">
+                                        <%= sale.buyer.firstName %> <%= sale.buyer.lastName %>
+                                    </a>
+                                            <% if (sale.buyerRatings && sale.buyerRatings.length> 0) { %>
+                                                <% sale.buyerRatings.forEach(rating=> { %>
+                                                    <button class="btn btn-secondary" disabled>Rated Buyer: <%=
+                                                            rating.value %> Stars</button>
+                                                    <p>Comment: <%= rating.comment || "No comment provided" %>
+                                                    </p>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <button class="btn btn-primary rate-buyer-button"
+                                                                data-toggle="modal" data-target="#rateBuyerModal"
+                                                                data-buyer-id="<%= sale.buyer.id %>"
+                                                                data-sale-id="<%= sale.id %>">Rate Buyer</button>
+
+                                                            <% } %>
+                                </p>
+                                <% }) %>
+                                    <% } else if (listing.status.toLowerCase()==='available' ) { %>
+                                        <button class="btn btn-success mark-sold-button" data-toggle="modal"
+                                            data-target="#markAsSoldModal" data-listing-id="<%= listing.id %>">Mark as
+                                            Sold</button>
+                                        <% } %>
                     </div>
                 </div>
-            <% }) %>
+                <% }) %>
+                    <!-- Mark As Sold Modal -->
+                    <div class="modal fade" id="markAsSoldModal" tabindex="-1" role="dialog"
+                        aria-labelledby="markAsSoldModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="markAsSoldModalLabel">Choose Buyer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- The list of users will be populated here -->
+                                    <div id="users-list"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="save-changes-btn">Save
+                                        changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rate Buyer Modal -->
+                    <div class="modal fade" id="rateBuyerModal" tabindex="-1" role="dialog"
+                        aria-labelledby="rateBuyerModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="rateBuyerModalLabel">Rate Buyer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Rating input form -->
+                                    <form id="rate-buyer-form">
+                                        <div class="form-group">
+                                            <label for="rating">Rating</label>
+                                            <select class="form-control" id="rating" required>
+                                                <option value="5">5 - Excellent</option>
+                                                <option value="4">4 - Very Good</option>
+                                                <option value="3">3 - Good</option>
+                                                <option value="2">2 - Fair</option>
+                                                <option value="1">1 - Poor</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="predefined-comments">What went well?</label>
+                                            <select class="form-control" id="predefined-comments" required>
+                                                <option value="Excellent Communication">Excellent Communication</option>
+                                                <option value="Very Punctual">Very Punctual</option>
+                                                <option value="Fair Pricing">Fair Pricing</option>
+                                                <option value="Accurate Listing Description">Accurate Listing
+                                                    Description</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
         </div>
     </main>
 
@@ -142,7 +294,7 @@
     <script type="text/javascript" src="slick/slick.min.js"></script>
     <!-- Initialize Slick Slider -->
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $(".image-slider").slick({
                 infinite: true,
                 slidesToShow: 1,
@@ -152,6 +304,105 @@
                 autoplaySpeed: 2000
             });
         });
+
+
+        $(document).ready(function () {
+            let currentBuyerId, currentSaleId;
+            $('#markAsSoldModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget); // Button that triggered the modal
+                const listingId = button.data('listing-id'); // Extract info from data-* attributes
+                const modal = $(this);
+                $(this).data('listing-id', listingId); // Store the listing ID in the modal's data attributes
+                const usersList = modal.find('#users-list');
+
+                // Fetch the users associated with the listing
+                $.ajax({
+                    url: `/user/listing/${listingId}/users`,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (users) {
+                        // Clear the current list
+                        usersList.empty();
+
+                        // Populate the users list
+                        users.forEach(user => {
+                            const radioButton = `
+                                <div class="user-item"> 
+                                    <input type="radio" name="buyer" value="${user.id}" data-conversation-id="${user.conversationId}" id="user${user.id}">
+                                    <label for="user${user.id}">${user.firstName} ${user.lastName}</label> 
+                                </div>`;
+                            usersList.append(radioButton);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching users:', error);
+                    }
+                });
+            });
+
+
+            $('#rateBuyerModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                currentBuyerId = button.data('buyer-id');
+                currentSaleId = button.data('sale-id'); 
+            });
+
+
+            $('#rate-buyer-form').submit(function (event) {
+                event.preventDefault();
+                const rating = $('#rating').val();
+                const comment = $('#predefined-comments').val();
+
+                // Send a request to the server to submit the rating
+                $.ajax({
+                    url: `/user/rate-buyer/${currentBuyerId}`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ value: rating, comment, saleId: currentSaleId, buyerId: currentBuyerId }), // Include buyerId in the request body
+                    success: function (response) {
+                        alert('Rating submitted successfully!');
+                        $('#rateBuyerModal').modal('hide');
+                        location.reload(); // Reload the page to reflect changes
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error submitting rating:', error);
+                        alert('Error submitting rating. Please try again.');
+                    }
+                });
+            });
+
+
+        });
+
+
+        $('#save-changes-btn').click(function () {
+            const buyerId = $('input[name="buyer"]:checked').val();
+            const conversationId = $('input[name="buyer"]:checked').data('conversation-id');
+            if (!buyerId) {
+                alert('Please select a buyer.');
+                return;
+            }
+            // Assuming you have stored the listing ID in a data attribute of the modal
+            const listingId = $('#markAsSoldModal').data('listing-id');
+
+            // Send a request to the server to mark the listing as sold
+            $.ajax({
+                url: `/user/mark-as-sold/${listingId}`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ buyerId, conversationId }), // Added for testing
+                success: function (response) {
+                    alert('Listing marked as sold successfully!');
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error marking listing as sold:', error);
+                    alert('Error marking listing as sold. Please try again.');
+                }
+            });
+        });
+
+
     </script>
 </body>
 

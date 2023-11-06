@@ -118,6 +118,7 @@
                     <div class="mb-3">
                         <label for="description" class="form-label">Description:</label>
                         <textarea name="description" class="form-control" required></textarea>
+                        
                     </div>
                     <!-- For Location -->
                     <div class="mb-3">
@@ -308,13 +309,16 @@
             document.getElementById('preview-price').textContent = `$${this.value}`;
         });
 
-        document.querySelector('select[name="category"]').addEventListener('change', function () {
-            document.getElementById('preview-category').textContent = this.options[this.selectedIndex].text;
+        document.querySelector('select[name="categoryId"]').addEventListener('change', function () {
+            const text = this.selectedIndex >= 0 ? this.options[this.selectedIndex].text : 'Category';
+            document.getElementById('preview-category').textContent = text;
         });
 
-        document.querySelector('select[name="condition"]').addEventListener('change', function () {
-            document.getElementById('preview-condition').textContent = this.options[this.selectedIndex].text;
+        document.querySelector('select[name="conditionId"]').addEventListener('change', function () {
+            const text = this.selectedIndex >= 0 ? this.options[this.selectedIndex].text : 'Condition';
+            document.getElementById('preview-condition').textContent = text;
         });
+
 
         document.querySelector('textarea[name="description"]').addEventListener('input', function () {
             document.getElementById('preview-description').textContent = this.value;

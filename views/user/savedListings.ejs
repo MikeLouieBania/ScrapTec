@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Listings | Marketplace</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f4f7fa;
+            margin-top: 20px;
+        }
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            margin-bottom: 30px;
+        }
+        .listing-card {
+            transition: box-shadow .3s;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .listing-card:hover {
+            box-shadow: 0 0 11px rgba(33,33,33,.2);
+        }
+        .listing-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .listing-details {
+            padding: 20px;
+        }
+        .listing-details h5 {
+            margin-top: 0;
+            color: #333;
+        }
+        .listing-details p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .btn-remove {
+            background-color: #ff3860;
+            color: white;
+            border: none;
+        }
+        .btn-remove:hover {
+            background-color: #ff2b56;
+        }
+        .btn-view {
+            background-color: #23d160;
+            color: white;
+            border: none;
+        }
+        .btn-view:hover {
+            background-color: #20c14f;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Navbar content -->
+    </nav>
+
+    <div class="container">
+        <h2 class="mb-4">Saved Listings</h2>
+        <div class="row">
+            <% savedListings.forEach(function(savedListing) { %>
+              <% const listing = savedListing.listing; %>
+              <div class="col-md-6 col-lg-4">
+                <div class="listing-card">
+                  <% if (listing.photos && listing.photos.length > 0) { %>
+                    <img src="<%= listing.photos[0].imageUrl %>" alt="<%= listing.title %>" class="listing-image">
+                  <% } else { %>
+                    <img src="/path/to/default/image.jpg" alt="Default Image" class="listing-image">
+                  <% } %>
+                  <div class="listing-details">
+                    <h5><%= listing.title %></h5>
+                    <p>Price: $<%= listing.price %></p>
+                    <p>Status: <%= listing.status %></p>
+                    <% if (listing.category) { %>
+                      <p>Category: <%= listing.category.name %></p>
+                    <% } else { %>
+                      <p>Category: Not specified</p>
+                    <% } %>
+                    <% if (listing.condition) { %>
+                      <p>Condition: <%= listing.condition.name %></p>
+                    <% } else { %>
+                      <p>Condition: Not specified</p>
+                    <% } %> 
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                      <a href="/user/listing/<%= listing.id %>" class="btn btn-view">View</a>
+                      <!-- Use a button to trigger AJAX call to unsave a listing -->
+                      <button onclick="unsaveListing('<%= listing.id %>')" class="btn btn-remove">Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+          
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <script>
+        function unsaveListing(listingId) {
+            $.ajax({
+                url: `/user/unsaveListing/${listingId}`,
+                method: 'POST',
+                success: function(response) {
+                alert('Listing unsaved successfully!');
+                location.reload(); // Reload the page to reflect changes
+                // Optionally remove the listing from the DOM or update the button state here
+                },
+                error: function(xhr, status, error) {
+                console.error('Error unsaving listing:', error);
+                alert('Error unsaving listing. Please try again.');
+                }
+            });
+            } 
+    </script>
+</body>
+
+</html>
