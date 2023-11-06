@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 var { PrismaClient } = require('@prisma/client');
+var http = require('http');
 
 // asd
 // Initialize Prisma client
@@ -23,6 +24,10 @@ var adminRoutes = require('./routes/admin');
 
 var app = express();
 
+// Create server for socket.io
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -39,6 +44,24 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
+// Socket.io connection setup 
+io.on('connection', function(socket) {
+  console.log('a user connected');
+
+  socket.on('join_room', function(room) {
+      console.log('Joining room:', room);
+      socket.join(room);
+  });
+
+  // ... rest of your code
+});
+
+// Make io accessible in routes via middleware
+app.use(function(req, res, next){
+  req.io = io;
+  next();
+});
 
 app.use('/', indexRoutes); 
 app.use('/user', authMiddlewareUser.requireLogin, userRoutes); 
@@ -62,4 +85,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+// Export the server instead of the app
+module.exports = server;

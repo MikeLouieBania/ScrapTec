@@ -20,7 +20,8 @@
             padding-top: 60px;
         }
 
-        .sidenav a, .sidenav button {
+        .sidenav a,
+        .sidenav button {
             padding: 10px 15px 10px 30px;
             text-decoration: none;
             font-size: 25px;
@@ -31,7 +32,8 @@
             border: none;
         }
 
-        .sidenav a:hover, .sidenav button:hover {
+        .sidenav a:hover,
+        .sidenav button:hover {
             color: #f1f1f1;
             background-color: transparent;
         }
@@ -39,6 +41,16 @@
         #main {
             transition: margin-left .5s;
             padding: 16px;
+            padding-top: 60px;
+            /* Adjust this value as needed */
+        }
+
+        #messages-container {
+            height: calc(100vh - 200px);
+            /* Adjust the 200px to account for header/footer height */
+            overflow-y: auto;
+            padding-bottom: 20px;
+            /* Space at the bottom */
         }
 
         .my-message {
@@ -49,6 +61,8 @@
             float: right;
             clear: both;
             max-width: 80%;
+            margin-bottom: 10px;
+            /* Ensure spacing between messages */
         }
 
         .their-message {
@@ -58,6 +72,8 @@
             border-radius: 10px 0 0 10px;
             clear: both;
             max-width: 80%;
+            margin-bottom: 10px;
+            /* Ensure spacing between messages */
         }
 
         .timestamp {
@@ -69,7 +85,6 @@
         .message-buttons {
             margin-top: 10px;
         }
-
     </style>
 </head>
 
@@ -91,68 +106,267 @@
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
 
         <div class="container mt-5">
-            <h3>Conversation about: <%= conversation.listing.title %></h3>
+            <h3>Conversation about: <%= conversation.listing.title %>
+            </h3>
 
             <% if(conversation.user1 && conversation.user2) { %>
-            <p>Participants: <%= conversation.user1.firstName %> <%= conversation.user1.lastName %> and <%= conversation.user2.firstName %> <%= conversation.user2.lastName %></p>
-            <% } else { %>
-            <p>Participants data missing.</p>
-            <% } %>
+                <p>Participants: <%= conversation.user1.firstName %>
+                        <%= conversation.user1.lastName %> and <%= conversation.user2.firstName %>
+                                <%= conversation.user2.lastName %>
+                </p>
+                <!-- Link to view seller's profile -->
+                <a href="/user/profile/<%= conversation.listing.userId %>" class="btn btn-primary btn-sm ml-2">View
+                    Seller's Profile</a>
 
-            <hr>
-
-            <% conversation.messages.forEach(function(message) { %>
-            <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>">
-                <strong>
-                    <% if(message.sender) { %>
-                    <%= message.sender.firstName %> <%= message.sender.lastName %>:
-                    <% } else { %>
-                    Unknown:
+                <% } else { %>
+                    <p>Participants data missing.</p>
                     <% } %>
-                </strong>
-                <%= message.content %>
-                <span class="timestamp">
-                    <%= new Date(message.createdAt).toLocaleString() %>
-                </span>
-            </div>
-            <% }); %>
 
-            <form action="/user/send_message_buyer" method="POST" class="mt-4">
-                <input type="hidden" name="listing_id" value="<%= conversation.listing.id %>">
+                        <hr>
+                        <button id="load-older-messages" class="btn btn-secondary">Load Older Messages</button>
+                        <div id="messages-container">
+                            <% conversation.messages.forEach(function(message) { %>
+                                <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>"
+                                    data-message-id="<%= message.id %>">
+                                    <strong>
+                                        <% if(message.sender) { %>
+                                            <%= message.sender.firstName %>
+                                                <%= message.sender.lastName %>:
+                                                    <% } else { %>
+                                                        Unknown:
+                                                        <% } %>
+                                    </strong>
 
-                <textarea name="message" class="form-control" placeholder="Type your message..."></textarea>
-                <div class="message-buttons mt-3">
-                    
-                    <button type="submit" class="btn btn-primary mt-2">Send</button>
-            
-                    <!-- Dropdown for More Options -->
-                    <div class="btn-group mt-2">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            More Options
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">See Details</a>
-            
-                            <!-- Sub-dropdown for Price Offer -->
-                            <div class="dropdown-divider"></div>
-                            <h6 class="dropdown-header">Price Offer</h6>
-                            <!-- Placeholder dropdown items for price offers. Update with actual options -->
-                            <a class="dropdown-item" href="#">Offer 1</a>
-                            <a class="dropdown-item" href="#">Offer 2</a>
-                            <a class="dropdown-item" href="#">Offer 3</a>
+                                    <% if (message.content) { %>
+                                        <p>
+                                            <%= message.content %>
+                                        </p>
+                                        <% } %>
+
+                                            <% if (message.imageFileId) { %>
+                                                <div>
+                                                    <img src="/user/image/<%= message.imageFileId %>"
+                                                        alt="<%= message.imageFileId %>"
+                                                        style="max-width: 300px; max-height: 300px;">
+                                                </div>
+                                                <% } %>
+                                                    <span class="timestamp">
+                                                        <%= new Date(message.createdAt).toLocaleString() %>
+                                                    </span>
+                                </div>
+                                <% }); %>
+
                         </div>
-                    </div>
-                    <!-- End of Dropdown for More Options -->
-            
-                </div>
-            </form>
+                        <button id="load-newer-messages" class="btn btn-secondary" style="display: none;">Load Newer
+                            Messages</button>
+
+                        <form id="message-form-buyer" action="/user/send_message_buyer" method="POST"
+                            enctype="multipart/form-data" class="mt-4">
+
+                            <input type="hidden" name="listing_id" value="<%= conversation.listing.id %>">
+
+                            <textarea name="message" class="form-control" placeholder="Type your message..."></textarea>
+                            <input type="file" name="image" accept="image/*">
+                            <div class="message-buttons mt-3">
+
+                                <button type="submit" class="btn btn-primary mt-2">Send</button>
+
+                                <!-- Dropdown for More Options -->
+                                <div class="btn-group mt-2">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        More Options
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">See Details</a>
+
+                                        <!-- Sub-dropdown for Price Offer -->
+                                        <div class="dropdown-divider"></div>
+                                        <h6 class="dropdown-header">Price Offer</h6>
+                                        <!-- Placeholder dropdown items for price offers. Update with actual options -->
+                                        <a class="dropdown-item" href="#">Offer 1</a>
+                                        <a class="dropdown-item" href="#">Offer 2</a>
+                                        <a class="dropdown-item" href="#">Offer 3</a>
+                                    </div>
+                                </div>
+                                <!-- End of Dropdown for More Options -->
+
+                            </div>
+                        </form>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Function to load messages
+        function loadMessages(direction, messageId) {
+            $.ajax({
+                url: `/user/loadMessages/<%= conversation.id %>/${messageId}?direction=${direction}`,
+                type: 'GET',
+                success: function (response) {
+
+                    // Replace the current messages with the new set
+                    $('#messages-container').empty();
+                    response.messages.forEach(function (message) {
+                        $('#messages-container').append(createMessageDiv(message));
+                    });
+
+                    // Update the visibility of the "Load Older Messages" button
+                    if (direction === 'older') {
+                        $('#load-older-messages').toggle(response.hasMoreOlder);
+                        // If we are loading older messages, ensure the "Load Newer Messages" button is shown
+                        $('#load-newer-messages').show();
+                    } else if (direction === 'newer') {
+                        $('#load-newer-messages').toggle(response.hasMoreNewer);
+                        // If we are loading newer messages, ensure the "Load Older Messages" button is shown
+                        $('#load-older-messages').show();
+                    }
+                },
+                error: function (error) {
+                    console.error('Error loading messages:', error);
+                    // Consider adding user feedback here
+                    alert('Error loading messages. Please try again.');
+                }
+            });
+        }
+
+        // Helper function to create message div
+        function createMessageDiv(message) {
+            var messageClass = message.senderId === '<%= user.id %>' ? 'my-message' : 'their-message';
+            var senderName = message.sender ? message.sender.firstName + ' ' + message.sender.lastName : 'Unknown';
+            var messageContent = message.content || '';
+            var messageImage = message.imageFileId ? `<img src="/user/image/${message.imageFileId}" alt="Message Image" style="max-width: 300px; max-height: 300px;">` : '';
+            var messageTimestamp = new Date(message.createdAt).toLocaleString();
+
+            var messageDiv = `
+                <div class="${messageClass}" data-message-id="${message.id}">
+                    <strong>${senderName}:</strong>
+                    <p>${messageContent}</p>
+                    ${messageImage}
+                    <span class="timestamp">${messageTimestamp}</span>
+                </div>
+            `;
+            return messageDiv;
+        }
+
+        $(document).ready(function () {
+            $('#load-older-messages').click(function () {
+                // Get the first .message element for the oldest message 
+                var oldestMessageDiv = $('#messages-container div[data-message-id]:first');
+
+                var oldestMessageId = oldestMessageDiv.data('message-id');
+                if (oldestMessageId) {
+                    loadMessages('older', oldestMessageId);
+                } else {
+                    console.error('No message ID found for the oldest message');
+                    // Handle the error appropriately
+                }
+            });
+
+
+            $('#load-newer-messages').click(function () {
+                // Get the last .message element for the newest message
+                var newestMessageDiv = $('#messages-container div[data-message-id]:last');
+                var newestMessageId = newestMessageDiv.data('message-id');
+                if (newestMessageId) {
+                    loadMessages('newer', newestMessageId);
+                } else {
+                    console.error('No message ID found for the newest message');
+                    // Handle the error appropriately
+                }
+            });
+            // Initially, set the visibility of the "Load Older Messages" button
+            // based on whether there are more messages than the initial limit
+            $('#load-older-messages').toggle(<%= hasMoreOlder %>);
+
+            // The "Load Newer Messages" button should be hidden on initial load
+            $('#load-newer-messages').hide();
+        });
+    </script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        // Join the conversation room
+        socket.emit('join_room', 'conversation_<%= conversation.id %>');
+
+        // Listen for new messages
+        socket.on('new_message', function (data) {
+            console.log('New message received:', data);
+            if (data.conversationId === '<%= conversation.id %>') {
+                var messagesContainer = document.getElementById('messages-container');
+                var newMessageDiv = document.createElement('div');
+                newMessageDiv.className = data.senderId === '<%= user.id %>' ? 'my-message' : 'their-message';
+
+                // Sender's name
+                var senderNameHtml = `<div class="message-sender"><strong>${data.senderName || 'Someone'}:</strong></div>`;
+
+                // Message content
+                var messageContentHtml = data.message.content ? `<div class="message-content"><p>${data.message.content}</p></div>` : '';
+
+                // Image content
+                var imageContentHtml = data.message.imageFileId ? `<div class="message-image"><img src="/user/image/${data.message.imageFileId}" alt="Message Image" style="max-width: 300px; max-height: 300px;"></div>` : '';
+
+                // Timestamp
+                var timestampHtml = `<div class="message-timestamp"><span class="timestamp">${new Date(data.message.createdAt).toLocaleString()}</span></div>`;
+
+                // Combine all parts
+                newMessageDiv.innerHTML = senderNameHtml + messageContentHtml + imageContentHtml + timestampHtml;
+
+                // Append the new message div to the messages container
+                messagesContainer.appendChild(newMessageDiv);
+ 
+                // Ensure that only the latest 10 messages are displayed
+                while (messagesContainer.children.length > 10) {
+                    messagesContainer.removeChild(messagesContainer.firstChild);
+                }
+
+                // Scroll to the bottom of the messages container
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // Check if "Load Older Messages" button should be visible
+                if (messagesContainer.children.length >= 10) {
+                    $('#load-older-messages').show();
+                } else {
+                    $('#load-older-messages').hide();
+                }
+            }
+        });
+
+
+        $(document).ready(function () {
+            $('#message-form-buyer').submit(function (e) {
+                e.preventDefault(); // Prevent the normal form submission
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '/user/send_message_buyer',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        console.log('Message sent:', response);
+                        // Clear the message input field
+                        $('textarea[name="message"]').val('');
+                        // Clear the file input field
+                        $('input[type="file"]').val('');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error sending message:', error);
+                    }
+                });
+            });
+        });
+
+    </script>
 
 
     <script>

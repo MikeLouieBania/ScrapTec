@@ -137,7 +137,6 @@ module.exports = {
       return res.render('login',{ message: 'An error occurred' });
     }
   },
-  
   async getVerifyOTP(req, res) {
     res.render('verify-otp', { message: 'Enter the OTP you received in your email.' });
   },
@@ -174,7 +173,6 @@ module.exports = {
       const uniqueFilename = `${Date.now()}-${documentUpload.originalname}`;
       const base64Content = documentUpload.buffer.toString('base64');
       const uniqueUrl = `data:${documentUpload.mimetype};base64,${base64Content}`;
-
 
   
       // Create a new organization in the database along with associated documents

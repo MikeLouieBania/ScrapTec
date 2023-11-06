@@ -19,6 +19,16 @@
         </h2>
         <div class="row">
             <div class="col-md-6">
+                <!-- Save/Unsave Listing Button -->
+                <% if (!existingSavedListing) { %>
+                    <form action="/user/saveListing/<%= listing.id %>" method="POST">
+                        <button type="submit" class="btn btn-success">Save Listing</button>
+                    </form>
+                <% } else { %>
+                    <!-- Use a button to trigger AJAX call to unsave a listing -->
+                    <button onclick="unsaveListing('<%= listing.id %>')" class="btn btn-danger">Unsave Listing</button>
+                <% } %>
+
                 <p>Price: $<%= listing.price %>
                 </p>
                 <p>Category: <%= listing.category.name %>
@@ -30,8 +40,11 @@
                 <div id='map' style='width: 100%; height: 300px;'></div>
                 <p>Status: <%= listing.status %>
                 </p>
-                <p>Seller: <%= listing.user.firstName %>
-                        <%= listing.user.lastName %>
+                <p>Seller:
+                    <a href="/user/profile/<%= listing.user.id %>">
+                        <%= listing.user.firstName %>
+                            <%= listing.user.lastName %>
+                    </a>
                 </p>
                 <p>Contact Number: <%= listing.user.contactNumber %>
                 </p>
@@ -77,12 +90,41 @@
                         <!-- Add more buttons for other suggested messages -->
                     </div>
 
-                    <form action="/user/send_message_buyer" method="POST">
+                    <form id="send-message-form">
                         <input type="hidden" name="listing_id" value="<%= listing.id %>">
                         <textarea name="message" rows="4" class="form-control mb-3"
                             placeholder="Type your message to the seller..."></textarea>
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
+
+                    <script>
+                        document.getElementById('send-message-form').addEventListener('submit', function(e) {
+                            e.preventDefault(); // Prevent the default form submission
+                        
+                            var formData = new FormData(this);
+                        
+                            fetch('/user/send_message_buyer', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.success) {
+                                    // Redirect to the conversation page
+                                    window.location.href = '/user/buyConversation/' + formData.get('listing_id');
+                                } else {
+                                    // Handle the error, show message to the user
+                                    alert(data.error || 'An error occurred while sending the message.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while sending the message.');
+                            });
+                        });
+                    </script>
+
+
                     <script>
                         const suggestButtons = document.querySelectorAll('.suggest-btn');
                         const messageTextarea = document.querySelector('textarea[name="message"]');
@@ -99,7 +141,23 @@
 
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+                    <script>
+                        function unsaveListing(listingId) {
+                            $.ajax({
+                                url: `/user/unsaveListing/${listingId}`,
+                                method: 'POST',
+                                success: function(response) {
+                                alert('Listing unsaved successfully!');
+                                location.reload(); // Reload the page to reflect changes
+                                // Optionally remove the listing from the DOM or update the button state here
+                                },
+                                error: function(xhr, status, error) {
+                                console.error('Error unsaving listing:', error);
+                                alert('Error unsaving listing. Please try again.');
+                                }
+                            });
+                            } 
+                    </script>
 
                     <script>
                         var map;
