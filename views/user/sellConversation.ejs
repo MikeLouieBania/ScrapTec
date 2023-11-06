@@ -36,18 +36,21 @@
         .sidenav button:hover {
             color: #f1f1f1;
             background-color: transparent;
-        } 
+        }
 
         #main {
             transition: margin-left .5s;
             padding: 16px;
-            padding-top: 60px; /* Adjust this value as needed */
+            padding-top: 60px;
+            /* Adjust this value as needed */
         }
 
         #messages-container {
-            height: calc(100vh - 200px); /* Adjust the 200px to account for header/footer height */
+            height: calc(100vh - 200px);
+            /* Adjust the 200px to account for header/footer height */
             overflow-y: auto;
-            padding-bottom: 20px; /* Space at the bottom */
+            padding-bottom: 20px;
+            /* Space at the bottom */
         }
 
         .my-message {
@@ -58,7 +61,8 @@
             float: right;
             clear: both;
             max-width: 80%;
-            margin-bottom: 10px; /* Ensure spacing between messages */
+            margin-bottom: 10px;
+            /* Ensure spacing between messages */
         }
 
         .their-message {
@@ -68,7 +72,8 @@
             border-radius: 10px 0 0 10px;
             clear: both;
             max-width: 80%;
-            margin-bottom: 10px; /* Ensure spacing between messages */
+            margin-bottom: 10px;
+            /* Ensure spacing between messages */
         }
 
         .timestamp {
@@ -120,8 +125,9 @@
                         <hr>
                         <button id="load-older-messages" class="btn btn-secondary">Load Old Messages</button>
                         <div id="messages-container">
-                            <% conversation.messages.forEach(function(message) { %> 
-                                 <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>" data-message-id="<%= message.id %>">
+                            <% conversation.messages.forEach(function(message) { %>
+                                <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>"
+                                    data-message-id="<%= message.id %>">
                                     <strong>
                                         <% if(message.sender) { %>
                                             <%= message.sender.firstName %>
@@ -149,9 +155,9 @@
                                                         <%= new Date(message.createdAt).toLocaleString() %>
                                                     </span>
                                 </div>
-                            <% }); %>
+                                <% }); %>
                         </div>
-                        <button id="load-newer-messages" class="btn btn-secondary">Load New Messages</button> 
+                        <button id="load-newer-messages" class="btn btn-secondary">Load New Messages</button>
 
                         <form id="message-form-seller" action="/user/send_message_seller" method="POST" class="mt-4"
                             enctype="multipart/form-data">
@@ -300,47 +306,25 @@
 
         // Listen for new messages
         socket.on('new_message', function (data) {
-            if (data.conversationId === '<%= conversation.id %>') { 
-
+            if (data.conversationId === '<%= conversation.id %>') {
+                // Clear the messages container
                 var messagesContainer = document.getElementById('messages-container');
-                var newMessageDiv = document.createElement('div');
-                newMessageDiv.className = data.senderId === '<%= user.id %>' ? 'my-message' : 'their-message';
+                messagesContainer.innerHTML = '';
 
-                // Sender's name
-                var senderNameHtml = `<div class="message-sender"><strong>${data.senderName || 'Someone'}:</strong></div>`;
-
-                // Message content
-                var messageContentHtml = data.message.content ? `<div class="message-content"><p>${data.message.content}</p></div>` : '';
-
-                // Image content
-                var imageContentHtml = data.message.imageFileId ? `<div class="message-image"><img src="/user/image/${data.message.imageFileId}" alt="Message Image" style="max-width: 300px; max-height: 300px;"></div>` : '';
-
-                // Timestamp
-                var timestampHtml = `<div class="message-timestamp"><span class="timestamp">${new Date(data.message.createdAt).toLocaleString()}</span></div>`;
-
-                // Combine all parts
-                newMessageDiv.innerHTML = senderNameHtml + messageContentHtml + imageContentHtml + timestampHtml;
-
-                // Append the new message div to the messages container
-                messagesContainer.appendChild(newMessageDiv);
- 
-                // Ensure that only the latest 10 messages are displayed
-                while (messagesContainer.children.length > 10) {
-                    messagesContainer.removeChild(messagesContainer.firstChild);
-                }
+                // Add the latest messages to the container
+                data.latestMessages.forEach(function (message) {
+                    var newMessageDiv = createMessageDiv(message);
+                    messagesContainer.innerHTML += newMessageDiv;
+                });
 
                 // Scroll to the bottom of the messages container
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-                // Update the total number of messages
-                var totalMessages = data.totalMessages; // Get the updated count from the server
+                // Update the visibility of the "Load Older Messages" button
+                $('#load-older-messages').toggle(data.totalMessages > 10);
 
-                // Check if "Load Older Messages" button should be visible
-                if (totalMessages > 10) {
-                    $('#load-older-messages').show();
-                } else {
-                    $('#load-older-messages').hide();
-                }
+                // The "Load Newer Messages" button should be hidden on initial load
+                $('#load-newer-messages').hide();
             }
         });
 
@@ -357,7 +341,7 @@
                     data: formData,
                     contentType: false,
                     processData: false,
-                    success: function (response) { 
+                    success: function (response) {
                         // Clear the message input field
                         $('textarea[name="message"]').val('');
                         // Clear the file input field

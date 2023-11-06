@@ -756,9 +756,26 @@ module.exports = {
         },
       });
 
+      const latestMessages = await prisma.message.findMany({
+        where: {
+            conversationId: conversation.id,
+        },
+        take: 10,
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include: {
+            sender: true
+        }
+    });
+    
+    // Reverse the messages to display them in the correct order
+    latestMessages.reverse();
+
       // Emit the message event to the WebSocket server
       req.io.to(`conversation_${conversation.id}`).emit('new_message', {
         message: newMessage,
+        latestMessages: latestMessages, // Send the latest 10 messages
         senderId: senderId,
         senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown',
         conversationId: conversation.id,
@@ -997,11 +1014,27 @@ module.exports = {
             conversationId: conversation.id,
         },
       });
+      const latestMessages = await prisma.message.findMany({
+        where: {
+            conversationId: conversation.id,
+        },
+        take: 10,
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include: {
+            sender: true
+        }
+    });
+
+    // Reverse the messages to display them in the correct order
+    latestMessages.reverse();
 
       // Emit the message event to the WebSocket server
       // After saving the message and uploading the image
       req.io.to(`conversation_${conversation.id}`).emit('new_message', {
         message: newMessage,
+        latestMessages: latestMessages, // Send the latest 10 messages
         senderId: senderId,
         senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown', // Use the sender's name from the database
         conversationId: conversation.id,
