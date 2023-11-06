@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
 
     <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -24,13 +29,240 @@
             padding: 20px 0;
             background-color: #f8f9fa;
         }
+
+        /* Navigation Bar Styles */
+.navbar.navbar-expand-lg.navbar-light.bg-light {
+    background-color: #219ebc !important;
+    padding: 10px 0;
+}
+
+
+.nav-link {
+    color: white !important;
+    font-family: 'Roboto Slab', serif,;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-family: 'Roboto Slab', serif,;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 1px; /* Align with .nav-link */
+    margin-left: 15px;
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-color: white;
+}
+
+/* Custom Logout Button Style */
+.btn-outline-success {
+    background-color: #002244 !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin-right: 20px;
+    font-weight: bold;
+    color: white !important;
+    font-family: 'Roboto Slab', serif,;
+}
+
+.btn-outline-success:hover {
+    background-color: #6082B6 !important;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+/* Body */
+body {
+    padding-top: 0px;
+    margin-bottom: 60px;
+}
+
+/* Additional Styles for Navigation Links */
+.nav-link {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+    color: white !important;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 10px;
+    position: relative;
+    transition: all .5s;
+}
+
+
+.nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #8ecae6;
+    transform: scaleX(0);
+    transition: transform 0.5s;
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
+}
+
+
+.container {
+    margin: 0 auto;
+    padding: 4rem;
+    width: 48rem;
+  }
+  
+  .accordion-item {
+    border-bottom: 1px solid #e5e5e5;
+  }
+  
+  .accordion-item button[aria-expanded='true'] {
+    border-bottom: 1px solid #03b5d2;
+  }
+  
+  .accordion button {
+    position: relative;
+    display: block;
+    text-align: left;
+    width: 100%;
+    padding: 1em 0;
+    color: #7288a2;
+    font-size: 1.15rem;
+    font-weight: 400;
+    border: none;
+    background: none;
+    outline: none;
+  }
+  
+  .accordion button:hover, .accordion button:focus {
+    cursor: pointer;
+    color: #03b5d2;
+  }
+  
+  .accordion button:hover::after, .accordion button:focus::after {
+    cursor: pointer;
+    color: #03b5d2;
+    border: 1px solid #03b5d2;
+  }
+  
+  .accordion-title {
+    padding: 1em 1.5em 1em 0;
+  }
+  
+  .icon {
+    display: inline-block;
+    position: absolute;
+    top: 18px;
+    right: 0;
+    width: 22px;
+    height: 22px;
+    border: 1px solid;
+    border-radius: 22px;
+  }
+  
+  .icon::before {
+    display: block;
+    position: absolute;
+    content: '';
+    top: 9px;
+    left: 5px;
+    width: 10px;
+    height: 2px;
+    background: currentColor;
+  }
+  
+  .icon::after {
+    display: block;
+    position: absolute;
+    content: '';
+    top: 5px;
+    left: 9px;
+    width: 2px;
+    height: 10px;
+    background: currentColor;
+  }
+  
+  .accordion-item button[aria-expanded='true'] {
+    color: #03b5d2;
+  }
+  
+  .accordion-item button[aria-expanded='true'] .icon::after {
+    width: 0;
+  }
+  
+  .accordion-item button[aria-expanded='true'] + .accordion-content {
+    opacity: 1;
+    max-height: 9em;
+    transition: all 200ms linear;
+    will-change: opacity, max-height;
+  }
+  
+  .accordion-content {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 200ms linear, max-height 200ms linear;
+    will-change: opacity, max-height;
+  }
+  
+  .accordion-content p {
+    font-size: 1rem;
+    font-weight: 300;
+    margin: 2em 0;
+    color: #4d5974;
+  }
+  
+  .accordion-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    color: #03b5d2;
+  }
+  .accordion .accordion-item h3 {
+    text-align: left;
+  }
+  
+  .faq-title {
+    text-align: center;
+  }
+  
+  .faq-title h2 {
+    position: relative;
+    margin-bottom: 45px;
+    display: inline-block;
+    font-weight: 600;
+    line-height: 1;
+    color: #5072A7;
+  }
+  
+  .faq-title h2::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 60px;
+    height: 2px;
+    background: #6CB4EE;
+    bottom: -25px;
+    transform: translateX(-50%);
+  }
+  
+  
     </style>
 </head>
 
 <body>
   <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+      <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
@@ -50,62 +282,67 @@
               </li>
           </ul> 
           <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
           </form>
       </div>
   </nav>
 
-    <div class="container">
-        <h1>Frequently Asked Questions</h1>
-
-        <div class="faq-section">
-            <h3>Donating Items</h3>
-            <div id="donationFAQ">
-                <div>
-                    <a data-toggle="collapse" href="#q1" aria-expanded="false">
-                        <strong>How can I donate?</strong>
-                    </a>
-                    <div class="collapse" id="q1">
-                        <p>Answer for the first question...</p>
+            <div class="container">
+                <div class="faq-title">
+                <h2>Frequently Asked Questions</h2>
+                <div class="accordion">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">Donating Items</h3>
+                    <button id="accordion-button-1" aria-expanded="false"><span class="accordion-title">How can I donate?</span><span class="icon" aria-hidden="true"></span></button>
+                    <div class="accordion-content">
+                    <p>Answer for the first question...</p>
                     </div>
                 </div>
-                <div>
-                    <a data-toggle="collapse" href="#q2" aria-expanded="false">
-                        <strong>What types of items can I donate?</strong>
-                    </a>
-                    <div class="collapse" id="q2">
-                        <p>Answer for the second question...</p>
+                <div class="accordion-item">
+                    <button id="accordion-button-2" aria-expanded="false"><span class="accordion-title">What types of items can I donate?</span><span class="icon" aria-hidden="true"></span></button>
+                    <div class="accordion-content">
+                    <p>Answer for the second question...</p>
                     </div>
-                </div> 
-            </div>
-
-            <div class="faq-section">
-                <h3>Account & Status</h3>
-                <div id="accountFAQ">
-                    <div>
-                        <a data-toggle="collapse" href="#q4" aria-expanded="false">
-                            <strong>How do I change my account settings?</strong>
-                        </a>
-                        <div class="collapse" id="q4">
-                            <p>Answer for the fourth question...</p>
-                        </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header">Account & Status</h3>
+                    <button id="accordion-button-3" aria-expanded="false"><span class="accordion-title">How do I change my account settings?</span><span class="icon" aria-hidden="true"></span></button>
+                    <div class="accordion-content">
+                    <p>Answer for the fourth question...</p>
                     </div>
-                    <div>
-                        <a data-toggle="collapse" href="#q5" aria-expanded="false">
-                            <strong>What is the status of my donations?</strong>
-                        </a>
-                        <div class="collapse" id="q5">
-                            <p>Answer for the fifth question...</p>
-                        </div>
+                </div>
+                <div class="accordion-item">
+                    <button id="accordion-button-4" aria-expanded="false"><span class="accordion-title">What is the status of my donations?</span><span class="icon" aria-hidden="true"></span></button>
+                    <div class="accordion-content">
+                    <p>Answer for the fifth question...</p>
                     </div>
                 </div>
             </div>
-        </div> 
-    </div>
+        </div>
+    </div> 
+</div>
+<script>
+    const items = document.querySelectorAll(".accordion button");
+
+function toggleAccordion() {
+  const itemToggle = this.getAttribute('aria-expanded');
+  
+  for (i = 0; i < items.length; i++) {
+    items[i].setAttribute('aria-expanded', 'false');
+  }
+  
+  if (itemToggle == 'false') {
+    this.setAttribute('aria-expanded', 'true');
+  }
+}
+
+items.forEach(item => item.addEventListener('click', toggleAccordion));
+</script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

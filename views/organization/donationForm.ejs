@@ -4,18 +4,179 @@
     <title>Donation Form</title>
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
       .container {
         max-width: 800px;
         margin: 0 auto;
         padding: 20px;
       }
+       /* Navigation Bar Styles */
+       .navbar.navbar-expand-lg.navbar-light.bg-light {
+        background-color: #219ebc !important;
+        padding: 10px 0;
+    }
+
+
+    .nav-link {
+        color: white !important;
+        font-family: 'Roboto Slab', serif,;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 15px;
+    }
+
+    .navbar-brand {
+        color: white !important;
+        font-family: 'Roboto Slab', serif,;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 1px; /* Align with .nav-link */
+        margin-left: 15px;
+    }
+
+    .navbar-light .navbar-toggler-icon {
+        background-color: white;
+    }
+
+    /* Custom Logout Button Style */
+    .btn-outline-success {
+        background-color: #002244 !important;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        margin-right: 20px;
+        font-weight: bold;
+        color: white !important;
+        font-family: 'Roboto Slab', serif,;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #6082B6 !important;
+        color: #fff !important;
+        text-decoration: none;
+    }
+
+    /* Body */
+    body {
+        padding-top: 0px;
+        margin-bottom: 60px;
+    }
+
+    /* Additional Styles for Navigation Links */
+    .nav-link {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: white !important;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 0 10px;
+        position: relative;
+        transition: all .5s;
+    }
+
+
+    .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #8ecae6;
+        transform: scaleX(0);
+        transition: transform 0.5s;
+    }
+
+    .nav-link:hover::after {
+        transform: scaleX(1);
+    }
+
+    body, input, select, button, .container h3, .container h4 {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .container {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 30px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 80%;
+      max-width: 600px;
+    }
+  
+    .container h3 {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 1em;
+    }
+    
+  
+    .form-group {
+      margin-bottom: 0.5em; /* Reduced bottom margin */
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: .5em;
+      font-weight: 600;
+      color: #555;
+    }
+  
+    .form-control {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 14px;
+      width: 100%;
+    }
+  
+    .form-control-static {
+      padding: 8px 12px;
+      background: #e9ecef;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  
+    .form-control:focus {
+      border-color: #007bff;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 123, 255, 0.6);
+    }
+  
+    .btn-primary {
+      display: block; /* Ensures the button is a block-level element */
+      margin: 10px auto 0; /* 30px top margin, auto side margins, and 0 bottom margin */
+      background-color: #5072A7;
+      border-color: #5072A7;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background-color: #6699CC;;
+    }
+    
+    
+
     </style>
   </head>
   <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
+        <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,7 +196,7 @@
                 </li>
             </ul> 
             <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
             </form>
         </div>
     </nav>
