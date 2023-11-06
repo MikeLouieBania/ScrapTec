@@ -16,6 +16,10 @@
             height: 50vh;
             margin: 0;
         }
+        .red-border {
+            color: brown;
+            text-align: center;
+        }
         
         .login-container {
             max-width: 450px;
@@ -94,10 +98,8 @@
     <div class="login-container">
         <span class="icon-lock">lock</span> <!-- Material Symbols Outlined lock icon -->
         <h2 class="text-center">Manager Login</h2>
-        <% if (typeof error === 'string' && error) { %>
-            <div class="alert alert-danger" role="alert">
-                <%= error %>
-            </div>
+        <% if (typeof message !== 'undefined') { %>
+            <p class="red-border"><%= message %></p>
         <% } %>
         <form action="/manager/login" method="post">
             <div class="form-group">
