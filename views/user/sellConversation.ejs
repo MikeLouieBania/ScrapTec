@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buying Conversation</title>
+    <title>Selling Conversation</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .sidenav {
@@ -36,11 +36,18 @@
         .sidenav button:hover {
             color: #f1f1f1;
             background-color: transparent;
-        }
+        } 
 
         #main {
             transition: margin-left .5s;
             padding: 16px;
+            padding-top: 60px; /* Adjust this value as needed */
+        }
+
+        #messages-container {
+            height: calc(100vh - 200px); /* Adjust the 200px to account for header/footer height */
+            overflow-y: auto;
+            padding-bottom: 20px; /* Space at the bottom */
         }
 
         .my-message {
@@ -51,6 +58,7 @@
             float: right;
             clear: both;
             max-width: 80%;
+            margin-bottom: 10px; /* Ensure spacing between messages */
         }
 
         .their-message {
@@ -60,6 +68,7 @@
             border-radius: 10px 0 0 10px;
             clear: both;
             max-width: 80%;
+            margin-bottom: 10px; /* Ensure spacing between messages */
         }
 
         .timestamp {

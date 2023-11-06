@@ -17,6 +17,10 @@ function getMimeType(extension) {
       return 'data:image/png;base64,'; // default to PNG or any other type you prefer
   }
 }
+function isValidObjectId(id) {
+  return /^[0-9a-fA-F]{24}$/.test(id);
+}
+
 
 async function handleImageUpload(req) {
   if (req.file) {
@@ -818,6 +822,7 @@ module.exports = {
     try {
       const userId = req.session.user.id;
       const listingId = req.params.listingId;
+      const limit = 10; // Number of messages to load initially
 
       // Fetch the conversation related to the listing
       const conversation = await prisma.conversation.findFirst({
@@ -834,6 +839,10 @@ module.exports = {
         },
         include: {
           messages: {     // include the messages in the conversation
+            take: limit, // Load only the most recent messages
+            orderBy: {
+              createdAt: 'desc' // Order by most recent messages first
+            },
             include: {
               sender: true // <-- Include sender details here
             }
@@ -848,13 +857,88 @@ module.exports = {
         return res.status(404).send("Conversation not found.");
       }
 
+      // Reverse the messages to display them in the correct order
+      conversation.messages.reverse();
+
+      // Determine if there are more than 'limit' messages to indicate if there are older messages
+      const totalMessages = await prisma.message.count({
+          where: {
+              conversationId: conversation.id,
+          },
+      });
+
       res.render('user/buyConversation', {
         user: req.session.user,
-        conversation
+        conversation,
+        hasMore: conversation.messages.length === limit, // Indicate if there are more messages to load
+        limit: limit,
+        hasMoreOlder: totalMessages > limit, // There are older messages if the total count is greater than the limit
+        hasMoreNewer: false // Initially, there are no newer messages to load
       });
 
     } catch (error) {
       console.error("Error fetching buy conversation:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+ 
+  async postLoadMessages(req, res) {
+    const { conversationId, messageId } = req.params;
+    const direction = req.query.direction;
+    const limit = 10; // Number of messages to load
+
+    if (!messageId || messageId === 'undefined' || !isValidObjectId(messageId)) {
+      return res.status(400).json({ error: 'Invalid messageId' });
+    }
+  
+
+    try { 
+      // Logic to fetch older or newer messages based on messageId and direction
+      const whereClause = direction === 'older' 
+          ? { lt: messageId } 
+          : { gt: messageId };
+
+      const orderByClause = direction === 'older' 
+          ? 'desc' 
+          : 'asc';
+
+      // Logic to fetch older or newer messages based on messageId and direction
+      const messages = await prisma.message.findMany({
+        where: {
+          conversationId: conversationId,
+          id: whereClause
+        },
+        take: limit + 1, // Fetch one extra message to check if there are more
+        orderBy: {
+          createdAt: orderByClause
+        },
+        include: {
+          sender: true // Include sender details
+        }
+      });
+
+      // Determine if there are more messages in either direction
+      const hasMoreOlder = direction === 'older' && messages.length > limit;
+      const hasMoreNewer = direction === 'newer' && messages.length > limit;
+
+      // If there are more messages, remove the extra message from the array
+      if (hasMoreOlder || hasMoreNewer) {
+        messages.pop();
+      }
+
+      // If loading older messages, reverse the array to maintain order
+      if (direction === 'older') {
+        messages.reverse();
+      }
+
+      res.json({
+        messages,
+        hasMoreOlder,
+        hasMoreNewer
+      });
+
+    } catch (error) {
+      console.error("Error loading messages:", error);
       res.status(500).send("Internal Server Error");
     }
   },
@@ -1023,7 +1107,6 @@ module.exports = {
       }
     }
   },
-
 
   async getSavedListings(req, res) {
     const userId = req.session.user.id; // Assuming the user ID is stored in the session

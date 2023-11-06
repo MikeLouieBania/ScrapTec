@@ -41,6 +41,16 @@
         #main {
             transition: margin-left .5s;
             padding: 16px;
+            padding-top: 60px;
+            /* Adjust this value as needed */
+        }
+
+        #messages-container {
+            height: calc(100vh - 200px);
+            /* Adjust the 200px to account for header/footer height */
+            overflow-y: auto;
+            padding-bottom: 20px;
+            /* Space at the bottom */
         }
 
         .my-message {
@@ -51,6 +61,8 @@
             float: right;
             clear: both;
             max-width: 80%;
+            margin-bottom: 10px;
+            /* Ensure spacing between messages */
         }
 
         .their-message {
@@ -60,6 +72,8 @@
             border-radius: 10px 0 0 10px;
             clear: both;
             max-width: 80%;
+            margin-bottom: 10px;
+            /* Ensure spacing between messages */
         }
 
         .timestamp {
@@ -109,9 +123,11 @@
                     <% } %>
 
                         <hr>
+                        <button id="load-older-messages" class="btn btn-secondary">Load Older Messages</button>
                         <div id="messages-container">
                             <% conversation.messages.forEach(function(message) { %>
-                                <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>">
+                                <div class="<%= message.senderId === user.id ? 'my-message' : 'their-message' %>"
+                                    data-message-id="<%= message.id %>">
                                     <strong>
                                         <% if(message.sender) { %>
                                             <%= message.sender.firstName %>
@@ -139,7 +155,10 @@
                                                     </span>
                                 </div>
                                 <% }); %>
+
                         </div>
+                        <button id="load-newer-messages" class="btn btn-secondary" style="display: none;">Load Newer
+                            Messages</button>
 
                         <form id="message-form-buyer" action="/user/send_message_buyer" method="POST"
                             enctype="multipart/form-data" class="mt-4">
@@ -182,7 +201,94 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- At the bottom of your buyConversation.ejs and sellConversation.ejs pages -->
+
+    <script>
+        // Function to load messages
+        function loadMessages(direction, messageId) {
+            $.ajax({
+                url: `/user/loadMessages/<%= conversation.id %>/${messageId}?direction=${direction}`,
+                type: 'GET',
+                success: function (response) {
+
+                    // Replace the current messages with the new set
+                    $('#messages-container').empty();
+                    response.messages.forEach(function (message) {
+                        $('#messages-container').append(createMessageDiv(message));
+                    });
+
+                    // Update the visibility of the "Load Older Messages" button
+                    $('#load-older-messages').toggle(response.hasMoreOlder);
+
+                    // If we are loading older messages, show the "Load Newer Messages" button
+                    if (direction === 'older') {
+                        $('#load-newer-messages').show();
+                    } else if (direction === 'newer') {
+                        // If we are loading newer messages and there are no more newer messages, hide the button
+                        $('#load-newer-messages').toggle(response.hasMoreNewer);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error loading messages:', error);
+                    // Consider adding user feedback here
+                    alert('Error loading messages. Please try again.');
+                }
+            });
+        }
+
+        // Helper function to create message div
+        function createMessageDiv(message) {
+            var messageClass = message.senderId === '<%= user.id %>' ? 'my-message' : 'their-message';
+            var senderName = message.sender ? message.sender.firstName + ' ' + message.sender.lastName : 'Unknown';
+            var messageContent = message.content || '';
+            var messageImage = message.imageFileId ? `<img src="/user/image/${message.imageFileId}" alt="Message Image" style="max-width: 300px; max-height: 300px;">` : '';
+            var messageTimestamp = new Date(message.createdAt).toLocaleString();
+
+            var messageDiv = `
+                <div class="${messageClass}" data-message-id="${message.id}">
+                    <strong>${senderName}:</strong>
+                    <p>${messageContent}</p>
+                    ${messageImage}
+                    <span class="timestamp">${messageTimestamp}</span>
+                </div>
+            `;
+            return messageDiv;
+        }
+
+        $(document).ready(function () {
+            $('#load-older-messages').click(function () {
+                // Get the first .message element for the oldest message 
+                var oldestMessageDiv = $('#messages-container div[data-message-id]:first');
+
+                var oldestMessageId = oldestMessageDiv.data('message-id');
+                if (oldestMessageId) {
+                    loadMessages('older', oldestMessageId);
+                } else {
+                    console.error('No message ID found for the oldest message');
+                    // Handle the error appropriately
+                }
+            });
+
+
+            $('#load-newer-messages').click(function () {
+                // Get the last .message element for the newest message
+                var newestMessageDiv = $('#messages-container div[data-message-id]:last');
+                var newestMessageId = newestMessageDiv.data('message-id');
+                if (newestMessageId) {
+                    loadMessages('newer', newestMessageId);
+                } else {
+                    console.error('No message ID found for the newest message');
+                    // Handle the error appropriately
+                }
+            });
+            // Initially, set the visibility of the "Load Older Messages" button
+            // based on whether there are more messages than the initial limit
+            $('#load-older-messages').toggle(<%= hasMoreOlder %>);
+
+            // The "Load Newer Messages" button should be hidden on initial load
+            $('#load-newer-messages').hide();
+        });
+    </script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
@@ -247,7 +353,9 @@
                 });
             });
         });
+
     </script>
+
 
     <script>
         function openNav() {
