@@ -17,18 +17,20 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
 
  
 
 <!-- ROUTING -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"> 
 
-    <style>
+    <style> 
         body {
-            font-family: 'Roboto', sans-serif;
             background-color: #f4f4f7; /* A light grayish background */
+            font-family: 'Poppins', sans-serif;
         }
-    
+
         .btn-success {
             background-color: #2ecc71; /* A vibrant green for success actions */
         }
@@ -121,6 +123,126 @@
             border: none;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        /* Modal content styling */
+            .modal-content {
+                border-radius: 8px;
+            }
+            
+            .modal-header {
+                background-color: #4B9CD3 !important; /* Or any color you want */
+                color: #fff;
+                border-bottom: none;
+                text-align: center; /* Align text to the center */
+                position: relative; /* Needed for absolute positioning of the close button */
+              }
+              
+              .modal-header .modal-title {
+                display: inline-block; /* Allows for centering when the parent has text-align: center */
+                width: 100%;
+              }
+              
+              .modal-header .close {
+                position: absolute;
+                right: 1rem; /* Adjust as needed */
+                top: 50%;
+                transform: translateY(-50%); /* Align vertically */
+                color: #fff;
+                opacity: 1;
+              }
+              
+              
+            
+            .modal-title {
+                font-size: 1.5rem;
+            }
+            
+            .close {
+                font-size: 1.5rem;
+                color: #fff;
+                opacity: 1;
+            }
+            
+            /* Styling for modal body and form elements */
+            .modal-body {
+                font-size: 1rem;
+            }
+            
+            .modal-body p {
+                margin-bottom: 1rem;
+            }
+            
+            .modal-body h5 {
+                font-weight: 600;
+            }
+            
+            /* Input and textarea styling */
+            input[type="text"],
+            select.form-control,
+            textarea {
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                padding: 10px;
+                margin-bottom: 1rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* Button styling */
+            button.btn {
+                padding: 10px 20px;
+                margin-right: 5px; /* Spacing between buttons */
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: background-color 0.3s ease;
+            }
+            
+            /* Primary button styling */
+            .btn-primary {
+                background-color: #5072A7;
+                color: #fff;
+            }
+            
+            .btn-primary:hover {
+                background-color: #6699CC;
+            }
+            
+            /* Secondary button styling */
+            .btn-secondary {
+                background-color: #6c757d;
+                color: #fff;
+            }
+            
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+            
+            /* Success button styling (for submit feedback) */
+            .btn-success {
+                background-color: #28a745;
+                color: #fff;
+            }
+            
+            .btn-success:hover {
+                background-color: #218838;
+            }
+            
+            /* Rating label styling */
+            .feedback-rating label {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+            
+            .feedback-rating input[type="radio"] {
+                margin-right: 0.5rem;
+            }
+            
+            /* Character count styling */
+            #charCount {
+                font-weight: 600;
+            }
+            
         .modal {
             z-index: 1051; /* Ensure it's above other elements including Leaflet controls */
         }
@@ -157,44 +279,181 @@
             box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.3); /* Add a blue glow around the button when it's focused */
         } 
         .modal-map-container {
-    margin-bottom: 10px;
-}
+            margin-bottom: 10px;
+        }
 
-.btn {
-    margin-right: 5px;
-    margin-top: 5px;
-}
+        .btn {
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+
+
+        /* Navigation Bar Styles */
+        .navbar.navbar-expand-lg.navbar-light.bg-light {
+            background-color: #219ebc !important;
+            padding: 10px 0;
+        }
+
+
+        .nav-link {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 1px; /* Align with .nav-link */
+            margin-left: 15px;
+        }
+
+        .navbar-light .navbar-toggler-icon {
+            background-color: white;
+        }
+
+        /* Custom Logout Button Style */
+        .btn-outline-success {
+            background-color: #002244 !important;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+            font-weight: bold;
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #6082B6 !important;
+            color: #fff !important;
+            text-decoration: none;
+        }
+
+        /* Body */
+        body {
+            padding-top: 0px;
+            margin-bottom: 60px;
+        }
+
+        /* Additional Styles for Navigation Links */
+        .nav-link {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: white !important;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0 10px;
+            position: relative;
+            transition: all .5s;
+        }
+
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #8ecae6;
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+
+        .card-header {
+            background: #f7f7f7;
+            border-bottom: 1px solid #e5e5e5;
+          }
+          
+          .card-header h2 {
+            font-size: 1rem; /* decreased from 1.25rem to 1rem */
+            font-weight: 600;
+          }
+          
+          .card-header button {
+            text-decoration: none;
+            color: #6699CC;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 1em 1.5em;
+            font-size: 1rem; /* decreased from 1.25rem to 1rem */
+            font-weight: 600;
+            outline: none;
+            position: relative;
+          }
+          
+          .card-header button:hover,
+          .card-header button:focus {
+            color: #e91e63;
+            outline: none;
+          }
+          
+          /* Removed the ::after pseudo-element for +/- icons */
+          
+          .card-body {
+            background: #fff;
+            padding: 2em;
+          }
+          
+          .card-body ul {
+            list-style: none;
+            padding: 0;
+          }
+          
+          .card-body li {
+            margin-bottom: 10px;
+          }
+          
+          .card-body li .badge {
+            margin-left: 5px;
+          }
+          
+          
 
     </style>
 </head>
 
     <body>
-        <!-- Navigation Bar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/organization/dashboard">Dashboard</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mr-auto">  
-                    <li class="nav-item">
-                    <a class="nav-link" href="/organization/donationsList">Donations</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-                    </li>  
-                    <li class="nav-item">
-                    <a class="nav-link" href="/organization/faq">FAQ</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/organization/account">Account</a>
-                    </li>
-                </ul> 
-                <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-                </form>
-            </div>
-        </nav>
+            <!-- Navigation Bar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">  
+                        <li class="nav-item">
+                        <a class="nav-link" href="/organization/donationsList">Donations</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                        </li>  
+                        <li class="nav-item">
+                        <a class="nav-link" href="/organization/faq">FAQ</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="/organization/account">Account</a>
+                        </li>
+                    </ul> 
+                    <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+                    </form>
+                </div>
+            </nav>
 
 
         <div class="dashboard-container mt-4">
