@@ -229,11 +229,12 @@ model Conversation {
 
 model Message {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  content        String
+  content        String?
   sender         User         @relation("MessageSenderRelation", fields: [senderId], references: [id])
   senderId       String       @map("sender_id") @db.ObjectId
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId String       @map("conversation_id") @db.ObjectId
+  imageFileId    String?      @map("image_file_id")
   read           Boolean      @default(false)
   createdAt      DateTime     @default(now())
 }

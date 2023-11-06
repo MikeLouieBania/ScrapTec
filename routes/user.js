@@ -15,7 +15,7 @@ router.get('/inbox', userController.getInbox);
 router.post('/send_message_buyer', userController.postSendMessageBuyer); 
 router.get('/buyConversation/:listingId', userController.getBuyConversation);
 router.post('/send_message_seller', userController.postSendMessageSeller); 
-router.get('/sellConversation/:listingId', userController.getSellConversation);
+router.get('/sellConversation/:listingId/:conversationId', userController.getSellConversation);
 router.get('/useraccount', userController.getAccount) 
 router.post('/logout', userController.logout); 
 
