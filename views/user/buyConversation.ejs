@@ -206,7 +206,7 @@
         // Function to load messages
         function loadMessages(direction, messageId) {
             $.ajax({
-                url: `/user/loadMessages/<%= conversation.id %>/${messageId}?direction=${direction}`,
+                url: `/user/loadMessagesBuyer/<%= conversation.id %>/${messageId}?direction=${direction}`,
                 type: 'GET',
                 success: function (response) {
 
@@ -297,8 +297,7 @@
         socket.emit('join_room', 'conversation_<%= conversation.id %>');
 
         // Listen for new messages
-        socket.on('new_message', function (data) {
-            console.log('New message received:', data);
+        socket.on('new_message', function (data) { 
             if (data.conversationId === '<%= conversation.id %>') {
                 var messagesContainer = document.getElementById('messages-container');
                 var newMessageDiv = document.createElement('div');
@@ -328,17 +327,20 @@
                 }
 
                 // Scroll to the bottom of the messages container
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight; 
+                                
+                // Update the total number of messages
+                var totalMessages = data.totalMessages; // Get the updated count from the server
 
                 // Check if "Load Older Messages" button should be visible
-                if (messagesContainer.children.length >= 10) {
+                // This should also check if the total number of messages exceeds the limit  
+                if (totalMessages > 10) {
                     $('#load-older-messages').show();
                 } else {
                     $('#load-older-messages').hide();
-                }
+                } 
             }
         });
-
 
         $(document).ready(function () {
             $('#message-form-buyer').submit(function (e) {
@@ -352,8 +354,7 @@
                     data: formData,
                     contentType: false,
                     processData: false,
-                    success: function (response) {
-                        console.log('Message sent:', response);
+                    success: function (response) { 
                         // Clear the message input field
                         $('textarea[name="message"]').val('');
                         // Clear the file input field

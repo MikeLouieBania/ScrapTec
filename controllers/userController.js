@@ -550,217 +550,6 @@ module.exports = {
     }
   },
 
-  async postSendMessageBuyer(req, res) {
-    try {
-      const senderId = req.session.user.id;
-      const listingId = req.body.listing_id;
-
-      // Fetch the listing to get the seller's ID
-      const listing = await prisma.listing.findUnique({
-        where: {
-          id: listingId,
-        }
-      });
-
-      if (!listing) {
-        return res.status(404).json({ error: 'Listing not found.' });
-      }
-
-      const recipientId = listing.userId;
-
-      // Attempt to find an existing conversation
-      let conversation = await prisma.conversation.findFirst({
-        where: {
-          OR: [
-            { user1Id: senderId, user2Id: recipientId, listingId: listingId },
-            { user1Id: recipientId, user2Id: senderId, listingId: listingId }
-          ]
-        }
-      });
-
-      // If the conversation doesn't exist, create it
-      if (!conversation) {
-        conversation = await prisma.conversation.create({
-          data: {
-            user1Id: senderId,
-            user2Id: recipientId,
-            listingId: listingId
-          }
-        });
-      }
-
-
-      // Handling the image upload
-      let imageFileId = null;
-      try {
-        imageFileId = await handleImageUpload(req); // Use the new function to handle the upload
-      } catch (error) {
-        return res.status(500).json({ error: error.message });
-      }
-
-      // Ensure either message content or image is provided
-      if (!req.body.message && !imageFileId) {
-        return res.status(400).json({ error: 'Message content cannot be empty if no image is provided.' });
-      }
-
-      // Save the message
-      let messageData = {
-        senderId: senderId,
-        conversationId: conversation.id,
-        read: false // initially, the message is not read
-      };
-
-      if (req.body.message) {
-        messageData.content = req.body.message;
-      }
-
-      if (imageFileId) {
-        messageData.imageFileId = imageFileId;
-      }
-
-      const newMessage = await prisma.message.create({ data: messageData });
-
-      // Fetch the sender's name from the database
-      const sender = await prisma.user.findUnique({
-        where: {
-          id: senderId
-        }
-      });
-
-      // Emit the message event to the WebSocket server
-      req.io.to(`conversation_${conversation.id}`).emit('new_message', {
-        message: newMessage,
-        senderId: senderId,
-        senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown',
-        conversationId: conversation.id,
-        imageFileId: imageFileId // This should not be null
-      });
-
-      console.log(`Message sent to room: conversation_${conversation.id}`);
-
-      // res.redirect('/user/buyConversation/' + listingId);
-      res.json({ success: true, message: 'Message sent successfully.', newMessage });
-    } catch (error) {
-      console.error('Error sending message:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  },
-
-  async postSendMessageSeller(req, res) {
-    try {
-
-      const senderId = req.session.user.id;  // This will be the seller
-      const listingId = req.body.listing_id;
-      const recipientId = req.body.buyer_id;  // Assuming you provide the buyer's ID when the seller wants to send a message.
-
-
-      if (!recipientId) {
-        return res.status(400).json({ error: 'Buyer ID is required to send a message.' });
-      }
-
-      // Check if the listing exists and belongs to the seller
-      const listing = await prisma.listing.findUnique({
-        where: {
-          id: listingId,
-          userId: senderId  // Ensure the listing belongs to the seller
-        }
-      });
-
-      if (!listing) {
-        return res.status(404).json({ error: 'Listing not found or you do not have permission to send a message for this listing.' });
-      }
-
-      // Attempt to find an existing conversation
-      let conversation = await prisma.conversation.findFirst({
-        where: {
-          AND: [
-            {
-              listingId: listingId
-            },
-            {
-              OR: [
-                { user1Id: senderId, user2Id: recipientId },
-                { user1Id: recipientId, user2Id: senderId }
-              ]
-            }
-          ]
-        }
-      });
-
-
-      // If the conversation doesn't exist, create it
-      if (!conversation) {
-        conversation = await prisma.conversation.create({
-          data: {
-            user1Id: senderId,
-            user2Id: recipientId,
-            listingId: listingId
-          }
-        });
-      }
-
-      // Handling the image upload
-      let imageFileId = null;
-      try {
-        imageFileId = await handleImageUpload(req); // Use the new function to handle the upload
-      } catch (error) {
-        return res.status(500).json({ error: error.message });
-      }
-
-      // Ensure either message content or image is provided
-      if (!req.body.message && !imageFileId) {
-        return res.status(400).json({ error: 'Message content cannot be empty if no image is provided.' });
-      }
-
-      // Save the message
-      let messageData = {
-        senderId: senderId,
-        conversationId: conversation.id,
-        read: false // initially, the message is not read
-      };
-
-      if (req.body.message) {
-        messageData.content = req.body.message;
-      }
-
-      if (imageFileId) {
-        messageData.imageFileId = imageFileId;
-      }
-
-      // After the image upload and message save
-      if (imageFileId) {
-        messageData.imageFileId = imageFileId;
-      }
-
-      const newMessage = await prisma.message.create({ data: messageData });
-
-      // Fetch the sender's name from the database
-      const sender = await prisma.user.findUnique({
-        where: {
-          id: senderId
-        }
-      });
-
-      // Emit the message event to the WebSocket server
-      // After saving the message and uploading the image
-      req.io.to(`conversation_${conversation.id}`).emit('new_message', {
-        message: newMessage,
-        senderId: senderId,
-        senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown', // Use the sender's name from the database
-        conversationId: conversation.id,
-        imageFileId: imageFileId // This should not be null
-      });
-
-      console.log(`Message sent to room: conversation_${conversation.id}`);
-
-      // res.redirect('/user/sellConversation/' + listingId + '/' + conversation.id);
-      res.json({ success: true, message: 'Message sent successfully.', newMessage });
-    } catch (error) {
-      console.error('Error sending message:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  },
-
   async getInbox(req, res) {
     try {
       const userId = req.session.user.id;
@@ -862,9 +651,9 @@ module.exports = {
 
       // Determine if there are more than 'limit' messages to indicate if there are older messages
       const totalMessages = await prisma.message.count({
-          where: {
-              conversationId: conversation.id,
-          },
+        where: {
+          conversationId: conversation.id,
+        },
       });
 
       res.render('user/buyConversation', {
@@ -873,7 +662,8 @@ module.exports = {
         hasMore: conversation.messages.length === limit, // Indicate if there are more messages to load
         limit: limit,
         hasMoreOlder: totalMessages > limit, // There are older messages if the total count is greater than the limit
-        hasMoreNewer: false // Initially, there are no newer messages to load
+        hasMoreNewer: false, // Initially, there are no newer messages to load
+        totalMessages
       });
 
     } catch (error) {
@@ -881,8 +671,113 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
- 
-  async postLoadMessages(req, res) {
+  
+  async postSendMessageBuyer(req, res) {
+    try {
+      const senderId = req.session.user.id;
+      const listingId = req.body.listing_id;
+
+      // Fetch the listing to get the seller's ID
+      const listing = await prisma.listing.findUnique({
+        where: {
+          id: listingId,
+        }
+      });
+
+      if (!listing) {
+        return res.status(404).json({ error: 'Listing not found.' });
+      }
+
+      const recipientId = listing.userId;
+
+      // Attempt to find an existing conversation
+      let conversation = await prisma.conversation.findFirst({
+        where: {
+          OR: [
+            { user1Id: senderId, user2Id: recipientId, listingId: listingId },
+            { user1Id: recipientId, user2Id: senderId, listingId: listingId }
+          ]
+        }
+      });
+
+      // If the conversation doesn't exist, create it
+      if (!conversation) {
+        conversation = await prisma.conversation.create({
+          data: {
+            user1Id: senderId,
+            user2Id: recipientId,
+            listingId: listingId
+          }
+        });
+      }
+
+
+      // Handling the image upload
+      let imageFileId = null;
+      try {
+        imageFileId = await handleImageUpload(req); // Use the new function to handle the upload
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      // Ensure either message content or image is provided
+      if (!req.body.message && !imageFileId) {
+        return res.status(400).json({ error: 'Message content cannot be empty if no image is provided.' });
+      }
+
+      // Save the message
+      let messageData = {
+        senderId: senderId,
+        conversationId: conversation.id,
+        read: false // initially, the message is not read
+      };
+
+      if (req.body.message) {
+        messageData.content = req.body.message;
+      }
+
+      if (imageFileId) {
+        messageData.imageFileId = imageFileId;
+      }
+
+      const newMessage = await prisma.message.create({ data: messageData });
+
+      // Fetch the sender's name from the database
+      const sender = await prisma.user.findUnique({
+        where: {
+          id: senderId
+        }
+      });
+      
+      // Increment the total message count and send it with the response
+      const totalMessages = await prisma.message.count({
+        where: {
+          conversationId: conversation.id,
+        },
+      });
+
+      // Emit the message event to the WebSocket server
+      req.io.to(`conversation_${conversation.id}`).emit('new_message', {
+        message: newMessage,
+        senderId: senderId,
+        senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown',
+        conversationId: conversation.id,
+        imageFileId: imageFileId, // This should not be null
+        totalMessages // Add this line to include the total message count
+      });
+
+      console.log(`Message sent to room: conversation_${conversation.id}`);
+
+
+      // res.redirect('/user/buyConversation/' + listingId);
+      res.json({ success: true, message: 'Message sent successfully.', newMessage, totalMessages });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }, 
+
+  async getLoadMessagesBuyer(req, res) {
     const { conversationId, messageId } = req.params;
     const direction = req.query.direction;
     const limit = 10; // Number of messages to load
@@ -890,17 +785,16 @@ module.exports = {
     if (!messageId || messageId === 'undefined' || !isValidObjectId(messageId)) {
       return res.status(400).json({ error: 'Invalid messageId' });
     }
-  
 
-    try { 
+    try {
       // Logic to fetch older or newer messages based on messageId and direction
-      const whereClause = direction === 'older' 
-          ? { lt: messageId } 
-          : { gt: messageId };
+      const whereClause = direction === 'older'
+        ? { lt: messageId }
+        : { gt: messageId };
 
-      const orderByClause = direction === 'older' 
-          ? 'desc' 
-          : 'asc';
+      const orderByClause = direction === 'older'
+        ? 'desc'
+        : 'asc';
 
       // Logic to fetch older or newer messages based on messageId and direction
       const messages = await prisma.message.findMany({
@@ -948,6 +842,7 @@ module.exports = {
       const userId = req.session.user.id;
       const listingId = req.params.listingId;
       const conversationId = req.params.conversationId;
+      const limit = 10; // Number of messages to load initially
 
       // Fetch the conversation related to the selling listing
       const conversation = await prisma.conversation.findFirst({
@@ -957,6 +852,10 @@ module.exports = {
         },
         include: {
           messages: {     // include the messages in the conversation
+            take: limit,
+            orderBy: {
+              createdAt: 'desc'
+            },
             include: {
               sender: true // <-- Include sender details here
             }
@@ -971,10 +870,24 @@ module.exports = {
         return res.status(404).send("Sell Conversation not found.");
       }
 
+      // Reverse the messages to display them in the correct order
+      conversation.messages.reverse();
+
+      // Determine if there are more messages to load
+      const totalMessages = await prisma.message.count({
+        where: {
+          conversationId: conversation.id,
+        },
+      });
+
       res.render('user/sellConversation', {
         user: req.session.user,
         userId: req.session.user.id,
-        conversation
+        conversation,
+        limit: limit,
+        hasMoreOlder: totalMessages > limit,
+        hasMoreNewer: false,
+        totalMessages
       });
 
     } catch (error) {
@@ -982,6 +895,182 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
+  async postSendMessageSeller(req, res) {
+    try {
+
+      const senderId = req.session.user.id;  // This will be the seller
+      const listingId = req.body.listing_id;
+      const recipientId = req.body.buyer_id;  // Assuming you provide the buyer's ID when the seller wants to send a message.
+
+
+      if (!recipientId) {
+        return res.status(400).json({ error: 'Buyer ID is required to send a message.' });
+      }
+
+      // Check if the listing exists and belongs to the seller
+      const listing = await prisma.listing.findUnique({
+        where: {
+          id: listingId,
+          userId: senderId  // Ensure the listing belongs to the seller
+        }
+      });
+
+      if (!listing) {
+        return res.status(404).json({ error: 'Listing not found or you do not have permission to send a message for this listing.' });
+      }
+
+      // Attempt to find an existing conversation
+      let conversation = await prisma.conversation.findFirst({
+        where: {
+          AND: [
+            {
+              listingId: listingId
+            },
+            {
+              OR: [
+                { user1Id: senderId, user2Id: recipientId },
+                { user1Id: recipientId, user2Id: senderId }
+              ]
+            }
+          ]
+        }
+      });
+
+
+      // If the conversation doesn't exist, create it
+      if (!conversation) {
+        conversation = await prisma.conversation.create({
+          data: {
+            user1Id: senderId,
+            user2Id: recipientId,
+            listingId: listingId
+          }
+        });
+      }
+
+      // Handling the image upload
+      let imageFileId = null;
+      try {
+        imageFileId = await handleImageUpload(req); // Use the new function to handle the upload
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      // Ensure either message content or image is provided
+      if (!req.body.message && !imageFileId) {
+        return res.status(400).json({ error: 'Message content cannot be empty if no image is provided.' });
+      }
+
+      // Save the message
+      let messageData = {
+        senderId: senderId,
+        conversationId: conversation.id,
+        read: false // initially, the message is not read
+      };
+
+      if (req.body.message) {
+        messageData.content = req.body.message;
+      }
+
+      if (imageFileId) {
+        messageData.imageFileId = imageFileId;
+      }
+
+      // After the image upload and message save
+      if (imageFileId) {
+        messageData.imageFileId = imageFileId;
+      }
+
+      const newMessage = await prisma.message.create({ data: messageData });
+
+      // Fetch the sender's name from the database
+      const sender = await prisma.user.findUnique({
+        where: {
+          id: senderId
+        }
+      });
+
+      // After creating the new message in postSendMessageSeller
+      const totalMessages = await prisma.message.count({
+        where: {
+            conversationId: conversation.id,
+        },
+      });
+
+      // Emit the message event to the WebSocket server
+      // After saving the message and uploading the image
+      req.io.to(`conversation_${conversation.id}`).emit('new_message', {
+        message: newMessage,
+        senderId: senderId,
+        senderName: sender ? `${sender.firstName} ${sender.lastName}` : 'Unknown', // Use the sender's name from the database
+        conversationId: conversation.id,
+        imageFileId: imageFileId, // This should not be null
+        totalMessages: totalMessages
+      });
+
+      console.log(`Message sent to room: conversation_${conversation.id}`);
+
+      // res.redirect('/user/sellConversation/' + listingId + '/' + conversation.id);
+      res.json({ success: true, message: 'Message sent successfully.', newMessage });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  async getLoadMessagesSeller(req, res) {
+    try {
+      const { conversationId, messageId } = req.params;
+      const direction = req.query.direction; // 'older' or 'newer'
+      const limit = 10; // Adjust the limit as needed
+  
+      let whereClause;
+      if (direction === 'older') {
+        whereClause = {
+          id: { lt: messageId }, // lt means "less than"
+          conversationId: conversationId
+        };
+      } else if (direction === 'newer') {
+        whereClause = {
+          id: { gt: messageId }, // gt means "greater than"
+          conversationId: conversationId
+        };
+      }
+  
+      const messages = await prisma.message.findMany({
+        where: whereClause,
+        take: limit + 1, // Fetch one more than the limit to check if there are more messages
+        orderBy: {
+          createdAt: direction === 'older' ? 'desc' : 'asc'
+        },
+        include: {
+          sender: true
+        }
+      });
+  
+      // Determine if there are more messages to load
+      const hasMoreMessages = messages.length > limit;
+      if (hasMoreMessages) {
+        // If there are more messages, remove the last one from the array
+        messages.pop();
+      }
+  
+      // If we're loading older messages, we need to reverse the order to display them correctly
+      if (direction === 'older') {
+        messages.reverse();
+      }
+  
+      res.json({
+        messages,
+        hasMoreOlder: direction === 'older' ? hasMoreMessages : undefined,
+        hasMoreNewer: direction === 'newer' ? hasMoreMessages : undefined
+      });
+    } catch (error) {
+      console.error("Error loading messages:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }, 
 
   async getImage(req, res) {
     try {
