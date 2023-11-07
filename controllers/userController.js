@@ -41,6 +41,9 @@ module.exports = {
       // Get user's city from the session
       const userCityId = req.session.user.cityId;
       const currentUserId = req.session.user.id;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 1; // Set a default limit or allow it to be set via query
+      const skip = (page - 1) * limit;
 
       // Fetch N active advertisements for the user's city
       const advertisements = await prisma.advertisement.findMany({
@@ -100,6 +103,8 @@ module.exports = {
         include: {
           photos: true, // Include photos of the listings
         },
+        skip: skip,
+        take: limit,
       });
 
       // Convert each listing's photos' imageUrl to Base64. 
@@ -114,8 +119,20 @@ module.exports = {
           });
         }
       });
+      // Fetch the total count of listings for pagination
+      const totalListings = await prisma.listing.count({
+        where: {
+          NOT: [
+            { userId: currentUserId },
+            { status: "SOLD" },
+          ],
+        },
+      });
+  
+      // Calculate total pages
+      const totalPages = Math.ceil(totalListings / limit);
 
-      res.render('user/marketplace', { user: req.session.user, advertisement: selectedAds, listings: listings });
+      res.render('user/marketplace', { user: req.session.user, advertisement: selectedAds, listings: listings, currentPage: page, totalPages: totalPages });
 
     } catch (error) {
       console.error("Error fetching marketplace:", error);
@@ -178,8 +195,7 @@ module.exports = {
       console.error("Error fetching listing:", error);
       res.status(500).send("Internal Server Error");
     }
-  },
-
+  }, 
 
   async getCreateListing(req, res) {
     try {

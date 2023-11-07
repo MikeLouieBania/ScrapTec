@@ -26,6 +26,7 @@
             overflow-x: hidden;
             margin-bottom: 60px;
             background-color: #F0F8FF;
+            font-family: 'Poppins', sans-serif;  
         }
 
         .navbar {
@@ -256,7 +257,12 @@
         .search-box:focus-within .search-icon {
             color: var(--primary);
         }
-        
+        .footer-section::before {
+            content: '';
+            display: block;
+            height: 120%; /* This height will push the footer down */
+        }
+
         .footer-section {
             padding: 80px 0;
             background: #F0F8FF;
@@ -431,77 +437,118 @@
             font-size: 14px;
         }
 
-        /* Style for pagination */
-        .pager {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            margin-top: 15rem;
+
+        /* Carousel controls general style */
+        .carousel-control-prev,
+        .carousel-control-next {
+            position: absolute;
+            top: 50%; /* Align vertically at the middle */
+            z-index: 1000; /* Make sure they are above other content */
+            width: 30px; /* Width of the clickable area */
+            height: 30px; /* Height of the clickable area */
+            transform: translateY(-50%); /* Center vertically */
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            color: #fff; /* White color text */
+            border-radius: 15px; /* Rounded corners for the background */
+            outline: none;
+            border: none;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        /* Specific styles for previous control */
+        .carousel-control-prev {
+            left: 10px; /* Position from the left side */
+        }
+
+        .carousel-control-prev-icon {
+            background-image: none; /* Remove default background image */
+        }
+
+        .carousel-control-prev-icon:after {
+            content: '<'; /* The content for the 'previous' icon */
+            font-size: 24px; /* Size of the icon */
+        }
+
+        /* Specific styles for next control */
+        .carousel-control-next {
+            right: 10px; /* Position from the right side */
+        }
+
+        .carousel-control-next-icon {
+            background-image: none; /* Remove default background image */
+        }
+
+        .carousel-control-next-icon:after {
+            content: '>'; /* The content for the 'next' icon */
+            font-size: 24px; /* Size of the icon */
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
             padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
 
-        .pager li {
-            margin: 0 5px;
-        }
-
-        .pager a {
-            text-decoration: none;
-            padding: 5px 10px;
-            background-color: #042400;
-            color: #fff;
-            border-radius: 3px;
-            transition: background-color 0.3s;
-        }
-
-        .pager a:hover {
-            background-color: #0056b3;
-        }
-
-        /* Style for active page */
-        .pager .active {
-            font-weight: bold;
-        }
-
-        .card-body {
+       /* Make sure the product container is a flex container */
+        .container-Products .row {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
+            flex-wrap: wrap; /* Allow the cards to wrap as needed */
         }
 
-        .card-body .btn-primary {
-            margin: 20px auto 0;
-            /* Gives some spacing and centers the button */
-        }
-
+        /* Flexbox properties for each card */
+        /* Flexbox properties for each card */
         .card {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            margin-bottom: 0.5rem;
-            margin-top: 1rem;
+            margin: 0.5rem 1rem; /* Reduced top and bottom margin */
+            display: flex;
+            flex-direction: column;
+            min-height: 400px; /* Minimum height for all cards */
+            height: 100%; /* Make sure all cards take up the same height */
         }
 
+
+        /* Hover effect for the cards */
         .card:hover {
             transform: translateY(-5px);
             cursor: pointer;
         }
 
+        /* Flex container for the card body with overflow handling */
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1; /* Grow to fill the space */
+            overflow: hidden; /* Hide overflow content */
+        }
+
+        /* Card title styles */
         .card-title {
             font-size: 1.2rem;
             margin-bottom: 0.5rem;
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis; /* Add an ellipsis to text that overflows */
+            white-space: nowrap; /* Prevent text from wrapping to a new line */
         }
 
+        /* Card text styles, including the price */
         .card-text {
             font-size: 1rem;
             color: #333;
-            margin-bottom: 1rem;
+            font-weight: bold;
+            margin-top: auto; /* Push the price to the bottom of the card */
         }
 
-        .btn-primary {
-            background-color: #219ebc;
-            border-color: #219ebc;
-        }
-
+ 
+  
+        
         /* Change color of "Sort by Price" label */
         .sort-price-section label {
             color: black;
@@ -596,34 +643,6 @@
                 max-width: 50%;
             }
         }
-
-        /* By default, the pagination items are displayed horizontally */
-        .pager {
-            display: flex;
-            flex-wrap: wrap;
-            /* Allow wrapping onto next line if necessary */
-            justify-content: center;
-            /* Center the items */
-        }
-
-        .pager li {
-            margin: 5px;
-            /* Some spacing between pagination items */
-        }
-
-        /* For smaller screens */
-        @media (max-width: 576px) {
-            .pager {
-                flex-direction: column;
-                /* Stack the items vertically */
-            }
-
-            .pager li a {
-                font-size: 0.9rem;
-                /* Adjust font size for smaller screens */
-            }
-        }
-
         .menu {
             width: 25%;
             height: 300px;
@@ -790,6 +809,35 @@
             box-shadow: none;  /* Remove shadow for disabled state */
             color: rgba(0, 0, 0, .3);
         }
+
+            /* Style for pagination */
+        .pagination {
+            display: flex;
+            justify-content: flex-end; /* Align pagination items to the right */
+            margin-top: 30%; /* Optional: add space above the pagination if needed */
+        }
+        /* Remove outline, box-shadow, and content from pseudo-elements on hover for pagination links */
+        .pagination .page-link:hover,
+        .pagination .page-link:hover::after {
+            outline: none !important;
+            box-shadow: none !important;
+            border-color: transparent !important;
+            content: '' !important; /* Clear content for ::after */
+            background-image: none !important; /* Remove any background images */
+        }
+
+        /* Reset ::after content for pagination links */
+        .pagination .page-link::after {
+            content: none !important; /* Removes the line */
+            background-color: transparent !important; /* Ensures no background color */
+            transform: scaleX(0) !important; /* Ensures it does not scale */
+            height: 0 !important; /* Ensures no height */
+            transition: none !important; /* Removes any transitions */
+        }
+
+
+        
+ 
         
     </style>
 </head>
@@ -984,16 +1032,30 @@
                 <% }); %>
             </div>
           </div>
+           <!-- Pagination -->
+           <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                <!-- Previous Button -->
+                <li class="page-item <%= currentPage <= 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="<%= currentPage > 1 ? `/user/marketplace?page=${currentPage - 1}` : '#' %>" tabindex="-1" aria-disabled="<%= currentPage <= 1 %>">Previous</a>
+                </li>
+                
+                <!-- Page Numbers -->
+                <% for(let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="/user/marketplace?page=<%= i %>"><%= i %></a>
+                    </li>
+                <% } %>
+                
+                <!-- Next Button -->
+                <li class="page-item <%= currentPage >= totalPages ? 'disabled' : '' %>">
+                    <a class="page-link" href="<%= currentPage < totalPages ? `/user/marketplace?page=${currentPage + 1}` : '#' %>">Next</a>
+                </li>
+            </ul>
+        </nav>
+        
 
-          <ul class="pager">
-            <li><a href="#">&laquo; Previous</a></li>
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a style="color: white;">............</a></li>
-            <li><a href="#">Next &raquo;</a></li>
-            <!-- Add more page numbers as needed -->
-          </ul>
+
           <!-- Start Footer Section -->
           <footer class="footer-section">
             <!-- Use .container only for inner content, not for the entire footer -->
