@@ -1046,7 +1046,7 @@
                         <a class="page-link" href="/user/marketplace?page=<%= i %>"><%= i %></a>
                     </li>
                 <% } %>
-                
+                        
                 <!-- Next Button -->
                 <li class="page-item <%= currentPage >= totalPages ? 'disabled' : '' %>">
                     <a class="page-link" href="<%= currentPage < totalPages ? `/user/marketplace?page=${currentPage + 1}` : '#' %>">Next</a>
