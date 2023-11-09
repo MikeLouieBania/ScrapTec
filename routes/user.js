@@ -9,6 +9,8 @@ const uploadImageBuyer = multer({ storage: storage }).single('image');
 
  
 router.get('/marketplace', userController.getMarketplace); 
+router.get('/ads', userController.getAdsForCity);
+router.post('/record-click', userController.postRecordAdClick);
 router.get('/listing/:id', userController.getListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
