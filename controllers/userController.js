@@ -21,7 +21,6 @@ function isValidObjectId(id) {
   return /^[0-9a-fA-F]{24}$/.test(id);
 }
 
-
 async function handleImageUpload(req) {
   if (req.file) {
     try {
@@ -35,63 +34,106 @@ async function handleImageUpload(req) {
   return null; // Return null if no file was uploaded
 }
 
+async function deactivateExpiredAds() {
+  const now = new Date();
+  const expiredAds = await prisma.advertisement.findMany({
+    where: {
+      isActive: true,
+      expiryDate: {
+        lt: now, // 'lt' stands for 'less than'
+      },
+    },
+  });
+
+  // Batch update to set isActive to false for all expired ads
+  const updatePromises = expiredAds.map(ad =>
+    prisma.advertisement.update({
+      where: { id: ad.id },
+      data: { isActive: false },
+    })
+  );
+
+  await Promise.all(updatePromises);
+}
+
+// Helper function to recalculate the exposure frequency
+async function recalculateExposureFrequency() {
+  const activeAdCount = await prisma.advertisement.count({ where: { isActive: true } });
+  // Assuming each user session will show 5 ads at a time, calculate how many rotations are needed per ad per day
+  const rotationsNeededPerAdPerDay = 24 * 60 / (activeAdCount / 5);
+  return Math.max(1, Math.floor(rotationsNeededPerAdPerDay));
+}
+
+// Modified getRankedAds function to incorporate fair exposure logic
+async function getRankedAds(cityId, takeLimit) {
+  // Fetch all active advertisements for the city
+  const allActiveAds = await prisma.advertisement.findMany({
+    where: {
+      cityId: cityId,
+      isActive: true,
+    },
+    include: {
+      organization: true, // Include the organization to access lifetimePoints
+    },
+    orderBy: [
+      {
+        organization: {
+          lifetimePoints: 'desc', // Primary sorting by lifetime points
+        },
+      },
+      {
+        startDate: 'asc', // Secondary sorting by creation date
+      },
+    ],
+  });
+
+  // Calculate the exposure frequency for each ad
+  const exposureFrequency = await recalculateExposureFrequency();
+
+  // Implement a round-robin mechanism to fairly expose ads
+  const lastIndex = await getLastDisplayedIndex(cityId);
+  let adsToDisplay = [];
+  let index = lastIndex;
+
+  // Adjust the takeLimit based on the number of active ads
+  takeLimit = Math.min(takeLimit, allActiveAds.length);
+
+  for (let i = 0; i < takeLimit; i++) {
+    adsToDisplay.push(allActiveAds[index]);
+    index = (index + 1) % allActiveAds.length; // Move to the next ad
+  } 
+
+  // Update the last displayed index
+  await setLastDisplayedIndex(cityId, index);
+
+  return adsToDisplay;
+}
+
+// This function retrieves the last displayed ad index from a persistent storage
+async function getLastDisplayedIndex(cityId) {
+  const record = await prisma.keyValueStore.findFirst({
+    where: { key: `lastIndex_${cityId}` },
+  });
+  return record ? parseInt(record.value) : 0;
+}
+
+// This function updates the last displayed ad index in a persistent storage
+async function setLastDisplayedIndex(cityId, index) {
+  await prisma.keyValueStore.upsert({
+    where: { key: `lastIndex_${cityId}` },
+    update: { value: index.toString() },
+    create: { key: `lastIndex_${cityId}`, value: index.toString() },
+  });
+}
+
 module.exports = {
   async getMarketplace(req, res) {
     try {
-      // Get user's city from the session
-      const userCityId = req.session.user.cityId;
       const currentUserId = req.session.user.id;
       const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 1; // Set a default limit or allow it to be set via query
+      const limit = parseInt(req.query.limit) || 10; // Adjusted default limit to 10
       const skip = (page - 1) * limit;
-
-      // Fetch N active advertisements for the user's city
-      const advertisements = await prisma.advertisement.findMany({
-        where: {
-          cityId: userCityId,
-          isActive: true,
-          expiryDate: {
-            gte: new Date(),
-          },
-        },
-        include: {
-          organization: true,
-        },
-        take: 10, // You can modify this value depending on how many ads you want to fetch at once
-      });
-
-
-      // Convert each advertisement's imageUrl to Base64.
-      advertisements.forEach(ad => {
-        if (ad.imageUrl) {
-          ad.imageUrl = ad.imageUrl.toString('base64');
-        }
-      });
-
-      // Create a weighted array
-      let weightedAds = [];
-
-      for (let ad of advertisements) {
-        // The multiplication factor determines the weight. 
-        // For example, if an organization has 1000 lifetimePoints, the ad will appear 1000 times.
-        let weight = Math.floor(ad.organization.lifetimePoints);
-
-        // Populate the weightedAds array
-        for (let i = 0; i < weight; i++) {
-          weightedAds.push(ad);
-        }
-      }
-
-      // Randomly select 4 ads (or fewer if not enough distinct ads available) from the weightedAds array
-      let selectedAds = [];
-      for (let i = 0; i < 4 && weightedAds.length > 0; i++) {
-        const randomIndex = Math.floor(Math.random() * weightedAds.length);
-        selectedAds.push(weightedAds[randomIndex]);
-
-        // Remove all occurrences of the selected ad from the weightedAds array to avoid duplicates
-        weightedAds = weightedAds.filter(ad => ad.id !== weightedAds[randomIndex].id);
-      }
-
+  
       // Fetch all listings except for the ones made by the currently logged-in user
       const listings = await prisma.listing.findMany({
         where: {
@@ -106,7 +148,7 @@ module.exports = {
         skip: skip,
         take: limit,
       });
-
+  
       // Convert each listing's photos' imageUrl to Base64. 
       listings.forEach(listing => {
         if (listing.photos && listing.photos.length > 0) {
@@ -119,6 +161,7 @@ module.exports = {
           });
         }
       });
+  
       // Fetch the total count of listings for pagination
       const totalListings = await prisma.listing.count({
         where: {
@@ -131,15 +174,82 @@ module.exports = {
   
       // Calculate total pages
       const totalPages = Math.ceil(totalListings / limit);
-
-      res.render('user/marketplace', { user: req.session.user, advertisement: selectedAds, listings: listings, currentPage: page, totalPages: totalPages });
-
+  
+      // Render the marketplace page without the selectedAds
+      res.render('user/marketplace', {
+        user: req.session.user,
+        listings: listings,
+        currentPage: page,
+        totalPages: totalPages
+      });
+  
     } catch (error) {
       console.error("Error fetching marketplace:", error);
       res.status(500).send("Internal Server Error");
     }
   },
 
+  async getAdsForCity(req, res) {
+    try {
+      // First, deactivate expired ads
+      await deactivateExpiredAds();
+
+      const userId = req.session.user.id;
+
+      // Find the user and include the city to get the cityId
+      const userWithCity = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { city: true }
+      });
+
+      if (!userWithCity || !userWithCity.city) {
+        return res.status(404).send("User or user's city not found.");
+      }
+
+      const cityId = userWithCity.city.id;
+
+      // Fetch ranked advertisements for the user's city, 5 at a time
+      const advertisements = await getRankedAds(cityId, 5);
+
+      // Convert each advertisement's imageUrl to Base64
+      const adsWithBase64Images = advertisements.map(ad => {
+        if (ad.imageUrl) { 
+          const mimeType = getMimeType('png'); // Default to 'png' or any other type you prefer
+          const base64Image = Buffer.from(ad.imageUrl).toString('base64');
+          return {
+            ...ad,
+            imageUrl: `${mimeType}${base64Image}`,
+            adId: ad.id, // Include the ad's unique identifier
+          };
+        }
+        return ad;
+      });
+
+      // Return the processed ads as JSON
+      res.json({ ads: adsWithBase64Images });
+    } catch (error) {
+      console.error("Error fetching ads for city:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  
+  async postRecordAdClick(req, res) {
+    try {
+      const { adId } = req.body;
+      // Record the click in the database
+      await prisma.adInteraction.create({
+        data: {
+          advertisementId: adId,
+          clickedAt: new Date(), // Record the current time as the click time
+        },
+      });
+      res.status(200).send('Click recorded');
+    } catch (error) {
+      console.error("Error recording ad click:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  
   async getListing(req, res) {
     try {
       const listingId = req.params.id;  // Get the listing ID from the URL parameter

@@ -918,26 +918,55 @@
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-      </div>
-
+      </div> 
       <script>
-        const ads = JSON.parse('<%- JSON.stringify(advertisement) %>');
+        window.onload = function() {
+          fetch('/user/ads')
+            .then(response => response.json())
+            .then(data => {
+              const ads = data.ads;
+              const carouselInner = document.querySelector('.carousel-inner');
+              const adCarousel = document.getElementById('adCarousel');
+              carouselInner.innerHTML = ''; // Clear existing items
+      
+              ads.forEach((ad, index) => {
+                const isActive = index === 0 ? 'active' : '';
+                const adHTML = `
+                  <div class="carousel-item ${isActive}">
+                      <a href="${ad.link}" target="_blank">
+                          <img src="${ad.imageUrl}" class="d-block w-100" alt="${ad.title}">
+                      </a>
+                  </div>
+                `;
+                carouselInner.insertAdjacentHTML('beforeend', adHTML);
 
-        ads.forEach((ad, index) => {
-          const isActive = index === 0 ? 'active' : '';
-
-          const adHTML = `
-            <div class="carousel-item ${isActive}">
-                <a href="${ad.link}" target="_blank">
-                    <img src="data:image/jpeg;base64,${ad.imageUrl}" class="d-block w-100" alt="${ad.title}">
-                </a>
-            </div>
-        `;
-
-          document.querySelector('.carousel-inner').insertAdjacentHTML('beforeend', adHTML);
-        });
-
+                // Add click event listener to record ad clicks
+                const adElement = carouselInner.lastElementChild;
+                adElement.addEventListener('click', () => {
+                fetch('/user/record-click', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ adId: ad.adId }), // Send the ad's unique identifier
+                });
+                }); 
+              });
+      
+              // Adjust carousel behavior based on the number of ads
+              if (ads.length === 0) {
+                adCarousel.style.display = 'none';
+              } else if (ads.length === 1) {
+                // Disable carousel controls if there's only one ad
+                document.querySelector('.carousel-control-prev').style.display = 'none';
+                document.querySelector('.carousel-control-next').style.display = 'none';
+                adCarousel.removeAttribute('data-bs-ride'); // Stop the automatic sliding
+              }
+            })
+            .catch(error => console.error('Error fetching ads:', error));
+        };
       </script>
+      
 
       <!-- Start of Product Section -->
       <!-- Products -->
