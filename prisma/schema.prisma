@@ -159,11 +159,18 @@ model Advertisement {
   interactions   AdInteraction[] // Relation to Advertisement Interactions
 }
 
+
 model AdInteraction {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   advertisement   Advertisement @relation(fields: [advertisementId], references: [id])
   advertisementId String        @map("advertisement_id") @db.ObjectId
   clickedAt       DateTime      @default(now()) // The time when the ad was clicked/interacted with
+}
+
+model KeyValueStore {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  key   String @unique // Mark this as unique
+  value String
 }
 
 model Listing {
