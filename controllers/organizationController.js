@@ -128,11 +128,43 @@ function computeAverageRating(feedbacks) {
   return totalRating / feedbacks.length;
 }
 
+ 
+const updateAdStatuses = async (organizationId) => {
+  try {
+    // Get all ads for the organization where expiryDate is less than the current date and isActive is true
+    const expiredAds = await prisma.advertisement.findMany({
+      where: {
+        organizationId: organizationId,
+        expiryDate: {
+          lt: new Date(), // 'lt' stands for 'less than'
+        },
+        isActive: true,
+      },
+    });
+
+    // Update the status of ads to inactive
+    const updatePromises = expiredAds.map(ad =>
+      prisma.advertisement.update({
+        where: { id: ad.id },
+        data: { isActive: false },
+      })
+    );
+
+    await Promise.all(updatePromises);
+    console.log(`Updated ${expiredAds.length} ad(s) to inactive for organization ${organizationId}.`);
+  } catch (error) {
+    console.error('Failed to update ad statuses for organization:', organizationId, error);
+  }
+};
+
 
 module.exports = {
   async getDashboard(req, res) {
     try {
         const organizationId = req.session.organizationId;  
+
+        // Update ad statuses asynchronously
+        updateAdStatuses(organizationId).catch(console.error);
 
         // Fetch drop points with managers
         const dropPointsWithManagers = await prisma.dropPoint.findMany({
