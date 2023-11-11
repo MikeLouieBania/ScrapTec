@@ -128,11 +128,43 @@ function computeAverageRating(feedbacks) {
   return totalRating / feedbacks.length;
 }
 
+ 
+const updateAdStatuses = async (organizationId) => {
+  try {
+    // Get all ads for the organization where expiryDate is less than the current date and isActive is true
+    const expiredAds = await prisma.advertisement.findMany({
+      where: {
+        organizationId: organizationId,
+        expiryDate: {
+          lt: new Date(), // 'lt' stands for 'less than'
+        },
+        isActive: true,
+      },
+    });
+
+    // Update the status of ads to inactive
+    const updatePromises = expiredAds.map(ad =>
+      prisma.advertisement.update({
+        where: { id: ad.id },
+        data: { isActive: false },
+      })
+    );
+
+    await Promise.all(updatePromises);
+    console.log(`Updated ${expiredAds.length} ad(s) to inactive for organization ${organizationId}.`);
+  } catch (error) {
+    console.error('Failed to update ad statuses for organization:', organizationId, error);
+  }
+};
+
 
 module.exports = {
   async getDashboard(req, res) {
     try {
         const organizationId = req.session.organizationId;  
+
+        // Update ad statuses asynchronously
+        updateAdStatuses(organizationId).catch(console.error);
 
         // Fetch drop points with managers
         const dropPointsWithManagers = await prisma.dropPoint.findMany({
@@ -241,6 +273,7 @@ module.exports = {
         res.status(500).send("Internal Server Error");
     }
   }, 
+
   async submitFeedback(req, res) {
     try {
         const { rating, content, donationId, dropPointId } = req.body;
@@ -285,6 +318,7 @@ module.exports = {
         res.status(500).send("Internal Server Error");
     }
   },
+
   async getDonationForm(req, res) {
     try {
         const dropPointId = req.body.dropPointId;
@@ -305,7 +339,8 @@ module.exports = {
         console.error("Error fetching drop point:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getAddDonation(req, res) {
     try {
         const {
@@ -370,7 +405,8 @@ module.exports = {
         console.error("Error adding donation:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getPledgeBasketPage(req, res) {
     try {
         const organizationId = req.session.organization.id;
@@ -392,7 +428,8 @@ module.exports = {
         console.error("Error fetching pledge basket items:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getConfirmDonation(req, res) {
     try {
         const { donationId, expectedDateOfArrival } = req.body;
@@ -418,7 +455,8 @@ module.exports = {
         console.error("Error confirming donation:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getDonationsList(req, res) {
     try {
       const organizationId = req.session.organization.id;
@@ -440,11 +478,13 @@ module.exports = {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal Server Error");
     }
-  },  
+  },
+
   async getFAQ(req, res) { 
      
     res.render('organization/FAQ'); 
   },
+
   async getAccount(req, res) { 
     try {
       const organizationId = req.session.organization.id;
@@ -476,11 +516,20 @@ module.exports = {
       console.error("Error fetching account data:", error);
       res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getAdvertisements(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
-      where: {id: organizationId},
+      where: { id: organizationId },
+      include: {
+        advertisements: {
+          include: {
+            interactions: true, // Include the interactions with each advertisement
+            city: true, // Include the city information for each advertisement
+          },
+        },
+      },
     }); 
     
     const totalPoints = await getTotalPointsForOrganization(organizationId);  
@@ -488,23 +537,26 @@ module.exports = {
     // Get cities with user counts
     const citiesWithCounts = await getCitiesWithUserCounts();
 
-    res.render('organization/advertisements', { organization, totalPoints, cities: citiesWithCounts, }); 
+    res.render('organization/advertisements', { 
+      organization, 
+      totalPoints, 
+      cities: citiesWithCounts, 
+      advertisements: organization.advertisements }); 
   }, 
-  async getSpentPoints(req, res) { 
-    const organizationId = req.session.organization.id;
-    const organization = await prisma.organization.findUnique({
-      where: {id: organizationId},
-    });
 
-    
-    const totalPoints = await getTotalPointsForOrganization(organizationId); 
-
-    
-    // Get cities with user counts
-    const citiesWithCounts = await getCitiesWithUserCounts();
-
-    res.render('organization/spentPoints', { organization, totalPoints, cities: citiesWithCounts, }); 
-  },  
+  async getAdvertisementInteractions(req, res) {  
+    try {
+      const adId = req.params.adId;
+      const interactions = await prisma.adInteraction.findMany({
+        where: { advertisementId: adId },
+      });
+      res.json(interactions);
+    } catch (error) {
+      console.error('Error fetching interactions:', error);
+      res.status(500).send('Error fetching interactions');
+    } 
+  },
+   
   async getAdCity(req, res) { 
     const cityId = req.params.cityId;
   
@@ -528,6 +580,7 @@ module.exports = {
     // Render the form for advertising in the chosen city
     res.render('organization/adCity', { city }); 
   }, 
+
   async submitAdvertisement(req, res) {
     try {
         const { title, link, adPlan, cityId } = req.body;
