@@ -23,6 +23,7 @@ router.get('/donationsList', organizationController.getDonationsList);
 router.get('/faq', organizationController.getFAQ);  
 router.get('/account', organizationController.getAccount); 
 router.get('/advertisements', organizationController.getAdvertisements);  
+router.get('/:adId/interactions', organizationController.getAdvertisementInteractions); 
 router.get('/advertise/:cityId', organizationController.getAdCity); 
 router.post('/submitAdvertisement', upload.single('imageUrl'), organizationController.submitAdvertisement);
 router.post('/logout', organizationController.logout); 

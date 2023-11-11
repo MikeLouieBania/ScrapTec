@@ -273,6 +273,7 @@ module.exports = {
         res.status(500).send("Internal Server Error");
     }
   }, 
+
   async submitFeedback(req, res) {
     try {
         const { rating, content, donationId, dropPointId } = req.body;
@@ -317,6 +318,7 @@ module.exports = {
         res.status(500).send("Internal Server Error");
     }
   },
+
   async getDonationForm(req, res) {
     try {
         const dropPointId = req.body.dropPointId;
@@ -337,7 +339,8 @@ module.exports = {
         console.error("Error fetching drop point:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getAddDonation(req, res) {
     try {
         const {
@@ -402,7 +405,8 @@ module.exports = {
         console.error("Error adding donation:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getPledgeBasketPage(req, res) {
     try {
         const organizationId = req.session.organization.id;
@@ -424,7 +428,8 @@ module.exports = {
         console.error("Error fetching pledge basket items:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getConfirmDonation(req, res) {
     try {
         const { donationId, expectedDateOfArrival } = req.body;
@@ -450,7 +455,8 @@ module.exports = {
         console.error("Error confirming donation:", error);
         res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getDonationsList(req, res) {
     try {
       const organizationId = req.session.organization.id;
@@ -472,11 +478,13 @@ module.exports = {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal Server Error");
     }
-  },  
+  },
+
   async getFAQ(req, res) { 
      
     res.render('organization/FAQ'); 
   },
+
   async getAccount(req, res) { 
     try {
       const organizationId = req.session.organization.id;
@@ -508,7 +516,8 @@ module.exports = {
       console.error("Error fetching account data:", error);
       res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async getAdvertisements(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
@@ -533,7 +542,21 @@ module.exports = {
       totalPoints, 
       cities: citiesWithCounts, 
       advertisements: organization.advertisements }); 
-  },  
+  }, 
+
+  async getAdvertisementInteractions(req, res) {  
+    try {
+      const adId = req.params.adId;
+      const interactions = await prisma.adInteraction.findMany({
+        where: { advertisementId: adId },
+      });
+      res.json(interactions);
+    } catch (error) {
+      console.error('Error fetching interactions:', error);
+      res.status(500).send('Error fetching interactions');
+    } 
+  },
+   
   async getAdCity(req, res) { 
     const cityId = req.params.cityId;
   
@@ -557,6 +580,7 @@ module.exports = {
     // Render the form for advertising in the chosen city
     res.render('organization/adCity', { city }); 
   }, 
+
   async submitAdvertisement(req, res) {
     try {
         const { title, link, adPlan, cityId } = req.body;
