@@ -10,12 +10,15 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
     
         @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
   
       body {
-        background-color: #c1e4fc;
+        background-color: white;
+        font-family: 'Poppins', sans-serif;
+        
     }
     
         
@@ -78,53 +81,58 @@
         /* Main content styles */
         .main-content {
             padding-left: 70px; /* Adjusted to avoid overlap with sidebar */
-            padding-top: 20px;
+            padding-top: 0px;
             padding-right: 20px;
             padding-bottom: 20px;
             transition: 0.5s; /* Smooth transition */
         }
 
         /* TABLE STYLE */
-
         .table {
-          width: 150%;  /* This will ensure the table takes up the full width of its container */
-          border-collapse: collapse;
-          font-family: Arial, sans-serif; /* Use any preferred font-family */
-          font-size: 18px;  /* Increase the font size */
-          margin-left: -120px;
-          font-family: 'Roboto', sans-serif;
-     
-      }
-
-    
+          width: 160%; /* Keeps the original width */
+          border-collapse: collapse; /* Collapse borders so they become single lines */
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px; /* Maintains the font size for readability */
+          margin-left: -150px; /* Keeps the original margin */
+          color: #212529; /* Sets text color to a standard dark for readability */
+        }
+      
       .table th, .table td {
-         
-          padding: 15px 20px;  /* Increased padding for a larger appearance */
-          text-align: left;
+          padding: 15px 20px; /* Restores the original padding */
+          text-align: left; /* Align text to the left for td, center for th */
+          border: 1px solid #dee2e6; /* Adds border to both td and th for grid lines */
       }
       
-      .table th {
-          background-color: #66C3F4;  /* Light blue header background */
-          /* Slightly darker blue border for headers */
+      .table thead th {
+          vertical-align: bottom;
+          border-bottom: 2px solid #dee2e6; /* Heavier bottom border for header */
+          background-color: #f8f9fa; /* Light grey header background */
+          padding: 1rem; /* Standardized padding */
+          text-align: center; /* Center-align the header text */
           font-weight: bold;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          text-align: center;  /* Center-align the header text */
+          color: #495057; /* Dark grey color for text */
       }
-
       
-      .table tbody tr:nth-child(odd) {
-          background-color: #f0f7ff;  /* Very light blue stripe */
+      .table tbody tr {
+          background-color: transparent; /* No striped effect */
       }
       
       .table tbody tr:hover {
-          background-color: #a7dbfc;  /* Blueish hover effect */
-          cursor: pointer;
+          background-color: #f1f3f5; /* Light grey background on row hover */
+      }
+      
+      .table tbody td {
+          padding: 1rem; /* Standardized padding */
+          border: 1px solid #dee2e6; /* Adds horizontal borders to each cell */
+          text-align: left; /* Align the body text to the left */
       }
       
       .mt-4 {
-          margin-top: 2rem;  /* Adjust as needed */
+          margin-top: 2rem; /* Keeps your custom top margin */
       }
+      
+      
+      
 
           /* Style for the Register Manager button */
     .reg-button {
@@ -137,6 +145,7 @@
       font-weight: bold;
       cursor: pointer;
       transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+      margin-right: 10px;
     }
 
     /* Hover effect */
@@ -150,8 +159,8 @@
         left: 94%; /* Adjust the right property to move it further right */
         padding: 10px; /* Add padding to the pagination table for spacing */
         border-radius: 5px; /* Rounded corners for the pagination table */
-        font-family: 'Josefin Sans', sans-serif;
         font-weight: bold;
+        font-family: 'Poppins', sans-serif;
       }
 
 /* Rest of your pagination styles... */
@@ -244,15 +253,22 @@
   margin-left: 35%;
 }
 
-.modal-content{
-  background-color: #96c1cf;
-  font-family: 'Josefin Sans', sans-serif;
-  border-radius: 10px 10px 0 0;
-}
-
 .modal-header {
   background-color: #2E8BC0;
-  color: white; /* This
+  color: white;
+
+}
+
+.modal-body .form-group label,
+.modal-body .form-group input {
+    font-family: 'Poppins', sans-serif; /* Set the font family */
+    color: #333; /* Set the text color to dark gray */
+}
+
+.modal-body .form-group input {
+    border: 1px solid #ced4da; /* Optional: sets a standard border color */
+    background-color: #fff; /* Optional: sets the background color to white */
+}
 
 
 /* Style for the close button */
@@ -342,7 +358,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body" style="background-color: #96c1cf">
+          <div class="modal-body">
             <form action="/admin/managermanagement" method="post">
                 <div class="row">
                     <!-- First Column -->

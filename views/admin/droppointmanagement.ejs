@@ -9,6 +9,7 @@
   <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 
   <!-- Link to Bootstrap CSS -->
@@ -20,7 +21,8 @@
   
 
     body {
-      background-color: #c1e4fc;
+      background-color: white;
+      font-family: 'Poppins', sans-serif;
   }
     /* Additional custom styles for the page */
     .container {
@@ -79,66 +81,75 @@
 
       /* TABLE STYLE */
 
-.table {
-  width: 150%;  /* This will ensure the table takes up the full width of its container */
-  border-collapse: collapse;
-  font-family: Arial, sans-serif; /* Use any preferred font-family */
-  font-size: 18px;  /* Increase the font size */
-  margin-left: -120px;
-  font-family: 'Roboto', sans-serif;
-}
+      .table {
+        width: 160%;  /* Maintains the original width */
+        border-collapse: collapse;
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;  /* Maintains the font size */
+        margin-left: -150px; /* Keeps the original negative margin */
+    }
+    
+    .table th, .table td {
+        padding: 15px 20px;  /* Maintains the padding */
+        text-align: left; /* Keeps text aligned to the left for td and center for th */
+        border: 1px solid #dee2e6; /* Adds borders for a grid-like appearance */
+    }
+    
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6; /* Adds a solid bottom border for the header */
+        background-color: #f8f9fa; /* Changes header background to a light grey */
+        color: #495057; /* Dark grey color for header text */
+        font-weight: bold;
+        text-align: center;  /* Keeps header text center-aligned */
+    }
 
-.table th, .table td {
-  padding: 15px 20px;  /* Increased padding for a larger appearance */
-  text-align: left;
-}
+      .table thead tr th:first-child {
+        text-align: left;
+    }   
 
-.table th {
-  background-color: #66C3F4;  /* Light blue header background */
-  /* Slightly darker blue border for headers */
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-align: center;  /* Center-align the header text */
-}
-
-.table tbody tr:nth-child(odd) {
-  background-color: #f0f7ff;  /* Very light blue stripe */
-}
-
-.table tbody tr:hover {
-  background-color: #a7dbfc;  /* Blueish hover effect */
-  cursor: pointer;
-}
-
-.mt-4 {
-  margin-top: 2rem;  /* Adjust as needed */
-}
-
-.reg-button {
-  background-color: #3b93c7;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 50px; /* Increased horizontal padding */
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-right: 50%;
-  white-space: nowrap; /* Prevents text inside the button from wrapping */
-}
+    .table tbody tr:nth-child(odd) {
+        background-color: #f1f3f5; /* Changes zebra striping to a light grey */
+    }
+    
+    .table tbody tr:hover {
+        background-color: #e2e6ea; /* Changes hover background to a slightly darker grey */
+        cursor: pointer; /* Keeps the cursor as a pointer to indicate clickable rows */
+    }
+    
+    .mt-4 {
+        margin-top: 2rem; /* Keeps your custom top margin */
+    }
+      /* Centering content for all 'td' elements that directly contain a button with the class 'btn' */
+    .table tbody tr td:has(> .btn) {
+      text-align: center;
+    }
 
 
+    .reg-button {
+      background-color: #3b93c7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 50px; /* Increased horizontal padding */
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-left: 10px;
+      white-space: nowrap; /* Prevents text inside the button from wrapping */
+    }
 
-/* Hover effect */
-.reg-button:hover {
-  background-color: #8babf1; /* Darker blue on hover */
-}
-/* Specific CSS rule to left-align text in the designated header cell */
-th[colspan="6"] {
-  text-align: left;
-}
+
+
+    /* Hover effect */
+    .reg-button:hover {
+      background-color: #8babf1; /* Darker blue on hover */
+    }
+    /* Specific CSS rule to left-align text in the designated header cell */
+    th[colspan="6"] {
+      text-align: left;
+    }
 
     /* Custom CSS to avoid style conflicts with Leaflet */
     .leaflet-map-pane,
@@ -253,121 +264,120 @@ th[colspan="6"] {
         }
 
 
-        /* Modal main styles */
-.modal-content {
-  background-color: #96c1cf;  /* Soft blue-gray background */
-  border-radius: 10px;  /* Rounded corners for the modal */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);  /* Shadow for depth */
-}
+                /* Modal main styles */
+        .modal-content {
+          background-color: white;  /* Soft blue-gray background */
+          border-radius: 10px;  /* Rounded corners for the modal */
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);  /* Shadow for depth */
+        }
 
-.modal-header {
-  background-color: #2E8BC0;  /* Darker blue-gray for header */
-  border-top-left-radius: 10px;  /* Rounded corners for the modal header */
-  border-top-right-radius: 10px;
-}
+        .modal-header {
+          background-color: #2E8BC0;  /* Darker blue-gray for header */
+          border-top-left-radius: 10px;  /* Rounded corners for the modal header */
+          border-top-right-radius: 10px;
+        }
 
-.modal-title {
-  color: white;  /* Dark gray text for contrast */
-  font-weight: bold;
-}
+        .modal-title {
+          color: white;  /* Dark gray text for contrast */
+          font-weight: bold;
+        }
 
-.close {
-  color: white;  /* Dark gray for the close button */
-  opacity: 0.8;
-}
+        .close {
+          color: white;  /* Dark gray for the close button */
+          opacity: 0.8;
+        }
 
-.close:hover {
-  color: #d9e4ff;  /* Darker gray on hover */
-  opacity: 1;
-}
+        .close:hover {
+          color: #d9e4ff;  /* Darker gray on hover */
+          opacity: 1;
+        }
 
-/* Adjusted button colors for better contrast with the new background */
-.btn-secondary {
-  background-color: #ccc;  /* Gray background */
-  color: #333;  /* Dark gray text */
-  font-weight: bold;
-}
+        /* Adjusted button colors for better contrast with the new background */
+        .btn-secondary {
+          background-color: #ccc;  /* Gray background */
+          color: #333;  /* Dark gray text */
+          font-weight: bold;
+        }
 
-.btn-secondary:hover {
-  background-color: #b2b2b2;  /* Darker gray on hover */
-}
+        .btn-secondary:hover {
+          background-color: #b2b2b2;  /* Darker gray on hover */
+        }
 
-.btn-primary {
-  background-color: #288ec9;  /* Blue background */
-  color: #fff;  /* White text */
-  font-weight: bold;
-}
+        .btn-primary {
+          background-color: #288ec9;  /* Blue background */
+          color: #fff;  /* White text */
+          font-weight: bold;
+        }
 
-.btn-primary:hover {
-  background-color: #5668d4;  /* Darker blue on hover */
-}
+        .btn-primary:hover {
+          background-color: #5668d4;  /* Darker blue on hover */
+        }
 
-/* Form Input Styles */
-.form-control {
-  background-color: #fff;  /* White background for clarity */
-  padding: 12px 15px;  /* Spacious padding */
-  border: 1px solid #e0e4e9;  /* Soft gray border */
-  border-radius: 5px;  /* Rounded edges */
-  font-size: 16px;  /* Slightly larger font for readability */
-  transition: border-color 0.3s, box-shadow 0.3s;  /* Smooth transition effects */
-}
+        /* Form Input Styles */
+        .form-control {
+          background-color: #fff;  /* White background for clarity */
+          padding: 12px 15px;  /* Spacious padding */
+          border: 1px solid #e0e4e9;  /* Soft gray border */
+          border-radius: 5px;  /* Rounded edges */
+          font-size: 16px;  /* Slightly larger font for readability */
+          transition: border-color 0.3s, box-shadow 0.3s;  /* Smooth transition effects */
+        }
 
-.form-control:focus {
-  border-color: #667eea;  /* Blue border on focus for better UX */
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);  /* Gentle glow effect */
-  outline: none;  /* Removing browser's default outline */
-}
+        .form-control:focus {
+          border-color: #667eea;  /* Blue border on focus for better UX */
+          box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);  /* Gentle glow effect */
+          outline: none;  /* Removing browser's default outline */
+        }
 
-/* Textarea styles for a consistent look */
-textarea.form-control {
-  resize: vertical;  /* Allows only vertical resizing */
-  min-height: 100px;  /* Minimum height for better appearance */
-}
+        /* Textarea styles for a consistent look */
+        textarea.form-control {
+          resize: vertical;  /* Allows only vertical resizing */
+          min-height: 100px;  /* Minimum height for better appearance */
+        }
 
-/* Placeholder color adjustment */
-.form-control::placeholder {
-  color: #b0b8c5;  /* Soft gray color for placeholder text */
-}
+        /* Placeholder color adjustment */
+        .form-control::placeholder {
+          color: #b0b8c5;  /* Soft gray color for placeholder text */
+        }
 
+        /* Custom CSS for responsiveness */
 
-/* Custom CSS for responsiveness */
+        /* Responsive styles for medium screens (tablets) */
+        @media (max-width: 992px) {
+          .sidebar {
+              width: 80px;
+          }
+        }
 
-/* Responsive styles for medium screens (tablets) */
-@media (max-width: 992px) {
-  .sidebar {
-      width: 80px;
-  }
-}
+        /* Responsive styles for small screens (mobile) */
+        @media (max-width: 768px) {
+          .sidebar {
+              width: 60px;
+          }
+          .sidebar a {
+              padding: 10px;
+          }
 
-/* Responsive styles for small screens (mobile) */
-@media (max-width: 768px) {
-  .sidebar {
-      width: 60px;
-  }
-  .sidebar a {
-      padding: 10px;
-  }
+          /* Adjust container padding for small screens */
+          .container {
+              padding: 10px;
+          }
+        }
 
-  /* Adjust container padding for small screens */
-  .container {
-      padding: 10px;
-  }
-}
+        /* Further adjustments for extra small screens (very small mobile devices) */
+        @media (max-width: 576px) {
+          .sidebar {
+              width: 50px;
+          }
+          .sidebar a {
+              padding: 8px;
+          }
 
-/* Further adjustments for extra small screens (very small mobile devices) */
-@media (max-width: 576px) {
-  .sidebar {
-      width: 50px;
-  }
-  .sidebar a {
-      padding: 8px;
-  }
-
-  /* Adjust container padding for extra small screens */
-  .container {
-      padding: 8px;
-  }
-}
+          /* Adjust container padding for extra small screens */
+          .container {
+              padding: 8px;
+          }
+        }
 
         
           

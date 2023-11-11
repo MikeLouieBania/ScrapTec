@@ -4,8 +4,15 @@
 <head>
     <title>Manage Donations</title>
     <!-- Link to Bootstrap CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style>
+   
+    body
+    {
+        font-family: 'Poppins', sans-serif; /* Updated font family to 'Poppins' */
+
+    }
        /* Additional custom styles for the page */
       .container {
         max-width: 800px;
@@ -100,89 +107,120 @@
         text-decoration: none;
       }
 
-       /* Basic table styles */
-    .table-wrapper {
-        position: relative;
-        width: 100%;
-    }
+    /* status modal header */
+        #statusModalLabel {
+            text-align: center; /* Centers the text */
+            display: block; /* Ensures the element behaves as a block-level element */
+            width: 100%; /* Ensures the element spans the full width */
+        }
+        
+        .modal-header {         
+            background-color: #4B9CD3; /* Example background color */
+            color: #fff; /* Example text color */
+            padding: 10px; /* Example padding */
+            border-bottom: 1px solid #dee2e6; /* Example bottom border */
+        }
 
-    .table-custom {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 50px; /* Adds some space between the search bar and the table */
-    }
+        .table-wrapper {
+            position: relative;
+            width: 100%; /* Keeps the width as is */
+        }
+        
+        .table-custom {
+            width: 150%; /* Keeps the original width */
+            border-collapse: collapse; /* Collapse borders so they become single lines */
+            margin-top: 60px; /* Keeps the space between the search bar and the table */
+            margin-left: -150px; /* Keeps the table shifted to the left */
+        }
+        
+        .table-custom th, .table-custom td {
+            padding: 15px 20px; /* Updated padding to match .table */
+            border: 1px solid #dee2e6; /* Keeps the borders as is */
+            text-align: left; /* Keeps text aligned to the left */
+            font-family: 'Poppins', sans-serif; /* Updated font family to 'Poppins' */
+            font-size: 16px; /* Updated font size to match .table */
+            color: #212529; /* Sets text color to a standard dark for readability */
+        }
+        
+        /* Zebra striping for rows */
+        .table-custom tr:nth-child(even) {
+            background-color: #f2f2f2; /* Keeps the zebra striping as is */
+        }
+        
+        /* Hover effect for rows (excluding header) */
+        .table-custom tbody tr:hover {
+            background-color: #f1f3f5; /* Light grey background on row hover to match .table */
+        }
+        
+        /* Table header styling */
+        .table-custom thead tr {
+            background-color: #f8f9fa; /* Light grey header background to match .table */
+            color: #495057; /* Dark grey color for text to match .table */
+            border-bottom: 2px solid #dee2e6; /* Heavier bottom border for header to match .table */
+            text-align: center; /* Center-align the header text */
+            font-weight: bold; /* Makes header text bold */
+        }
+        
+        /* Action button styling */
+        .action-btn {
+            border: none; /* Removes the border */
+            background: none; /* Removes the background */
+            cursor: pointer; /* Keeps the cursor as pointer */
+            margin-right: 5px; /* Right margin to separate action buttons */
+        }
+        
+        .action-btn:hover {
+            color: #007BFF; /* Blue color on hover to match .table-custom thead */
+        }
+        
 
-    .table-custom th, .table-custom td {
-        border: 1px solid #dee2e6;
-        padding: 8px 12px;
-        text-align: left;
-    }
+   
 
-    /* Zebra striping for rows */
-    .table-custom tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
+        /* Search bar styling */
+        .search-input {
+            position: absolute;
+            top: -45px; /* Adjusted position to account for the added margin */
+            right: 0;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px; /* New margin added to the bottom of the search bar */
+        }
 
-    /* Hover effect for rows (excluding header) */
-    .table-custom tbody tr:hover {
-        background-color: #ddd;
-    }
+        /* Pagination styling */
+        .table-wrapper {
+            position: relative; /* This ensures that absolute positioning is relative to this container */
+            padding-bottom: 70px; /* Add padding to make space for the pagination */
+        }
+        
+        .pagination {
+            position: absolute;
+            bottom: 10px; /* Adjust this value as needed */
+            right: -230px; /* Aligns the pagination to the right */
+            left: 0; /* Ensures the pagination can still be centered if needed */
+            justify-content: flex-end; /* This will align the pagination items to the right */
+        }
+        
 
-    /* Table header styling */
-    .table-custom thead tr {
-        background-color: #007BFF;
-        color: white;
-    }
+        .pagination a {
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #007BFF;
+            color: #007BFF;
+            text-decoration: none;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
 
-    /* Action button styling (using Font Awesome icons as an example) */
-    .action-btn {
-        border: none;
-        background: none;
-        cursor: pointer;
-        margin-right: 5px;
-    }
+        .pagination a:hover {
+            background-color: #007BFF;
+            color: white;
+        }
 
-    .action-btn:hover {
-        color: #007BFF;
-    }
-
-    /* Search bar styling */
-    .search-input {
-        position: absolute;
-        top: -45px; /* Adjusted position to account for the added margin */
-        right: 0;
-        padding: 5px 10px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        margin-bottom: 10px; /* New margin added to the bottom of the search bar */
-    }
-
-     /* Pagination styling */
-     .pagination {
-        display: flex;
-        justify-content: center;  /* Aligns pagination to the center */
-        margin: 20px 0;           /* Adds space above and below the pagination */
-    }
-
-    .pagination a {
-        margin: 0 5px;
-        padding: 5px 10px;
-        border: 1px solid #007BFF;
-        color: #007BFF;
-        text-decoration: none;
-        border-radius: 3px;
-        transition: background-color 0.3s;
-    }
-
-    .pagination a:hover {
-        background-color: #007BFF;
-        color: white;
-    }
-
-    .pagination a.active {
-        background-color: #007BFF;
-        color: white;
-    }
+        .pagination a.active {
+            background-color: #007BFF;
+            color: white;
+        }
     </style>
 </head>
 
@@ -226,39 +264,21 @@
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Example row with action buttons -->
-                    <tr>
-                        <td>1</td>
-                        <td>Org Name</td>
-                        <td>DD-MM-YYYY</td>
-                        <td>Peripheral Details</td>
-                        <td>Status Info</td>
-                        <td>
-                            <!-- Font Awesome icons for edit and delete actions as an example -->
-                            <button class="action-btn"><i class="fa fa-pencil"></i></button>
-                            <button class="action-btn"><i class="fa fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <!-- Add other rows as needed -->
-                </tbody>
-            </table>
-        
             <!-- Search bar placed above the table on the right -->
             <input type="text" class="search-input" placeholder="Search...">
 
-            <!-- Pagination -->
-        <div class="pagination">
-        <a href="#">&laquo;</a> <!-- Previous page -->
-        <a href="#" class="active">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#">&raquo;</a> <!-- Next page -->
-    </div>
-</div>
-            
+                        <!-- Pagination -->
+                    <div class="pagination">
+                    <a href="#">&laquo;</a> <!-- Previous page -->
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">&raquo;</a> <!-- Next page -->
+                </div>
+            </div>
+                        
             <tbody>
                 <% donations.forEach(function(donation, index) { %>
 
