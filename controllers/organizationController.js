@@ -512,7 +512,15 @@ module.exports = {
   async getAdvertisements(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
-      where: {id: organizationId},
+      where: { id: organizationId },
+      include: {
+        advertisements: {
+          include: {
+            interactions: true, // Include the interactions with each advertisement
+            city: true, // Include the city information for each advertisement
+          },
+        },
+      },
     }); 
     
     const totalPoints = await getTotalPointsForOrganization(organizationId);  
@@ -520,22 +528,11 @@ module.exports = {
     // Get cities with user counts
     const citiesWithCounts = await getCitiesWithUserCounts();
 
-    res.render('organization/advertisements', { organization, totalPoints, cities: citiesWithCounts, }); 
-  }, 
-  async getSpentPoints(req, res) { 
-    const organizationId = req.session.organization.id;
-    const organization = await prisma.organization.findUnique({
-      where: {id: organizationId},
-    });
-
-    
-    const totalPoints = await getTotalPointsForOrganization(organizationId); 
-
-    
-    // Get cities with user counts
-    const citiesWithCounts = await getCitiesWithUserCounts();
-
-    res.render('organization/spentPoints', { organization, totalPoints, cities: citiesWithCounts, }); 
+    res.render('organization/advertisements', { 
+      organization, 
+      totalPoints, 
+      cities: citiesWithCounts, 
+      advertisements: organization.advertisements }); 
   },  
   async getAdCity(req, res) { 
     const cityId = req.params.cityId;
