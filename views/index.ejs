@@ -2,7 +2,10 @@
 <%- include('partials/navbar') %>
 <head>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <style>
   /* what we do responsive*/
@@ -350,106 +353,253 @@
           transform: scale(1); /* Reverts back to the original size */
         }
 
- /* CSS for the Marketplace section */
-#marketplace {
-  display: flex;
-  justify-content: space-between;
-  background-color: #f5f5f5; /* Light grey background */
-  border-radius: 8px; /* Rounded corners */
-  overflow: hidden; /* Hide anything that goes outside the container's boundary */
-}
+    /* CSS for the Marketplace section */
+    #marketplace {
+      display: flex;
+      justify-content: space-between;
+      background-color: #f5f5f5; /* Light grey background */
+      border-radius: 8px; /* Rounded corners */
+      overflow: hidden; /* Hide anything that goes outside the container's boundary */
+    }
 
-.half {
-  width: 50%;
-  box-sizing: border-box;
-}
+    .half {
+      width: 50%;
+      box-sizing: border-box;
+    }
 
-.image-side img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    .image-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-.text-side {
-  padding: 40px; /* Increased padding */
-  background: linear-gradient(to right, #8babf1 , #89c4f4); /* Gradient background */
-  text-align: center; /* Center align text */
-  font-family: 'Josefin Sans', sans-serif;
-  color: white; /* White text color for better visibility */
-}
+    .text-side {
+      padding: 40px; /* Increased padding */
+      background: linear-gradient(to right, #8babf1 , #89c4f4); /* Gradient background */
+      text-align: center; /* Center align text */
+      font-family: 'Josefin Sans', sans-serif;
+      color: white; /* White text color for better visibility */
+    }
 
-.text-side h2 {
-  color: #fff; /* Dark grey text color */
-  margin-top: 10%;
-  font-size: 35px;
-  margin-bottom: 20px; /* Space below the heading */
-}
+    .text-side h2 {
+      color: #fff; /* Dark grey text color */
+      margin-top: 10%;
+      font-size: 35px;
+      margin-bottom: 20px; /* Space below the heading */
+    }
 
-@keyframes stretchUnderline {
-  0%, 100% {
-    transform: scaleX(1); /* Start and end at original size */
+    @keyframes stretchUnderline {
+      0%, 100% {
+        transform: scaleX(1); /* Start and end at original size */
+      }
+      50% {
+        transform: scaleX(1.5); /* Stretch to 1.5 times the original size at halfway point */
+      }
+    }
+
+    .underline {
+      display: block; /* Changed to inline-block for centering */
+      width: 100px;
+      height: 4px;
+      background-color: #c1f2f5;
+      margin: 10px auto 0;
+      animation: stretchUnderline 2s infinite ease-in-out; /* Apply the animation */
+    }
+
+    .icon {
+      font-size: 48px;  /* Size of the icon */
+      color: white;  /* Color of the icon */
+      margin-bottom: 0px;  /* Space below the icon */
+      margin-top: 25%;
+    }
+
+
+    .text-side p {
+      color: #fff; /* Light grey text color */
+      margin-bottom: 20px; /* Space below the paragraph */
+      font-size: 19px;
+    }
+
+    .engage-button {
+      padding: 12px 24px; /* Button padding */
+      background-color: #547fc2; /* Blue background */
+      color: white; /* White text */
+      border: none; /* No border */
+      border-radius: 4px; /* Rounded corners */
+      cursor: pointer; /* Hand cursor on hover */
+      font-family: 'Josefin Sans', sans-serif; /* New font */
+      transition: all 0.3s ease; /* Transition effect for all properties */
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Initial box shadow */
+      font-size: 20px;
+    }
+
+    .engage-button:hover {
+      background-color: #dae5ff; /* Darker blue on hover */
+      transform: translateY(-4px); /* Move the button up */
+      box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Increase box shadow */
+    }
+
+
+    /* Add responsiveness */
+    @media (max-width: 768px) {
+      #marketplace {
+        flex-direction: column;
+      }
+
+      .half {
+        width: 100%;
+      }
+    }
+
+      /* Styles for the draggable chat icon */
+    .draggable-chat-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      cursor: pointer; /* cursor changes to indicate the item is draggable */
+    }
+
+    /* Additional styles to ensure the image is not too large */
+    .draggable-chat-icon img {
+      width: 100px; /* You can adjust the size as needed */
+      height: auto;
+    }
+
+    /* Styles for the chatbot container */
+    .chatbot-container {
+      position: fixed;
+      bottom: 50px; /* Position adjusted for better visibility */
+      right: 20px;
+      width: 350px; /* Width set to your preference */
+      height: 500px; /* Height set to your preference */
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* Ensures the border radius is applied to child elements */
+      font-family: 'Poppins', sans-serif;
+
+    }
+
+    .chatbot-header {
+      background-color: #5072A7;
+      color: white;
+      padding: 10px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: flex; /* Makes the header a flex container */
+      justify-content: space-between; /* Spaces out the items */
+      align-items: center; /* Align items vertically in the center */
+    }
+
+    .chatbot-content {
+      padding: 15px;
+      padding-bottom: 80px; /* Add extra padding at the bottom */
+      overflow-y: auto;
+      flex-grow: 1; /* Ensures it takes up available space */
+    }
+
+    /* Styles for the chatbot footer with the message input */
+    .chatbot-footer {
+      margin-top: 200px; /* Adds space between the content and footer */
+      padding: 10px;
+      background: #f1f1f1;
+      display: flex;
+      border-top: 1px solid #ccc; /* Adds a subtle line between the content and the input area */
+    }
+
+    .chatbot-footer input {
+      flex-grow: 1;
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px; /* Larger font size for better readability */
+    }
+
+    .chatbot-footer button {
+      padding: 10px 15px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px; /* Larger font size for better readability */
+    }
+
+    .chatbot-close {
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px; /* Larger close button for better interaction */
+      margin-left: auto;
+    }
+
+    /* Styles for chat messages */
+    .chat-message {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      border: 1px solid #e1e1e1;
+    }
+
+    /* Style adjustments for better responsiveness */
+    @media (max-width: 600px) {
+      .chatbot-container {
+          width: 90%;
+          right: 5%; /* Center the chatbot in the viewport */
+          bottom: 10%; /* Adjust bottom position */
+          height: 70%; /* Adjust height */
+      }
+    }
+
+
+    /* Button styling */
+    .chatbot-send {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 50%;
+      outline: none;
+      transition: transform 0.3s;
+      margin-right: -10px; /* Reduce space between buttons */
+    }
+    /* Reset Button styling to match the send button */
+    .chatbot-reset {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 50%;
+      outline: none;
+      transition: transform 0.3s;
+      margin-right: -8px;
+    }
+
+    /* Icon styling */
+  .material-symbols-outlined {
+    font-size: 24px; /* Adjust icon size as needed */
+    color: #B0C4DE; /* Icon color */
   }
-  50% {
-    transform: scaleX(1.5); /* Stretch to 1.5 times the original size at halfway point */
-  }
+   /* Hover effect on the icons */
+.chatbot-send:hover .material-symbols-outlined, 
+.chatbot-send:focus .material-symbols-outlined,
+.chatbot-reset:hover .material-symbols-outlined, 
+.chatbot-reset:focus .material-symbols-outlined {
+  color: #E1EBEE; /* Darker shade of blue for the hover state */
 }
 
-.underline {
-  display: block; /* Changed to inline-block for centering */
-  width: 100px;
-  height: 4px;
-  background-color: #c1f2f5;
-  margin: 10px auto 0;
-  animation: stretchUnderline 2s infinite ease-in-out; /* Apply the animation */
-}
-
-.icon {
-  font-size: 48px;  /* Size of the icon */
-  color: white;  /* Color of the icon */
-  margin-bottom: 0px;  /* Space below the icon */
-  margin-top: 25%;
-}
-
-
-.text-side p {
-  color: #fff; /* Light grey text color */
-  margin-bottom: 20px; /* Space below the paragraph */
-  font-size: 19px;
-}
-
-.engage-button {
-  padding: 12px 24px; /* Button padding */
-  background-color: #547fc2; /* Blue background */
-  color: white; /* White text */
-  border: none; /* No border */
-  border-radius: 4px; /* Rounded corners */
-  cursor: pointer; /* Hand cursor on hover */
-  font-family: 'Josefin Sans', sans-serif; /* New font */
-  transition: all 0.3s ease; /* Transition effect for all properties */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Initial box shadow */
-  font-size: 20px;
-}
-
-.engage-button:hover {
-  background-color: #dae5ff; /* Darker blue on hover */
-  transform: translateY(-4px); /* Move the button up */
-  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Increase box shadow */
-}
-
-
-/* Add responsiveness */
-@media (max-width: 768px) {
-  #marketplace {
-    flex-direction: column;
-  }
-
-  .half {
-    width: 100%;
-  }
-}
-
-
-          
 
     
     
@@ -479,11 +629,11 @@
       <div class="content-container" style="display: flex; justify-content: center; gap: 20px;">
             
            <!-- Mission Container -->
-<div class="text-container mission-text">
-    <i class="material-icons" style="display: block; text-align: center; font-size: 24px; margin-bottom: 10px;">public</i>
-    <h3>Mission</h3>
-    <p>To lead the global movement in reducing electronic waste by promoting responsible recycling, reuse, and disposal practices. We aim to foster collaboration among businesses, governments, and consumers to build a sustainable digital future.</p>
-</div>
+      <div class="text-container mission-text">
+          <i class="material-icons" style="display: block; text-align: center; font-size: 24px; margin-bottom: 10px;">public</i>
+          <h3>Mission</h3>
+          <p>To lead the global movement in reducing electronic waste by promoting responsible recycling, reuse, and disposal practices. We aim to foster collaboration among businesses, governments, and consumers to build a sustainable digital future.</p>
+      </div>
 
 <!-- Vision Container -->
 <div class="text-container vision-text" >
@@ -586,7 +736,39 @@
     <p>Join our marketplace to buy, sell, or exchange electronics in an eco-friendly way. Contribute to sustainability while getting the best deals.</p>
     <button class="engage-button">Engage Now</button>
   </div>
+
+  <!-- Draggable Chat Icon -->
+  <div id="chatIcon" class="draggable-chat-icon">
+    <img src="https://i.postimg.cc/DwQHg9tH/icons.png" alt="Chat Icon" />
+  </div>
+
+<!-- Chatbot Interface Container -->
+<div id="chatbotContainer" class="chatbot-container" style="display:none;">
+  <div class="chatbot-header">
+    <span>Chat with us!</span>
+    <button id="closeChatbot" class="chatbot-close">&times;</button>
+  </div>
+  <div id="chatbotContent" class="chatbot-content">
+    <!-- This is where messages will appear. -->
+    <!-- Static example content - this would be dynamically generated in practice -->
+    <div class="chat-message">Hello! How can I help you today?</div>
+  </div>
+  <div class="chatbot-footer">
+    <input type="text" id="chatbotInput" placeholder="Type your message here..." />
+     
+   <!-- Send Button -->
+   <button class="chatbot-send">
+    <span class="material-symbols-outlined">send</span>
+</button>
+<!-- Reset Button with Regenerate Icon -->
+<button id="resetChatbotInput" class="chatbot-reset">
+    <span class="material-symbols-outlined">restart_alt</span>
+  </button>
+  </div>
+</div>
 </section>
+
+
 
 
 
@@ -691,7 +873,26 @@
           });
         });
 
+        $(function() {
+          // Make the chat icon draggable
+          $("#chatIcon").draggable();
+      });
 
-        
+        // JavaScript to handle chat icon and chatbot container
+    document.addEventListener('DOMContentLoaded', function () {
+      var chatIcon = document.getElementById('chatIcon');
+      var chatbotContainer = document.getElementById('chatbotContainer');
+      var closeChatbot = document.getElementById('closeChatbot');
+
+      // Function to show the chatbot
+      chatIcon.onclick = function() {
+          chatbotContainer.style.display = 'block';
+      };
+
+      // Function to hide the chatbot
+      closeChatbot.onclick = function() {
+          chatbotContainer.style.display = 'none';
+      };
+    });
         
       </script>
