@@ -6,6 +6,18 @@ const authMiddlewareAdmin = require('../controllers/authMiddlewareAdmin');
 router.get('/login', authMiddlewareAdmin.checkLoggedInRedirect, adminController.getAdminLogin);
 router.post('/login', adminController.postAdminLogin);
 router.get('/dashboard', authMiddlewareAdmin.requireLogin, adminController.getAccount); 
+router.get('/gender-distribution', authMiddlewareAdmin.requireLogin, adminController.getGenderDistribution);
+router.get('/user-signups', authMiddlewareAdmin.requireLogin, adminController.getUserSignups);
+router.get('/users-by-city', authMiddlewareAdmin.requireLogin, adminController.getUsersByCity);
+router.get('/organizations-by-verification', authMiddlewareAdmin.requireLogin, adminController.getOrganizationsByVerification);
+router.get('/organization-points-over-time', authMiddlewareAdmin.requireLogin, adminController.getOrganizationPointsOverTime);
+router.get('/donations-over-time', authMiddlewareAdmin.requireLogin, adminController.getDonationsOverTime);
+router.get('/donation-status-distribution', authMiddlewareAdmin.requireLogin, adminController.getDonationStatusDistribution);
+router.get('/average-rating-per-entity', adminController.getAverageRatingPerEntity);
+router.get('/ratings-distribution', adminController.getRatingsDistribution);
+
+
+
 router.get('/organizationmanagement', authMiddlewareAdmin.requireLogin,  adminController.getOrganizationManagement); 
 router.get('/viewdocuments', authMiddlewareAdmin.requireLogin,  adminController.viewDocuments);
 router.get('/usermanagement', authMiddlewareAdmin.requireLogin,  adminController.getUserManagement); 

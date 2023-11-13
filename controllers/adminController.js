@@ -16,6 +16,197 @@ module.exports = {
   async getAdminLogin(req, res) {
     res.render('admin/login');
   }, 
+  
+  async getGenderDistribution(req, res) {
+    try {
+      const genderDistribution = await prisma.user.groupBy({
+        by: ['gender'],
+        _count: {
+          gender: true
+        }
+      });
+      res.json(genderDistribution);
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  },
+
+  async getUserSignups(req, res) {
+    try {
+      const userSignups = await prisma.user.findMany({
+        select: {
+          createdAt: true
+        }
+      });
+  
+      const groupedByDate = userSignups.reduce((acc, user) => {
+        const date = user.createdAt.toISOString().split('T')[0]; // Get date in 'YYYY-MM-DD' format
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+      }, {});
+  
+      const formattedData = Object.entries(groupedByDate).map(([date, count]) => {
+        return { date, count };
+      });
+  
+      res.json(formattedData);
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  },
+
+  async getUsersByCity(req, res) {
+    try {
+      // Fetch all cities with the count of users
+      const citiesWithUserCount = await prisma.city.findMany({
+        include: {
+          _count: {
+            select: { users: true } // Count the users related to each city
+          }
+        }
+      });
+  
+      // Sort cities based on the count of users in descending order
+      citiesWithUserCount.sort((a, b) => b._count.users - a._count.users);
+  
+      res.json(citiesWithUserCount);
+    } catch (error) {
+      console.error("Error fetching users by city:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getOrganizationsByVerification(req, res) {
+    try {
+      const organizationsByVerification = await prisma.organization.groupBy({
+        by: ['verificationStatus'],
+        _count: {
+          verificationStatus: true
+        }
+      });
+  
+      res.json(organizationsByVerification);
+    } catch (error) {
+      console.error("Error fetching organizations by verification status:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getOrganizationPointsOverTime(req, res) {
+    try {
+      const organizationPointsOverTime = await prisma.organization.findMany({
+        select: {
+          createdAt: true,
+          totalPoints: true
+        },
+        orderBy: {
+          createdAt: 'asc'
+        }
+      });
+  
+      // Format the data for the line chart
+      const formattedData = organizationPointsOverTime.map(org => {
+        return {
+          date: org.createdAt.toISOString().split('T')[0], // Format date as 'YYYY-MM-DD'
+          totalPoints: org.totalPoints
+        };
+      });
+  
+      res.json(formattedData);
+    } catch (error) {
+      console.error("Error fetching organization points over time:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getDonationsOverTime(req, res) {
+    try {
+        const donations = await prisma.donation.findMany({
+            select: {
+                createdAt: true
+            }
+        });
+
+        const groupedByDate = donations.reduce((acc, donation) => {
+            const date = donation.createdAt.toISOString().split('T')[0];
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+        }, {});
+
+        const formattedData = Object.entries(groupedByDate).map(([date, count]) => {
+            return { date, count };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching donations over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getDonationStatusDistribution(req, res) {
+    try {
+        const donationsByStatus = await prisma.donation.groupBy({
+            by: ['status'],
+            _count: {
+                status: true
+            }
+        });
+
+        res.json(donationsByStatus);
+    } catch (error) {
+        console.error("Error fetching donation status distribution:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getAverageRatingPerEntity(req, res) {
+    try {
+        // Average rating for organizations
+        const averageRatingOrganizations = await prisma.feedback.groupBy({
+            by: ['organizationId'],
+            _avg: {
+                rating: true
+            },
+            where: {
+                organizationId: { not: { equals: "" } } // Assuming empty string is not a valid value
+            }
+        });
+
+        // Average rating for drop points
+        const averageRatingDropPoints = await prisma.feedback.groupBy({
+            by: ['dropPointId'],
+            _avg: {
+                rating: true
+            },
+            where: {
+                dropPointId: { not: { equals: "" } } // Assuming similar correction needed here
+            }
+        });
+
+        res.json({ organizations: averageRatingOrganizations, dropPoints: averageRatingDropPoints });
+    } catch (error) {
+        console.error("Error fetching average ratings:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getRatingsDistribution(req, res) {
+    try {
+        const ratingsDistribution = await prisma.feedback.groupBy({
+            by: ['rating'],
+            _count: {
+                rating: true
+            }
+        });
+
+        res.json(ratingsDistribution);
+    } catch (error) {
+        console.error("Error fetching ratings distribution:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
   async postAdminLogin(req, res) {
     try {
       const { email, password } = req.body;
@@ -56,6 +247,7 @@ module.exports = {
       res.render('admin/login',{ message: 'An error occurred' });
   }
   },
+
   async getOrganizationManagement(req, res) {
     try {
       const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
@@ -76,7 +268,8 @@ module.exports = {
       console.error("Error fetching organizations:", error);
       res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async updateOrganizationStatus(req, res) {
     try {
         const { organizationId, newStatus } = req.body;
@@ -158,6 +351,7 @@ module.exports = {
         res.status(500).send("Internal Server Error");
     }
   },
+
   async viewDocuments(req, res) {
     try {
       const { organizationId } = req.query;
@@ -189,6 +383,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+  
   async getDropPointManagement(req, res) {
     try {
       // Fetch all managers
@@ -213,7 +408,8 @@ module.exports = {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
     }
-  },    
+  },  
+
   async getManagerManagement(req, res) {
     try {
       // Fetch managers
@@ -246,9 +442,11 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async getUserManagement(req, res) {
     res.render('admin/usermanagement');
   }, 
+
   async createDropPoint(req, res) {
     try {
       const { name, location, openingTime, closingTime, description } = req.body;
@@ -271,6 +469,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async registerManager(req, res) {
     try {
       const { firstName, lastName, email, phoneNumber, address } = req.body;
@@ -293,6 +492,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   }, 
+
   async assignManagerToDropPoint(req, res) {
     try {
       const { managerEmail, password, dropPointId } = req.body;
@@ -393,6 +593,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async removeManagerFromDropPoint(req, res) {
     try {
       const { dropPointId } = req.body;
@@ -463,6 +664,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },   
+
   async updateDropPoint(req, res) {
     try {
       const { id, name, location, openingTime, closingTime, description } = req.body;

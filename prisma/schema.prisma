@@ -159,7 +159,6 @@ model Advertisement {
   interactions   AdInteraction[] // Relation to Advertisement Interactions
 }
 
-
 model AdInteraction {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   advertisement   Advertisement @relation(fields: [advertisementId], references: [id])

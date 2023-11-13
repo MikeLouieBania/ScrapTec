@@ -108,17 +108,351 @@
     </div>
 
     
-    <!-- Main content -->
-    <div class="main-content">
+     <!-- Main content -->
+     <div class="main-content">
         <div class="container">
             <h1>Admin Dashboard</h1>
-            <!-- Add your content here -->
+            <!-- User Demographics and Activity Section -->
+            <section id="user-demographics">
+                <h2>User Demographics and Activity</h2>
+                <div id="gender-distribution-chart" style="height: 400px;"></div>
+                <div id="user-signups-chart" style="height: 400px;"></div>
+                <div id="users-by-city-chart" style="height: 400px;"></div>
+            </section>
+
+            <!-- Organization Insights Section -->
+            <section id="organization-insights">
+                <h2>Organization Insights</h2>
+                <div id="organizations-by-verification-chart"></div>
+                <div id="organization-points-over-time-chart"></div>
+            </section>
+
+            <!-- Donation Analysis Section -->
+            <section id="donation-analysis">
+                <h2>Donation Analysis</h2>
+                <div id="donations-over-time-chart"></div>
+                <div id="donation-status-distribution-chart"></div>
+            </section>
+
+            <!-- Feedback and Ratings Section -->
+            <section id="feedback-ratings">
+                <h2>Feedback and Ratings</h2>
+                <div id="average-rating-chart"></div>
+                <div id="ratings-distribution-chart"></div>
+            </section>
+
+            <!-- Advertisement Performance Section -->
+            <section id="advertisement-performance">
+                <h2>Advertisement Performance</h2>
+                <!-- Chart placeholders go here -->
+            </section>
+
+            <!-- Sales and Listings Section -->
+            <section id="sales-listings">
+                <h2>Sales and Listings</h2>
+                <!-- Chart placeholders go here -->
+            </section>
+
+            <!-- Message and Conversation Insights Section -->
+            <section id="message-conversation-insights">
+                <h2>Message and Conversation Insights</h2>
+                <!-- Chart placeholders go here -->
+            </section>
+
+            <!-- General Analytics Section -->
+            <section id="general-analytics">
+                <h2>General Analytics</h2>
+                <!-- Chart placeholders go here -->
+            </section>
         </div>
     </div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) --> 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Highcharts Library -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script> 
+
+    <!-- Highmaps Library -->
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Fetch and render gender distribution chart
+            $.get('/admin/gender-distribution', function(data) {
+                Highcharts.chart('gender-distribution-chart', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Gender Distribution'
+                    },
+                    series: [{
+                        name: 'Users',
+                        colorByPoint: true,
+                        data: data.map(item => {
+                            return {
+                                name: item.gender,
+                                y: item._count.gender
+                            };
+                        })
+                    }]
+                });
+            });
+
+            // Fetch and render user signups chart
+            $.get('/admin/user-signups', function(data) {
+                Highcharts.chart('user-signups-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'User Sign-ups Over Time'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Sign-ups'
+                        },
+                        allowDecimals: false, 
+                        min: 0, 
+                        tickInterval: 1 
+                    },
+                    series: [{
+                        name: 'Sign-ups',
+                        data: data.map(item => {
+                            return [new Date(item.date).getTime(), item.count];
+                        })
+                    }]
+                });
+            });
+
+            // Fetch and render users by city chart 
+            $.get('/admin/users-by-city', function(data) {
+                Highcharts.chart('users-by-city-chart', {
+                    chart: {
+                        type: 'bar' // Bar chart
+                    },
+                    title: {
+                        text: 'Users by City in the Philippines'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.name), // Use city name for the X-axis
+                        title: {
+                            text: 'Cities'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        allowDecimals: false, // Ensure Y-axis has only whole numbers
+                        title: {
+                            text: 'Number of Users',
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    plotOptions: {
+                        bar: {
+                            dataLabels: {
+                                enabled: true
+                            }
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Users',
+                        data: data.map(item => item._count.users) // User count for each city
+                    }]
+                });
+            });
+       
+            // Fetch and render organizations by verification status chart
+            $.get('/admin/organizations-by-verification', function(data) {
+                Highcharts.chart('organizations-by-verification-chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Organizations by Verification Status'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.verificationStatus),
+                        title: {
+                            text: 'Verification Status'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of Organizations'
+                        }
+                    },
+                    series: [{
+                        name: 'Organizations',
+                        data: data.map(item => item._count.verificationStatus)
+                    }]
+                });
+            });
+
+            // Fetch and render organization points over time chart
+            $.get('/admin/organization-points-over-time', function(data) {
+                Highcharts.chart('organization-points-over-time-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Total Points Accumulated by Organizations Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date),
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Total Points'
+                        }
+                    },
+                    series: [{
+                        name: 'Total Points',
+                        data: data.map(item => item.totalPoints)
+                    }]
+                });
+            });
+       
+            // Fetch and render donations over time chart
+            $.get('/admin/donations-over-time', function(data) {
+                Highcharts.chart('donations-over-time-chart', {
+                    chart: {
+                        type: 'area'
+                    },
+                    title: {
+                        text: 'Donations Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date)
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Donations'
+                        }
+                    },
+                    series: [{
+                        name: 'Donations',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+            
+            // Fetch and render donation status distribution chart
+            $.get('/admin/donation-status-distribution', function(data) {
+                    Highcharts.chart('donation-status-distribution-chart', {
+                        chart: {
+                            type: 'pie'
+                        },
+                        title: {
+                            text: 'Donation Status Distribution'
+                        },
+                        series: [{
+                            name: 'Donations',
+                            colorByPoint: true,
+                            data: data.map(item => {
+                                return {
+                                    name: item.status,
+                                    y: item._count.status
+                                };
+                            })
+                        }]
+                    });
+                });
+
+            // Fetch and render average rating per entity chart
+            $.get('/admin/average-rating-per-entity', function(data) {
+                let categories = [];
+                let seriesData = [];
+
+                // Process organizations
+                data.organizations.forEach(org => {
+                    categories.push('Org: ' + org.organizationId);
+                    seriesData.push(org._avg.rating);
+                });
+
+                // Process drop points
+                data.dropPoints.forEach(dp => {
+                    categories.push('DP: ' + dp.dropPointId);
+                    seriesData.push(dp._avg.rating);
+                });
+
+                Highcharts.chart('average-rating-chart', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Average Rating per Organization or Drop Point'
+                    },
+                    xAxis: {
+                        categories: categories
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Average Rating'
+                        }
+                    },
+                    series: [{
+                        name: 'Average Rating',
+                        data: seriesData
+                    }]
+                });
+            });
+
+            // Fetch and render ratings distribution chart
+            $.get('/admin/ratings-distribution', function(data) {
+                Highcharts.chart('ratings-distribution-chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Distribution of Ratings'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.rating.toString())
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Ratings'
+                        }
+                    },
+                    series: [{
+                        name: 'Ratings',
+                        data: data.map(item => item._count.rating)
+                    }]
+                });
+            });
+
+
+            
+        });
+
+    </script>
+        
+
+
 </body>
 </html>
