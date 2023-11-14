@@ -114,6 +114,11 @@
             height: 400px;
         }
 
+        .section-title {
+            color: #007BFF;
+            margin-bottom: 30px;
+        }
+
         /* Responsive Main Content */
         @media (min-width: 768px) {
             .main-content {
@@ -141,85 +146,130 @@
 
     
      <!-- Main content -->
-     <div class="main-content">
-        <div class="container">
-            <h1>Admin Dashboard</h1>
-            <!-- User Demographics and Activity Section -->
-            <section id="user-demographics">
-                <h2>User Demographics and Activity</h2>
-                <div class="chart-container">
+    <div class="main-content">
+        <div class="container-fluid">
+            <h1 class="section-title">Admin Dashboard</h1>
+
+            <!-- User Demographics and Activity -->
+            <div class="row">
+                <div class="col-lg-6">
                     <div id="gender-distribution-chart" class="chart"></div>
+                </div>
+                <div class="col-lg-6">
                     <div id="user-signups-chart" class="chart"></div>
+                </div>
+                <div class="col-lg-12">
                     <div id="users-by-city-chart" class="chart"></div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Organization Insights Section -->
-            <section id="organization-insights">
-                <h2>Organization Insights</h2>
-                <div class="chart-container">
-                    <div id="organizations-by-verification-chart" class="chart"></div>
-                    <div id="organization-points-over-time-chart" class="chart"></div>
-                </div>
-            </section>
+            <!-- Organization Insights -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Organization Insights</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="organizations-by-verification-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="organization-points-over-time-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
 
-            <!-- Donation Analysis Section -->
-            <section id="donation-analysis">
-                <h2>Donation Analysis</h2>
-                <div class="chart-container">
-                    <div id="donations-over-time-chart" class="chart"></div>
-                    <div id="donation-status-distribution-chart" class="chart"></div>
-                </div>
-            </section>
+            <!-- Donation Analysis  -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Donation Analysis</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="donations-over-time-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="donation-status-distribution-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
 
-            <!-- Feedback and Ratings Section -->
-            <section id="feedback-ratings">
-                <h2>Feedback and Ratings</h2>  
-                <div class="chart-container">
-                    <div id="average-rating-bubble-chart" class="chart"></div>
-                    <div id="ratings-distribution-chart" class="chart"></div>
-                </div>
-            </section>
+            <!-- Feedback and Ratings -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Feedback and Ratings</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="average-rating-bubble-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="ratings-distribution-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div> 
+            </div>  
 
-            <!-- Advertisement Performance Section -->
-            <section id="advertisement-performance">
-                <h2>Advertisement Performance</h2>
-                <div class="chart-container">
-                    <div id="ad-interactions-line-chart" class="chart"></div>
-                    <div id="points-spent-bar-chart" class="chart"></div>
-                </div>
-            </section>
+            <!-- Advertisement Performance -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Advertisement Performance</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="ad-interactions-line-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="points-spent-bar-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div> 
+            </div>  
 
-            <!-- Sales and Listings Section -->
-            <section id="sales-listings">
-                <h2>Sales and Listings</h2>
-                <div class="chart-container">
-                    <div id="listings-per-category-chart" class="chart"></div>
-                    <div id="sales-over-time-chart" class="chart"></div>
-                </div>
-            </section>
- 
+            <!-- Sales and Listings -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Sales and Listings</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="listings-per-category-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="sales-over-time-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>  
+            </div>   
 
             <!-- Message and Conversation Insights Section -->
-            <section id="message-conversation-insights">
-                <h2>Message and Conversation Insights</h2>
-                <div class="chart-container">
-                    <div id="messages-per-user-chart" class="chart"></div>
-                    <div id="conversations-over-time-chart" class="chart"></div> 
-                </div>
-            </section>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Message and Conversation Insights</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="messages-per-user-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="conversations-over-time-chart" class="chart"></div> 
+                        </div>
+                    </div>
+                </div>  
+            </div>   
 
             <!-- General Analytics Section -->
-            <section id="general-analytics">
-                <h2>General Analytics</h2>
-                <div class="chart-container">
-                    <div id="user-activity-heatmap" class="chart"></div>
-                    <div id="activity-sales-correlation-chart" class="chart"></div>
-                </div>
-            </section>
-            
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">General Analytics</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="user-activity-heatmap" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="activity-sales-correlation-chart" class="chart"></div> 
+                        </div>
+                    </div>
+                </div>  
+            </div>   
         </div>
     </div>
+
 
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) --> 
