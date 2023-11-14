@@ -88,6 +88,38 @@
             margin-bottom: 20px;
             color: #007BFF; /* Main blue */
         }
+
+        .sidebar a button {
+            background: none;
+            border: none;
+            color: inherit;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        /* Chart Container Improvements */
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        /* Chart Styling */
+        .chart {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+            height: 400px;
+        }
+
+        /* Responsive Main Content */
+        @media (min-width: 768px) {
+            .main-content {
+                padding-left: 200px; /* Adjust for expanded sidebar */
+            }
+        }
     </style>
 </head>
 
@@ -115,59 +147,75 @@
             <!-- User Demographics and Activity Section -->
             <section id="user-demographics">
                 <h2>User Demographics and Activity</h2>
-                <div id="gender-distribution-chart" style="height: 400px;"></div>
-                <div id="user-signups-chart" style="height: 400px;"></div>
-                <div id="users-by-city-chart" style="height: 400px;"></div>
+                <div class="chart-container">
+                    <div id="gender-distribution-chart" class="chart"></div>
+                    <div id="user-signups-chart" class="chart"></div>
+                    <div id="users-by-city-chart" class="chart"></div>
+                </div>
             </section>
 
             <!-- Organization Insights Section -->
             <section id="organization-insights">
                 <h2>Organization Insights</h2>
-                <div id="organizations-by-verification-chart" style="width:100%; height:400px;"></div>
-                <div id="organization-points-over-time-chart" style="width:100%; height:400px;"></div>
+                <div class="chart-container">
+                    <div id="organizations-by-verification-chart" class="chart"></div>
+                    <div id="organization-points-over-time-chart" class="chart"></div>
+                </div>
             </section>
 
             <!-- Donation Analysis Section -->
             <section id="donation-analysis">
                 <h2>Donation Analysis</h2>
-                <div id="donations-over-time-chart" style="width:100%; height:400px;"></div>
-                <div id="donation-status-distribution-chart" style="width:100%; height:400px;"></div>
+                <div class="chart-container">
+                    <div id="donations-over-time-chart" class="chart"></div>
+                    <div id="donation-status-distribution-chart" class="chart"></div>
+                </div>
             </section>
 
             <!-- Feedback and Ratings Section -->
             <section id="feedback-ratings">
                 <h2>Feedback and Ratings</h2>  
-                <div id="average-rating-bubble-chart" style="width:100%; height:400px;"></div>
-                <div id="ratings-distribution-chart" style="width:100%; height:400px;"></div>
+                <div class="chart-container">
+                    <div id="average-rating-bubble-chart" class="chart"></div>
+                    <div id="ratings-distribution-chart" class="chart"></div>
+                </div>
             </section>
 
             <!-- Advertisement Performance Section -->
             <section id="advertisement-performance">
                 <h2>Advertisement Performance</h2>
-                <div id="ad-interactions-line-chart" style="width:100%; height:400px;"></div>
-                <div id="points-spent-bar-chart" style="width:100%; height:400px;"></div>
+                <div class="chart-container">
+                    <div id="ad-interactions-line-chart" class="chart"></div>
+                    <div id="points-spent-bar-chart" class="chart"></div>
+                </div>
             </section>
 
             <!-- Sales and Listings Section -->
             <section id="sales-listings">
                 <h2>Sales and Listings</h2>
-                <div id="listings-per-category-chart" style="width:100%; height:400px;"></div>
-                <div id="sales-over-time-chart" style="width:100%; height:400px;"></div>
+                <div class="chart-container">
+                    <div id="listings-per-category-chart" class="chart"></div>
+                    <div id="sales-over-time-chart" class="chart"></div>
+                </div>
             </section>
  
 
             <!-- Message and Conversation Insights Section -->
             <section id="message-conversation-insights">
                 <h2>Message and Conversation Insights</h2>
-                <div id="messages-per-user-chart" style="width:100%; height:400px;"></div>
-                <div id="conversations-over-time-chart" style="width:100%; height:400px;"></div> 
+                <div class="chart-container">
+                    <div id="messages-per-user-chart" class="chart"></div>
+                    <div id="conversations-over-time-chart" class="chart"></div> 
+                </div>
             </section>
 
             <!-- General Analytics Section -->
             <section id="general-analytics">
                 <h2>General Analytics</h2>
-                <div id="user-activity-heatmap" style="width:100%; height:400px;"></div>
-                <div id="activity-sales-correlation-chart" style="width:100%; height:400px;"></div>
+                <div class="chart-container">
+                    <div id="user-activity-heatmap" class="chart"></div>
+                    <div id="activity-sales-correlation-chart" class="chart"></div>
+                </div>
             </section>
             
         </div>
