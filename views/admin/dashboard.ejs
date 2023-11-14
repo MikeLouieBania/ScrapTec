@@ -151,20 +151,25 @@
             <!-- Sales and Listings Section -->
             <section id="sales-listings">
                 <h2>Sales and Listings</h2>
-                <!-- Chart placeholders go here -->
+                <div id="listings-per-category-chart" style="width:100%; height:400px;"></div>
+                <div id="sales-over-time-chart" style="width:100%; height:400px;"></div>
             </section>
+ 
 
             <!-- Message and Conversation Insights Section -->
             <section id="message-conversation-insights">
                 <h2>Message and Conversation Insights</h2>
-                <!-- Chart placeholders go here -->
+                <div id="messages-per-user-chart" style="width:100%; height:400px;"></div>
+                <div id="conversations-over-time-chart" style="width:100%; height:400px;"></div> 
             </section>
 
             <!-- General Analytics Section -->
             <section id="general-analytics">
                 <h2>General Analytics</h2>
-                <!-- Chart placeholders go here -->
+                <div id="user-activity-heatmap" style="width:100%; height:400px;"></div>
+                <div id="activity-sales-correlation-chart" style="width:100%; height:400px;"></div>
             </section>
+            
         </div>
     </div>
 
@@ -177,6 +182,7 @@
     <!-- Highcharts Library -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script> 
@@ -526,6 +532,225 @@
                 });
             });
 
+            // Fetch and render column chart for number of listings per category
+            $.get('/admin/listings-per-category', function(data) {
+                // Assuming Highcharts is used
+                Highcharts.chart('listings-per-category-chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Number of Listings per Category'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.category)
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of Listings'
+                        }
+                    },
+                    series: [{
+                        name: 'Listings',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+
+            // Fetch and render line chart for sales over time
+            $.get('/admin/sales-over-time', function(data) {
+                Highcharts.chart('sales-over-time-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Sales Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date)
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Sales'
+                        }
+                    },
+                    series: [{
+                        name: 'Sales',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+            
+            // Fetch and render bar chart for number of messages sent per user
+            $.get('/admin/messages-per-user', function(data) {
+                Highcharts.chart('messages-per-user-chart', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Number of Messages Sent per User'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.user)
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of Messages'
+                        }
+                    },
+                    series: [{
+                        name: 'Messages',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+
+            // Fetch and render line chart for conversations initiated over time
+            $.get('/admin/conversations-over-time', function(data) {
+                Highcharts.chart('conversations-over-time-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Conversations Initiated Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date)
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Conversations'
+                        }
+                    },
+                    series: [{
+                        name: 'Conversations',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+ 
+             // Fetch and render Heat Map for User Activity
+            $.get('/admin/user-activity-heatmap', function(data) {
+                // Process data to fit Highcharts format
+                const heatMapData = data.map(point => [point.day, point.hour, point.count]);
+
+                Highcharts.chart('user-activity-heatmap', {
+                    chart: {
+                        type: 'heatmap',
+                        // Additional heatmap options
+                    },
+                    title: {
+                        text: 'User Activity by Time and Day'
+                    },
+                    xAxis: {
+                        categories: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                        title: {
+                            text: 'Day of the Week'
+                        }
+                    },
+                    yAxis: {
+                        categories: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+                        title: {
+                            text: 'Hour of the Day'
+                        },
+                        min: 0,
+                        max: 23
+                    },
+                    colorAxis: {
+                        min: 0,
+                        minColor: '#FFFFFF',
+                        maxColor: Highcharts.getOptions().colors[0],
+                        // Uncomment below for logarithmic scale
+                        // type: 'logarithmic'
+                    },
+                    legend: {
+                        align: 'right',
+                        layout: 'vertical',
+                        margin: 0,
+                        verticalAlign: 'top',
+                        y: 25,
+                        symbolHeight: 280
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return 'Day: <b>' + this.series.xAxis.categories[this.point.x] + '</b><br/>Hour: <b>' + this.series.yAxis.categories[this.point.y] + '</b><br/>Activity Count: <b>' + this.point.value + '</b>';
+                        }
+                    },
+                    series: [{
+                        name: 'User Activity',
+                        borderWidth: 1,
+                        data: heatMapData,
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            format: '{point.value}'
+                        }
+                    }]
+                });
+            });
+
+            // Fetch and render Scatter Plot for User Activity and Sales
+            $.get('/admin/activity-sales-correlation', function(data) {
+                // Process data to fit Highcharts format
+                const scatterData = data.map(point => [point.messagesSent, point.salesMade]);
+
+                Highcharts.chart('activity-sales-correlation-chart', {
+                    chart: {
+                        type: 'scatter',
+                        // Additional scatter plot options
+                    },
+                    title: {
+                        text: 'Correlation between User Messages and Sales'
+                    },
+                    xAxis: {
+                        title: {
+                            text: 'Messages Sent'
+                        },
+                        startOnTick: true,
+                        endOnTick: true,
+                        showLastLabel: true
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Sales Made'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        scatter: {
+                            marker: {
+                                radius: 5,
+                                states: {
+                                    hover: {
+                                        enabled: true,
+                                        lineColor: 'rgb(100,100,100)'
+                                    }
+                                }
+                            },
+                            states: {
+                                hover: {
+                                    marker: {
+                                        enabled: false
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                headerFormat: '<b>{series.name}</b><br>',
+                                pointFormat: '{point.x} messages sent, {point.y} sales made'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'User Activity vs Sales',
+                        color: 'rgba(223, 83, 83, .5)',
+                        data: scatterData
+                    }]
+                });
+            });
 
         });
 

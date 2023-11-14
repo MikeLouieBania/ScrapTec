@@ -264,33 +264,60 @@ module.exports = {
             };
         });
 
-        res.json(formattedData);
+        // Aggregate counts by date
+        const aggregatedData = formattedData.reduce((acc, curr) => {
+            const date = curr.date;
+            if (!acc[date]) {
+                acc[date] = 0;
+            }
+            acc[date] += curr.count;
+            return acc;
+        }, {});
+
+        // Convert aggregated data into array format
+        const finalData = Object.keys(aggregatedData).map(date => {
+            return { date: date, count: aggregatedData[date] };
+        });
+
+        res.json(finalData);
     } catch (error) {
         console.error("Error fetching ad interactions over time:", error);
         res.status(500).send('Server Error: ' + error.message);
     }
-  }, 
+  },
 
   async getPointsSpentOnAds(req, res) {
     try {
+        // Step 1: Group and sum points spent by organizationId
         const pointsSpent = await prisma.advertisement.groupBy({
             by: ['organizationId'],
             _sum: {
                 pointsSpent: true
-            },
-            include: {
-                organization: {
-                    select: {
-                        organizationname: true
-                    }
-                }
             }
         });
+
+        // Step 2: Fetch organization names separately
+        const organizationIds = pointsSpent.map(item => item.organizationId);
+        const organizations = await prisma.organization.findMany({
+            where: {
+                id: { in: organizationIds }
+            },
+            select: {
+                id: true,
+                organizationname: true
+            }
+        });
+
+        // Create a map for quick lookup
+        const organizationMap = organizations.reduce((map, org) => {
+            map[org.id] = org.organizationname;
+            return map;
+        }, {});
 
         // Format data for the bar chart
         const formattedData = pointsSpent.map(item => {
             return {
-                organization: item.organization.organizationname,
+                organization: organizationMap[item.organizationId],
                 pointsSpent: item._sum.pointsSpent || 0
             };
         });
@@ -298,6 +325,198 @@ module.exports = {
         res.json(formattedData);
     } catch (error) {
         console.error("Error fetching points spent on ads:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getListingsPerCategory(req, res) {
+    try {
+      // Step 1: Perform groupBy operation
+      const listingsPerCategory = await prisma.listing.groupBy({
+        by: ['categoryId'],
+        _count: {
+          id: true
+        },
+        _avg: {
+          price: true
+        }
+      });
+  
+      // Step 2: Fetch categories and create a mapping
+      const categories = await prisma.category.findMany({
+        select: {
+          id: true,
+          name: true
+        }
+      });
+      const categoryMapping = categories.reduce((acc, category) => {
+        acc[category.id] = category.name;
+        return acc;
+      }, {});
+  
+      // Step 3: Map results to include category names
+      const formattedData = listingsPerCategory.map(item => {
+        return {
+          category: categoryMapping[item.categoryId],
+          count: item._count.id,
+          averagePrice: item._avg.price
+        };
+      });
+
+      // Step 4: Sort the results (e.g., by count in descending order)
+      formattedData.sort((a, b) => b.count - a.count);
+
+      res.json(formattedData);
+    } catch (error) {
+      console.error("Error fetching listings per category:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+  
+  async getSalesOverTime(req, res) {
+    try {
+        const salesOverTime = await prisma.sale.groupBy({
+            by: ['saleDate'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                saleDate: 'asc'
+            }
+        });
+
+        const formattedData = salesOverTime.map(sale => {
+            return {
+                date: sale.saleDate.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+                count: sale._count.id
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching sales over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }   
+  },
+
+  async getMessagesPerUser(req, res) {
+    try {
+        const messagesPerUser = await prisma.message.groupBy({
+            by: ['senderId'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                _count: {
+                    id: 'desc'
+                }
+            }
+        });
+
+        // Map the senderId to user details (e.g., firstName, lastName)
+        const detailedMessagesPerUser = await Promise.all(messagesPerUser.map(async (message) => {
+            const user = await prisma.user.findUnique({
+                where: { id: message.senderId },
+                select: { firstName: true, lastName: true }
+            });
+            return {
+                user: `${user.firstName} ${user.lastName}`,
+                count: message._count.id
+            };
+        }));
+
+        res.json(detailedMessagesPerUser);
+    } catch (error) {
+        console.error("Error fetching messages per user:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getConversationsOverTime(req, res) {
+    try {
+        const conversationsOverTime = await prisma.conversation.groupBy({
+            by: ['createdAt'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        });
+
+        const formattedData = conversationsOverTime.map(conversation => {
+            return {
+                date: conversation.createdAt.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+                count: conversation._count.id
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching conversations over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getUserActivityHeatMap(req, res) {
+    try {
+        // Aggregate user activity (e.g., messages sent) by day of week and hour
+        const userActivity = await prisma.message.groupBy({
+            by: [
+                'createdAt'
+            ],
+            _count: {
+                id: true
+            }
+        });
+
+        // Process data to fit the format required for a heat map
+        const heatMapData = userActivity.map(activity => {
+            return {
+                day: activity.createdAt.getDay(), // Day of the week
+                hour: activity.createdAt.getHours(), // Hour of the day
+                count: activity._count.id
+            };
+        });
+
+        res.json(heatMapData);
+    } catch (error) {
+        console.error("Error fetching user activity heat map data:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getActivitySalesCorrelation(req, res) {
+    try {
+        // Fetch user activity data (e.g., number of messages sent)
+        const userActivity = await prisma.message.groupBy({
+            by: ['senderId'],
+            _count: {
+                id: true
+            }
+        });
+
+        // Fetch sales data
+        const salesData = await prisma.sale.groupBy({
+            by: ['buyerId'],
+            _count: {
+                id: true
+            }
+        });
+
+        // Process and correlate the data
+        const correlationData = userActivity.map(activity => {
+            const sales = salesData.find(sale => sale.buyerId === activity.senderId) || { _count: { id: 0 } };
+            return {
+                userId: activity.senderId,
+                messagesSent: activity._count.id,
+                salesMade: sales._count.id
+            };
+        });
+
+        res.json(correlationData);
+    } catch (error) {
+        console.error("Error fetching activity-sales correlation data:", error);
         res.status(500).send('Server Error: ' + error.message);
     }
   },

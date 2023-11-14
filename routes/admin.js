@@ -18,8 +18,13 @@ router.get('/donation-status-distribution', authMiddlewareAdmin.requireLogin, ad
 router.get('/average-rating-per-entity', authMiddlewareAdmin.requireLogin, adminController.getAverageRatingPerEntity);
 router.get('/ratings-distribution', authMiddlewareAdmin.requireLogin, adminController.getRatingsDistribution); 
 router.get('/ad-interactions-over-time', authMiddlewareAdmin.requireLogin, adminController.getAdInteractionsOverTime); 
-router.get('/points-spent-on-ads', authMiddlewareAdmin.requireLogin, adminController.getPointsSpentOnAds);
-
+router.get('/points-spent-on-ads', authMiddlewareAdmin.requireLogin, adminController.getPointsSpentOnAds); 
+router.get('/listings-per-category', authMiddlewareAdmin.requireLogin, adminController.getListingsPerCategory);
+router.get('/sales-over-time', authMiddlewareAdmin.requireLogin, adminController.getSalesOverTime);
+router.get('/messages-per-user', authMiddlewareAdmin.requireLogin, adminController.getMessagesPerUser);
+router.get('/conversations-over-time', authMiddlewareAdmin.requireLogin, adminController.getConversationsOverTime);
+router.get('/user-activity-heatmap', authMiddlewareAdmin.requireLogin, adminController.getUserActivityHeatMap);
+router.get('/activity-sales-correlation', authMiddlewareAdmin.requireLogin, adminController.getActivitySalesCorrelation);
 
 router.get('/organizationmanagement', authMiddlewareAdmin.requireLogin,  adminController.getOrganizationManagement); 
 router.get('/viewdocuments', authMiddlewareAdmin.requireLogin,  adminController.viewDocuments);
