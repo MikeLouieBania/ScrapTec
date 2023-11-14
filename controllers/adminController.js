@@ -162,32 +162,53 @@ module.exports = {
 
   async getAverageRatingPerEntity(req, res) {
     try {
-        // Average rating for organizations
-        const averageRatingOrganizations = await prisma.feedback.groupBy({
-            by: ['organizationId'],
-            _avg: {
-                rating: true
-            },
-            where: {
-                organizationId: { not: { equals: "" } } // Assuming empty string is not a valid value
-            }
-        });
-
-        // Average rating for drop points
-        const averageRatingDropPoints = await prisma.feedback.groupBy({
-            by: ['dropPointId'],
-            _avg: {
-                rating: true
-            },
-            where: {
-                dropPointId: { not: { equals: "" } } // Assuming similar correction needed here
-            }
-        });
-
-        res.json({ organizations: averageRatingOrganizations, dropPoints: averageRatingDropPoints });
+      // Fetch all feedbacks
+      const feedbacks = await prisma.feedback.findMany({
+        select: {
+          rating: true,
+          organizationId: true,
+          dropPointId: true
+        }
+      });
+      
+      // Manual aggregation
+      const aggregatedRatings = {};
+      feedbacks.forEach(fb => {
+        const key = fb.organizationId || fb.dropPointId;
+        if (!aggregatedRatings[key]) {
+          aggregatedRatings[key] = { totalRating: 0, count: 0, type: fb.organizationId ? 'organization' : 'dropPoint' };
+        }
+        aggregatedRatings[key].totalRating += fb.rating;
+        aggregatedRatings[key].count++;
+      });
+  
+      // Fetch names and prepare response
+      const response = await Promise.all(Object.keys(aggregatedRatings).map(async key => {
+        const { totalRating, count, type } = aggregatedRatings[key];
+        const averageRating = totalRating / count;
+        let name;
+  
+        if (type === 'organization') {
+          const org = await prisma.organization.findUnique({
+            where: { id: key },
+            select: { organizationname: true }
+          });
+          name = org ? org.organizationname : 'Unknown Organization';
+        } else {
+          const dp = await prisma.dropPoint.findUnique({
+            where: { id: key },
+            select: { name: true }
+          });
+          name = dp ? dp.name : 'Unknown Drop Point';
+        }
+  
+        return { name, averageRating, count };
+      }));
+  
+      res.json(response);
     } catch (error) {
-        console.error("Error fetching average ratings:", error);
-        res.status(500).send('Server Error: ' + error.message);
+      console.error("Error fetching average ratings:", error);
+      res.status(500).send('Server Error: ' + error.message);
     }
   },
 
@@ -197,12 +218,86 @@ module.exports = {
             by: ['rating'],
             _count: {
                 rating: true
+            },
+            orderBy: {
+                rating: 'desc'
             }
         });
 
-        res.json(ratingsDistribution);
+        // Initialize an object with all ratings set to 0
+        let ratingsCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+        // Update counts based on the database response
+        ratingsDistribution.forEach(item => {
+            ratingsCount[item.rating] = item._count.rating;
+        });
+
+        // Convert to array format for Highcharts
+        const formattedData = Object.keys(ratingsCount).map(key => {
+            return { rating: key, count: ratingsCount[key] };
+        });
+
+        res.json(formattedData);
     } catch (error) {
         console.error("Error fetching ratings distribution:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }   
+  }, 
+
+  async getAdInteractionsOverTime(req, res) {
+    try {
+        const adInteractions = await prisma.adInteraction.groupBy({
+            by: ['clickedAt'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                clickedAt: 'asc'
+            }
+        });
+
+        // Format data for the line chart
+        const formattedData = adInteractions.map(interaction => {
+            return {
+                date: interaction.clickedAt.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+                count: interaction._count.id
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching ad interactions over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  }, 
+
+  async getPointsSpentOnAds(req, res) {
+    try {
+        const pointsSpent = await prisma.advertisement.groupBy({
+            by: ['organizationId'],
+            _sum: {
+                pointsSpent: true
+            },
+            include: {
+                organization: {
+                    select: {
+                        organizationname: true
+                    }
+                }
+            }
+        });
+
+        // Format data for the bar chart
+        const formattedData = pointsSpent.map(item => {
+            return {
+                organization: item.organization.organizationname,
+                pointsSpent: item._sum.pointsSpent || 0
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching points spent on ads:", error);
         res.status(500).send('Server Error: ' + error.message);
     }
   },

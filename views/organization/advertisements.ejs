@@ -244,17 +244,20 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
   <script>
     let interactionChart; // Global reference to the chart instance
 
     $(document).ready(function () {
       $('.view-chart-btn').on('click', function () {
-        var adId = $(this).data('ad-id'); 
+        var adId = $(this).data('ad-id');
         loadChart(adId);
       });
     });
 
-    function loadChart(adId) { 
+    function loadChart(adId) {
 
       // Destroy the previous chart instance if it exists
       if (interactionChart) {
@@ -264,23 +267,32 @@
       $.ajax({
         url: `/organization/${adId}/interactions`,
         type: 'GET',
-        success: function (data) { 
+        success: function (data) {
+          var labels = Object.keys(data);
+          var clickData = Object.values(data);
+
           var ctx = document.getElementById('modalChart').getContext('2d');
           interactionChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
-              labels: data.map(interaction => new Date(interaction.clickedAt).toLocaleDateString()),
+              labels: labels,     
               datasets: [{
-                label: 'Clicks',
-                data: data.map(interaction => 1), // Assuming each interaction is one click
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                label: 'Daily Clicks',
+                data: clickData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
+                borderWidth: 2,
+                fill: false,
               }]
             },
             options: {
               scales: {
-                y: { beginAtZero: true }
+                y: { beginAtZero: true },
+                x: { 
+                  time: {
+                    unit: 'day'
+                  }
+                }
               }
             }
           });

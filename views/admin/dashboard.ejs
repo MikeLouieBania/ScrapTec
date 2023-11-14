@@ -123,28 +123,29 @@
             <!-- Organization Insights Section -->
             <section id="organization-insights">
                 <h2>Organization Insights</h2>
-                <div id="organizations-by-verification-chart"></div>
-                <div id="organization-points-over-time-chart"></div>
+                <div id="organizations-by-verification-chart" style="width:100%; height:400px;"></div>
+                <div id="organization-points-over-time-chart" style="width:100%; height:400px;"></div>
             </section>
 
             <!-- Donation Analysis Section -->
             <section id="donation-analysis">
                 <h2>Donation Analysis</h2>
-                <div id="donations-over-time-chart"></div>
-                <div id="donation-status-distribution-chart"></div>
+                <div id="donations-over-time-chart" style="width:100%; height:400px;"></div>
+                <div id="donation-status-distribution-chart" style="width:100%; height:400px;"></div>
             </section>
 
             <!-- Feedback and Ratings Section -->
             <section id="feedback-ratings">
-                <h2>Feedback and Ratings</h2>
-                <div id="average-rating-chart"></div>
-                <div id="ratings-distribution-chart"></div>
+                <h2>Feedback and Ratings</h2>  
+                <div id="average-rating-bubble-chart" style="width:100%; height:400px;"></div>
+                <div id="ratings-distribution-chart" style="width:100%; height:400px;"></div>
             </section>
 
             <!-- Advertisement Performance Section -->
             <section id="advertisement-performance">
                 <h2>Advertisement Performance</h2>
-                <!-- Chart placeholders go here -->
+                <div id="ad-interactions-line-chart" style="width:100%; height:400px;"></div>
+                <div id="points-spent-bar-chart" style="width:100%; height:400px;"></div>
             </section>
 
             <!-- Sales and Listings Section -->
@@ -175,6 +176,7 @@
 
     <!-- Highcharts Library -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script> 
@@ -382,72 +384,149 @@
                         }]
                     });
                 });
+            
+            // Fetch and render average rating per organization or drop point
+            $.get('/admin/average-rating-per-entity', function(data) { 
+                if (Array.isArray(data) && data.length > 0) {
+                    Highcharts.chart('average-rating-bubble-chart', {
+                        chart: {
+                            type: 'bubble',
+                            plotBorderWidth: 1,
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: 'Average Ratings and Feedback Volume'
+                        },
+                        xAxis: {
+                            title: {
+                                text: 'Average Rating'
+                            },
+                            labels: {
+                                formatter: function() {
+                                    return this.value.toFixed(2); // Format to two decimal points
+                                }
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Feedback Count'
+                            }
+                        },
+                        tooltip: {
+                            pointFormat: '{point.name}: <b>{point.x} stars</b>, {point.y} feedbacks'
+                        },
+                        plotOptions: {
+                            bubble: {
+                                minSize: '10%',
+                                maxSize: '120%',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.name}: {point.y}'
+                                }
+                            }
+                        },
+                        series: [{
+                            data: data.map(item => ({
+                                x: parseFloat(item.averageRating.toFixed(2)),
+                                y: parseInt(item.count, 10),
+                                name: item.name
+                            })),
+                            name: 'Organizations & Drop Points'
+                        }]
+                    });
+                } else {
+                    console.error('No data received for average ratings');
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Error fetching average ratings:', textStatus, errorThrown);
+            });
 
-            // Fetch and render average rating per entity chart
-            $.get('/admin/average-rating-per-entity', function(data) {
-                let categories = [];
-                let seriesData = [];
+            // Fetch and render histogram for distribution of ratings
+            $.get('/admin/ratings-distribution', function(data) {
+                // Map the data to the format expected by Highcharts
+                const seriesData = data.map(item => item.count);
 
-                // Process organizations
-                data.organizations.forEach(org => {
-                    categories.push('Org: ' + org.organizationId);
-                    seriesData.push(org._avg.rating);
-                });
-
-                // Process drop points
-                data.dropPoints.forEach(dp => {
-                    categories.push('DP: ' + dp.dropPointId);
-                    seriesData.push(dp._avg.rating);
-                });
-
-                Highcharts.chart('average-rating-chart', {
-                    chart: {
-                        type: 'bar'
-                    },
-                    title: {
-                        text: 'Average Rating per Organization or Drop Point'
-                    },
+                Highcharts.chart('ratings-distribution-chart', {
+                    chart: { type: 'column' },
+                    title: { text: 'Distribution of Ratings' },
                     xAxis: {
-                        categories: categories
+                        categories: ['1', '2', '3', '4', '5'],
+                        crosshair: true,
+                        title: { text: 'Rating' }
                     },
                     yAxis: {
-                        title: {
-                            text: 'Average Rating'
+                        min: 0,
+                        title: { text: 'Number of Ratings' },
+                        stackLabels: {
+                            enabled: true,
+                            style: { fontWeight: 'bold', color: (Highcharts.defaultOptions.title.style && Highcharts.defaultOptions.title.style.color) || 'gray' }
                         }
                     },
                     series: [{
-                        name: 'Average Rating',
+                        name: 'Ratings',
                         data: seriesData
                     }]
                 });
             });
 
-            // Fetch and render ratings distribution chart
-            $.get('/admin/ratings-distribution', function(data) {
-                Highcharts.chart('ratings-distribution-chart', {
+            // Fetch and render line chart for advertisement interactions over time
+            $.get('/admin/ad-interactions-over-time', function(data) {
+                Highcharts.chart('ad-interactions-line-chart', {
                     chart: {
-                        type: 'column'
+                        type: 'line'
                     },
                     title: {
-                        text: 'Distribution of Ratings'
+                        text: 'Advertisement Interactions Over Time'
                     },
                     xAxis: {
-                        categories: data.map(item => item.rating.toString())
+                        type: 'category',
+                        categories: data.map(item => item.date),
+                        title: {
+                            text: 'Date'
+                        }
                     },
                     yAxis: {
                         title: {
-                            text: 'Number of Ratings'
+                            text: 'Number of Interactions'
                         }
                     },
                     series: [{
-                        name: 'Ratings',
-                        data: data.map(item => item._count.rating)
+                        name: 'Interactions',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+
+            // Fetch and render bar chart for points spent on advertisements by organization
+            $.get('/admin/points-spent-on-ads', function(data) {
+                Highcharts.chart('points-spent-bar-chart', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Points Spent on Advertisements by Organization'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        categories: data.map(item => item.organization),
+                        title: {
+                            text: 'Organization'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Points Spent'
+                        }
+                    },
+                    series: [{
+                        name: 'Points Spent',
+                        data: data.map(item => item.pointsSpent)
                     }]
                 });
             });
 
 
-            
         });
 
     </script>
