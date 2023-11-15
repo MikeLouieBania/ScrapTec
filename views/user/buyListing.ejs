@@ -8,82 +8,204 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="slick/slick.css">
     <link rel="stylesheet" type="text/css" href="slick/slick-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .page-title {
-            font-size: 24px;
-            margin-bottom: 20px;
+        body{
+            font-family: 'Poppins', sans-serif;
         }
 
-        .listing-container {
-            gap: 20px;
+        /* Navigation Bar Styles */
+        .navbar.navbar-expand-lg.navbar-light.bg-light {
+            background-color: #219ebc !important;
+            padding: 10px 0;
         }
-
-        .card-image-container {
-            border-radius: 50%;
-            overflow: hidden;
-            width: 80px;
-            height: 80px;
+        
+        .navbar .nav-link {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            margin: 0 10px;
+            position: relative;
+            transition: all .5s;
         }
-
-        .card-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        
+        .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #8ecae6;
+            transform: scaleX(0);
+            transition: transform 0.5s;
         }
-
-        .card-details {
-            flex: 1;
-            margin-left: 20px;
+        
+        .navbar .nav-link:hover::after {
+            transform: scaleX(1);
         }
-
-        .edit-button,
-        .delete-button,
-        .rate-button {
-            margin-top: 10px;
+        
+        .navbar-brand {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: -0.5px; /* Align with .nav-link */
+            margin-left: 15px;
+        }
+        
+        .navbar-light .navbar-toggler-icon {
+            background-color: white;
+        }
+        
+        /* Custom Logout Button Style */
+        .btn-outline-success {
+            background-color: #002244 !important;
+            border: none;
+            padding: 10px 20px;
             border-radius: 5px;
-            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+            font-weight: bold;
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+        }
+        
+        .btn-outline-success:hover {
+            background-color: #6082B6 !important;
+            color: #fff !important;
+            text-decoration: none;
         }
 
-        .edit-button:hover,
-        .delete-button:hover,
-        .rate-button:hover {
-            filter: brightness(90%);
+        /* Page title styling */
+        .page-title {
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center; /* Center the title if that fits your design */
         }
 
+        /* Card container styling */
+        .listing-container .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem; /* Rounded corners for the cards */
+            overflow: hidden; /* Ensures the content does not flow outside the card's border-radius */
+            transition: transform 0.3s ease-in-out; /* Animation on hover */
+        }
+
+        .listing-container .card:hover {
+            transform: translateY(-5px); /* Slight lift effect on hover */
+        }
+
+        /* Card image styling */
+        .card-image-container {
+            width: 100%; /* Full width of the container */
+            padding: 0.5rem; /* Padding around the image */
+        }
+
+        .card-img-top {
+            width: 100%; /* Full width to fit container */
+            height: auto; /* Maintain aspect ratio */
+            object-fit: cover; /* Cover the frame, might crop the image */
+            border-radius: 0.25rem; /* Rounded corners for the images */
+        }
+
+        /* Card body styling */
+        .card-body {
+            padding: 1rem; /* Padding inside the card */
+        }
+
+        .card-body h5 {
+            color: #007bff; /* Theme color for the title */
+            margin-bottom: 1rem;
+        }
+
+        .card-body .card-text {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Ratings and stars styling */
         .rating {
             display: flex;
             align-items: center;
         }
 
-        .rating span {
-            color: #FFD700;
-            font-size: 24px;
-            margin-right: 5px;
+        .rating > span {
+            color: #ffc107; /* Gold color for stars */
+            margin-right: 0.25rem;
         }
+
+        .rating-comment {
+            flex-grow: 1;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Style for the submit rating button */
+        .rate-button {
+            width: 100%; /* Full width button */
+        }
+
+        /* Form elements within the card */
+        .form-control {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Style for predefined comments dropdown */
+        #predefined-comments {
+            background: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 0.75rem; /* Smaller padding on smaller screens */
+            }
+            
+            .rate-button {
+                padding: 0.5rem 1rem; /* Adjust padding for smaller screens */
+            }
+        }
+
     </style>
 </head>
 
 <body>
     <header>
+        <!--Navigation Bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Marketplace</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/user/marketplace">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/user/inbox">Inbox</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/user/buyListing">Buying</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/sellListing">Selling</a>
+                    </li>
                 </ul>
+                <form class="form-inline my-2 my-lg-0" action="/user/logout" method="POST">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+                </form>
             </div>
-            <form action="/user/logout" method="POST">
-                <button type="submit" class="btn btn-outline-primary">LOGOUT</button>
-            </form>
         </nav>
     </header>
 
@@ -168,7 +290,6 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="slick/slick.min.js"></script>
     <script>
         $(document).ready(function () {
             $(".image-slider").slick({

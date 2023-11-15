@@ -9,10 +9,284 @@
     </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
 </head>
+<style>
+    body{
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Navigation Bar Styles */
+    .navbar.navbar-expand-lg.navbar-light.bg-light {
+        background-color: #219ebc !important;
+        padding: 10px 0;
+    }
+    
+    .navbar .nav-link {
+        color: white !important;
+        font-family: 'Roboto Slab', serif,;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 15px;
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        text-transform: uppercase;
+        margin: 0 10px;
+        position: relative;
+        transition: all .5s;
+    }
+    
+    .navbar .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #8ecae6;
+        transform: scaleX(0);
+        transition: transform 0.5s;
+    }
+    
+    .navbar .nav-link:hover::after {
+        transform: scaleX(1);
+    }
+    
+    .navbar-brand {
+        color: white !important;
+        font-family: 'Roboto Slab', serif,;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: -0.5px; /* Align with .nav-link */
+        margin-left: 15px;
+    }
+    
+    .navbar-light .navbar-toggler-icon {
+        background-color: white;
+    }
+    
+    /* Custom Logout Button Style */
+    .btn-outline-success {
+        background-color: #002244 !important;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        margin-right: 20px;
+        font-weight: bold;
+        color: white !important;
+        font-family: 'Roboto Slab', serif,;
+    }
+    
+    .btn-outline-success:hover {
+        background-color: #6082B6 !important;
+        color: #fff !important;
+        text-decoration: none;
+    }
+
+        /* Base container styles */
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Headings and text */
+        h2, h5 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        .btn {
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-outline-primary {
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            box-shadow: none; /* Optional: remove if you prefer a shadow */
+        }
+
+        /* Forms and inputs */
+        form {
+            margin-top: 1rem;
+        }
+
+        form .form-control {
+            border-radius: 0.25rem;
+            border: 1px solid #ced4da;
+        }
+
+        form .btn-primary {
+            width: 100%; /* Full width button */
+            margin-top: 1rem; /* Spacing after the textarea */
+        }
+
+        /* Increase margin-top for the carousel-container */
+        .carousel-container {
+            margin-top: 80px; /* Adjust the value as needed to move the container down */
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        /* Carousel Inner Image styling */
+        .carousel-inner img {
+            max-height: 300px; /* Maximum height for images */
+            width: auto; /* Auto width for maintaining aspect ratio */
+            margin: auto; /* Center image horizontally */
+            object-fit: contain; /* Ensure the image fits well within the container */
+        }
+
+        /* Style for the carousel */
+        .carousel {
+            margin-bottom: 15px; /* Spacing below the carousel */
+        }
+
+        /* Ensure that the carousel controls are positioned correctly */
+        .carousel-control-prev, .carousel-control-next {
+            width: 5%; /* Control width */
+        }
+
+
+        /* Maps and images */
+        #map {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        /* Suggested messages */
+        .suggested-messages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem; /* Spacing between buttons */
+        }
+
+        /* Listing description */
+        .listing-description {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        /* Media query for mobile screens */
+        @media (max-width: 576px) {
+            .btn {
+                width: 100%; /* Full-width buttons on mobile */
+                margin-right: 0;
+            }
+
+            .suggested-messages {
+                flex-direction: column; /* Stack the buttons on mobile */
+            }
+        }
+                /* Style for the send message form */
+        #send-message-form {
+            display: flex;
+            flex-wrap: wrap; /* Allows for wrapping on smaller screens */
+            align-items: stretch; /* Stretches items to fill the container */
+        }
+
+                /* Directly target the textarea within the form with ID */
+        #send-message-form textarea.form-control {
+            flex: 1; /* Flex grow to take available space */
+            margin-bottom: 0;
+            margin-left: 10px; /* Space between textarea and button */
+        }
+
+        /* Directly target the button within the form with ID */
+        #send-message-form button[type="submit"] {
+            flex: 0 0 auto; /* Do not grow or shrink */
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .contact-seller{
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            #send-message-form textarea.form-control,
+            #send-message-form button[type="submit"] {
+                margin-right: 0;
+                width: calc(100% - 20px); /* Full width minus padding */
+            }
+        }
+
+
+</style>
 
 <body>
+    <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/marketplace">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/inbox">Inbox</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/buyListing">Buying</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/sellListing">Selling</a>
+            </li>
+        </ul>
+        <form class="form-inline" action="/user/logout" method="POST">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+        </form>
+    </div>
+</nav>
+
+
+
+
+
     <div class="container mt-5">
         <h2 class="mb-3">
             <%= listing.title %>
@@ -50,11 +324,12 @@
                 </p>
             </div>
             <div class="col-md-6">
+                <div class="carousel-container">
                 <div id="carousel<%= listing.id %>" class="carousel slide mb-4" data-ride="carousel">
                     <div class="carousel-inner">
                         <% listing.photos.forEach(function(photo, index) { %>
                             <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                <img class="d-block w-100" style="max-height: 400px;" src="<%= photo.imageUrl %>"
+                                <img class="d-block w-100" style="max-height: 300px; max-width: 300px; " src="<%= photo.imageUrl %>"
                                     alt="<%= listing.title %>">
                             </div>
                             <% }) %>
@@ -93,7 +368,7 @@
                     <form id="send-message-form">
                         <input type="hidden" name="listing_id" value="<%= listing.id %>">
                         <textarea name="message" rows="4" class="form-control mb-3"
-                            placeholder="Type your message to the seller..."></textarea>
+                            placeholder="Type your message to the seller..." style="width: 300px;"></textarea>
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
 
