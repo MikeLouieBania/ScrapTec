@@ -92,6 +92,47 @@
       <div class="container">
         <!-- Add the content of the admin dashboard here -->
         <h1>User Management</h1> 
+        <div class="main-content ml-200">
+            <div class="container">
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th colspan="6" class="w-75 text-left">User Management</th>
+                            <th class="text-right w-25">
+                                <!-- Button for adding a user, if needed -->
+                                <button type="button" class="btn btn-primary">Add User</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>City</th>
+                            <th>Gender</th>
+                            <th>Contact Number</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.id %></td>
+                            <td><%= user.firstName %> <%= user.lastName %></td>
+                            <td><%= user.email %></td>
+                            <td><%= user.city.name %></td> <!-- Assuming 'city' has a 'name' property -->
+                            <td><%= user.gender %></td>
+                            <td><%= user.contactNumber %></td>
+                            <td>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <!-- Pagination here -->
+            </div>
+        </div>
       </div>
 
       
