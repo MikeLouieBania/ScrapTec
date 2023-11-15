@@ -6,107 +6,206 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account | Marketplace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #f4f7fa;
-            margin-top: 20px;
+
+        body{
+            font-family: 'Poppins', sans-serif;
         }
-        .navbar {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+
+        /* Navigation Bar Styles */
+        .navbar.navbar-expand-lg.navbar-light.bg-light {
+            background-color: #219ebc !important;
+            padding: 10px 0;
         }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        
+        .navbar .nav-link {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            margin: 0 10px;
+            position: relative;
+            transition: all .5s;
         }
-        .profile-img {
-            max-width: 100%; /* Ensure the image is no wider than the container */
-            max-height: 100%; /* Ensure the image is no taller than the container */
-            height: auto; /* Maintain aspect ratio */
-            width: auto; /* Maintain aspect ratio */
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 0 auto;
-            display: flex; /* Added display flex */
-            align-items: center; /* Align items vertically */
-            justify-content: center; /* Center the image horizontally */
+        
+        .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #8ecae6;
+            transform: scaleX(0);
+            transition: transform 0.5s;
         }
-        .profile-img img {
-            max-width: 100%; /* Ensure the image is no wider than the container */
-            max-height: 100%; /* Ensure the image is no taller than the container */
-            height: auto; /* Maintain aspect ratio */
-            width: auto; /* Maintain aspect ratio */
+        
+        .navbar .nav-link:hover::after {
+            transform: scaleX(1);
         }
-        .account-settings .user-profile {
-            margin-top: 20px;
-            margin-bottom: 20px;
+        
+        .navbar-brand {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: -0.5px; /* Align with .nav-link */
+            margin-left: 15px;
         }
-        .account-settings .about {
-            margin-top: 2rem;
-            padding: 20px;
-            background: #f8f9fa;
+        
+        .navbar-light .navbar-toggler-icon {
+            background-color: white;
         }
-        .card {
+        
+        /* Custom Logout Button Style */
+        .btn-outline-success {
+            background-color: #002244 !important;
             border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+            font-weight: bold;
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
         }
-        .card .card-header {
-            background-color: #fff;
-            border-bottom: none;
-            padding: 3rem 2rem;
-            border-bottom: 1px solid #e6e6f2;
-            border-top-left-radius: .25rem;
-            border-top-right-radius: .25rem;
-        }
-        .card-header:first-child {
-            border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
-        }
-        .card .card-body {
-            padding: 2rem;
-            background: #f8f9fa;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .btn-link {
-            font-weight: 600;
-            color: #007bff;
-        }
-        .btn-link:hover {
-            color: #0056b3;
+        
+        .btn-outline-success:hover {
+            background-color: #6082B6 !important;
+            color: #fff !important;
             text-decoration: none;
         }
+
+                
+                /* Container and Row */
+        .container {
+            margin-top: 2rem; /* Add space from the top */
+        }
+
+        /* Card General Styles */
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
+            border-radius: 0.5rem; /* Rounded corners */
+        }
+
+        .card-header {
+            background-color: #219ebc; /* Theme color for headers */
+            color: white; /* White text for contrast */
+            border-radius: 0.5rem 0.5rem 0 0; /* Rounded corners for the header top */
+            padding: 0.75rem 1.25rem; /* Padding for the header */
+            display: flex; /* Makes the header a flex container */
+            flex-direction: column; /* Align children vertically */
+            align-items: center; /* Center children horizontally */
+            justify-content: center; /* Center children vertically if the header has a fixed height */
+        }
+
+        .card-body {
+            padding: 1.25rem; /* Spacing inside the card */
+        }
+
+        /* Profile Image Styles */
+        .profile-img img {
+            width: 100px; /* Fixed size */
+            height: 100px; /* Fixed size */
+            border-radius: 50%; /* Circle shape */
+            object-fit: cover; /* Cover the holder without stretching */
+            border: 3px solid #dee2e6; /* Border to distinguish from the background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            margin-bottom: 1rem; /* Space below the image */
+        }
+
+        /* User Profile Information Styles */
+        .user-profile h5 {
+            color: #72A0C1 !important; /* A lighter shade of the header background for harmony */
+            font-weight: bold;
+            margin-bottom: 1rem; /* Space below the name */
+        }
+
+        .user-profile p {
+            color: #6c757d; /* Muted text for less important info */
+        }
+
+        .user-profile .btn-link {
+            color: #219ebc; /* Theme color */
+            text-decoration: none; /* Remove underline */
+        }
+
+        .user-profile .btn-link:hover {
+            color: #107c91; /* Darker shade on hover */
+        }
+
+        /* Account Settings Styles */
+        .card-header h4 {
+            font-size: 1.5rem; /* Slightly larger font size for sub-headers */
+        }
+
+        .text-secondary {
+            color: #495057; /* Darker grey for readability */
+        }
+
+        h6 {
+            font-size: 1rem; /* Ensure h6 size is not too large */
+            color: #343a40; /* Slightly darker for emphasis */
+            margin-bottom: 0.5rem; /* Space below the section headers */
+        }
+
+        hr {
+            margin: 1rem 0; /* Spacing around horizontal rules */
+        }
+
+        /* Ratings List Styles */
+        .list-group-item {
+            border: none; /* Remove borders for a cleaner look */
+            padding: 0.5rem 1rem; /* Smaller padding for compactness */
+        }
+
+        .list-group-item strong {
+            color: #212529; /* Strong color for the rater's name */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px; /* Padding on smaller screens */
+            }
+
+            .profile-img img {
+                width: 80px; /* Smaller image on mobile */
+                height: 80px;
+            }
+        }
+
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="/user/dashboard">Marketplace</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/marketplace">Marketplace</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/user/useraccount">My Account</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" method="post" action="/user/logout">
-                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Logout</button>
-            </form>
-        </div>
-    </nav>
+    <!-- Navigation Bar -->
+   <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/marketplace">Marketplace</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/useraccount">My Account</a>
+            </li>
+        </ul>
+        <form class="form-inline" action="/user/logout" method="POST">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+        </form>
+    </div>
+</nav>
 
     <div class="container">
         <div class="row">

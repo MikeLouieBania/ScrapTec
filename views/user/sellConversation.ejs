@@ -5,105 +5,247 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selling Conversation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .sidenav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
+        body{
+            font-family: 'Poppins', sans-serif;
         }
 
-        .sidenav a,
-        .sidenav button {
-            padding: 10px 15px 10px 30px;
-            text-decoration: none;
-            font-size: 25px;
-            color: white;
+        /* Navigation Bar Styles */
+        .navbar.navbar-expand-lg.navbar-light.bg-light {
+            background-color: #219ebc !important;
+            padding: 10px 0;
+        }
+        
+        .navbar .nav-link {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
             display: block;
-            transition: 0.3s;
-            background-color: transparent;
+            padding: 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            margin: 0 10px;
+            position: relative;
+            transition: all .5s;
+        }
+        
+        .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #8ecae6;
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+        
+        .navbar .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: -0.5px; /* Align with .nav-link */
+            margin-left: 15px;
+        }
+        
+        .navbar-light .navbar-toggler-icon {
+            background-color: white;
+        }
+        
+        /* Custom Logout Button Style */
+        .btn-outline-success {
+            background-color: #002244 !important;
             border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+            font-weight: bold;
+            color: white !important;
+            font-family: 'Roboto Slab', serif,;
+        }
+        
+        .btn-outline-success:hover {
+            background-color: #6082B6 !important;
+            color: #fff !important;
+            text-decoration: none;
         }
 
-        .sidenav a:hover,
-        .sidenav button:hover {
-            color: #f1f1f1;
-            background-color: transparent;
-        }
-
-        #main {
-            transition: margin-left .5s;
-            padding: 16px;
-            padding-top: 60px;
-            /* Adjust this value as needed */
+        /* General styling for the container */
+        .container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #messages-container {
-            height: calc(100vh - 200px);
-            /* Adjust the 200px to account for header/footer height */
-            overflow-y: auto;
-            padding-bottom: 20px;
-            /* Space at the bottom */
+            width: calc(100% - 30px);
+            margin-bottom: 20px;
+            padding-right: 30px; /* Increase padding to account for the scrollbar */
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: white;
+            border-radius: 10px;
+            max-height: 500px;
+            overflow-y: auto; /* Scrollbar as needed */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
+        }
+        
+        /* Ensure the container doesn't change width when scrollbar appears or disappears */
+        #messages-container::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 13px; /* Width of the scrollbar */
+        }
+        
+        #messages-container::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            border: 3px solid white; /* Should match background */
+            background-color: rgba(0, 0, 0, .5);
+        }
+        
+
+
+        /* Common styles for both message types */
+    .my-message, .their-message {
+        position: relative;
+        padding: 10px 15px;
+        border-radius: 15px;
+        margin-bottom: 10px;
+        max-width: 50%;
+        word-break: break-word; /* To prevent long text from overflowing */
+    }
+
+    /* Styles for your messages */
+    .my-message {
+        background-color: #dcf8c6; /* Light green background for your messages */
+        margin-left: auto; /* Align to right */
+    }
+
+    /* Styles for their messages */
+    .their-message {
+        background-color: #e5e5ea; /* Light gray background for their messages */
+        margin-right: auto; /* Align to left */
+    }
+
+    /* Adding the 'tail' to the speech bubble */
+    .my-message::after, .their-message::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+    }
+
+    /* Tail for your messages */
+    .my-message::after {
+        right: -10px; /* Positioned to the right */
+        border-width: 10px 0 10px 10px;
+        border-color: transparent transparent transparent #dcf8c6; /* Same as .my-message background */
+    }
+
+    /* Tail for their messages */
+    .their-message::after {
+        left: -10px; /* Positioned to the left */
+        border-width: 10px 10px 10px 0;
+        border-color: transparent #e5e5ea transparent transparent; /* Same as .their-message background */
+    }
+
+        /* Styling for the form */
+        form#message-form-seller {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
         }
 
-        .my-message {
-            background-color: #e6f7ff;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 0 10px 10px 0;
-            float: right;
-            clear: both;
-            max-width: 80%;
-            margin-bottom: 10px;
-            /* Ensure spacing between messages */
+        /* Styling for buttons and icons */
+        button[type="submit"], button#load-older-messages, button#load-newer-messages {
+            background: transparent;
+            border: none;
+            color: #007bff;
         }
 
-        .their-message {
-            background-color: #ffebcc;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 10px 0 0 10px;
-            clear: both;
-            max-width: 80%;
-            margin-bottom: 10px;
-            /* Ensure spacing between messages */
+        button[type="submit"]:hover, button#load-older-messages:hover, button#load-newer-messages:hover {
+            color: #0056b3;
+        }
+        .btn-primary {
+            float: right; /* Align button to the right */
+            margin-top: 2px; /* Adjust top margin as needed */
         }
 
-        .timestamp {
-            font-size: 12px;
-            color: gray;
-            float: right;
+        /* File input field */
+        input[type="file"] {
+            display: none;
         }
 
-        .message-buttons {
+        /* Custom file label */
+        .file-label {
             margin-top: 10px;
+            background-color: #72A0C1;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
         }
+
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+
+        /* Timestamp styling */
+        .timestamp {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
     </style>
 </head>
 
 <body>
 
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="/user/marketplace">Home</a>
-        <a href="/user/inbox">Inbox</a>
-        <a href="/user/buyListing">Buying</a>
-        <a href="/user/sellListing">Selling</a>
-
-        <form action="/user/logout" method="POST">
-            <button type="submit" class="nav-link">LOGOUT</button>
+   <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/marketplace">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/inbox">Inbox</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/buyListing">Buying</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/sellListing">Selling</a>
+            </li>
+        </ul>
+        <form class="form-inline" action="/user/logout" method="POST">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
         </form>
     </div>
-
-    <div id="main">
-        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+</nav>
 
         <div class="container mt-5">
             <h3>Selling Conversation about: <%= conversation.listing.title %>
@@ -172,10 +314,14 @@
                                 <textarea name="message" class="form-control"
                                     placeholder="Type your message..."></textarea>
 
-                                <input type="file" name="image" accept="image/*">
-                                <div class="message-buttons mt-3">
+                                <!-- File Input and Label -->
+                                <input type="file" name="image" id="file-input" accept="image/*">
+                                <label for="file-input" class="file-label">
+                                    <i class="fa fa-upload"></i> Choose File</label>
 
-                                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+                                    <!-- Send Button -->
+                                <button type="submit" class="btn btn-primary mt-2">
+                                    <i class="fa fa-paper-plane"></i> Send </button>
 
                                     <!-- Dropdown for More Options -->
                                     <div class="btn-group mt-2">
@@ -366,6 +512,20 @@
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("main").style.marginLeft = "0";
         }
+
+       // Before loading old messages
+        var scrollPos = document.getElementById('messages-container').scrollTop;
+
+        // Load old messages...
+
+        // After messages have been loaded
+        setTimeout(function() {
+            document.getElementById('messages-container').scrollTop = scrollPos;
+        }, 0); // Timeout ensures it runs after the DOM has updated
+
+
+
+        
     </script>
 
 </body>
