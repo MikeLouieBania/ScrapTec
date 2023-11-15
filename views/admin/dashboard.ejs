@@ -10,6 +10,12 @@
     <!-- Link to Google's Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Mapbox CSS -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+
+    <!-- Mapbox JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+
     <style>
         /* Additional custom styles for the page */
         body {
@@ -88,6 +94,48 @@
             margin-bottom: 20px;
             color: #007BFF; /* Main blue */
         }
+
+        .sidebar a button {
+            background: none;
+            border: none;
+            color: inherit;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        /* Chart Container Improvements */
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        /* Chart Styling */
+        .chart {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+            height: 400px;
+        }
+
+        .section-title {
+            color: #007BFF;
+            margin-bottom: 30px;
+        }
+
+        #users-by-city-chart {
+            height: 800px; /* Adjust height for the map */
+        }
+
+
+        /* Responsive Main Content */
+        @media (min-width: 768px) {
+            .main-content {
+                padding-left: 200px; /* Adjust for expanded sidebar */
+            }
+        }
     </style>
 </head>
 
@@ -108,17 +156,708 @@
     </div>
 
     
-    <!-- Main content -->
+     <!-- Main content -->
     <div class="main-content">
-        <div class="container">
-            <h1>Admin Dashboard</h1>
-            <!-- Add your content here -->
+        <div class="container-fluid">
+            <h1 class="section-title">Admin Dashboard</h1>
+
+            <!-- User Demographics and Activity -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div id="gender-distribution-chart" class="chart"></div>
+                    <div id="user-signups-chart" class="chart mt-4"></div>
+                </div>
+                <div class="col-lg-6">
+                    <div id="users-by-city-chart" class="chart"></div>
+                </div>
+            </div>
+
+            <!-- Organization Insights -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Organization Insights</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="organizations-by-verification-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="organization-points-over-time-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+
+            <!-- Donation Analysis  -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Donation Analysis</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="donations-over-time-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="donation-status-distribution-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+
+            <!-- Feedback and Ratings -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Feedback and Ratings</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="average-rating-bubble-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="ratings-distribution-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div> 
+            </div>  
+
+            <!-- Advertisement Performance -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Advertisement Performance</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="ad-interactions-line-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="points-spent-bar-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div> 
+            </div>  
+
+            <!-- Sales and Listings -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Sales and Listings</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="listings-per-category-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="sales-over-time-chart" class="chart"></div>
+                        </div>
+                    </div>
+                </div>  
+            </div>   
+
+            <!-- Message and Conversation Insights Section -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">Message and Conversation Insights</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="messages-per-user-chart" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="conversations-over-time-chart" class="chart"></div> 
+                        </div>
+                    </div>
+                </div>  
+            </div>   
+
+            <!-- General Analytics Section -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="section-title">General Analytics</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="user-activity-heatmap" class="chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="activity-sales-correlation-chart" class="chart"></div> 
+                        </div>
+                    </div>
+                </div>  
+            </div>   
         </div>
     </div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) --> 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Highcharts Library -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script> 
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Mapbox
+            mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw'; // Replace with your Mapbox access token
+            var map = new mapboxgl.Map({
+                container: 'users-by-city-chart', // Container ID
+                style: 'mapbox://styles/mapbox/light-v10', // Map style
+                center: [121.7740, 12.8797], // Center on the Philippines
+                zoom: 5, // Zoom level
+                maxBounds: [[116.0, 4.0], [127.0, 21.0]]
+            });
+
+            map.addControl(new mapboxgl.NavigationControl()); // Add zoom and rotation controls
+            map.addControl(new mapboxgl.FullscreenControl()); // Add fullscreen control
+
+            // Fetch and render gender distribution chart
+            $.get('/admin/gender-distribution', function(data) {
+                Highcharts.chart('gender-distribution-chart', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Gender Distribution'
+                    },
+                    series: [{
+                        name: 'Users',
+                        colorByPoint: true,
+                        data: data.map(item => {
+                            return {
+                                name: item.gender,
+                                y: item._count.gender
+                            };
+                        })
+                    }]
+                });
+            });
+
+            // Fetch and render user signups chart
+            $.get('/admin/user-signups', function(data) {
+                Highcharts.chart('user-signups-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'User Sign-ups Over Time'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Sign-ups'
+                        },
+                        allowDecimals: false, 
+                        min: 0, 
+                        tickInterval: 1 
+                    },
+                    series: [{
+                        name: 'Sign-ups',
+                        data: data.map(item => {
+                            return [new Date(item.date).getTime(), item.count];
+                        })
+                    }]
+                });
+            });
+
+            // Fetch and render users by city 
+            $.get('/admin/users-by-city', function(data) {
+                data.forEach(city => {
+                    var geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(city.name)}.json?access_token=pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw&limit=1`;
+
+                    $.getJSON(geocodingUrl, function(geocodeData) {
+                        if (geocodeData.features && geocodeData.features.length > 0) {
+                            var coordinates = geocodeData.features[0].center;
+
+                            var popup = new mapboxgl.Popup({ offset: 25, closeButton: false })
+                                .setText(`Users in ${city.name}: ${city._count.users}`);
+
+                            var marker = new mapboxgl.Marker()
+                                .setLngLat(coordinates)
+                                .setPopup(popup)
+                                .addTo(map);
+
+                            marker.getElement().addEventListener('mouseenter', () => marker.togglePopup());
+                            marker.getElement().addEventListener('mouseleave', () => marker.togglePopup());
+                        }
+                    }).fail(function() {
+                        console.error("Error fetching geocode data for city: " + city.name);
+                    });
+                });
+            });      
+                        
+
+
+            // Fetch and render organizations by verification status chart
+            $.get('/admin/organizations-by-verification', function(data) {
+                Highcharts.chart('organizations-by-verification-chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Organizations by Verification Status'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.verificationStatus),
+                        title: {
+                            text: 'Verification Status'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of Organizations'
+                        }
+                    },
+                    series: [{
+                        name: 'Organizations',
+                        data: data.map(item => item._count.verificationStatus)
+                    }]
+                });
+            });
+
+            // Fetch and render organization points over time chart
+            $.get('/admin/organization-points-over-time', function(data) {
+                Highcharts.chart('organization-points-over-time-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Total Points Accumulated by Organizations Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date),
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Total Points'
+                        }
+                    },
+                    series: [{
+                        name: 'Total Points',
+                        data: data.map(item => item.totalPoints)
+                    }]
+                });
+            });
+       
+            // Fetch and render donations over time chart
+            $.get('/admin/donations-over-time', function(data) {
+                Highcharts.chart('donations-over-time-chart', {
+                    chart: {
+                        type: 'area'
+                    },
+                    title: {
+                        text: 'Donations Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date)
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Donations'
+                        }
+                    },
+                    series: [{
+                        name: 'Donations',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+            
+            // Fetch and render donation status distribution chart
+            $.get('/admin/donation-status-distribution', function(data) {
+                    Highcharts.chart('donation-status-distribution-chart', {
+                        chart: {
+                            type: 'pie'
+                        },
+                        title: {
+                            text: 'Donation Status Distribution'
+                        },
+                        series: [{
+                            name: 'Donations',
+                            colorByPoint: true,
+                            data: data.map(item => {
+                                return {
+                                    name: item.status,
+                                    y: item._count.status
+                                };
+                            })
+                        }]
+                    });
+                });
+            
+            // Fetch and render average rating per organization or drop point
+            $.get('/admin/average-rating-per-entity', function(data) { 
+                if (Array.isArray(data) && data.length > 0) {
+                    Highcharts.chart('average-rating-bubble-chart', {
+                        chart: {
+                            type: 'bubble',
+                            plotBorderWidth: 1,
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: 'Average Ratings and Feedback Volume'
+                        },
+                        xAxis: {
+                            title: {
+                                text: 'Average Rating'
+                            },
+                            labels: {
+                                formatter: function() {
+                                    return this.value.toFixed(2); // Format to two decimal points
+                                }
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Feedback Count'
+                            }
+                        },
+                        tooltip: {
+                            pointFormat: '{point.name}: <b>{point.x} stars</b>, {point.y} feedbacks'
+                        },
+                        plotOptions: {
+                            bubble: {
+                                minSize: '10%',
+                                maxSize: '120%',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.name}: {point.y}'
+                                }
+                            }
+                        },
+                        series: [{
+                            data: data.map(item => ({
+                                x: parseFloat(item.averageRating.toFixed(2)),
+                                y: parseInt(item.count, 10),
+                                name: item.name
+                            })),
+                            name: 'Organizations & Drop Points'
+                        }]
+                    });
+                } else {
+                    console.error('No data received for average ratings');
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Error fetching average ratings:', textStatus, errorThrown);
+            });
+
+            // Fetch and render histogram for distribution of ratings
+            $.get('/admin/ratings-distribution', function(data) {
+                // Map the data to the format expected by Highcharts
+                const seriesData = data.map(item => item.count);
+
+                Highcharts.chart('ratings-distribution-chart', {
+                    chart: { type: 'column' },
+                    title: { text: 'Distribution of Ratings' },
+                    xAxis: {
+                        categories: ['1', '2', '3', '4', '5'],
+                        crosshair: true,
+                        title: { text: 'Rating' }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: { text: 'Number of Ratings' },
+                        stackLabels: {
+                            enabled: true,
+                            style: { fontWeight: 'bold', color: (Highcharts.defaultOptions.title.style && Highcharts.defaultOptions.title.style.color) || 'gray' }
+                        }
+                    },
+                    series: [{
+                        name: 'Ratings',
+                        data: seriesData
+                    }]
+                });
+            });
+
+            // Fetch and render line chart for advertisement interactions over time
+            $.get('/admin/ad-interactions-over-time', function(data) {
+                Highcharts.chart('ad-interactions-line-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Advertisement Interactions Over Time'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        categories: data.map(item => item.date),
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Interactions'
+                        }
+                    },
+                    series: [{
+                        name: 'Interactions',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+
+            // Fetch and render bar chart for points spent on advertisements by organization
+            $.get('/admin/points-spent-on-ads', function(data) {
+                Highcharts.chart('points-spent-bar-chart', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Points Spent on Advertisements by Organization'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        categories: data.map(item => item.organization),
+                        title: {
+                            text: 'Organization'
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Points Spent'
+                        }
+                    },
+                    series: [{
+                        name: 'Points Spent',
+                        data: data.map(item => item.pointsSpent)
+                    }]
+                });
+            });
+
+            // Fetch and render column chart for number of listings per category
+            $.get('/admin/listings-per-category', function(data) {
+                // Assuming Highcharts is used
+                Highcharts.chart('listings-per-category-chart', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Number of Listings per Category'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.category)
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of Listings'
+                        }
+                    },
+                    series: [{
+                        name: 'Listings',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+
+            // Fetch and render line chart for sales over time
+            $.get('/admin/sales-over-time', function(data) {
+                Highcharts.chart('sales-over-time-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Sales Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date)
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Sales'
+                        }
+                    },
+                    series: [{
+                        name: 'Sales',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+            
+            // Fetch and render bar chart for number of messages sent per user
+            $.get('/admin/messages-per-user', function(data) {
+                Highcharts.chart('messages-per-user-chart', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Number of Messages Sent per User'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.user)
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Number of Messages'
+                        }
+                    },
+                    series: [{
+                        name: 'Messages',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+
+            // Fetch and render line chart for conversations initiated over time
+            $.get('/admin/conversations-over-time', function(data) {
+                Highcharts.chart('conversations-over-time-chart', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Conversations Initiated Over Time'
+                    },
+                    xAxis: {
+                        categories: data.map(item => item.date)
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Number of Conversations'
+                        }
+                    },
+                    series: [{
+                        name: 'Conversations',
+                        data: data.map(item => item.count)
+                    }]
+                });
+            });
+ 
+             // Fetch and render Heat Map for User Activity
+            $.get('/admin/user-activity-heatmap', function(data) {
+                // Process data to fit Highcharts format
+                const heatMapData = data.map(point => [point.day, point.hour, point.count]);
+
+                Highcharts.chart('user-activity-heatmap', {
+                    chart: {
+                        type: 'heatmap',
+                        // Additional heatmap options
+                    },
+                    title: {
+                        text: 'User Activity by Time and Day'
+                    },
+                    xAxis: {
+                        categories: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                        title: {
+                            text: 'Day of the Week'
+                        }
+                    },
+                    yAxis: {
+                        categories: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+                        title: {
+                            text: 'Hour of the Day'
+                        },
+                        min: 0,
+                        max: 23
+                    },
+                    colorAxis: {
+                        min: 0,
+                        minColor: '#FFFFFF',
+                        maxColor: Highcharts.getOptions().colors[0],
+                        // Uncomment below for logarithmic scale
+                        // type: 'logarithmic'
+                    },
+                    legend: {
+                        align: 'right',
+                        layout: 'vertical',
+                        margin: 0,
+                        verticalAlign: 'top',
+                        y: 25,
+                        symbolHeight: 280
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return 'Day: <b>' + this.series.xAxis.categories[this.point.x] + '</b><br/>Hour: <b>' + this.series.yAxis.categories[this.point.y] + '</b><br/>Activity Count: <b>' + this.point.value + '</b>';
+                        }
+                    },
+                    series: [{
+                        name: 'User Activity',
+                        borderWidth: 1,
+                        data: heatMapData,
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            format: '{point.value}'
+                        }
+                    }]
+                });
+            });
+
+            // Fetch and render Scatter Plot for User Activity and Sales
+            $.get('/admin/activity-sales-correlation', function(data) {
+                // Process data to fit Highcharts format
+                const scatterData = data.map(point => [point.messagesSent, point.salesMade]);
+
+                Highcharts.chart('activity-sales-correlation-chart', {
+                    chart: {
+                        type: 'scatter',
+                        // Additional scatter plot options
+                    },
+                    title: {
+                        text: 'Correlation between User Messages and Sales'
+                    },
+                    xAxis: {
+                        title: {
+                            text: 'Messages Sent'
+                        },
+                        startOnTick: true,
+                        endOnTick: true,
+                        showLastLabel: true
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Sales Made'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        scatter: {
+                            marker: {
+                                radius: 5,
+                                states: {
+                                    hover: {
+                                        enabled: true,
+                                        lineColor: 'rgb(100,100,100)'
+                                    }
+                                }
+                            },
+                            states: {
+                                hover: {
+                                    marker: {
+                                        enabled: false
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                headerFormat: '<b>{series.name}</b><br>',
+                                pointFormat: '{point.x} messages sent, {point.y} sales made'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'User Activity vs Sales',
+                        color: 'rgba(223, 83, 83, .5)',
+                        data: scatterData
+                    }]
+                });
+            });
+
+        });
+
+    </script>
+        
+
+
 </body>
 </html>

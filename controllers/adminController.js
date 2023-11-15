@@ -16,6 +16,511 @@ module.exports = {
   async getAdminLogin(req, res) {
     res.render('admin/login');
   }, 
+  
+  async getGenderDistribution(req, res) {
+    try {
+      const genderDistribution = await prisma.user.groupBy({
+        by: ['gender'],
+        _count: {
+          gender: true
+        }
+      });
+      res.json(genderDistribution);
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  },
+
+  async getUserSignups(req, res) {
+    try {
+      const userSignups = await prisma.user.findMany({
+        select: {
+          createdAt: true
+        }
+      });
+  
+      const groupedByDate = userSignups.reduce((acc, user) => {
+        const date = user.createdAt.toISOString().split('T')[0]; // Get date in 'YYYY-MM-DD' format
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+      }, {});
+  
+      const formattedData = Object.entries(groupedByDate).map(([date, count]) => {
+        return { date, count };
+      });
+  
+      res.json(formattedData);
+    } catch (error) {
+      res.status(500).send('Server Error');
+    }
+  },
+
+  async getUsersByCity(req, res) {
+    try {
+      // Fetch all cities with the count of users
+      const citiesWithUserCount = await prisma.city.findMany({
+        include: {
+          _count: {
+            select: { users: true } // Count the users related to each city
+          }
+        }
+      });
+  
+      // Sort cities based on the count of users in descending order
+      citiesWithUserCount.sort((a, b) => b._count.users - a._count.users);
+  
+      res.json(citiesWithUserCount);
+    } catch (error) {
+      console.error("Error fetching users by city:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getOrganizationsByVerification(req, res) {
+    try {
+      const organizationsByVerification = await prisma.organization.groupBy({
+        by: ['verificationStatus'],
+        _count: {
+          verificationStatus: true
+        }
+      });
+  
+      res.json(organizationsByVerification);
+    } catch (error) {
+      console.error("Error fetching organizations by verification status:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getOrganizationPointsOverTime(req, res) {
+    try {
+      const organizationPointsOverTime = await prisma.organization.findMany({
+        select: {
+          createdAt: true,
+          totalPoints: true
+        },
+        orderBy: {
+          createdAt: 'asc'
+        }
+      });
+  
+      // Format the data for the line chart
+      const formattedData = organizationPointsOverTime.map(org => {
+        return {
+          date: org.createdAt.toISOString().split('T')[0], // Format date as 'YYYY-MM-DD'
+          totalPoints: org.totalPoints
+        };
+      });
+  
+      res.json(formattedData);
+    } catch (error) {
+      console.error("Error fetching organization points over time:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getDonationsOverTime(req, res) {
+    try {
+        const donations = await prisma.donation.findMany({
+            select: {
+                createdAt: true
+            }
+        });
+
+        const groupedByDate = donations.reduce((acc, donation) => {
+            const date = donation.createdAt.toISOString().split('T')[0];
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+        }, {});
+
+        const formattedData = Object.entries(groupedByDate).map(([date, count]) => {
+            return { date, count };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching donations over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getDonationStatusDistribution(req, res) {
+    try {
+        const donationsByStatus = await prisma.donation.groupBy({
+            by: ['status'],
+            _count: {
+                status: true
+            }
+        });
+
+        res.json(donationsByStatus);
+    } catch (error) {
+        console.error("Error fetching donation status distribution:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getAverageRatingPerEntity(req, res) {
+    try {
+      // Fetch all feedbacks
+      const feedbacks = await prisma.feedback.findMany({
+        select: {
+          rating: true,
+          organizationId: true,
+          dropPointId: true
+        }
+      });
+      
+      // Manual aggregation
+      const aggregatedRatings = {};
+      feedbacks.forEach(fb => {
+        const key = fb.organizationId || fb.dropPointId;
+        if (!aggregatedRatings[key]) {
+          aggregatedRatings[key] = { totalRating: 0, count: 0, type: fb.organizationId ? 'organization' : 'dropPoint' };
+        }
+        aggregatedRatings[key].totalRating += fb.rating;
+        aggregatedRatings[key].count++;
+      });
+  
+      // Fetch names and prepare response
+      const response = await Promise.all(Object.keys(aggregatedRatings).map(async key => {
+        const { totalRating, count, type } = aggregatedRatings[key];
+        const averageRating = totalRating / count;
+        let name;
+  
+        if (type === 'organization') {
+          const org = await prisma.organization.findUnique({
+            where: { id: key },
+            select: { organizationname: true }
+          });
+          name = org ? org.organizationname : 'Unknown Organization';
+        } else {
+          const dp = await prisma.dropPoint.findUnique({
+            where: { id: key },
+            select: { name: true }
+          });
+          name = dp ? dp.name : 'Unknown Drop Point';
+        }
+  
+        return { name, averageRating, count };
+      }));
+  
+      res.json(response);
+    } catch (error) {
+      console.error("Error fetching average ratings:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getRatingsDistribution(req, res) {
+    try {
+        const ratingsDistribution = await prisma.feedback.groupBy({
+            by: ['rating'],
+            _count: {
+                rating: true
+            },
+            orderBy: {
+                rating: 'desc'
+            }
+        });
+
+        // Initialize an object with all ratings set to 0
+        let ratingsCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+        // Update counts based on the database response
+        ratingsDistribution.forEach(item => {
+            ratingsCount[item.rating] = item._count.rating;
+        });
+
+        // Convert to array format for Highcharts
+        const formattedData = Object.keys(ratingsCount).map(key => {
+            return { rating: key, count: ratingsCount[key] };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching ratings distribution:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }   
+  }, 
+
+  async getAdInteractionsOverTime(req, res) {
+    try {
+        const adInteractions = await prisma.adInteraction.groupBy({
+            by: ['clickedAt'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                clickedAt: 'asc'
+            }
+        });
+
+        // Format data for the line chart
+        const formattedData = adInteractions.map(interaction => {
+            return {
+                date: interaction.clickedAt.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+                count: interaction._count.id
+            };
+        });
+
+        // Aggregate counts by date
+        const aggregatedData = formattedData.reduce((acc, curr) => {
+            const date = curr.date;
+            if (!acc[date]) {
+                acc[date] = 0;
+            }
+            acc[date] += curr.count;
+            return acc;
+        }, {});
+
+        // Convert aggregated data into array format
+        const finalData = Object.keys(aggregatedData).map(date => {
+            return { date: date, count: aggregatedData[date] };
+        });
+
+        res.json(finalData);
+    } catch (error) {
+        console.error("Error fetching ad interactions over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getPointsSpentOnAds(req, res) {
+    try {
+        // Step 1: Group and sum points spent by organizationId
+        const pointsSpent = await prisma.advertisement.groupBy({
+            by: ['organizationId'],
+            _sum: {
+                pointsSpent: true
+            }
+        });
+
+        // Step 2: Fetch organization names separately
+        const organizationIds = pointsSpent.map(item => item.organizationId);
+        const organizations = await prisma.organization.findMany({
+            where: {
+                id: { in: organizationIds }
+            },
+            select: {
+                id: true,
+                organizationname: true
+            }
+        });
+
+        // Create a map for quick lookup
+        const organizationMap = organizations.reduce((map, org) => {
+            map[org.id] = org.organizationname;
+            return map;
+        }, {});
+
+        // Format data for the bar chart
+        const formattedData = pointsSpent.map(item => {
+            return {
+                organization: organizationMap[item.organizationId],
+                pointsSpent: item._sum.pointsSpent || 0
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching points spent on ads:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getListingsPerCategory(req, res) {
+    try {
+      // Step 1: Perform groupBy operation
+      const listingsPerCategory = await prisma.listing.groupBy({
+        by: ['categoryId'],
+        _count: {
+          id: true
+        },
+        _avg: {
+          price: true
+        }
+      });
+  
+      // Step 2: Fetch categories and create a mapping
+      const categories = await prisma.category.findMany({
+        select: {
+          id: true,
+          name: true
+        }
+      });
+      const categoryMapping = categories.reduce((acc, category) => {
+        acc[category.id] = category.name;
+        return acc;
+      }, {});
+  
+      // Step 3: Map results to include category names
+      const formattedData = listingsPerCategory.map(item => {
+        return {
+          category: categoryMapping[item.categoryId],
+          count: item._count.id,
+          averagePrice: item._avg.price
+        };
+      });
+
+      // Step 4: Sort the results (e.g., by count in descending order)
+      formattedData.sort((a, b) => b.count - a.count);
+
+      res.json(formattedData);
+    } catch (error) {
+      console.error("Error fetching listings per category:", error);
+      res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+  
+  async getSalesOverTime(req, res) {
+    try {
+        const salesOverTime = await prisma.sale.groupBy({
+            by: ['saleDate'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                saleDate: 'asc'
+            }
+        });
+
+        const formattedData = salesOverTime.map(sale => {
+            return {
+                date: sale.saleDate.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+                count: sale._count.id
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching sales over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }   
+  },
+
+  async getMessagesPerUser(req, res) {
+    try {
+        const messagesPerUser = await prisma.message.groupBy({
+            by: ['senderId'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                _count: {
+                    id: 'desc'
+                }
+            }
+        });
+
+        // Map the senderId to user details (e.g., firstName, lastName)
+        const detailedMessagesPerUser = await Promise.all(messagesPerUser.map(async (message) => {
+            const user = await prisma.user.findUnique({
+                where: { id: message.senderId },
+                select: { firstName: true, lastName: true }
+            });
+            return {
+                user: `${user.firstName} ${user.lastName}`,
+                count: message._count.id
+            };
+        }));
+
+        res.json(detailedMessagesPerUser);
+    } catch (error) {
+        console.error("Error fetching messages per user:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getConversationsOverTime(req, res) {
+    try {
+        const conversationsOverTime = await prisma.conversation.groupBy({
+            by: ['createdAt'],
+            _count: {
+                id: true
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        });
+
+        const formattedData = conversationsOverTime.map(conversation => {
+            return {
+                date: conversation.createdAt.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+                count: conversation._count.id
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching conversations over time:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getUserActivityHeatMap(req, res) {
+    try {
+        // Aggregate user activity (e.g., messages sent) by day of week and hour
+        const userActivity = await prisma.message.groupBy({
+            by: [
+                'createdAt'
+            ],
+            _count: {
+                id: true
+            }
+        });
+
+        // Process data to fit the format required for a heat map
+        const heatMapData = userActivity.map(activity => {
+            return {
+                day: activity.createdAt.getDay(), // Day of the week
+                hour: activity.createdAt.getHours(), // Hour of the day
+                count: activity._count.id
+            };
+        });
+
+        res.json(heatMapData);
+    } catch (error) {
+        console.error("Error fetching user activity heat map data:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
+  async getActivitySalesCorrelation(req, res) {
+    try {
+        // Fetch user activity data (e.g., number of messages sent)
+        const userActivity = await prisma.message.groupBy({
+            by: ['senderId'],
+            _count: {
+                id: true
+            }
+        });
+
+        // Fetch sales data
+        const salesData = await prisma.sale.groupBy({
+            by: ['buyerId'],
+            _count: {
+                id: true
+            }
+        });
+
+        // Process and correlate the data
+        const correlationData = userActivity.map(activity => {
+            const sales = salesData.find(sale => sale.buyerId === activity.senderId) || { _count: { id: 0 } };
+            return {
+                userId: activity.senderId,
+                messagesSent: activity._count.id,
+                salesMade: sales._count.id
+            };
+        });
+
+        res.json(correlationData);
+    } catch (error) {
+        console.error("Error fetching activity-sales correlation data:", error);
+        res.status(500).send('Server Error: ' + error.message);
+    }
+  },
+
   async postAdminLogin(req, res) {
     try {
       const { email, password } = req.body;
@@ -56,6 +561,7 @@ module.exports = {
       res.render('admin/login',{ message: 'An error occurred' });
   }
   },
+
   async getOrganizationManagement(req, res) {
     try {
       const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
@@ -76,7 +582,8 @@ module.exports = {
       console.error("Error fetching organizations:", error);
       res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async updateOrganizationStatus(req, res) {
     try {
         const { organizationId, newStatus } = req.body;
@@ -158,6 +665,7 @@ module.exports = {
         res.status(500).send("Internal Server Error");
     }
   },
+
   async viewDocuments(req, res) {
     try {
       const { organizationId } = req.query;
@@ -189,6 +697,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+  
   async getDropPointManagement(req, res) {
     try {
       // Fetch all managers
@@ -213,7 +722,8 @@ module.exports = {
       console.error("Error fetching drop points:", error);
       res.status(500).send("Internal Server Error");
     }
-  },    
+  },  
+
   async getManagerManagement(req, res) {
     try {
       // Fetch managers
@@ -246,9 +756,11 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async getUserManagement(req, res) {
     res.render('admin/usermanagement');
   }, 
+
   async createDropPoint(req, res) {
     try {
       const { name, location, openingTime, closingTime, description } = req.body;
@@ -271,6 +783,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async registerManager(req, res) {
     try {
       const { firstName, lastName, email, phoneNumber, address } = req.body;
@@ -293,6 +806,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   }, 
+
   async assignManagerToDropPoint(req, res) {
     try {
       const { managerEmail, password, dropPointId } = req.body;
@@ -393,6 +907,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async removeManagerFromDropPoint(req, res) {
     try {
       const { dropPointId } = req.body;
@@ -463,6 +978,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },   
+
   async updateDropPoint(req, res) {
     try {
       const { id, name, location, openingTime, closingTime, description } = req.body;

@@ -544,17 +544,43 @@ module.exports = {
       advertisements: organization.advertisements }); 
   }, 
 
-  async getAdvertisementInteractions(req, res) {  
+  async getAdvertisementInteractions(req, res) {
     try {
       const adId = req.params.adId;
-      const interactions = await prisma.adInteraction.findMany({
-        where: { advertisementId: adId },
+      const advertisement = await prisma.advertisement.findUnique({
+        where: { id: adId },
+        include: {
+          interactions: true,
+        },
       });
-      res.json(interactions);
+  
+      if (!advertisement) {
+        return res.status(404).send('Advertisement not found');
+      }
+  
+      // Aggregate interactions by date
+      const startDate = advertisement.startDate;
+      const endDate = advertisement.expiryDate;
+      let date = new Date(startDate);
+      const interactionsByDate = {};
+  
+      while (date <= endDate) {
+        interactionsByDate[date.toISOString().split('T')[0]] = 0;
+        date.setDate(date.getDate() + 1);
+      }
+  
+      advertisement.interactions.forEach(interaction => {
+        const interactionDate = interaction.clickedAt.toISOString().split('T')[0];
+        if (interactionDate in interactionsByDate) {
+          interactionsByDate[interactionDate]++;
+        }
+      });
+  
+      res.json(interactionsByDate);
     } catch (error) {
       console.error('Error fetching interactions:', error);
       res.status(500).send('Error fetching interactions');
-    } 
+    }
   },
    
   async getAdCity(req, res) { 
