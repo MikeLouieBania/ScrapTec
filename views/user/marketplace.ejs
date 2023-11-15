@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>E-Waste Zero</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
@@ -21,11 +21,11 @@
         }
 
         body {
-            padding-top: 60px;
+      
             /* Adjusted the padding for navbar */
             overflow-x: hidden;
             margin-bottom: 60px;
-            background-color: #F0F8FF;
+            background-color: #F0F8FF;  
             font-family: 'Poppins', sans-serif;  
         }
 
@@ -149,6 +149,7 @@
 
         /* Filter By Button */
         .image-button {
+            margin-left: 5%;
             background-color: #219ebc;
             color: #fff;
             border: none;
@@ -437,53 +438,6 @@
             font-size: 14px;
         }
 
-
-        /* Carousel controls general style */
-        .carousel-control-prev,
-        .carousel-control-next {
-            position: absolute;
-            top: 50%; /* Align vertically at the middle */
-            z-index: 1000; /* Make sure they are above other content */
-            width: 30px; /* Width of the clickable area */
-            height: 30px; /* Height of the clickable area */
-            transform: translateY(-50%); /* Center vertically */
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            color: #fff; /* White color text */
-            border-radius: 15px; /* Rounded corners for the background */
-            outline: none;
-            border: none;
-            text-align: center;
-            line-height: 30px;
-        }
-
-        /* Specific styles for previous control */
-        .carousel-control-prev {
-            left: 10px; /* Position from the left side */
-        }
-
-        .carousel-control-prev-icon {
-            background-image: none; /* Remove default background image */
-        }
-
-        .carousel-control-prev-icon:after {
-            content: '<'; /* The content for the 'previous' icon */
-            font-size: 24px; /* Size of the icon */
-        }
-
-        /* Specific styles for next control */
-        .carousel-control-next {
-            right: 10px; /* Position from the right side */
-        }
-
-        .carousel-control-next-icon {
-            background-image: none; /* Remove default background image */
-        }
-
-        .carousel-control-next-icon:after {
-            content: '>'; /* The content for the 'next' icon */
-            font-size: 24px; /* Size of the icon */
-        }
-
         .sr-only {
             position: absolute;
             width: 1px;
@@ -499,6 +453,7 @@
         .container-Products .row {
             display: flex;
             flex-wrap: wrap; /* Allow the cards to wrap as needed */
+            margin-right: 25%;
         }
 
         /* Flexbox properties for each card */
@@ -509,8 +464,10 @@
             margin: 0.5rem 1rem; /* Reduced top and bottom margin */
             display: flex;
             flex-direction: column;
-            min-height: 400px; /* Minimum height for all cards */
+            min-height: 300px; /* Minimum height for all cards */
+            min-width: 300px;
             height: 100%; /* Make sure all cards take up the same height */
+            width: 100%;
         }
 
 
@@ -524,8 +481,7 @@
         .card-body {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            flex-grow: 1; /* Grow to fill the space */
+            justify-content: start; /* Change to 'start' to align items to the top */
             overflow: hidden; /* Hide overflow content */
         }
 
@@ -643,6 +599,8 @@
                 max-width: 50%;
             }
         }
+        
+        
         .menu {
             width: 25%;
             height: 300px;
@@ -721,45 +679,35 @@
 
         .container-Products {
             position: relative;
-            /* or absolute, depending on your needs */
             width: 100%;
-            /* Adjust width as required */
             left: 350px;
             bottom: 15.5%;
             z-index: 1;
-            /* Ensures the container stays above other elements */
             margin-bottom: -457px;
-            /* Adjust top, right, bottom, left properties if using position: absolute; */
         }
-
-        .mapslocations {
-            position: absolute;
-            left: 81%;
-            bottom: -300px;
+        
+        .row.flex-wrap {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
         }
-
-        .modal-maps {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 9999;
+        
+        .card-fixed-width {
+            width: calc((100% - 40px) / 3); /* Adjust the subtraction to account for your margins */
+            margin: 0 10px 20px; /* This is an example, adjust your margins as needed */
         }
-
-        .modalmaps-y {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 720px;
-            height: 520px;
-            padding: 20px;
-            background: #ffffff;
-            z-index: 10000;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        @media (max-width: 768px) {
+            .card-fixed-width {
+                width: calc((100% - 20px) / 2); /* 2 cards per row on smaller screens */
+                margin: 0 5px 10px; /* Smaller margins */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card-fixed-width {
+                width: 100%; /* Full width for very small screens */
+                margin: 0 0 10px; /* Only bottom margin */
+            }
         }
 
         .listahan {
@@ -836,7 +784,19 @@
         }
 
 
-        
+        /* Custom row with very small padding to pull cards very close together */
+        .row-tight > [class*='col-'] {
+            padding-right: 0; /* No right padding */
+            padding-left: 0; /* No left padding */
+        }
+
+        /* Adjust the card margins to reduce space */
+        .card {
+            width: calc(100% - 1px); /* Adjust the total width by the sum of left and right padding */
+            max-width: 250px; /* Keep the maximum size for the cards */
+            margin: 5px auto; /* Reduced margin, auto centers the card within the column */
+        }
+
  
         
     </style>
@@ -857,7 +817,7 @@
                     <a class="nav-link" href="#">Marketplace</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My Account</a>
+                    <a class="nav-link" href="/user/useraccount">My Account</a>
                 </li>
                 <li class="nav-item">
                     <form action="/user/logout" method="POST">
@@ -868,130 +828,31 @@
         </div>
     </nav>
 
-    <!-- Objective Section -->
-    <section class="jumbotron text-center text-white mb-0 d-flex align-items-start justify-content-center" style="position: relative; padding: 100px 0;">
-        <div class="container">
-            <h1 class="display-4" style="font-family: 'Josefin Sans', sans-serif; font-size: 105px; margin-inline-start: auto;">Our Objective at E-Waste Zero</h1>
-            <p class="lead" style="font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 21px"> Reducing electronic waste by providing a platform for buying and selling used electronic products. We believe in sustainability and promoting a circular economy for electronics. </p>
-        </div>
-        <div class="jumbotron-bg"></div>
-    </section>
-
     <!-- Filters -->
     <div class="untree_co-section product-section before-footer-section">
         <div class="container">
             <div class="row">
 
-                <!-- Start Sidebar (Filter by Button) -->
-                <div class="col-lg-3">
-                    <button class="image-button">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 4.5H21M3 12H21M3 19.5H13" stroke="White" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg> Filter by </button>
-                </div>
-
-                <!-- Sort by Price Slider -->
-                <div class="col-lg-6">
-                    <!-- Leaving this column empty for spacing -->
-                </div>
-                <div class="col-lg-3 text-right sort-price-section">
-                    <label>Sort by Price:</label>
-                    <input type="range" class="custom-range" id="priceSlider" min="50" max="1000" step="100" value="5000">
-                    <span id="priceLabel">5000</span>
-                </div>
-            </div> <!-- End of row for filters -->
-
+                
       <!-- Advertisement -->
       <div class="mt-4">
-        <h4>Advertisement</h4>
         <div id="adCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
           <!-- data-bs-interval sets the time for each slide, here it's 3 seconds -->
           <div class="carousel-inner">
             <!-- The advertisements will be populated here -->
           </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#adCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#adCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
         </div>
       </div> 
-      <script>
-        window.onload = function() {
-          fetch('/user/ads')
-            .then(response => response.json())
-            .then(data => {
-              const ads = data.ads;
-              const carouselInner = document.querySelector('.carousel-inner');
-              const adCarousel = document.getElementById('adCarousel');
-              carouselInner.innerHTML = ''; // Clear existing items
       
-              ads.forEach((ad, index) => {
-                const isActive = index === 0 ? 'active' : '';
-                const adHTML = `
-                  <div class="carousel-item ${isActive}">
-                      <a href="${ad.link}" target="_blank">
-                          <img src="${ad.imageUrl}" class="d-block w-100" alt="${ad.title}">
-                      </a>
-                  </div>
-                `;
-                carouselInner.insertAdjacentHTML('beforeend', adHTML);
-
-                // Add click event listener to record ad clicks
-                const adElement = carouselInner.lastElementChild;
-                adElement.addEventListener('click', () => {
-                fetch('/user/record-click', {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ adId: ad.adId }), // Send the ad's unique identifier
-                });
-                }); 
-              });
-      
-              // Adjust carousel behavior based on the number of ads
-              if (ads.length === 0) {
-                adCarousel.style.display = 'none';
-              } else if (ads.length === 1) {
-                // Disable carousel controls if there's only one ad
-                document.querySelector('.carousel-control-prev').style.display = 'none';
-                document.querySelector('.carousel-control-next').style.display = 'none';
-                adCarousel.removeAttribute('data-bs-ride'); // Stop the automatic sliding
-              }
-            })
-            .catch(error => console.error('Error fetching ads:', error));
-        };
-      </script>
-      
-
-      <!-- Start of Product Section -->
-      <!-- Products -->
-      <div class="row">
-
+      <div class="row row-tight">
         <!-- Search Bar -->
         <div class="row mb-4"> <!-- Added row here -->
           <div class="col-md-3"> <!-- Using col-md-3 for the search bar -->
-            <div class="mapslocations">
-              <a href="#Locations" class="maps">
-                <span class="icon location"></span>
-                Click here please
-              </a>
-            </div>
+
             <div class="search-box">
               <ion-icon name="search" class="search-icon"></ion-icon>
               <input type="text" class="input-search" placeholder="Search for products...">
               <!-- The Unicode character represents a magnifying glass icon -->
-            </div>
-          </div>
-          <div class="modal-maps" id="MapModals">
-            <div class="modalmaps-y">
-              <h2>Modal Title</h2>
-              <p>This is an empty modal.</p>
-              <button id="closeModal">Close</button>
             </div>
           </div>
           <div class="menu">
@@ -1017,10 +878,19 @@
             </a>
           </div>
 
+          
           <div class="container-Products">
-            <div class="row">
+            <!-- Start Sidebar (Filter by Button) -->
+            <div class="col-lg-3">
+                <button class="image-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 4.5H21M3 12H21M3 19.5H13" stroke="White" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg> Filter by </button>
+            </div>
+
+            <div class="row flex-wrap">
               <% listings.forEach(listing=> { %>
-                <div class="col-md-3 mb-4">
+                <div class="col-md-4 mb-4">
                   <a href="/user/listing/<%= listing.id %>">
                     <div class="card" onclick="showProductDetails(event, <%= listing.id %>)"
                       data-product-id="<%= listing.id %>">
@@ -1030,7 +900,7 @@
                         <div class="carousel-inner">
                           <% listing.photos.forEach(function(photo, index) { %>
                             <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                              <img class="d-block w-100 slider-image" src="<%= photo.imageUrl %>"
+                              <img class="d-block w-100 slider-image" src="<%= photo.imageUrl %>" style="width: 300px; height: 300px; overflow: hidden;"
                                 alt="<%= listing.title %>">
                             </div>
                             <% }) %>
@@ -1046,13 +916,14 @@
                           <span class="carousel-control-next-icon" aria-hidden="true"></span>
                           <span class="sr-only">Next</span>
                         </a>
+                        
                       </div>
 
                       <div class="card-body">
-                        <h5 class="card-title">
+                        <p class="card-title">
                           <%= listing.title %>
-                        </h5>
-                        <p class="card-text">$<%= listing.price %>
+                        </p>
+                        <p class="card-text">₱<%= listing.price %>
                         </p>
                       </div>
                     </div>
@@ -1166,9 +1037,56 @@
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
+<script>
+    window.onload = function() {
+      fetch('/user/ads')
+        .then(response => response.json())
+        .then(data => {
+          const ads = data.ads;
+          const carouselInner = document.querySelector('.carousel-inner');
+          const adCarousel = document.getElementById('adCarousel');
+          carouselInner.innerHTML = ''; // Clear existing items
+  
+          ads.forEach((ad, index) => {
+            const isActive = index === 0 ? 'active' : '';
+            const adHTML = `
+              <div class="carousel-item ${isActive}">
+                  <a href="${ad.link}" target="_blank">
+                      <img src="${ad.imageUrl}" class="d-block w-100" style="max-width: 5000px; max-height: 400px;" alt="${ad.title}">
+                  </a>
+              </div>
+            `;
+            carouselInner.insertAdjacentHTML('beforeend', adHTML);
+
+            // Add click event listener to record ad clicks
+            const adElement = carouselInner.lastElementChild;
+            adElement.addEventListener('click', () => {
+            fetch('/user/record-click', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ adId: ad.adId }), // Send the ad's unique identifier
+            });
+            }); 
+          });
+  
+          // Adjust carousel behavior based on the number of ads
+          if (ads.length === 0) {
+            adCarousel.style.display = 'none';
+          } else if (ads.length === 1) {
+            // Disable carousel controls if there's only one ad
+            document.querySelector('.carousel-control-prev').style.display = 'none';
+            document.querySelector('.carousel-control-next').style.display = 'none';
+            adCarousel.removeAttribute('data-bs-ride'); // Stop the automatic sliding
+          }
+        })
+        .catch(error => console.error('Error fetching ads:', error));
+    };
+  </script>
+
 <script>
     // Get the modal, button that opens the modal, and the <span> element that closes the modal
     var modal = document.getElementById("myModal");
