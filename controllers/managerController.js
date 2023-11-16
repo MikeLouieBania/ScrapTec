@@ -186,6 +186,10 @@ module.exports = {
 
   async getManageDonation(req, res) {
     try {
+      const page = parseInt(req.query.page) || 1; // Current page number
+      const limit = parseInt(req.query.limit) || 2; // Number of items per page
+      const skip = (page - 1) * limit;
+      
       // Fetch the manager's profile and associated drop point using the ID stored in the session
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: {
@@ -196,6 +200,8 @@ module.exports = {
             include: {
               donations: {
                 where: { isSubmitted: true },  // Fetch only the submitted donations
+                skip: skip,
+                take: limit,
                 include: { 
                   organization: true,
                   peripherals: true
@@ -205,6 +211,15 @@ module.exports = {
           }
         }
       });
+
+      // Calculate total number of donations
+      const totalDonations = await prisma.donation.count({
+        where: {
+          dropPointId: managerWithDropPoint.dropPoint[0]?.id,
+          isSubmitted: true
+        }
+      });
+      const totalPages = Math.ceil(totalDonations / limit);
   
       // Get the drop point name from the first drop point (if it exists)
       const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
@@ -213,6 +228,8 @@ module.exports = {
       res.render('manager/manageDonation', { 
         donations: managerWithDropPoint.dropPoint[0]?.donations || [],
         dropPointName: dropPointName,
+        currentPage: page,
+        totalPages: totalPages
       });
   
     } catch (error) {
