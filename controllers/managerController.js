@@ -19,12 +19,12 @@ async function sendMilestoneCertificate(organization, numberOfDonations) {
               color: rgb(0, 0, 0)
             };
             break;
-          case (numberOfDonations === 7):
+          case (numberOfDonations === 5):
             certificateDetails = {        
               file: 'Gold-Level.pdf',
-              position: { x: 160, y: 260 },
+              position: { x: 250, y: 260 },
               size: 45 ,
-              color: rgb(176, 126, 9)
+              color: rgb(176/255, 126/255, 9/255)
             };
             break;
             case (numberOfDonations === 10):
@@ -32,13 +32,13 @@ async function sendMilestoneCertificate(organization, numberOfDonations) {
                 file: 'Diamond-Level.pdf',
                 position: { x: 170, y: 265 },
                 size: 40 ,
-                color: rgb(107, 77, 33)
+                color: rgb(107/255, 77/255, 33/255)
               };
               break;
-            case (numberOfDonations === 20):
+            case (numberOfDonations === 7):
               certificateDetails = {
                 file: 'Platinum-Level.pdf',
-                position: { x: 180, y: 270 },
+                position: { x: 270, y: 300 },
                 size: 35,
                 color: rgb(0, 0, 0)
               };
