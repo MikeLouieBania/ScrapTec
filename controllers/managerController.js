@@ -1,11 +1,129 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const fs = require('fs');
+const path = require('path');
+const { PDFDocument, rgb } = require('pdf-lib');
+const fontkit = require('@pdf-lib/fontkit');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+async function sendMilestoneCertificate(organization, numberOfDonations) { 
+  return new Promise(async (resolve, reject) => {
+    try {   
+        let certificateDetails = {};
+        switch (true) {
+          case (numberOfDonations === 1):
+            certificateDetails = {
+              file: 'Bronze-Level.pdf',
+              position: { x: 200, y: 275 },
+              size: 50,
+              color: rgb(0, 0, 0)
+            };
+            break;
+          case (numberOfDonations === 7):
+            certificateDetails = {        
+              file: 'Gold-Level.pdf',
+              position: { x: 160, y: 260 },
+              size: 45 ,
+              color: rgb(176, 126, 9)
+            };
+            break;
+            case (numberOfDonations === 10):
+              certificateDetails = {
+                file: 'Diamond-Level.pdf',
+                position: { x: 170, y: 265 },
+                size: 40 ,
+                color: rgb(107, 77, 33)
+              };
+              break;
+            case (numberOfDonations === 20):
+              certificateDetails = {
+                file: 'Platinum-Level.pdf',
+                position: { x: 180, y: 270 },
+                size: 35,
+                color: rgb(0, 0, 0)
+              };
+              break;
+            default:
+              return reject('No certificate file determined for the given number of donations.');
+        } 
 
+        // Define the path to the certificate file based on the milestone
+        const pdfPath = path.join(__dirname, '..', 'certificate', certificateDetails.file);
+        const pdfBytes = fs.readFileSync(pdfPath);
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+
+        // Register fontkit instance
+        pdfDoc.registerFontkit(fontkit);
+
+        // Load the Caladea font
+        const fontBytes = fs.readFileSync(path.join(__dirname, '..', 'fonts', 'Caladea-Regular.ttf'));
+        // Embed a font
+        const font = await pdfDoc.embedFont(fontBytes);
+
+        // Get the first page of the document
+        const pages = pdfDoc.getPages();
+        const firstPage = pages[0]; 
+
+        // Add the organization name to the page
+        firstPage.drawText(organization.organizationname, {
+            x: certificateDetails.position.x,
+            y: certificateDetails.position.y,
+            size: certificateDetails.size,
+            font: font,
+            color: certificateDetails.color
+        });
+
+        // Save the modified PDF
+        const modifiedPdfBytes = await pdfDoc.save();
+
+        // Email configuration
+        const transporter = nodemailer.createTransport({
+            service: process.env.EMAIL_SERVICE,
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD,
+            },
+        });
+
+        // HTML formatted email content
+        const htmlContent = `
+            <h1>Congratulations on Your Achievement!</h1>
+            <p>Dear ${organization.organizationname},</p>
+            <p>We are thrilled to acknowledge your remarkable contribution to our cause. Your dedication and generosity are truly appreciated.</p>
+            <p>Attached is your milestone certificate as a token of our gratitude.</p>
+            <p>Thank you for your continued support.</p>
+            <p>Best regards,</p>
+            <p><strong>CycleUpTech</strong></p>
+        `;
+
+        // Send the email with the attached certificate
+        await transporter.sendMail({
+            from: process.env.EMAIL_USERNAME,
+            to: organization.email,
+            subject: 'Your Milestone Achievement Certificate',
+            html: htmlContent,
+            attachments: [
+                {
+                    filename: 'Milestone-Certificate.pdf',
+                    content: modifiedPdfBytes,
+                },
+            ],
+        });
+
+        console.log('Milestone certificate sent successfully.');
+        return { success: true };
+    } catch (error) {
+        console.error('Error sending milestone certificate:', error);
+        return { success: false, error: error.message };
+    }
+  });
+}
 
 module.exports = {
   async getLogin(req, res) {
     res.render('manager/login');
   },
+
   async managerLogin(req, res) {
     try {
       const { email, password } = req.body;
@@ -34,6 +152,7 @@ module.exports = {
       res.render('manager/login', { message: "Internal Server Error." });
     }
   },
+
   async getDashboard(req, res) {
     try {
 
@@ -64,6 +183,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async getManageDonation(req, res) {
     try {
       // Fetch the manager's profile and associated drop point using the ID stored in the session
@@ -99,7 +219,8 @@ module.exports = {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
+
   async updateDonationStatus(req, res) {
     try {
       const { donationId, newStatus } = req.body;
@@ -147,7 +268,17 @@ module.exports = {
              lifetimePoints: newLifetimePoints 
             }
         });
-      }
+
+        // Count the number of donations for the organization
+        const numberOfDonations = await prisma.donation.count({
+          where: { organizationId: donation.organizationId }
+        });  
+ 
+        sendMilestoneCertificate(organization, numberOfDonations)
+          .then(result => console.log('Certificate process completed:', result))
+          .catch(error => console.error('Certificate process failed:', error));
+        
+      } 
   
       // Redirect back to the donations management page
       res.redirect('/manager/manageDonation');
@@ -156,6 +287,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   async getManagerAccount(req, res) {
     try {
       // Fetch the manager's profile and associated drop point using the ID stored in the session
@@ -180,6 +312,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   }, 
+
   managerLogout(req, res) {
     req.session.managerId = null; // Clear the manager's session
     res.redirect('/manager/login');
