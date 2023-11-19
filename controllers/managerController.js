@@ -6,87 +6,87 @@ const { PDFDocument, rgb } = require('pdf-lib');
 const fontkit = require('@pdf-lib/fontkit');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
-async function sendMilestoneCertificate(organization, numberOfDonations) { 
+async function sendMilestoneCertificate(organization, numberOfDonations) {
   return new Promise(async (resolve, reject) => {
-    try {   
-        let certificateDetails = {};
-        switch (true) {
-          case (numberOfDonations === 1):
-            certificateDetails = {
-              file: 'Bronze-Level.pdf',
-              position: { x: 200, y: 275 },
-              size: 50,
-              color: rgb(0, 0, 0)
-            };
-            break;
-          case (numberOfDonations === 5):
-            certificateDetails = {        
-              file: 'Gold-Level.pdf',
-              position: { x: 250, y: 260 },
-              size: 45 ,
-              color: rgb(176/255, 126/255, 9/255)
-            };
-            break;
-            case (numberOfDonations === 10):
-              certificateDetails = {
-                file: 'Diamond-Level.pdf',
-                position: { x: 170, y: 265 },
-                size: 40 ,
-                color: rgb(107/255, 77/255, 33/255)
-              };
-              break;
-            case (numberOfDonations === 7):
-              certificateDetails = {
-                file: 'Platinum-Level.pdf',
-                position: { x: 270, y: 300 },
-                size: 35,
-                color: rgb(0, 0, 0)
-              };
-              break;
-            default:
-              return reject('No certificate file determined for the given number of donations.');
-        } 
+    try {
+      let certificateDetails = {};
+      switch (true) {
+        case (numberOfDonations === 1):
+          certificateDetails = {
+            file: 'Bronze-Level.pdf',
+            position: { x: 200, y: 275 },
+            size: 50,
+            color: rgb(0, 0, 0)
+          };
+          break;
+        case (numberOfDonations === 5):
+          certificateDetails = {
+            file: 'Gold-Level.pdf',
+            position: { x: 250, y: 260 },
+            size: 45,
+            color: rgb(176 / 255, 126 / 255, 9 / 255)
+          };
+          break;
+        case (numberOfDonations === 10):
+          certificateDetails = {
+            file: 'Diamond-Level.pdf',
+            position: { x: 170, y: 265 },
+            size: 40,
+            color: rgb(107 / 255, 77 / 255, 33 / 255)
+          };
+          break;
+        case (numberOfDonations === 20):
+          certificateDetails = {
+            file: 'Platinum-Level.pdf',
+            position: { x: 270, y: 300 },
+            size: 35,
+            color: rgb(0, 0, 0)
+          };
+          break;
+        default:
+          return reject('No certificate file determined for the given number of donations.');
+      }
 
-        // Define the path to the certificate file based on the milestone
-        const pdfPath = path.join(__dirname, '..', 'certificate', certificateDetails.file);
-        const pdfBytes = fs.readFileSync(pdfPath);
-        const pdfDoc = await PDFDocument.load(pdfBytes);
+      // Define the path to the certificate file based on the milestone
+      const pdfPath = path.join(__dirname, '..', 'certificate', certificateDetails.file);
+      const pdfBytes = fs.readFileSync(pdfPath);
+      const pdfDoc = await PDFDocument.load(pdfBytes);
 
-        // Register fontkit instance
-        pdfDoc.registerFontkit(fontkit);
+      // Register fontkit instance
+      pdfDoc.registerFontkit(fontkit);
 
-        // Load the Caladea font
-        const fontBytes = fs.readFileSync(path.join(__dirname, '..', 'fonts', 'Caladea-Regular.ttf'));
-        // Embed a font
-        const font = await pdfDoc.embedFont(fontBytes);
+      // Load the Caladea font
+      const fontBytes = fs.readFileSync(path.join(__dirname, '..', 'fonts', 'Caladea-Regular.ttf'));
+      // Embed a font
+      const font = await pdfDoc.embedFont(fontBytes);
 
-        // Get the first page of the document
-        const pages = pdfDoc.getPages();
-        const firstPage = pages[0]; 
+      // Get the first page of the document
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
 
-        // Add the organization name to the page
-        firstPage.drawText(organization.organizationname, {
-            x: certificateDetails.position.x,
-            y: certificateDetails.position.y,
-            size: certificateDetails.size,
-            font: font,
-            color: certificateDetails.color
-        });
+      // Add the organization name to the page
+      firstPage.drawText(organization.organizationname, {
+        x: certificateDetails.position.x,
+        y: certificateDetails.position.y,
+        size: certificateDetails.size,
+        font: font,
+        color: certificateDetails.color
+      });
 
-        // Save the modified PDF
-        const modifiedPdfBytes = await pdfDoc.save();
+      // Save the modified PDF
+      const modifiedPdfBytes = await pdfDoc.save();
 
-        // Email configuration
-        const transporter = nodemailer.createTransport({
-            service: process.env.EMAIL_SERVICE,
-            auth: {
-                user: process.env.EMAIL_USERNAME,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-        });
+      // Email configuration
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
 
-        // HTML formatted email content
-        const htmlContent = `
+      // HTML formatted email content
+      const htmlContent = `
             <h1>Congratulations on Your Achievement!</h1>
             <p>Dear ${organization.organizationname},</p>
             <p>We are thrilled to acknowledge your remarkable contribution to our cause. Your dedication and generosity are truly appreciated.</p>
@@ -96,25 +96,25 @@ async function sendMilestoneCertificate(organization, numberOfDonations) {
             <p><strong>CycleUpTech</strong></p>
         `;
 
-        // Send the email with the attached certificate
-        await transporter.sendMail({
-            from: process.env.EMAIL_USERNAME,
-            to: organization.email,
-            subject: 'Your Milestone Achievement Certificate',
-            html: htmlContent,
-            attachments: [
-                {
-                    filename: 'Milestone-Certificate.pdf',
-                    content: modifiedPdfBytes,
-                },
-            ],
-        });
+      // Send the email with the attached certificate
+      await transporter.sendMail({
+        from: process.env.EMAIL_USERNAME,
+        to: organization.email,
+        subject: 'Your Milestone Achievement Certificate',
+        html: htmlContent,
+        attachments: [
+          {
+            filename: 'Milestone-Certificate.pdf',
+            content: modifiedPdfBytes,
+          },
+        ],
+      });
 
-        console.log('Milestone certificate sent successfully.');
-        return { success: true };
+      console.log('Milestone certificate sent successfully.');
+      return { success: true };
     } catch (error) {
-        console.error('Error sending milestone certificate:', error);
-        return { success: false, error: error.message };
+      console.error('Error sending milestone certificate:', error);
+      return { success: false, error: error.message };
     }
   });
 }
@@ -127,7 +127,7 @@ module.exports = {
   async managerLogin(req, res) {
     try {
       const { email, password } = req.body;
-  
+
       // Fetch the drop point associated with the manager's email
       const dropPoint = await prisma.dropPoint.findFirst({
         where: {
@@ -135,8 +135,8 @@ module.exports = {
             email: email
           }
         }
-      }); 
-  
+      });
+
       // If the manager has no associated drop point or the password doesn't match, render the login page with an error
       if (!dropPoint || dropPoint.password !== password) {
         return res.render('manager/login', { message: "Invalid credentials." });
@@ -144,7 +144,7 @@ module.exports = {
 
       // Store manager's ID in session for future requests
       req.session.managerId = dropPoint.managerId;
-  
+
       // Successful login, redirect to the dashboard.
       res.redirect('/manager/dashboard');
     } catch (error) {
@@ -165,21 +165,100 @@ module.exports = {
           dropPoint: true  // Fetch associated drop point details
         }
       });
-  
+
       // Check if managerWithDropPoint or managerWithDropPoint.dropPoint is null
       if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
         return res.render('manager/login', { message: "Manager or associated drop point not found" });
       }
-  
+
       // Extract the drop point name or provide a default value if it's not available  
       const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
 
-  
+
       // Render the dashboard with the manager's profile and drop point name
       res.render('manager/dashboard', { manager: managerWithDropPoint, dropPointName });
-  
+
     } catch (error) {
       console.error("Error fetching manager's profile:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getDonationOverview(req, res) {
+    try {
+      const donationsByStatus = await prisma.donation.groupBy({
+        by: ['status'],
+        _count: {
+          id: true
+        }
+      });
+
+      const formattedData = donationsByStatus.map(item => ({
+        name: item.status,
+        y: item._count.id
+      }));
+
+      res.json(formattedData);
+    } catch (error) {
+      console.error("Error in getDonationOverview:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getRecentDonations(req, res) {
+    try {
+      const recentDonations = await prisma.donation.findMany({
+        where: {
+          // Add any necessary conditions, like a date range
+        },
+        include: {
+          organization: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: 10 // Adjust the number of donations to fetch
+      });
+
+      const formattedData = recentDonations.map(donation => ({
+        organizationName: donation.organization.organizationname,
+        date: donation.createdAt,
+        status: donation.status
+      }));
+
+      res.json(formattedData);
+    } catch (error) {
+      console.error("Error in getRecentDonations:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getDonationTrends(req, res) {
+    try {
+      const startDate = new Date(/* Set start date */);
+      const endDate = new Date(/* Set end date */);
+
+      const donationTrends = await prisma.donation.groupBy({
+        by: ['createdAt'],
+        _count: {
+          id: true
+        },
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate
+          }
+        }
+      });
+
+      const formattedData = donationTrends.map(item => ({
+        x: item.createdAt.getTime(),
+        y: item._count.id
+      }));
+
+      res.json(formattedData);
+    } catch (error) {
+      console.error("Error in getDonationTrends:", error);
       res.status(500).send("Internal Server Error");
     }
   },
@@ -187,9 +266,40 @@ module.exports = {
   async getManageDonation(req, res) {
     try {
       const page = parseInt(req.query.page) || 1; // Current page number
-      const limit = parseInt(req.query.limit) || 2; // Number of items per page
+      const limit = parseInt(req.query.limit) || 10; // Number of items per page
       const skip = (page - 1) * limit;
-      
+
+      const searchQuery = req.query.search || '';
+      const filterDate = req.query.date || '';
+      const filterStatus = req.query.status || '';
+      const sortParam = req.query.sort || 'expectedDateOfArrival_asc'; // Default sorting parameter
+
+      let whereClause = {
+        isSubmitted: true,
+        organization: {
+          organizationname: {
+            contains: searchQuery,
+            mode: 'insensitive'
+          }
+        }
+      };
+
+      if (filterDate) {
+        // Adjust this based on how your dates are stored and queried in your database
+        whereClause.expectedDateOfArrival = {
+          equals: new Date(filterDate)
+        };
+      }
+
+      if (filterStatus) {
+        whereClause.status = filterStatus;
+      }
+
+      // Parsing sort parameter
+      const [sortField, sortOrder] = sortParam.split('_');
+      let orderByClause = {};
+      orderByClause[sortField] = sortOrder;
+
       // Fetch the manager's profile and associated drop point using the ID stored in the session
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: {
@@ -199,10 +309,11 @@ module.exports = {
           dropPoint: {
             include: {
               donations: {
-                where: { isSubmitted: true },  // Fetch only the submitted donations
+                where: whereClause,
                 skip: skip,
                 take: limit,
-                include: { 
+                orderBy: orderByClause,
+                include: {
                   organization: true,
                   peripherals: true
                 }  // Fetch related organization for each donation
@@ -220,18 +331,18 @@ module.exports = {
         }
       });
       const totalPages = Math.ceil(totalDonations / limit);
-  
+
       // Get the drop point name from the first drop point (if it exists)
       const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
-  
+
       // Render the manageDonation view, passing in the donations and dropPoint name
-      res.render('manager/manageDonation', { 
+      res.render('manager/manageDonation', {
         donations: managerWithDropPoint.dropPoint[0]?.donations || [],
         dropPointName: dropPointName,
         currentPage: page,
         totalPages: totalPages
       });
-  
+
     } catch (error) {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal Server Error");
@@ -241,7 +352,7 @@ module.exports = {
   async updateDonationStatus(req, res) {
     try {
       const { donationId, newStatus } = req.body;
-  
+
       // Fetch the existing donation
       const donation = await prisma.donation.findUnique({
         where: { id: donationId },
@@ -250,18 +361,18 @@ module.exports = {
           organizationId: true
         }
       });
-  
+
       // Check if the donation exists and has points.
       if (!donation || donation.points === null) {
         return res.status(404).send("Donation not found or points are null");
       }
-    
+
       // Update the donation status using donationId and newStatus
       await prisma.donation.update({
         where: { id: donationId },
         data: { status: newStatus },
       });
-  
+
       // Proceed with updating the organization's points if the new status is "VERIFIED" or "ACCEPTEDWITHISSUES"
       if (newStatus === "VERIFIED" || newStatus === "ACCEPTEDWITHISSUES") {
         // Fetch the existing organization
@@ -281,26 +392,72 @@ module.exports = {
         await prisma.organization.update({
           where: { id: donation.organizationId },
           data: {
-             totalPoints: newTotalPoints,
-             lifetimePoints: newLifetimePoints 
-            }
+            totalPoints: newTotalPoints,
+            lifetimePoints: newLifetimePoints
+          }
         });
 
         // Count the number of donations for the organization
         const numberOfDonations = await prisma.donation.count({
           where: { organizationId: donation.organizationId }
-        });  
- 
+        });
+
         sendMilestoneCertificate(organization, numberOfDonations)
           .then(result => console.log('Certificate process completed:', result))
           .catch(error => console.error('Certificate process failed:', error));
-        
-      } 
-  
+
+      }
+
       // Redirect back to the donations management page
       res.redirect('/manager/manageDonation');
     } catch (error) {
       console.error("Error updating donation status:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postUpdatePeripheral(req, res) {
+    try {
+      const { peripheralId, condition, quantity } = req.body;
+
+      // Fetch the current details of the peripheral
+      const currentPeripheral = await prisma.peripheral.findUnique({
+        where: { id: peripheralId },
+        include: { donation: true }
+      });
+
+      let deduction = 0;
+
+      // Check for condition change and apply deductions
+      if (currentPeripheral.condition !== condition) {
+        deduction += 2; // Deduct 2 points for condition change
+      }
+
+      // Check for quantity change and apply deductions
+      if (currentPeripheral.quantity !== parseInt(quantity)) {
+        // Deduct 1 point per item reduced
+        const quantityChange = currentPeripheral.quantity - parseInt(quantity);
+        if (quantityChange > 0) { // Ensure deduction only if quantity is reduced
+          deduction += quantityChange;
+        }
+      }
+
+      // Update the peripheral in the database
+      await prisma.peripheral.update({
+        where: { id: peripheralId },
+        data: { condition, quantity: parseInt(quantity) }
+      });
+
+      // Update the donation's points
+      const newTotalPoints = Math.max(0, currentPeripheral.donation.points - deduction); // Ensure points do not go below zero
+      await prisma.donation.update({
+        where: { id: currentPeripheral.donationId },
+        data: { points: newTotalPoints }
+      });
+
+      res.redirect('/manager/manageDonation');
+    } catch (error) {
+      console.error("Error updating peripheral:", error);
       res.status(500).send("Internal Server Error");
     }
   },
@@ -316,23 +473,33 @@ module.exports = {
           dropPoint: true  // Fetch associated drop point details
         }
       });
-      
-      // Get the drop point name from the first drop point (if it exists)
-      const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
 
-  
-      // Render the manager account page with the manager's profile and drop point name
-      res.render('manager/manageraccount', { manager: managerWithDropPoint, dropPointName: dropPointName });
-  
+      // Extract drop point details
+      const dropPoint = managerWithDropPoint.dropPoint[0] || {};
+      const dropPointName = dropPoint.name || "Unnamed Drop Point";
+      const dropPointLocation = dropPoint.location || "N/A";
+      const dropPointOpeningTime = dropPoint.openingTime || "N/A";
+      const dropPointClosingTime = dropPoint.closingTime || "N/A";
+      const dropPointDescription = dropPoint.description || "No description available";
+
+      // Render the manager account page with the manager's profile and drop point details
+      res.render('manager/manageraccount', {
+        manager: managerWithDropPoint,
+        dropPointName,
+        dropPointLocation,
+        dropPointOpeningTime,
+        dropPointClosingTime,
+        dropPointDescription
+      });
+
     } catch (error) {
       console.error("Error fetching manager's profile:", error);
       res.status(500).send("Internal Server Error");
     }
-  }, 
+  },
 
   managerLogout(req, res) {
     req.session.managerId = null; // Clear the manager's session
     res.redirect('/manager/login');
   }
 };
-   

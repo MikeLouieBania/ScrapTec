@@ -190,7 +190,29 @@
                 <a href="/manager/changepassword" class="btn btn-warning">Change Password</a>
             </div>
         </div>
+    </div> 
+    
+    <!-- Drop Point Information Card -->
+    <div class="card mt-5"> <!-- Added margin-top for spacing -->
+        <div class="circle-icon" style="background-color: #28a745;"> <!-- Different background color for distinction -->
+            <i class="large material-icons">location_on</i> <!-- Different icon for drop point -->
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Managed Drop Point</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="card-text"><strong>Name:</strong> <%= dropPointName %></p>
+                    <p class="card-text"><strong>Location:</strong> <%= dropPointLocation %></p>
+                </div>
+                <div class="col-md-6">
+                    <p class="card-text"><strong>Opening Time:</strong> <%= dropPointOpeningTime %></p>
+                    <p class="card-text"><strong>Closing Time:</strong> <%= dropPointClosingTime %></p>
+                </div>
+            </div>
+            <p class="card-text"><strong>Description:</strong> <%= dropPointDescription %></p>
+        </div>
     </div>
+
 </div>
 
 <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->

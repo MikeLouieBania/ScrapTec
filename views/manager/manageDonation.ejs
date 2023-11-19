@@ -309,16 +309,45 @@
                     </tr>
                 </thead>
                 <!-- Search bar placed above the table on the right -->
-                <input type="text" class="search-input" placeholder="Search...">
+                <!-- <input type="text" class="search-input" placeholder="Search..."> -->
+                <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+                <!-- Filter by Expected Date of Arrival -->
+                <input type="date" id="filterDate" class="filter-input" placeholder="Filter by Date">
+
+                <!-- Filter by Status -->
+                <select id="filterStatus" class="filter-input">
+                    <option value="">Select Status</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="ARRIVED">Arrived</option>
+                    <option value="VERIFIED">Verified</option>
+                    <option value="REJECTED">Rejected</option>
+                    <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
+                </select>
+                <!-- Add this within your HTML form or near the filter inputs -->
+                <select id="sortOrder" class="filter-input">
+                    <option value="expectedDateOfArrival_asc">Date of Arrival (Ascending)</option>
+                    <option value="expectedDateOfArrival_desc">Date of Arrival (Descending)</option>  
+                </select>
+
+
+                <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+                <button id="clearFilters" class="btn btn-secondary">Clear Filters</button>
+
+
 
                 <!-- Pagination -->
                 <div class="pagination">
                     <a href="?page=1">&laquo;</a>
                     <% for(let i = 1; i <= totalPages; i++) { %>
-                      <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                      <% if(i == 1 || i == totalPages || i == currentPage || i == currentPage - 1 || i == currentPage + 1) { %>
+                        <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                      <% } else if(i == currentPage - 2 || i == currentPage + 2) { %>
+                        <span>...</span>
+                      <% } %>
                     <% } %>
                     <a href="?page=<%= totalPages %>">&raquo;</a>
-                  </div>                  
+                  </div>
+                                   
 
         </div>
 
@@ -356,59 +385,55 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- Check if donation.peripherals is defined -->
                                         <% if (donation.peripherals) { %>
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Type</th>
-                                                        <th>Brand</th>
-                                                        <th>Model</th>
-                                                        <th>Condition</th>
-                                                        <th>Quantity</th>
-                                                        <% /* Add other attributes you want to verify */ %>
-                                                            <th>Actions</th> <!-- New column for actions -->
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% donation.peripherals.forEach(function(peripheral) { %>
+                                                <table class="table">
+                                                    <thead>
                                                         <tr>
-                                                            <td>
-                                                                <%= peripheral.type %>
-                                                            </td>
-                                                            <td>
-                                                                <%= peripheral.brand %>
-                                                            </td>
-                                                            <td>
-                                                                <%= peripheral.model %>
-                                                            </td>
-                                                            <td>
-                                                                <%= peripheral.condition %>
-                                                            </td>
-                                                            <td>
-                                                                <%= peripheral.quantity %>
-                                                            </td>
-                                                            <% /* Add other input fields for attributes you want to
-                                                                verify */ %>
-                                                                <td>
-                                                                    <button class="btn btn-primary btn-sm"
-                                                                        onclick="updatePeripheral(<%= index %>, '<%= peripheral.id %>')">Update</button>
-                                                                </td>
+                                                            <th>Type</th>
+                                                            <th>Brand</th>
+                                                            <th>Model</th>
+                                                            <th>Condition</th>
+                                                            <th>Quantity</th>
+                                                            <th>Update</th>
                                                         </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% donation.peripherals.forEach(function(peripheral, peripheralIndex) { %>
+                                                        <form action="/manager/updatePeripheral" method="post">
+                                                            <tr id="peripheralRow<%= peripheralIndex %>">
+                                                                <td><%= peripheral.type %></td>
+                                                                <td><%= peripheral.brand %></td>
+                                                                <td><%= peripheral.model %></td>
+                                                                <td>
+                                                                    <select class="form-control" name="condition" id="condition<%= peripheralIndex %>">
+                                                                        <option value="Used but Working" <%= peripheral.condition === "Used but Working" ? "selected" : "" %>>Used but Working</option>
+                                                                        <option value="New" <%= peripheral.condition === "New" ? "selected" : "" %>>New</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control" name="quantity" value="<%= peripheral.quantity %>" id="quantity<%= peripheralIndex %>">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="hidden" name="peripheralId" value="<%= peripheral.id %>"> 
+                                                                    <button type="submit" class="btn btn-primary btn-sm" <%= ['VERIFIED', 'REJECTED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update</button>
+                                                                </td>
+                                                            </tr>
+                                                        </form>
                                                         <% }) %>
-                                                </tbody>
-                                            </table>
-                                            <% } else { %>
-                                                <p>No peripherals available</p>
-                                                <% } %>
+                                                    </tbody>
+                                                </table>
+                                        <% } else { %>
+                                            <p>No peripherals available</p>
+                                        <% } %>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
                     </td>
                     <td>
                         <!-- Display different verification statuses -->
@@ -458,16 +483,17 @@
                                             <!-- Hidden input for the donation ID -->
                                             <input type="hidden" name="donationId" value="<%= donation.id %>">
                                             <div class="form-group">
-                                                <label for="newStatus">Select New Status:</label>
-                                                <select class="form-control" id="newStatus" name="newStatus">
+                                                <label for="newStatus">Select New Status:</label> 
+                                                <select class="form-control" id="newStatus" name="newStatus" <%= ['VERIFIED', 'REJECTED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>
+
                                                     <option disabled readonly selected>Select Status</option>
                                                     <option value="ARRIVED">Arrived</option>
                                                     <option value="VERIFIED">Verified</option>
                                                     <option value="REJECTED">Rejected</option>
                                                     <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
                                                 </select>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Update Status</button>
+                                            </div> 
+                                            <button type="submit" class="btn btn-primary" <%= ['VERIFIED', 'REJECTED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update Status</button>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
@@ -490,7 +516,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchQuery = e.target.value;
+            window.location.href = `/manager/manageDonation?search=${searchQuery}`;
+        });
 
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            const filterDate = document.getElementById('filterDate').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+            let query = '/manager/manageDonation?';
+
+            if (filterDate) {
+                query += `date=${filterDate}&`;
+            }
+            if (filterStatus) {
+                query += `status=${filterStatus}&`;
+            }
+            if (sortOrder) {
+                query += `sort=${sortOrder}`;
+            }
+
+            window.location.href = query;
+        });
+
+        document.getElementById('clearFilters').addEventListener('click', function() {
+            window.location.href = '/manager/manageDonation';
+        });
+
+
+    </script>
 
 </body>
 

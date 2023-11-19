@@ -1,137 +1,237 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager Dashboard</title>
-    <!-- Link to Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
-    <style>
-      /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
 
-      
-      .navbar .navbar-brand,
-      .navbar .nav-link {
-          color: #fff;
-          font-family: 'Roboto Slab', serif,;
-          font-weight: bold;
-          font-size: 16px;
-          margin-top: 15px;
-      }
-      
-      body {
-          padding-top: 0px;
-          margin-bottom: 60px;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard</title>
+  <!-- Link to Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    /* Additional custom styles for the page */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-      .jumbotron {
-          background-color: #3498db;
-          color: #fff;
-          margin-bottom: 0;
-      }
 
-      .navbar {
-          background-color: #219ebc;
-          padding: 10px 0;
-      }
+    .navbar .navbar-brand,
+    .navbar .nav-link {
+      color: #fff;
+      font-family: 'Roboto Slab', serif, ;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 15px;
+    }
 
-      nav ul {
-          list-style: none;
-          text-align: center;
-      }
-        
-      nav ul li {
-          display: inline-block;
-      }
-        
-      nav ul li a {
-          display: block;
-          padding: 15px;
-          text-decoration: none;
-          color: #aaa;
-          font-weight: 800;
-          text-transform: uppercase;
-          margin: 0 10px;
-          position: relative;
-          transition: all .5s; 
-      }
-        
-      nav ul li a:hover {
-          color: #555;
-      }
-        
-      nav ul li a::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background-color: #8ecae6;
-          transform: scaleX(0);
-          transition: transform 0.5s;
-      }
-        
-      nav ul li a:hover::after {
-          transform: scaleX(1);
-      }
+    body {
+      padding-top: 0px;
+      margin-bottom: 60px;
+    }
 
-      /* Custom Logout Button Style */
-      .btn-logout {
-        background-color: #002244;  /* Reddish color for the button */
-        border: none;
-        padding: 10px 20px;  /* Larger padding for a bigger button */
-        border-radius: 5px;  /* Rounded corners */
-        transition: background-color 0.3s;  /* Smooth transition for hover effect */
-        margin-right: 20px;
-        font-weight: bold;
-        color: white;
-        font-family: 'Roboto Slab', serif,;
-      
-      }
+    .jumbotron {
+      background-color: #3498db;
+      color: #fff;
+      margin-bottom: 0;
+    }
 
-      .btn-logout:hover {
-        background-color: #6082B6;  /* Darker shade when hovered */
-        color: #fff;  /* White text color */
-        text-decoration: none;
-      }
+    .navbar {
+      background-color: #219ebc;
+      padding: 10px 0;
+    }
 
-    </style>
-  </head>
-  <body> 
+    nav ul {
+      list-style: none;
+      text-align: center;
+    }
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg">
-      <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-              <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
-          </li>  
-          <li class="nav-item">
-              <a class="nav-link" href="/manager/managerAccount">Account</a>
-          </li> 
-      </ul>
-      <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
-        <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
-      </form>
+    nav ul li {
+      display: inline-block;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 15px;
+      text-decoration: none;
+      color: #aaa;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin: 0 10px;
+      position: relative;
+      transition: all .5s;
+    }
+
+    nav ul li a:hover {
+      color: #555;
+    }
+
+    nav ul li a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #8ecae6;
+      transform: scaleX(0);
+      transition: transform 0.5s;
+    }
+
+    nav ul li a:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* Custom Logout Button Style */
+    .btn-logout {
+      background-color: #002244;
+      /* Reddish color for the button */
+      border: none;
+      padding: 10px 20px;
+      /* Larger padding for a bigger button */
+      border-radius: 5px;
+      /* Rounded corners */
+      transition: background-color 0.3s;
+      /* Smooth transition for hover effect */
+      margin-right: 20px;
+      font-weight: bold;
+      color: white;
+      font-family: 'Roboto Slab', serif, ;
+
+    }
+
+    .btn-logout:hover {
+      background-color: #6082B6;
+      /* Darker shade when hovered */
+      color: #fff;
+      /* White text color */
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary">
+            <%= dropPointName %>
+          </span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/manager/managerAccount">Account</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
+      <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
+    </form>
   </nav>
 
 
-    <div class="container"> 
+  <div class="container">
+    <div id="donation-overview-chart" style="height: 400px; margin-bottom: 30px;"></div>
+    <div id="recent-donations-chart" style="height: 400px; margin-bottom: 30px;"></div>
+    <div id="donation-trends-chart" style="height: 400px; margin-bottom: 30px;"></div>
 
-    </div>
+  </div>
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+  <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Highcharts core library -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+
+  <!-- Additional Highcharts modules -->
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <script>
+    // Fetch and render Donation Overview Chart
+    fetch('/manager/donationOverviewData')
+      .then(response => response.json())
+      .then(data => {
+        Highcharts.chart('donation-overview-chart', {
+          chart: {
+            type: 'pie'
+          },
+          title: {
+            text: 'Donation Overview'
+          },
+          series: [{
+            name: 'Donations',
+            colorByPoint: true,
+            data: data
+          }]
+        });
+      });
+  
+    // Fetch and render Recent Donations Chart
+    fetch('/manager/recentDonationsData')
+      .then(response => response.json())
+      .then(data => {
+        Highcharts.chart('recent-donations-chart', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Recent Donations'
+          },
+          xAxis: {
+            categories: data.map(item => item.organizationName)
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Donations Count'
+            }
+          },
+          series: [{
+            name: 'Donations',
+            data: data.map(item => item.status)
+          }]
+        });
+      });
+  
+    // Fetch and render Donation Trends Chart
+    fetch('/manager/donationTrendsData')
+      .then(response => response.json())
+      .then(data => {
+        Highcharts.chart('donation-trends-chart', {
+          chart: {
+            type: 'line'
+          },
+          title: {
+            text: 'Donation Trends'
+          },
+          xAxis: {
+            type: 'datetime',
+            title: {
+              text: 'Date'
+            }
+          },
+          yAxis: {
+            title: {
+              text: 'Number of Donations'
+            }
+          },
+          series: [{
+            name: 'Donations',
+            data: data
+          }]
+        });
+      });
+  </script>
+  
+</body>
+
 </html>

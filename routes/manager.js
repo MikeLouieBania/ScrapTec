@@ -8,6 +8,14 @@ router.post('/login', authMiddlewareManager.checkLoggedInRedirect, managerContro
 
 router.get('/dashboard', authMiddlewareManager.requireLogin, managerController.getDashboard);
 router.get('/manageDonation', authMiddlewareManager.requireLogin, managerController.getManageDonation); 
+router.post('/updatePeripheral', authMiddlewareManager.requireLogin, managerController.postUpdatePeripheral);
+
+// New routes for donation management
+router.get('/donationOverviewData', authMiddlewareManager.requireLogin, managerController.getDonationOverview);
+router.get('/recentDonationsData', authMiddlewareManager.requireLogin, managerController.getRecentDonations);
+router.get('/donationTrendsData', authMiddlewareManager.requireLogin, managerController.getDonationTrends);
+
+
 
 router.post('/updateDonationStatus', authMiddlewareManager.requireLogin, managerController.updateDonationStatus);
 router.get('/managerAccount', authMiddlewareManager.requireLogin, managerController.getManagerAccount);  
