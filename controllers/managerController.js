@@ -5,6 +5,7 @@ const path = require('path');
 const { PDFDocument, rgb } = require('pdf-lib');
 const fontkit = require('@pdf-lib/fontkit');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 async function sendMilestoneCertificate(organization, numberOfDonations) {
   return new Promise(async (resolve, reject) => {
@@ -168,7 +169,7 @@ module.exports = {
   async getLogin(req, res) {
     res.render('manager/login');
   },
-
+  
   async managerLogin(req, res) {
     try {
       const { email, password } = req.body;
@@ -183,7 +184,7 @@ module.exports = {
       });
 
       // If the manager has no associated drop point or the password doesn't match, render the login page with an error
-      if (!dropPoint || dropPoint.password !== password) {
+      if (!dropPoint || !(await bcrypt.compare(password, dropPoint.password))) {
         return res.render('manager/login', { message: "Invalid credentials." });
       }
 
@@ -683,7 +684,7 @@ module.exports = {
           return { ...donation, organizationname: organization?.organizationname };
         }));
       });
-      
+
 
 
 
@@ -965,6 +966,61 @@ module.exports = {
 
     } catch (error) {
       console.error("Error fetching manager's profile:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postUpdateAccount(req, res) {
+    try {
+      const { firstName, lastName, email, phoneNumber, address } = req.body;
+      await prisma.manager.update({
+        where: { id: req.session.managerId },
+        data: { firstName, lastName, email, phoneNumber, address }
+      });
+      res.redirect('/manager/managerAccount'); // Redirect to the account page or dashboard after update
+    } catch (error) {
+      console.error("Error updating manager's account:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postChangePassword(req, res) {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const managerId = req.session.managerId;
+
+      // Fetch the drop point associated with the manager
+      const dropPoint = await prisma.dropPoint.findFirst({
+        where: { managerId }
+      });
+
+      if (dropPoint) {
+        // Check if the current password is correct
+        const isPasswordValid = await bcrypt.compare(currentPassword, dropPoint.password);
+
+        if (isPasswordValid) {
+          // Check if the current password and new password are different
+          if (currentPassword !== newPassword) {
+            // Hash the new password with 10 salt rounds
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // Update the drop point's password with the hashed password
+            await prisma.dropPoint.update({
+              where: { id: dropPoint.id },
+              data: { password: hashedPassword }
+            });
+            res.redirect('/manager/managerAccount'); // Redirect after changing the password
+          } else {
+            res.status(400).send("New password must be different from the current password");
+          }
+        } else {
+          res.status(400).send("Incorrect current password");
+        }
+      } else {
+        res.status(404).send("Drop point not found or not associated with a manager");
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
       res.status(500).send("Internal Server Error");
     }
   },

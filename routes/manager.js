@@ -25,11 +25,14 @@ router.get('/performanceMetricsData', authMiddlewareManager.requireLogin, manage
 router.get('/userEngagement', authMiddlewareManager.requireLogin, managerController.getUserEngagement);
 router.get('/organizationProfiles', authMiddlewareManager.requireLogin, managerController.getOrganizationProfiles);
 
-
-
-
 router.post('/updateDonationStatus', authMiddlewareManager.requireLogin, managerController.updateDonationStatus);
 router.get('/managerAccount', authMiddlewareManager.requireLogin, managerController.getManagerAccount);  
+
+ 
+router.post('/updateAccount', authMiddlewareManager.requireLogin, managerController.postUpdateAccount); 
+router.post('/changePassword', authMiddlewareManager.requireLogin, managerController.postChangePassword);
+
+
 router.post('/logout', managerController.managerLogout);
 
 module.exports = router;
