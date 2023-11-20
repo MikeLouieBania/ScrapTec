@@ -119,6 +119,51 @@ async function sendMilestoneCertificate(organization, numberOfDonations) {
   });
 }
 
+async function aggregateDonationsByDay(donations) {
+  const donationCounts = {};
+
+  donations.forEach(donation => {
+    const date = donation.createdAt.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
+    donationCounts[date] = (donationCounts[date] || 0) + 1;
+  });
+
+  return Object.entries(donationCounts).map(([date, count]) => ({
+    x: new Date(date).getTime(), // Convert date to timestamp
+    y: count
+  }));
+}
+
+async function aggregateFeedbackByTimePeriod(feedbackTrends) {
+  // Object to hold the aggregated data
+  const aggregatedData = {};
+
+  feedbackTrends.forEach(feedback => {
+    // Convert the date to a YYYY-MM-DD string
+    const dateKey = feedback.createdAt.toISOString().split('T')[0];
+
+    if (!aggregatedData[dateKey]) {
+      aggregatedData[dateKey] = {
+        totalRatings: 0,
+        count: 0,
+        averageRating: 0
+      };
+    }
+
+    aggregatedData[dateKey].totalRatings += feedback.rating;
+    aggregatedData[dateKey].count += 1;
+    aggregatedData[dateKey].averageRating = aggregatedData[dateKey].totalRatings / aggregatedData[dateKey].count;
+  });
+
+  // Convert the aggregated data into an array suitable for charting
+  return Object.keys(aggregatedData).map(dateKey => {
+    return {
+      date: dateKey,
+      averageRating: aggregatedData[dateKey].averageRating
+    };
+  });
+}
+
+
 module.exports = {
   async getLogin(req, res) {
     res.render('manager/login');
@@ -171,12 +216,18 @@ module.exports = {
         return res.render('manager/login', { message: "Manager or associated drop point not found" });
       }
 
-      // Extract the drop point name or provide a default value if it's not available  
+      // Extract the drop point name and operating hours
       const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
-
+      const openingTime = managerWithDropPoint.dropPoint[0]?.openingTime || "Not Available";
+      const closingTime = managerWithDropPoint.dropPoint[0]?.closingTime || "Not Available";
 
       // Render the dashboard with the manager's profile and drop point name
-      res.render('manager/dashboard', { manager: managerWithDropPoint, dropPointName });
+      res.render('manager/dashboard', {
+        manager: managerWithDropPoint,
+        dropPointName,
+        openingTime,
+        closingTime
+      });
 
     } catch (error) {
       console.error("Error fetching manager's profile:", error);
@@ -186,19 +237,76 @@ module.exports = {
 
   async getDonationOverview(req, res) {
     try {
+      // Fetch the manager's drop point ID from the session
+      const managerId = req.session.managerId;
+
+      // Fetch the associated drop point details
+      const managerWithDropPoint = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        },
+        include: {
+          dropPoint: true
+        }
+      });
+
+      // Check if managerWithDropPoint or managerWithDropPoint.dropPoint is null
+      if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
+        return res.status(404).send("Associated drop point not found");
+      }
+
+      // Extract the drop point ID
+      const dropPointId = managerWithDropPoint.dropPoint[0]?.id;
+
+      // Fetch donations grouped by status for a specific drop point
       const donationsByStatus = await prisma.donation.groupBy({
+        where: {
+          dropPointId: dropPointId
+        },
         by: ['status'],
         _count: {
           id: true
         }
       });
 
-      const formattedData = donationsByStatus.map(item => ({
+      // Prepare main data for the pie chart
+      const mainData = donationsByStatus.map(item => ({
         name: item.status,
-        y: item._count.id
+        y: item._count.id,
+        drilldown: item.status
       }));
 
-      res.json(formattedData);
+      // Prepare drilldown data
+      const drilldownData = await Promise.all(donationsByStatus.map(async (item) => {
+        // Fetch more detailed data for each status for the specific drop point
+        const detailedData = await prisma.donation.findMany({
+          where: {
+            status: item.status,
+            dropPointId: dropPointId
+          },
+          select: {
+            organization: true, // Assuming you want to show organization details in drilldown
+            createdAt: true,
+            points: true
+          }
+        });
+
+        // Format the detailed data
+        const data = detailedData.map(donation => {
+          return [
+            donation.organization.organizationname, // Display organization name
+            donation.points // Display points for each donation
+          ];
+        });
+
+        return {
+          name: item.status,
+          id: item.status,
+          data: data
+        };
+      }));
+
+      res.json({ mainData, drilldownData });
     } catch (error) {
       console.error("Error in getDonationOverview:", error);
       res.status(500).send("Internal Server Error");
@@ -207,12 +315,27 @@ module.exports = {
 
   async getRecentDonations(req, res) {
     try {
+      // Fetch recent donations for the manager's drop point
+      const managerId = req.session.managerId;
+      const managerWithDropPoint = await prisma.manager.findUnique({
+        where: { id: managerId },
+        include: { dropPoint: true }
+      });
+
+      if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
+        return res.status(404).send("Associated drop point not found");
+      }
+
+      const dropPointId = managerWithDropPoint.dropPoint[0]?.id;
+
       const recentDonations = await prisma.donation.findMany({
         where: {
+          dropPointId: dropPointId
           // Add any necessary conditions, like a date range
         },
         include: {
-          organization: true
+          organization: true,
+          peripherals: true // Assuming peripherals contain the quantity
         },
         orderBy: {
           createdAt: 'desc'
@@ -220,10 +343,31 @@ module.exports = {
         take: 10 // Adjust the number of donations to fetch
       });
 
-      const formattedData = recentDonations.map(donation => ({
-        organizationName: donation.organization.organizationname,
-        date: donation.createdAt,
-        status: donation.status
+      const formattedData = recentDonations.map(donation => {
+        // Sum up the quantities of all peripherals in the donation
+        const totalQuantity = donation.peripherals.reduce((sum, peripheral) => sum + peripheral.quantity, 0);
+
+        return {
+          id: donation.id,
+          organizationName: donation.organization.organizationname,
+          date: donation.createdAt.toISOString().split('T')[0], // Format the date
+          status: donation.status,
+          quantity: totalQuantity // Use the total quantity
+        };
+      });
+
+      const drilldownData = await Promise.all(recentDonations.map(async (donation) => {
+        const peripherals = await prisma.peripheral.findMany({
+          where: { donationId: donation.id }
+        });
+
+        return {
+          id: donation.id, // Use donation ID for drilldown
+          data: peripherals.map(peripheral => ({
+            name: `${peripheral.type} - ${peripheral.condition}`,
+            y: peripheral.quantity
+          }))
+        };
       }));
 
       res.json(formattedData);
@@ -235,30 +379,356 @@ module.exports = {
 
   async getDonationTrends(req, res) {
     try {
-      const startDate = new Date(/* Set start date */);
-      const endDate = new Date(/* Set end date */);
-
-      const donationTrends = await prisma.donation.groupBy({
-        by: ['createdAt'],
-        _count: {
-          id: true
+      // Fetch the earliest and latest donation dates
+      const earliestDonation = await prisma.donation.findFirst({
+        orderBy: {
+          createdAt: 'asc'
         },
+        select: {
+          createdAt: true
+        }
+      });
+
+      const latestDonation = await prisma.donation.findFirst({
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          createdAt: true
+        }
+      });
+
+      // Check if dates are available
+      if (!earliestDonation || !latestDonation) {
+        return res.status(404).send("No donations found");
+      }
+
+      const startDate = earliestDonation.createdAt;
+      const endDate = latestDonation.createdAt;
+
+      // Fetch donations within the date range
+      const donations = await prisma.donation.findMany({
         where: {
           createdAt: {
             gte: startDate,
             lte: endDate
           }
+        },
+        select: {
+          createdAt: true,
+          id: true
         }
       });
 
-      const formattedData = donationTrends.map(item => ({
-        x: item.createdAt.getTime(),
-        y: item._count.id
-      }));
+      // Aggregate the data
+      const aggregatedData = await aggregateDonationsByDay(donations);
 
-      res.json(formattedData);
+      res.json(aggregatedData);
     } catch (error) {
       console.error("Error in getDonationTrends:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getRecentFeedback(req, res) {
+    try {
+      const managerId = req.session.managerId;
+
+      const managerWithDropPoint = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        },
+        include: {
+          dropPoint: true
+        }
+      });
+
+      if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
+        return res.status(404).send("Associated drop point not found");
+      }
+
+      const dropPointId = managerWithDropPoint.dropPoint[0]?.id;
+
+      const recentFeedback = await prisma.feedback.findMany({
+        where: {
+          dropPointId: dropPointId
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: 10,
+        include: {
+          organization: true
+        }
+      });
+
+      res.json(recentFeedback);
+    } catch (error) {
+      console.error("Error in getRecentFeedback:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getFeedbackSummary(req, res) {
+    try {
+      const managerId = req.session.managerId;
+
+      const managerWithDropPoint = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        },
+        include: {
+          dropPoint: true
+        }
+      });
+
+      if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
+        return res.status(404).send("Associated drop point not found");
+      }
+
+      const dropPointId = managerWithDropPoint.dropPoint[0]?.id;
+
+      const feedbackSummary = await prisma.feedback.groupBy({
+        where: {
+          dropPointId: dropPointId
+        },
+        by: ['rating'],
+        _count: {
+          rating: true
+        }
+      });
+
+      res.json(feedbackSummary);
+    } catch (error) {
+      console.error("Error in getFeedbackSummary:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getFeedbackTrends(req, res) {
+    try {
+      const managerId = req.session.managerId;
+
+      const managerWithDropPoint = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        },
+        include: {
+          dropPoint: true
+        }
+      });
+
+      if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
+        return res.status(404).send("Associated drop point not found");
+      }
+
+      const dropPointId = managerWithDropPoint.dropPoint[0]?.id;
+
+      // Find the oldest and newest feedback dates for the specific drop point
+      const oldestFeedback = await prisma.feedback.findFirst({
+        where: {
+          dropPointId: dropPointId
+        },
+        orderBy: {
+          createdAt: 'asc'
+        },
+        select: {
+          createdAt: true
+        }
+      });
+
+      const newestFeedback = await prisma.feedback.findFirst({
+        where: {
+          dropPointId: dropPointId
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          createdAt: true
+        }
+      });
+
+      if (!oldestFeedback || !newestFeedback) {
+        return res.status(404).send("No feedback found");
+      }
+
+      const startDate = new Date(oldestFeedback.createdAt);
+      const endDate = new Date(newestFeedback.createdAt);
+
+      const feedbackTrends = await prisma.feedback.findMany({
+        where: {
+          dropPointId: dropPointId,
+          createdAt: {
+            gte: startDate,
+            lte: endDate
+          }
+        },
+        select: {
+          createdAt: true,
+          rating: true
+        }
+      });
+
+      const aggregatedData = await aggregateFeedbackByTimePeriod(feedbackTrends);
+
+      res.json(aggregatedData);
+    } catch (error) {
+      console.error("Error in getFeedbackTrends:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getDonationReports(req, res) {
+    try {
+      const managerId = req.session.managerId;
+
+      // Assuming each manager is associated with one drop point
+      const manager = await prisma.manager.findUnique({
+        where: { id: managerId },
+        include: { dropPoint: true }
+      });
+
+      if (!manager || !manager.dropPoint) {
+        return res.status(404).send("Manager or associated drop point not found");
+      }
+
+      const dropPointId = manager.dropPoint.id;
+
+      // Example: Fetch total donations count
+      const totalDonations = await prisma.donation.count({
+        where: { dropPointId: dropPointId }
+      });
+
+      // Add more queries as needed for detailed breakdowns
+
+      res.json({ totalDonations });
+    } catch (error) {
+      console.error("Error in getDonationReports:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getPerformanceMetrics(req, res) {
+    try {
+      const managerId = req.session.managerId;
+
+      const manager = await prisma.manager.findUnique({
+        where: { id: managerId },
+        include: { dropPoint: true }
+      });
+
+      if (!manager || !manager.dropPoint) {
+        return res.status(404).send("Manager or associated drop point not found");
+      }
+
+      const dropPointId = manager.dropPoint.id;
+
+      // Example: Calculate average feedback score
+      const averageFeedbackScore = await prisma.feedback.aggregate({
+        where: { dropPointId: dropPointId },
+        _avg: { rating: true }
+      });
+
+      // Add more queries for other KPIs like donation turnaround time
+
+      res.json({ averageFeedbackScore: averageFeedbackScore._avg.rating });
+    } catch (error) {
+      console.error("Error in getPerformanceMetrics:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getUserEngagement(req, res) {
+    try {
+      const managerId = req.session.managerId;
+
+      const managerWithDropPoint = await prisma.manager.findUnique({
+        where: { id: managerId },
+        include: { dropPoint: true }
+      });
+
+      if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
+        return res.status(404).send("Associated drop point not found");
+      }
+
+      const dropPointId = managerWithDropPoint.dropPoint.id;
+
+      // Fetch frequency of donations by each organization
+      const donationFrequency = await prisma.donation.groupBy({
+        by: ['organizationId'],
+        where: {
+          dropPointId: dropPointId, // assuming dropPointId is defined and not undefined
+        },
+        _count: {
+          _all: true,
+        },
+        _sum: {
+          points: true,
+        },
+        _avg: {
+          points: true,
+        },
+        orderBy: {
+          _count: {
+            _all: 'desc',
+          },
+        },
+      }).then(donations => {
+        return Promise.all(donations.map(async donation => {
+          const organization = await prisma.organization.findUnique({
+            where: { id: donation.organizationId },
+            select: { organizationname: true },
+          });
+          return { ...donation, organizationname: organization?.organizationname };
+        }));
+      });
+
+
+
+      // Fetch types of items donated
+      const donationTypes = await prisma.peripheral.groupBy({
+        by: ['type'],
+        where: { donation: { dropPointId: dropPointId } },
+        _count: true
+      });
+
+      res.json({ donationFrequency, donationTypes });
+    } catch (error) {
+      console.error("Error in getUserEngagement:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getOrganizationProfiles(req, res) {
+    try {
+      const managerId = req.session.managerId;
+
+      const managerWithDropPoint = await prisma.manager.findUnique({
+        where: { id: managerId },
+        include: { dropPoint: true }
+      });
+
+      if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
+        return res.status(404).send("Associated drop point not found");
+      }
+
+      const dropPointId = managerWithDropPoint.dropPoint.id;
+
+      // Fetch organizations with their donation details
+      const organizations = await prisma.organization.findMany({
+        where: { donations: { some: { dropPointId: dropPointId } } },
+        include: {
+          donations: {
+            where: { dropPointId: dropPointId },
+            select: { id: true, createdAt: true, points: true }
+          }
+        }
+      });
+
+      res.json(organizations);
+    } catch (error) {
+      console.error("Error in getOrganizationProfiles:", error);
       res.status(500).send("Internal Server Error");
     }
   },

@@ -10,10 +10,21 @@ router.get('/dashboard', authMiddlewareManager.requireLogin, managerController.g
 router.get('/manageDonation', authMiddlewareManager.requireLogin, managerController.getManageDonation); 
 router.post('/updatePeripheral', authMiddlewareManager.requireLogin, managerController.postUpdatePeripheral);
 
-// New routes for donation management
+// donation charts
 router.get('/donationOverviewData', authMiddlewareManager.requireLogin, managerController.getDonationOverview);
 router.get('/recentDonationsData', authMiddlewareManager.requireLogin, managerController.getRecentDonations);
 router.get('/donationTrendsData', authMiddlewareManager.requireLogin, managerController.getDonationTrends);
+// feedback charts
+router.get('/recentFeedback', authMiddlewareManager.requireLogin, managerController.getRecentFeedback);
+router.get('/feedbackSummary', authMiddlewareManager.requireLogin, managerController.getFeedbackSummary);
+router.get('/feedbackTrends', authMiddlewareManager.requireLogin, managerController.getFeedbackTrends);
+// reporting and analytics charts
+router.get('/donationReportsData', authMiddlewareManager.requireLogin, managerController.getDonationReports);
+router.get('/performanceMetricsData', authMiddlewareManager.requireLogin, managerController.getPerformanceMetrics);
+// user and organization interaction charts
+router.get('/userEngagement', authMiddlewareManager.requireLogin, managerController.getUserEngagement);
+router.get('/organizationProfiles', authMiddlewareManager.requireLogin, managerController.getOrganizationProfiles);
+
 
 
 

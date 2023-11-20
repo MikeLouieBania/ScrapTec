@@ -8,14 +8,15 @@
   <!-- Link to Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
   <style>
     /* Additional custom styles for the page */
     .container {
-      max-width: 800px;
+      max-width: 90%;
       margin: 0 auto;
       padding: 20px;
     }
-
 
     .navbar .navbar-brand,
     .navbar .nav-link {
@@ -108,6 +109,61 @@
       /* White text color */
       text-decoration: none;
     }
+
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .chart-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+    }
+
+    .operating-hours-card {
+      background: #e9ecef;
+      /* Light grey background */
+      border-left: 5px solid #4e73df;
+      /* Blue border on the left for distinction */
+      padding: 10px;
+      margin-bottom: 20px;
+      /* Space between this card and charts */
+      font-size: 0.9em;
+      /* Smaller font size for compactness */
+      text-align: center;
+      /* Centered text */
+    }
+
+    .operating-hours-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+      /* Darker text for title */
+    }
+
+    .card-header {
+      background-color: #4e73df;
+      color: white;
+      font-size: 1.2em;
+    }
+
+    .metric-card {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .metric-card .card-title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .metric-card .card-text {
+      font-size: 1.5em;
+      color: #333;
+    }
   </style>
 </head>
 
@@ -133,12 +189,54 @@
     </form>
   </nav>
 
-
   <div class="container">
-    <div id="donation-overview-chart" style="height: 400px; margin-bottom: 30px;"></div>
-    <div id="recent-donations-chart" style="height: 400px; margin-bottom: 30px;"></div>
-    <div id="donation-trends-chart" style="height: 400px; margin-bottom: 30px;"></div>
+    <div class="row">
+      <!-- Operating Hours Card -->
+      <div class="col-md-4">
+        <div class="card operating-hours-card">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-clock"></i> Operating Hours</h5>
+            <p class="card-text"><i class="fas fa-sun"></i> Open: <%= openingTime %>
+            </p>
+            <p class="card-text"><i class="fas fa-moon"></i> Close: <%= closingTime %>
+            </p>
+          </div>
+        </div>
+      </div>
 
+      <!-- Donation Reports Card -->
+      <div class="col-md-4">
+        <div class="card metric-card" id="donation-reports-card">
+          <div class="card-body">
+            <h5 class="card-title">Total Donations</h5>
+            <p class="card-text" id="total-donations">Loading...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Metrics Card -->
+      <div class="col-md-4">
+        <div class="card metric-card" id="performance-metrics-card">
+          <div class="card-body">
+            <h5 class="card-title">Average Feedback Score</h5>
+            <p class="card-text" id="average-feedback-score">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="dashboard-container">
+      <div class="chart-card" id="donation-overview-chart"></div>
+      <div class="chart-card" id="recent-feedback-container"></div>
+      <div class="chart-card" id="recent-donations-chart"></div>
+      <div class="chart-card" id="donation-trends-chart"></div>
+      <div class="chart-card" id="feedback-summary-chart"></div>
+      <div class="chart-card" id="feedback-trends-chart"></div>
+      <div class="chart-card" id="user-engagement-chart"></div>
+      <div class="chart-card" id="organization-profiles-chart"></div>
+    </div>
   </div>
 
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
@@ -151,12 +249,13 @@
 
   <!-- Additional Highcharts modules -->
   <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/drilldown.js"></script>
   <script src="https://code.highcharts.com/modules/heatmap.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/export-data.js"></script>
   <script src="https://code.highcharts.com/modules/accessibility.js"></script>
   <script>
-    // Fetch and render Donation Overview Chart
+    // Fetch and render Donation Overview Chart with Drilldown
     fetch('/manager/donationOverviewData')
       .then(response => response.json())
       .then(data => {
@@ -167,14 +266,27 @@
           title: {
             text: 'Donation Overview'
           },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+            }
+          },
           series: [{
             name: 'Donations',
             colorByPoint: true,
-            data: data
-          }]
+            data: data.mainData
+          }],
+          drilldown: {
+            series: data.drilldownData
+          }
         });
       });
-  
+
     // Fetch and render Recent Donations Chart
     fetch('/manager/recentDonationsData')
       .then(response => response.json())
@@ -187,25 +299,49 @@
             text: 'Recent Donations'
           },
           xAxis: {
-            categories: data.map(item => item.organizationName)
+            categories: data.map(item => item.organizationName),
+            crosshair: true
           },
           yAxis: {
             min: 0,
             title: {
-              text: 'Donations Count'
+              text: 'Total Quantity of Donations'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y}</b></td></tr>' +
+              '<tr><td style="padding:0">Date: </td><td style="padding:0"><b>{point.date}</b></td></tr>' +
+              '<tr><td style="padding:0">Status: </td><td style="padding:0"><b>{point.status}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0
             }
           },
           series: [{
-            name: 'Donations',
-            data: data.map(item => item.status)
+            name: 'Quantity',
+            data: data.map(item => {
+              return {
+                y: item.quantity,
+                date: item.date,
+                status: item.status
+              };
+            })
           }]
         });
       });
-  
+
     // Fetch and render Donation Trends Chart
     fetch('/manager/donationTrendsData')
       .then(response => response.json())
       .then(data => {
+        console.log("Data received:", data);
         Highcharts.chart('donation-trends-chart', {
           chart: {
             type: 'line'
@@ -230,8 +366,208 @@
           }]
         });
       });
+
+    // Fetch and render Recent Feedback
+    fetch('/manager/recentFeedback')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('recent-feedback-container');
+        let html = '<h3>Recent Feedback</h3>';
+        html += '<div class="table-responsive">'; // Wrap the table in a div with class 'table-responsive'
+        html += '<table class="table">';
+        html += '<thead><tr><th>Organization</th><th>Feedback</th><th>Rating</th><th>Date</th></tr></thead><tbody>';
+
+        data.forEach(feedback => {
+          html += `<tr>
+                <td>${feedback.organization.organizationname}</td>
+                <td>${feedback.content}</td>
+                <td>${feedback.rating}</td>
+                <td>${new Date(feedback.createdAt).toLocaleDateString()}</td>
+               </tr>`;
+        });
+
+        html += '</tbody></table>';
+        html += '</div>'; // Close the 'table-responsive' div
+        container.innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Error fetching recent feedback:', error);
+        // Handle error
+      });
+
+    // Fetch and render Feedback Summary Chart
+    fetch('/manager/feedbackSummary')
+      .then(response => response.json())
+      .then(data => {
+        Highcharts.chart('feedback-summary-chart', {
+          chart: {
+            type: 'pie'
+          },
+          title: {
+            text: 'Feedback Summary'
+          },
+          series: [{
+            name: 'Ratings',
+            colorByPoint: true,
+            data: data.map(item => {
+              return {
+                name: `Rating ${item.rating}`,
+                y: item._count.rating
+              };
+            })
+          }]
+        });
+      });
+
+    // Fetch and render Feedback Trends Chart
+    fetch('/manager/feedbackTrends')
+      .then(response => response.json())
+      .then(data => {
+        Highcharts.chart('feedback-trends-chart', {
+          chart: {
+            type: 'line'
+          },
+          title: {
+            text: 'Feedback Trends Over Time'
+          },
+          xAxis: {
+            type: 'datetime',
+            title: {
+              text: 'Date'
+            }
+          },
+          yAxis: {
+            title: {
+              text: 'Average Rating'
+            }
+          },
+          series: [{
+            name: 'Average Rating',
+            data: data.map(item => {
+              return {
+                x: new Date(item.date).getTime(),
+                y: item.averageRating
+              };
+            })
+          }]
+        });
+      });
+
+    // Fetch and update Donation Reports Card
+    fetch('/manager/donationReportsData')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('total-donations').textContent = data.totalDonations || 'No data';
+      })
+      .catch(error => {
+        console.error('Error fetching donation reports:', error);
+        document.getElementById('total-donations').textContent = 'Error loading data';
+      });
+
+    // Fetch and update Performance Metrics Card
+    fetch('/manager/performanceMetricsData')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('average-feedback-score').textContent = data.averageFeedbackScore.toFixed(2) || 'No data';
+      })
+      .catch(error => {
+        console.error('Error fetching performance metrics:', error);
+        document.getElementById('average-feedback-score').textContent = 'Error loading data';
+      });
+
+    // Fetch and render User Engagement Chart
+    fetch('/manager/userEngagement')
+      .then(response => response.json())
+      .then(data => {
+        // Donation Frequency Chart
+        Highcharts.chart('user-engagement-chart', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'User Engagement - Donation Frequency and Types'
+          },
+          xAxis: {
+            categories: data.donationFrequency.map(item => item.organizationName),
+            crosshair: true
+          },
+          yAxis: [{
+            min: 0,
+            title: {
+              text: 'Number of Donations'
+            }
+          }, {
+            title: {
+              text: 'Donation Types'
+            },
+            opposite: true
+          }],
+          tooltip: {
+            shared: true
+          },
+          series: [{
+            name: 'Donations',
+            data: data.donationFrequency.map(item => item._count)
+          }, {
+            name: 'Donation Types',
+            type: 'spline',
+            yAxis: 1,
+            data: data.donationTypes.map(item => item._count),
+            tooltip: {
+              valueSuffix: ' types'
+            }
+          }]
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching user engagement data:', error);
+      });
+
+
+    // Fetch and render Organization Profiles Chart
+    fetch('/manager/organizationProfiles')
+      .then(response => response.json())
+      .then(data => {
+        Highcharts.chart('organization-profiles-chart', {
+          chart: {
+            type: 'bar'
+          },
+          title: {
+            text: 'Organization Profiles - Donation Details'
+          },
+          xAxis: {
+            categories: data.map(org => org.organizationname),
+            title: {
+              text: 'Organization Name'
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Total Points and Donations'
+            }
+          },
+          series: [{
+            name: 'Total Points',
+            data: data.map(org => org.donations.reduce((sum, donation) => sum + donation.points, 0))
+          }, {
+            name: 'Total Donations',
+            data: data.map(org => org.donations.length),
+            tooltip: {
+              valueSuffix: ' donations'
+            }
+          }]
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching organization profiles data:', error);
+      });
+
+
+
+
   </script>
-  
+
 </body>
 
 </html>
