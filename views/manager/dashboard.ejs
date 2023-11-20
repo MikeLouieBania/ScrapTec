@@ -163,7 +163,7 @@
     .metric-card .card-text {
       font-size: 1.5em;
       color: #333;
-    }
+    } 
   </style>
 </head>
 
@@ -225,11 +225,9 @@
       </div>
     </div>
 
-
-
     <div class="dashboard-container">
       <div class="chart-card" id="donation-overview-chart"></div>
-      <div class="chart-card" id="recent-feedback-container"></div>
+      <div class="chart-card" id="recent-feedback-container" style="grid-column: span 2;"></div>
       <div class="chart-card" id="recent-donations-chart"></div>
       <div class="chart-card" id="donation-trends-chart"></div>
       <div class="chart-card" id="feedback-summary-chart"></div>
@@ -507,7 +505,7 @@
           },
           series: [{
             name: 'Donations',
-            data: data.donationFrequency.map(item => item._count)
+            data: data.donationFrequency.map(item => item._count.organizationId)
           }, {
             name: 'Donation Types',
             type: 'spline',

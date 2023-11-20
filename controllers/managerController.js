@@ -658,10 +658,10 @@ module.exports = {
       const donationFrequency = await prisma.donation.groupBy({
         by: ['organizationId'],
         where: {
-          dropPointId: dropPointId, // assuming dropPointId is defined and not undefined
+          dropPointId: dropPointId,
         },
         _count: {
-          _all: true,
+          organizationId: true, // Count by organizationId
         },
         _sum: {
           points: true,
@@ -671,7 +671,7 @@ module.exports = {
         },
         orderBy: {
           _count: {
-            _all: 'desc',
+            organizationId: 'desc', // Order by count of organizationId
           },
         },
       }).then(donations => {
@@ -683,6 +683,7 @@ module.exports = {
           return { ...donation, organizationname: organization?.organizationname };
         }));
       });
+      
 
 
 
