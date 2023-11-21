@@ -206,58 +206,51 @@ module.exports = {
     }
   },
 
-  async getAverageRatingPerEntity(req, res) {
+  async getAverageRatingPerDropPoint(req, res) {
     try {
       // Fetch all feedbacks
       const feedbacks = await prisma.feedback.findMany({
         select: {
           rating: true,
-          organizationId: true,
           dropPointId: true
         }
       });
-
-      // Manual aggregation
+  
+      // Filter out feedbacks without a valid dropPointId
+      const validFeedbacks = feedbacks.filter(fb => fb.dropPointId);
+  
+      // Manual aggregation for drop points
       const aggregatedRatings = {};
-      feedbacks.forEach(fb => {
-        const key = fb.organizationId || fb.dropPointId;
+      validFeedbacks.forEach(fb => {
+        const key = fb.dropPointId;
         if (!aggregatedRatings[key]) {
-          aggregatedRatings[key] = { totalRating: 0, count: 0, type: fb.organizationId ? 'organization' : 'dropPoint' };
+          aggregatedRatings[key] = { totalRating: 0, count: 0 };
         }
         aggregatedRatings[key].totalRating += fb.rating;
         aggregatedRatings[key].count++;
       });
-
-      // Fetch names and prepare response
+  
+      // Fetch names of drop points and prepare response
       const response = await Promise.all(Object.keys(aggregatedRatings).map(async key => {
-        const { totalRating, count, type } = aggregatedRatings[key];
+        const { totalRating, count } = aggregatedRatings[key];
         const averageRating = totalRating / count;
-        let name;
-
-        if (type === 'organization') {
-          const org = await prisma.organization.findUnique({
-            where: { id: key },
-            select: { organizationname: true }
-          });
-          name = org ? org.organizationname : 'Unknown Organization';
-        } else {
-          const dp = await prisma.dropPoint.findUnique({
-            where: { id: key },
-            select: { name: true }
-          });
-          name = dp ? dp.name : 'Unknown Drop Point';
-        }
-
-        return { name, averageRating, count };
+  
+        const dp = await prisma.dropPoint.findUnique({
+          where: { id: key },
+          select: { name: true }
+        });
+        const name = dp ? dp.name : 'Unknown Drop Point';
+  
+        return { name, averageRating, count }; // Include count in the response
       }));
-
+  
       res.json(response);
     } catch (error) {
-      console.error("Error fetching average ratings:", error);
+      console.error("Error fetching average ratings for drop points:", error);
       res.status(500).send('Server Error: ' + error.message);
     }
   },
-
+  
   async getRatingsDistribution(req, res) {
     try {
       const ratingsDistribution = await prisma.feedback.groupBy({
@@ -807,42 +800,60 @@ module.exports = {
     try {
       const { activityType, startDate, endDate, page = 1, limit = 10, dateOrder = 'desc', userEmail } = req.query;
       const skip = (page - 1) * limit;
-
+  
       let userSearchConditions = {};
       if (userEmail) userSearchConditions.email = { contains: userEmail };
-
+  
       const users = await prisma.user.findMany({
         where: userSearchConditions,
         include: {
+          city: true,
           listings: true,
           purchases: {
             include: {
               listing: true,
             },
           },
+          receivedRatings: true, // Including ratings received by the user
         },
+        skip: skip,
+        take: limit,
       });
-
+  
+      // Enhance users with additional details
+      const enhancedUsers = users.map(user => {
+        const averageRating = user.receivedRatings.length > 0
+          ? user.receivedRatings.reduce((acc, rating) => acc + rating.value, 0) / user.receivedRatings.length
+          : 0;
+  
+        return {
+          ...user,
+          listingsCount: user.listings.length,
+          purchasesCount: user.purchases.length,
+          averageRating: averageRating.toFixed(1), // Rounded to 1 decimal place
+        };
+      });
+  
       let activityLog = [];
-
       users.forEach(user => {
         const userName = `${user.firstName} ${user.lastName}`;
         addListingsToActivityLog(user, activityType, activityLog, userName);
         addPurchasesToActivityLog(user, activityType, activityLog, userName);
       });
-
+  
       applyDateFiltersAndSort(activityLog, startDate, endDate, dateOrder);
-
+  
+      const totalUsersCount = await prisma.user.count({
+        where: userSearchConditions
+      });
+      const totalUserPages = Math.ceil(totalUsersCount / limit);
+  
       const paginatedActivities = paginateActivities(activityLog, skip, limit);
       const totalPages = Math.ceil(activityLog.length / limit);
       const activeTab = req.query.tab || (userEmail ? 'userDetails' : 'activityLog');
-      
-      const totalUsers = users.length;
-      const paginatedUsers = users.slice(skip, skip + limit);
-      const totalUserPages = Math.ceil(totalUsers / limit);
-
+  
       res.render('admin/usermanagement', {
-        users: paginatedUsers,
+        users: enhancedUsers,
         activityLog: paginatedActivities,
         currentPage: parseInt(page, 10),
         totalPages,

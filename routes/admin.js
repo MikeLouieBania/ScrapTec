@@ -14,8 +14,8 @@ router.get('/users-by-city', authMiddlewareAdmin.requireLogin, adminController.g
 router.get('/organizations-by-verification', authMiddlewareAdmin.requireLogin, adminController.getOrganizationsByVerification);
 router.get('/organization-points-over-time', authMiddlewareAdmin.requireLogin, adminController.getOrganizationPointsOverTime);
 router.get('/donations-over-time', authMiddlewareAdmin.requireLogin, adminController.getDonationsOverTime);
-router.get('/donation-status-distribution', authMiddlewareAdmin.requireLogin, adminController.getDonationStatusDistribution); 
-router.get('/average-rating-per-entity', authMiddlewareAdmin.requireLogin, adminController.getAverageRatingPerEntity);
+router.get('/donation-status-distribution', authMiddlewareAdmin.requireLogin, adminController.getDonationStatusDistribution);  
+router.get('/average-rating-per-drop-point', authMiddlewareAdmin.requireLogin, adminController.getAverageRatingPerDropPoint); 
 router.get('/ratings-distribution', authMiddlewareAdmin.requireLogin, adminController.getRatingsDistribution); 
 router.get('/ad-interactions-over-time', authMiddlewareAdmin.requireLogin, adminController.getAdInteractionsOverTime); 
 router.get('/points-spent-on-ads', authMiddlewareAdmin.requireLogin, adminController.getPointsSpentOnAds); 

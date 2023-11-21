@@ -376,7 +376,13 @@
                                 <th>ID</th>
                                 <th>Email</th>
                                 <th>Name</th>
-                                <!-- Add other user details columns as needed -->
+                                <th>City</th>  
+                                <th>Contact</th>
+                                <th>Gender</th>
+                                <th>Joined</th>
+                                <th>Listings</th>
+                                <th>Purchases</th>
+                                <th>Avg. Rating</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -393,6 +399,13 @@
                                             <%= user.firstName %>
                                                 <%= user.lastName %>
                                         </td>
+                                        <td><%= user.city.name %></td> 
+                                        <td><%= user.contactNumber %></td>
+                                        <td><%= user.gender %></td>
+                                        <td><%= user.createdAt.toDateString() %></td>
+                                        <td><%= user.listingsCount %></td>
+                                        <td><%= user.purchasesCount %></td>
+                                        <td><%= user.averageRating %></td>
                                     </tr>
                                     <% }); %>
                         </tbody>
@@ -421,6 +434,7 @@
         </div>
     </div>
 
+    
 
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
