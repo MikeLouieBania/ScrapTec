@@ -154,10 +154,12 @@
   </div>
   <div class="main-content ml-200">
     <div class="container">
-      <!-- Search and Filter Section -->
+      <!-- Search and Filter Section --> 
       <div class="search-section">
-        <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by Name, Email."> 
+        <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by Name, Email.">
+        <button id="clearSearch" class="btn btn-secondary">Clear</button>
       </div>
+      
       
       <!-- Manager Management Table -->
       <table class="table mt-4">
@@ -196,7 +198,7 @@
                 </td>
                 <td>
                   <%= manager.firstName %>
-                    <%= manager.firstName %>
+                    <%= manager.lastName %>
                 </td>
                 <td>
                   <%= manager.email %>
@@ -348,6 +350,31 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function() {
+      // Function to get query parameter from URL
+      function getQueryParam(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+
+      // Set the search input value from URL parameter
+      var searchQuery = getQueryParam('search');
+      if (searchQuery) {
+        $('#searchInput').val(searchQuery);
+      }
+
+      // Search function
+      $('#searchInput').on('keyup', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          var searchQuery = $(this).val();
+          window.location.href = '/admin/managermanagement?search=' + encodeURIComponent(searchQuery);
+        }
+      });
+
+      $('#clearSearch').on('click', function() {
+        $('#searchInput').val('');
+        window.location.href = '/admin/managermanagement';
+      });
+
       $('.details-button').on('click', function() {
         const managerId = $(this).data('manager-id');
         const logsTab = $('#logs-' + managerId);

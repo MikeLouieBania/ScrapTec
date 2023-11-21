@@ -768,15 +768,44 @@ module.exports = {
       const page = parseInt(req.query.page) || 1; // Get current page from query, default is 1
       const limit = 5; // Limit number of managers per page
       const skip = (page - 1) * limit; // Calculate the offset
+      const searchQuery = req.query.search || ''; 
+      let filter = {};
+
+      if (searchQuery) {
+        filter = {
+          OR: [
+            {
+              firstName: {
+                contains: searchQuery,
+                mode: 'insensitive',
+              },
+            },
+            {
+              lastName: {
+                contains: searchQuery,
+                mode: 'insensitive',
+              },
+            },
+            {
+              email: {
+                contains: searchQuery,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        };
+      }
+
   
       // Fetch limited managers with offset
       const managers = await prisma.manager.findMany({
+        where: filter,
         skip: skip,
         take: limit
       });
   
       // Calculate total number of managers for pagination
-      const totalManagers = await prisma.manager.count();
+      const totalManagers = await prisma.manager.count({ where: filter });
       const totalPages = Math.ceil(totalManagers / limit);
 
       // Fetch unique assigned managerIds from drop points
