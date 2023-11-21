@@ -2,407 +2,447 @@
 <html>
 
 <head>
-    <title>Manager Management</title>
-    <!-- Link to Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-
-    <!-- Link to Google's Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-    
-        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-  
-      body {
-        background-color: white;
-        font-family: 'Poppins', sans-serif;
-        
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Management</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
     }
-    
-        
 
-        /* Additional custom styles for the page */
-        .container {
-            max-width: 800px;
-            margin-left: 20%;
-            padding: 20px;
-            margin-top: 60px;
-        }
+    .sidebar {
+      height: 100%;
+      width: 60px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #6499E9;
+      padding-top: 20px;
+      transition: 0.5s;
+      z-index: 2;
+    }
 
-        /* Sidebar styles */
-        .sidebar {
-            height: 100%;
-            width: 60px; /* Initial width just for the icons */
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #6499E9; /* Main blue */
-            padding-top: 20px;
-            transition: 0.5s;
-            z-index: 2; /* Ensure the sidebar is above the main content */
-        }
+    .sidebar:hover {
+      width: 200px;
+    }
 
-        .sidebar:hover {
-            width: 200px; /* Width when hovered */
-        }
-
-        .sidebar a {
-            margin-top: 25px;
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            color: #fff;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            font-weight: bold;
-        }
-
-        .sidebar a .material-icons {
-            margin-right: 10px; /* Space between icon and text */
-        }
-
-        /* Hide text labels by default */
-        .sidebar a::after {
-            content: attr(data-label);
-            display: none;
-        }
-
-        /* Show text labels on hover */
-        .sidebar:hover a::after {
-            display: inline;
-        }
-
-        .sidebar a:hover {
-            background-color: #4477CE; /* Darker blue on hover */
-        }
-
-        /* Main content styles */
-        .main-content {
-            padding-left: 70px; /* Adjusted to avoid overlap with sidebar */
-            padding-top: 0px;
-            padding-right: 20px;
-            padding-bottom: 20px;
-            transition: 0.5s; /* Smooth transition */
-        }
-
-        /* TABLE STYLE */
-        .table {
-          width: 160%; /* Keeps the original width */
-          border-collapse: collapse; /* Collapse borders so they become single lines */
-          font-family: 'Poppins', sans-serif;
-          font-size: 16px; /* Maintains the font size for readability */
-          margin-left: -150px; /* Keeps the original margin */
-          color: #212529; /* Sets text color to a standard dark for readability */
-        }
-      
-      .table th, .table td {
-          padding: 15px 20px; /* Restores the original padding */
-          text-align: left; /* Align text to the left for td, center for th */
-          border: 1px solid #dee2e6; /* Adds border to both td and th for grid lines */
-      }
-      
-      .table thead th {
-          vertical-align: bottom;
-          border-bottom: 2px solid #dee2e6; /* Heavier bottom border for header */
-          background-color: #f8f9fa; /* Light grey header background */
-          padding: 1rem; /* Standardized padding */
-          text-align: center; /* Center-align the header text */
-          font-weight: bold;
-          color: #495057; /* Dark grey color for text */
-      }
-      
-      .table tbody tr {
-          background-color: transparent; /* No striped effect */
-      }
-      
-      .table tbody tr:hover {
-          background-color: #f1f3f5; /* Light grey background on row hover */
-      }
-      
-      .table tbody td {
-          padding: 1rem; /* Standardized padding */
-          border: 1px solid #dee2e6; /* Adds horizontal borders to each cell */
-          text-align: left; /* Align the body text to the left */
-      }
-      
-      .mt-4 {
-          margin-top: 2rem; /* Keeps your custom top margin */
-      }
-      
-      
-      
-
-          /* Style for the Register Manager button */
-    .reg-button {
-      background-color: #3b93c7; /* Blue background color */
-      color: white; /* Text color */
-      border: none;
-      border-radius: 6px; /* Rounded corners */
-      padding: 10px 20px; /* Padding around the text */
-      font-size: 16px; /* Font size */
+    .sidebar a {
+      margin-top: 25px;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      transition: background-color 0.3s;
       font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+    }
+
+    .sidebar a:hover {
+      background-color: #4477CE;
+    }
+
+    .sidebar a .material-icons {
       margin-right: 10px;
     }
 
-    /* Hover effect */
-    .reg-button:hover {
-      background-color: #8babf1; /* Darker blue on hover */
+    .sidebar a::after {
+      content: attr(data-label);
+      display: none;
     }
 
-    /* Style for the pagination */
-      .pagination {
-        position: relative;
-        left: 94%; /* Adjust the right property to move it further right */
-        padding: 10px; /* Add padding to the pagination table for spacing */
-        border-radius: 5px; /* Rounded corners for the pagination table */
-        font-weight: bold;
-        font-family: 'Poppins', sans-serif;
+    .sidebar:hover a::after {
+      display: inline;
+    }
+
+    .main-content {
+      padding-left: 70px;
+      padding: 20px;
+      transition: 0.5s;
+    }
+
+    @media screen and (max-width: 768px) {
+      .main-content {
+        padding-left: 60px;
       }
+    }
 
-/* Rest of your pagination styles... */
+    .table-responsive {
+      margin-top: 20px;
+    }
 
-  .pagination li a {
+    .modal-dialog {
+      max-width: 800px;
+    }
+
+    .modal-header {
+      background: #007bff;
+      color: #fff;
+    }
+
+    .modal-body {
+      background: #f8f9fa;
+    }
+
+    .modal-footer {
+      background: #f8f9fa;
+    }
+
+    .form-control {
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
       border: none;
-      font-size: 16px;
-      min-width: 30px;
-      min-height: 30px;
-      color: #999;
-      margin: 0 2px;
-      line-height: 30px;
-      border-radius: 2px !important;
-      text-align: center;
-      padding: 0 6px;
-  }
-  .pagination li a:hover {
-      color: #666;
-  }	
-  .pagination li.active a, .pagination li.active a.page-link {
-      background: #63bdf4;
-  }
-  .pagination li.active a:hover {        
-      background: #0397d6;
-  }
-  .pagination li.disabled i {
-      color: #ccc;
-  }
-  .pagination li i {
-      font-size: 16px;
-      padding-top: 6px
-  }
+    }
 
-       /* Style for the form labels */
-.form-group label {
-  font-weight: bold;
-  font-size: 16px;
-  color: #333;
-}
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
 
-/* Style for the form inputs */
-.form-control {
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-  margin-bottom: 15px;
-  transition: border-color 0.3s ease;
-}
+    .search-section {
+      padding: 15px 0;
+    }
 
-/* Highlight the input field when focused */
-.form-control:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
+    .search-input {
+      margin-bottom: 10px;
+    } 
 
+    .details-button {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: white;
+    }
 
+    .details-button:hover {
+      background-color: #0056b3;
+      border-color: #004085;
+    }
 
-/* Style for the submit button */
-#registerManagerButton {
-  background-color: #288ec9;
-  color: white;
-  border: none;
-  border-radius: 7px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
-}
+    #detailTabsContent .tab-pane {
+      max-height: 400px; /* Adjust height as needed */
+      overflow-y: scroll;
+    }
 
-/* Hover effect for the submit button */
-#registerManagerButton:hover {
-  background-color: #94ceea;
-}
+    /* Style for modal tabs */
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+      color: #495057;
+      background-color: #fff;
+      border-color: #dee2e6 #dee2e6 #fff;
+    }
+  </style>
 
-/* Custom styles for the modal dialog */
-.my-modal-dialog {
-  margin-top: 100px;
-}
-
-/* Style for the modal title */
-.modal-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  margin-left: 35%;
-}
-
-.modal-header {
-  background-color: #2E8BC0;
-  color: white;
-
-}
-
-.modal-body .form-group label,
-.modal-body .form-group input {
-    font-family: 'Poppins', sans-serif; /* Set the font family */
-    color: #333; /* Set the text color to dark gray */
-}
-
-.modal-body .form-group input {
-    border: 1px solid #ced4da; /* Optional: sets a standard border color */
-    background-color: #fff; /* Optional: sets the background color to white */
-}
-
-
-/* Style for the close button */
-.close {
-  font-size: 28px;
-  color: white;
-}
-
-
-
-    </style>
-   
 </head>
 
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
-        <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
-        <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
-        <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
-        <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
-        <a href="/admin/logout" data-label="Logout"><span class="material-icons">logout</span></a>
-    </div>
-    <div class="main-content ml-200">
-      <div class="container">
-          <table class="table mt-4">
-              <thead>
-                  <!-- Row for the Manager Management title and button -->
-                  <tr>
-                    <th colspan="5" class="w-75 text-left">Manager Management</th> <!-- Increase the width of this cell to 75% of the table width -->
-                    <th class="text-right w-25">
-                        <button type="button" class="btn btn-primary reg-button" data-toggle="modal" data-target="#registerManagerModal">
-                            Register a Manager
-                        </button>
-                    </th>
-                </tr>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Contact No.</th>
-              <th>Address</th>
-              <th>Assigned Status</th> 
-            </tr>
-            
-          </thead>
-          
-          <tbody>
-            <!-- Populate table rows with drop point data -->
-            <% let counter = 1; %>
-            <% managers.forEach(manager => { %>
-            <tr>
-              <td><%= counter++ %></td>
-              <td><%= manager.firstName %> <%= manager.firstName %></td>
-              <td><%= manager.email %></td> 
-              <td><%= manager.phoneNumber %></td>
-              <td><%= manager.address %></td> 
-              <td><%= manager.isAssigned ? "Assigned" : "Not Assigned" %></td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-        <div class="clearfix">
-            <ul class="pagination">
-                <li class="page-item disabled"><a href="#">Previous</a></li>
-                <li class="page-item"><a href="#" class="page-link">1</a></li>
-                <li class="page-item"><a href="#" class="page-link">2</a></li>
-                <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                <li class="page-item"><a href="#" class="page-link">4</a></li>
-                <li class="page-item"><a href="#" class="page-link">5</a></li>
-                <li class="page-item"><a href="#" class="page-link">Next</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-      </div> 
-    </div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
+    <a href="/admin/organizationmanagement" data-label="Organization Management"><span
+        class="material-icons">business_center</span></a>
+    <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span
+        class="material-icons">place</span></a>
+    <a href="/admin/managermanagement" data-label="Manager Management"><span
+        class="material-icons">supervisor_account</span></a>
+    <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
+    <a href="/admin/logout" data-label="Logout"><span class="material-icons">logout</span></a>
+  </div>
+  <div class="main-content ml-200">
+    <div class="container">
+      <!-- Search and Filter Section -->
+      <div class="search-section">
+        <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by Name, Email."> 
+      </div>
+      
+      <!-- Manager Management Table -->
+      <table class="table mt-4">
+        <thead>
+          <!-- Row for the Manager Management title and button -->
+          <tr>
+            <th colspan="6" class="w-75 text-left">Manager Management</th>
+            <!-- Increase the width of this cell to 75% of the table width -->
+            <th class="text-right w-25">
+              <button type="button" class="btn btn-primary reg-button" data-toggle="modal"
+                data-target="#registerManagerModal">
+                Register a Manager
+              </button>
+            </th>
+          </tr>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact No.</th>
+            <th>Address</th>
+            <th>Assigned Status</th>
+            <th>Details</th>
+        
+          </tr>
 
-    <!-- Modal for creating drop points -->
-    <div class="modal fade" id="registerManagerModal" tabindex="-1" role="dialog" aria-labelledby="registerManagerModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg my-modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="registerManagerModalLabel">Register a Manager</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form action="/admin/managermanagement" method="post">
-                <div class="row">
-                    <!-- First Column -->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="managerFirstName">First Name</label>
-                            <input type="text" name="firstName" class="form-control" id="managerFirstName" placeholder="Enter manager's first name">
-                        </div>
-                        <div class="form-group">
-                            <label for="managerLastName">Last Name</label>
-                            <input type="text" name="lastName" class="form-control" id="managerLastName" placeholder="Enter manager's last name">
-                        </div>
-                        <div class="form-group">
-                            <label for="managerEmail">Email</label>
-                            <input type="email" name="email" class="form-control" id="managerEmail" placeholder="Enter manager's email">
-                        </div>
+        </thead>
+
+        <tbody>
+          <!-- Populate table rows with drop point data -->
+          <% let counter=1; %>
+            <% managers.forEach(manager=> { %>
+              <tr>
+                <td>
+                  <%= counter++ %>
+                </td>
+                <td>
+                  <%= manager.firstName %>
+                    <%= manager.firstName %>
+                </td>
+                <td>
+                  <%= manager.email %>
+                </td>
+                <td>
+                  <%= manager.phoneNumber %>
+                </td>
+                <td>
+                  <%= manager.address %>
+                </td>
+                <td>
+                  <%= manager.isAssigned ? "Assigned" : "Not Assigned" %>
+                </td> 
+                <td> 
+                  <button type="button" class="btn details-button" data-toggle="modal" data-target="#detailsModal-<%= manager.id %>" data-manager-id="<%= manager.id %>">
+                    View Details
+                  </button>
+                  
+                </td>
+              </tr>
+
+              <!-- Modal for Manager Details -->
+              <div class="modal fade" id="detailsModal-<%= manager.id %>" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="detailsModalLabel">Details for <%= manager.firstName %> <%= manager.lastName %></h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                     </div>
-                    <!-- Second Column -->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="managerPhone">Phone Number</label>
-                            <input type="tel" name="phoneNumber" class="form-control" id="managerPhone" placeholder="Enter manager's phone number">
+                    <div class="modal-body">
+                      <ul class="nav nav-tabs" id="detailTabs" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" id="logs-tab" data-toggle="tab" href="#logs-<%= manager.id %>" role="tab" aria-controls="logs" aria-selected="true">Logs</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="donations-tab" data-toggle="tab" href="#donations-<%= manager.id %>" role="tab" aria-controls="donations" aria-selected="false">Donations</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback-<%= manager.id %>" role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
+                        </li>
+                      </ul>
+                      <div class="tab-content" id="detailTabsContent">
+                        <div class="tab-pane fade show active" id="logs-<%= manager.id %>" role="tabpanel" aria-labelledby="logs-tab">
+                          <!-- Logs content will be loaded here -->
                         </div>
-                        <div class="form-group">
-                            <label for="managerAddress">Address</label>
-                            <input type="text" name="address" class="form-control" id="managerAddress" placeholder="Enter manager's address">
+                        <div class="tab-pane fade" id="donations-<%= manager.id %>" role="tabpanel" aria-labelledby="donations-tab">
+                          <!-- Donations content will be loaded here -->
                         </div>
+                        <div class="tab-pane fade" id="feedback-<%= manager.id %>" role="tabpanel" aria-labelledby="feedback-tab">
+                          <!-- Feedback content will be loaded here -->
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <div class="modal-footer d-flex justify-content-center"> <!-- Add these classes -->
-                  <button type="submit" class="btn btn-primary" id="registerManagerButton">Register Manager</button>
+              </div>
+
+               
+              <% }) %>
+        </tbody>
+      </table>
+
+      <div class="clearfix">
+        <ul class="pagination">
+          <% if(currentPage > 1) { %>
+            <li class="page-item">
+              <a href="/admin/managermanagement?page=<%= currentPage - 1 %>" class="page-link">Previous</a>
+            </li>
+          <% } %>
+          <% for(let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+              <a href="/admin/managermanagement?page=<%= i %>" class="page-link"><%= i %></a>
+            </li>
+          <% } %>
+          <% if(currentPage < totalPages) { %>
+            <li class="page-item">
+              <a href="/admin/managermanagement?page=<%= currentPage + 1 %>" class="page-link">Next</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+      
+    </div>
+  </div> 
+  
+  <!-- Modal for creating drop points -->
+  <div class="modal fade" id="registerManagerModal" tabindex="-1" role="dialog"
+    aria-labelledby="registerManagerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg my-modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerManagerModalLabel">Register a Manager</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/managermanagement" method="post">
+            <div class="row">
+              <!-- First Column -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="managerFirstName">First Name</label>
+                  <input type="text" name="firstName" class="form-control" id="managerFirstName"
+                    placeholder="Enter manager's first name">
                 </div>
-            </form>
+                <div class="form-group">
+                  <label for="managerLastName">Last Name</label>
+                  <input type="text" name="lastName" class="form-control" id="managerLastName"
+                    placeholder="Enter manager's last name">
+                </div>
+                <div class="form-group">
+                  <label for="managerEmail">Email</label>
+                  <input type="email" name="email" class="form-control" id="managerEmail"
+                    placeholder="Enter manager's email">
+                </div>
+              </div>
+              <!-- Second Column -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="managerPhone">Phone Number</label>
+                  <input type="tel" name="phoneNumber" class="form-control" id="managerPhone"
+                    placeholder="Enter manager's phone number">
+                </div>
+                <div class="form-group">
+                  <label for="managerAddress">Address</label>
+                  <input type="text" name="address" class="form-control" id="managerAddress"
+                    placeholder="Enter manager's address">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center"> <!-- Add these classes -->
+              <button type="submit" class="btn btn-primary" id="registerManagerButton">Register Manager</button>
+            </div>
+          </form>
         </div>
-         
-          </div> 
-        </div>
+
       </div>
     </div>
+  </div> 
 
-    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
-  </html>
+  <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+  <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.details-button').on('click', function() {
+        const managerId = $(this).data('manager-id');
+        const logsTab = $('#logs-' + managerId);
+        const donationsTab = $('#donations-' + managerId);
+        const feedbacksTab = $('#feedback-' + managerId);
   
+        $.get('/admin/managermanagement/logs/' + managerId, function(activityLogs) {
+          // Clear existing content
+          logsTab.empty();
+  
+          // Check if there are any activities
+          if (activityLogs.length === 0) {
+            logsTab.append('<p>No activities recorded.</p>');
+          } else {
+            // Start the table
+            var tableHtml = '<table class="table"><thead><tr><th>Type</th><th>Donation ID</th><th>Organization</th><th>Drop Point</th><th>Date</th></tr></thead><tbody>';
+  
+            // Populate logs tab with activity data
+            activityLogs.forEach(log => {
+              tableHtml += `<tr>
+                              <td>${log.type}</td>
+                              <td>${log.donationId}</td>
+                              <td>${log.organizationName}</td>
+                              <td>${log.dropPointName}</td>
+                              <td>${new Date(log.date).toLocaleString()}</td>
+                            </tr>`;
+            });
+  
+            // Close the table
+            tableHtml += '</tbody></table>';
+  
+            logsTab.append(tableHtml);
+          }
+        }).fail(function() {
+          logsTab.html('<p>Error loading activities</p>');
+        });
+
+        $.get('/admin/managermanagement/donations/' + managerId, function(donations) {
+          // Clear existing content
+          donationsTab.empty();
+
+          if (donations.length === 0) {
+            donationsTab.append('<p>No donations managed.</p>');
+          } else {
+            var tableHtml = '<table class="table"><thead><tr><th>ID</th><th>Organization</th><th>Drop Point</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+
+            donations.forEach(donation => {
+              tableHtml += `<tr>
+                              <td>${donation.id}</td>
+                              <td>${donation.organization.organizationname}</td>
+                              <td>${donation.dropPoint.name}</td>
+                              <td>${donation.status || 'Not Updated'}</td>
+                              <td>${new Date(donation.createdAt).toLocaleString()}</td>
+                            </tr>`;
+            });
+
+            tableHtml += '</tbody></table>';
+            donationsTab.append(tableHtml);
+          }
+        }).fail(function() {
+          donationsTab.html('<p>Error loading donations</p>');
+        });
+
+        $.get('/admin/managermanagement/feedbacks/' + managerId, function(feedbacks) {
+          // Clear existing content
+          feedbacksTab.empty();
+
+          if (feedbacks.length === 0) {
+            feedbacksTab.append('<p>No feedbacks received.</p>');
+          } else {
+            var tableHtml = '<table class="table"><thead><tr><th>ID</th><th>Organization</th><th>Drop Point</th><th>Rating</th><th>Content</th><th>Date</th></tr></thead><tbody>';
+
+            feedbacks.forEach(feedback => {
+              tableHtml += `<tr>
+                              <td>${feedback.id}</td>
+                              <td>${feedback.organization.organizationname}</td>
+                              <td>${feedback.dropPoint.name}</td>
+                              <td>${feedback.rating}</td>
+                              <td>${feedback.content}</td>
+                              <td>${new Date(feedback.createdAt).toLocaleString()}</td>
+                            </tr>`;
+            });
+
+            tableHtml += '</tbody></table>';
+            feedbacksTab.append(tableHtml);
+          }
+        }).fail(function() {
+          feedbacksTab.html('<p>Error loading feedbacks</p>');
+        });
+
+      });
+    });
+  </script>
+  
+
+</body>
+
+</html>

@@ -123,7 +123,7 @@
     donation       Donation     @relation(fields: [donationId], references: [id])
     donationId     String       @unique @map("donation_id") @db.ObjectId
   }
-
+  
   model Peripheral {
     id        String @id @default(auto()) @map("_id") @db.ObjectId
     type      String // e.g., Mouse, Keyboard, RAM, HDD, SSD, Graphic Card, etc.

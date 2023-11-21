@@ -30,6 +30,12 @@ router.get('/organizationmanagement', authMiddlewareAdmin.requireLogin,  adminCo
 router.get('/viewdocuments', authMiddlewareAdmin.requireLogin,  adminController.viewDocuments);
 router.get('/usermanagement', authMiddlewareAdmin.requireLogin,  adminController.getUserManagement); 
 router.get('/managermanagement', authMiddlewareAdmin.requireLogin,  adminController.getManagerManagement); 
+
+router.get('/managermanagement/logs/:managerId', authMiddlewareAdmin.requireLogin, adminController.getManagerActivities);
+router.get('/managermanagement/donations/:managerId', authMiddlewareAdmin.requireLogin, adminController.getManagerDonations);
+router.get('/managermanagement/feedbacks/:managerId', authMiddlewareAdmin.requireLogin, adminController.getManagerFeedbacks);
+
+
 router.get('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.getDropPointManagement); 
 router.post('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.createDropPoint);  
 router.post('/managermanagement', authMiddlewareAdmin.requireLogin,  adminController.registerManager);

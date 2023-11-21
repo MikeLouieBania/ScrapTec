@@ -765,8 +765,19 @@ module.exports = {
 
   async getManagerManagement(req, res) {
     try {
-      // Fetch managers
-      const managers = await prisma.manager.findMany();
+      const page = parseInt(req.query.page) || 1; // Get current page from query, default is 1
+      const limit = 5; // Limit number of managers per page
+      const skip = (page - 1) * limit; // Calculate the offset
+  
+      // Fetch limited managers with offset
+      const managers = await prisma.manager.findMany({
+        skip: skip,
+        take: limit
+      });
+  
+      // Calculate total number of managers for pagination
+      const totalManagers = await prisma.manager.count();
+      const totalPages = Math.ceil(totalManagers / limit);
 
       // Fetch unique assigned managerIds from drop points
       const dropPoints = await prisma.dropPoint.groupBy({
@@ -789,12 +800,106 @@ module.exports = {
         isAssigned: assignedManagerIds.has(manager.id)
       }));
 
-      res.render('admin/managermanagement', { managers: managersWithStatus });
+      res.render('admin/managermanagement', { 
+         managers: managersWithStatus, 
+         totalPages, 
+         currentPage: page 
+        });
     } catch (error) {
       console.error("Error fetching managers:", error);
       res.status(500).send("Internal Server Error");
     }
   },
+
+  async getManagerActivities(req, res) {
+    try {
+      const managerId = req.params.managerId; // Get manager ID from route parameter
+  
+      // Fetch donations associated with drop points managed by this manager
+      const managedDonations = await prisma.donation.findMany({
+        where: {
+          dropPoint: {
+            managerId: managerId,
+          },
+        },
+        include: {
+          organization: true, // Include related organization data
+          dropPoint: true, // Include drop point data
+          peripherals: true, // Include peripheral data if needed
+        }
+      });
+  
+      // Transform data to a more log-like structure if needed
+      const activityLogs = managedDonations.map(donation => ({
+        type: 'Donation Managed',
+        donationId: donation.id,
+        organizationName: donation.organization.organizationname,
+        dropPointName: donation.dropPoint.name,
+        date: donation.createdAt
+        // Add other relevant information
+      }));
+  
+      res.json(activityLogs); // Send log-like data as JSON response
+    } catch (error) {
+      console.error("Error fetching activities for manager:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  
+  async getManagerDonations(req, res) {
+    try {
+      const managerId = req.params.managerId;
+  
+      // Fetch donations where the drop point is managed by this manager
+      const donations = await prisma.donation.findMany({
+        where: {
+          dropPoint: {
+            managerId: managerId,
+          },
+        },
+        include: {
+          organization: true, // Include organization data
+          dropPoint: true, // Include drop point data
+          // other fields as needed
+        }
+      });
+  
+      res.json(donations);
+    } catch (error) {
+      console.error("Error fetching donations for manager:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async getManagerFeedbacks(req, res) {
+    try {
+      const managerId = req.params.managerId;
+  
+      // Fetch feedbacks where the drop point is managed by this manager
+      const feedbacks = await prisma.feedback.findMany({
+        where: {
+          dropPoint: {
+            managerId: managerId,
+          },
+        },
+        include: {
+          organization: true, // Include organization data
+          dropPoint: true, // Include drop point data
+          // other fields as needed
+        }
+      });
+  
+      res.json(feedbacks);
+    } catch (error) {
+      console.error("Error fetching feedbacks for manager:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  
+  
+
+
+
 
   async getUserManagement(req, res) {
     try {
