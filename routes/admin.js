@@ -37,6 +37,10 @@ router.get('/managermanagement/feedbacks/:managerId', authMiddlewareAdmin.requir
 
 
 router.get('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.getDropPointManagement); 
+router.get('/marketplacemanagement', authMiddlewareAdmin.requireLogin,  adminController.getMarketplaceManagement); 
+router.get('/listings/:listingId/photos/:photoIndex', authMiddlewareAdmin.requireLogin, adminController.getListingPhoto);
+
+
 router.post('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.createDropPoint);  
 router.post('/managermanagement', authMiddlewareAdmin.requireLogin,  adminController.registerManager);
 router.post('/assignManagerToDropPoint', authMiddlewareAdmin.requireLogin,  adminController.assignManagerToDropPoint); 

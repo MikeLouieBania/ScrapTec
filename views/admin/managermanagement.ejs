@@ -111,7 +111,7 @@
 
     .search-input {
       margin-bottom: 10px;
-    } 
+    }
 
     .details-button {
       background-color: #007bff;
@@ -125,12 +125,14 @@
     }
 
     #detailTabsContent .tab-pane {
-      max-height: 400px; /* Adjust height as needed */
+      max-height: 400px;
+      /* Adjust height as needed */
       overflow-y: scroll;
     }
 
     /* Style for modal tabs */
-    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    .nav-tabs .nav-item.show .nav-link,
+    .nav-tabs .nav-link.active {
       color: #495057;
       background-color: #fff;
       border-color: #dee2e6 #dee2e6 #fff;
@@ -147,20 +149,26 @@
         class="material-icons">business_center</span></a>
     <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span
         class="material-icons">place</span></a>
+    <a href="/admin/marketplacemanagement" data-label="Marketplace Management"><span
+        class="material-icons">shopping_cart</span></a> 
     <a href="/admin/managermanagement" data-label="Manager Management"><span
         class="material-icons">supervisor_account</span></a>
     <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
-    <a href="/admin/logout" data-label="Logout"><span class="material-icons">logout</span></a>
+    <a><form action="/admin/logout" method="post">
+      <button type="submit" data-label="Logout">
+        <span class="material-icons">logout</span>
+      </button>
+    </form></a> 
   </div>
   <div class="main-content ml-200">
     <div class="container">
-      <!-- Search and Filter Section --> 
+      <!-- Search and Filter Section -->
       <div class="search-section">
         <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by Name, Email.">
         <button id="clearSearch" class="btn btn-secondary">Clear</button>
       </div>
-      
-      
+
+
       <!-- Manager Management Table -->
       <table class="table mt-4">
         <thead>
@@ -183,7 +191,7 @@
             <th>Address</th>
             <th>Assigned Status</th>
             <th>Details</th>
-        
+
           </tr>
 
         </thead>
@@ -211,21 +219,25 @@
                 </td>
                 <td>
                   <%= manager.isAssigned ? "Assigned" : "Not Assigned" %>
-                </td> 
-                <td> 
-                  <button type="button" class="btn details-button" data-toggle="modal" data-target="#detailsModal-<%= manager.id %>" data-manager-id="<%= manager.id %>">
+                </td>
+                <td>
+                  <button type="button" class="btn details-button" data-toggle="modal"
+                    data-target="#detailsModal-<%= manager.id %>" data-manager-id="<%= manager.id %>">
                     View Details
                   </button>
-                  
+
                 </td>
               </tr>
 
               <!-- Modal for Manager Details -->
-              <div class="modal fade" id="detailsModal-<%= manager.id %>" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+              <div class="modal fade" id="detailsModal-<%= manager.id %>" tabindex="-1" role="dialog"
+                aria-labelledby="detailsModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="detailsModalLabel">Details for <%= manager.firstName %> <%= manager.lastName %></h5>
+                      <h5 class="modal-title" id="detailsModalLabel">Details for <%= manager.firstName %>
+                          <%= manager.lastName %>
+                      </h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -233,23 +245,29 @@
                     <div class="modal-body">
                       <ul class="nav nav-tabs" id="detailTabs" role="tablist">
                         <li class="nav-item">
-                          <a class="nav-link active" id="logs-tab" data-toggle="tab" href="#logs-<%= manager.id %>" role="tab" aria-controls="logs" aria-selected="true">Logs</a>
+                          <a class="nav-link active" id="logs-tab" data-toggle="tab" href="#logs-<%= manager.id %>"
+                            role="tab" aria-controls="logs" aria-selected="true">Logs</a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link" id="donations-tab" data-toggle="tab" href="#donations-<%= manager.id %>" role="tab" aria-controls="donations" aria-selected="false">Donations</a>
+                          <a class="nav-link" id="donations-tab" data-toggle="tab" href="#donations-<%= manager.id %>"
+                            role="tab" aria-controls="donations" aria-selected="false">Donations</a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback-<%= manager.id %>" role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
+                          <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback-<%= manager.id %>"
+                            role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
                         </li>
                       </ul>
                       <div class="tab-content" id="detailTabsContent">
-                        <div class="tab-pane fade show active" id="logs-<%= manager.id %>" role="tabpanel" aria-labelledby="logs-tab">
+                        <div class="tab-pane fade show active" id="logs-<%= manager.id %>" role="tabpanel"
+                          aria-labelledby="logs-tab">
                           <!-- Logs content will be loaded here -->
                         </div>
-                        <div class="tab-pane fade" id="donations-<%= manager.id %>" role="tabpanel" aria-labelledby="donations-tab">
+                        <div class="tab-pane fade" id="donations-<%= manager.id %>" role="tabpanel"
+                          aria-labelledby="donations-tab">
                           <!-- Donations content will be loaded here -->
                         </div>
-                        <div class="tab-pane fade" id="feedback-<%= manager.id %>" role="tabpanel" aria-labelledby="feedback-tab">
+                        <div class="tab-pane fade" id="feedback-<%= manager.id %>" role="tabpanel"
+                          aria-labelledby="feedback-tab">
                           <!-- Feedback content will be loaded here -->
                         </div>
                       </div>
@@ -258,34 +276,36 @@
                 </div>
               </div>
 
-               
+
               <% }) %>
         </tbody>
       </table>
 
       <div class="clearfix">
         <ul class="pagination">
-          <% if(currentPage > 1) { %>
+          <% if(currentPage> 1) { %>
             <li class="page-item">
               <a href="/admin/managermanagement?page=<%= currentPage - 1 %>" class="page-link">Previous</a>
             </li>
-          <% } %>
-          <% for(let i = 1; i <= totalPages; i++) { %>
-            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-              <a href="/admin/managermanagement?page=<%= i %>" class="page-link"><%= i %></a>
-            </li>
-          <% } %>
-          <% if(currentPage < totalPages) { %>
-            <li class="page-item">
-              <a href="/admin/managermanagement?page=<%= currentPage + 1 %>" class="page-link">Next</a>
-            </li>
-          <% } %>
+            <% } %>
+              <% for(let i=1; i <=totalPages; i++) { %>
+                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                  <a href="/admin/managermanagement?page=<%= i %>" class="page-link">
+                    <%= i %>
+                  </a>
+                </li>
+                <% } %>
+                  <% if(currentPage < totalPages) { %>
+                    <li class="page-item">
+                      <a href="/admin/managermanagement?page=<%= currentPage + 1 %>" class="page-link">Next</a>
+                    </li>
+                    <% } %>
         </ul>
       </div>
-      
+
     </div>
-  </div> 
-  
+  </div>
+
   <!-- Modal for creating drop points -->
   <div class="modal fade" id="registerManagerModal" tabindex="-1" role="dialog"
     aria-labelledby="registerManagerModalLabel" aria-hidden="true">
@@ -340,7 +360,7 @@
 
       </div>
     </div>
-  </div> 
+  </div>
 
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
   <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
@@ -349,7 +369,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
       // Function to get query parameter from URL
       function getQueryParam(param) {
         var urlParams = new URLSearchParams(window.location.search);
@@ -363,35 +383,35 @@
       }
 
       // Search function
-      $('#searchInput').on('keyup', function(e) {
+      $('#searchInput').on('keyup', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
           var searchQuery = $(this).val();
           window.location.href = '/admin/managermanagement?search=' + encodeURIComponent(searchQuery);
         }
       });
 
-      $('#clearSearch').on('click', function() {
+      $('#clearSearch').on('click', function () {
         $('#searchInput').val('');
         window.location.href = '/admin/managermanagement';
       });
 
-      $('.details-button').on('click', function() {
+      $('.details-button').on('click', function () {
         const managerId = $(this).data('manager-id');
         const logsTab = $('#logs-' + managerId);
         const donationsTab = $('#donations-' + managerId);
         const feedbacksTab = $('#feedback-' + managerId);
-  
-        $.get('/admin/managermanagement/logs/' + managerId, function(activityLogs) {
+
+        $.get('/admin/managermanagement/logs/' + managerId, function (activityLogs) {
           // Clear existing content
           logsTab.empty();
-  
+
           // Check if there are any activities
           if (activityLogs.length === 0) {
             logsTab.append('<p>No activities recorded.</p>');
           } else {
             // Start the table
             var tableHtml = '<table class="table"><thead><tr><th>Type</th><th>Donation ID</th><th>Organization</th><th>Drop Point</th><th>Date</th></tr></thead><tbody>';
-  
+
             // Populate logs tab with activity data
             activityLogs.forEach(log => {
               tableHtml += `<tr>
@@ -402,17 +422,17 @@
                               <td>${new Date(log.date).toLocaleString()}</td>
                             </tr>`;
             });
-  
+
             // Close the table
             tableHtml += '</tbody></table>';
-  
+
             logsTab.append(tableHtml);
           }
-        }).fail(function() {
+        }).fail(function () {
           logsTab.html('<p>Error loading activities</p>');
         });
 
-        $.get('/admin/managermanagement/donations/' + managerId, function(donations) {
+        $.get('/admin/managermanagement/donations/' + managerId, function (donations) {
           // Clear existing content
           donationsTab.empty();
 
@@ -434,11 +454,11 @@
             tableHtml += '</tbody></table>';
             donationsTab.append(tableHtml);
           }
-        }).fail(function() {
+        }).fail(function () {
           donationsTab.html('<p>Error loading donations</p>');
         });
 
-        $.get('/admin/managermanagement/feedbacks/' + managerId, function(feedbacks) {
+        $.get('/admin/managermanagement/feedbacks/' + managerId, function (feedbacks) {
           // Clear existing content
           feedbacksTab.empty();
 
@@ -461,14 +481,14 @@
             tableHtml += '</tbody></table>';
             feedbacksTab.append(tableHtml);
           }
-        }).fail(function() {
+        }).fail(function () {
           feedbacksTab.html('<p>Error loading feedbacks</p>');
         });
 
       });
     });
   </script>
-  
+
 
 </body>
 

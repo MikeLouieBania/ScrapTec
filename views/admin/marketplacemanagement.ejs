@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Management</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- Google's Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 60px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #6499E9;
+            padding-top: 20px;
+            transition: 0.5s;
+            z-index: 2;
+        }
+
+        .sidebar:hover {
+            width: 200px;
+        }
+
+        .sidebar a {
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .sidebar a .material-icons {
+            margin-right: 10px;
+        }
+
+        .sidebar a::after {
+            content: attr(data-label);
+            display: none;
+        }
+
+        .sidebar:hover a::after {
+            display: inline;
+        }
+
+        .sidebar a:hover {
+            background-color: #4477CE;
+        }
+
+        .main-content {
+            padding-left: 70px;
+            padding-top: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            transition: 0.5s;
+        }
+        .table {
+            margin-top: 20px;
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
+        
+        :fullscreen img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            margin: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
+        <a href="/admin/organizationmanagement" data-label="Organization Management"><span
+                class="material-icons">business_center</span></a>
+        <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span
+                class="material-icons">place</span></a>
+                <a href="/admin/marketplacemanagement" data-label="Marketplace Management"><span class="material-icons">shopping_cart</span></a>
+        <a href="/admin/managermanagement" data-label="Manager Management"><span
+                class="material-icons">supervisor_account</span></a>
+        <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
+        <a><form action="/admin/logout" method="post">
+            <button type="submit" data-label="Logout">
+              <span class="material-icons">logout</span>
+            </button>
+          </form></a> 
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="container">
+            <h1>Marketplace Management</h1>
+            <!-- Tabs for filtering listings -->
+            <ul class="nav nav-tabs" id="listingTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pending-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending Review</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Approved</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="rejected-tab" data-toggle="tab" href="#rejected" role="tab" aria-controls="rejected" aria-selected="false">Rejected</a>
+                </li>
+            </ul>
+            
+            
+            <!-- Tab panes for listing -->
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                    <!-- Table for pending review listings -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Title</th>
+                                <th>Seller Name</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (listings && listings.length > 0) { %>
+                                <% listings.forEach(listing => { %>
+                                    <tr>
+                                        <td> 
+                                            <% if (listing.photos && listing.photos.length > 0) { %>
+                                                <div id="carousel<%= listing.id %>" class="carousel slide" data-ride="carousel">
+                                                    <div class="carousel-inner">
+                                                        <% listing.photos.forEach((photo, index) => { %>
+                                                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                                                <!-- <img class="d-block w-100" src="data:image/jpeg;base64,<%= photo.imageUrl.toString('base64') %>" loading="lazy" alt="Listing Image" style="width: 100px; height: 100px;"> -->  
+                                                                <img src="/admin/listings/<%= listing.id %>/photos/<%= index %>" loading="lazy" alt="Listing Image" style="width: 100px; height: auto;" onclick="openImageFullscreen(this)">
+              
+                                                            </div>
+                                                        <% }) %>
+                                                    </div>
+                                                    <a class="carousel-control-prev" href="#carousel<%= listing.id %>" role="button" data-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                    <a class="carousel-control-next" href="#carousel<%= listing.id %>" role="button" data-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </div>
+                                            <% } else { %>
+                                                <p>No Image Available</p>
+                                            <% } %>
+                                        </td>
+                                        <td><%= listing.title %></td>
+                                        <td><%= listing.user.firstName %> <%= listing.user.lastName %></td>
+                                        <td><%= listing.price %></td>
+                                        <td><%= listing.status %></td>
+                                        <td><%= listing.location %></td>
+                                        <td>
+                                            <button class="btn btn-success">Approve</button>
+                                            <button class="btn btn-danger">Reject</button>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            <% } else { %>
+                                <p>No listings available.</p>
+                            <% } %> 
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tab">
+                    <!-- Table for approved listings -->
+                </div>
+                <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
+                    <!-- Table for rejected listings -->
+                </div>
+            </div>
+ 
+        </div>
+    </div> 
+
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function openImageFullscreen(imgElement) {
+            if (imgElement.requestFullscreen) {
+                imgElement.requestFullscreen();
+            } else if (imgElement.webkitRequestFullscreen) { // Safari
+                imgElement.webkitRequestFullscreen();
+            } else if (imgElement.msRequestFullscreen) { // IE11
+                imgElement.msRequestFullscreen();
+            }
+        }
+    </script>
+    
+</body>
+
+</html>

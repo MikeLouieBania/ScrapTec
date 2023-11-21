@@ -762,6 +762,62 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+  
+  async getMarketplaceManagement(req, res) {
+    try {
+        const page = req.query.page || 1;
+        const limit = 10; // Number of listings per page
+        const skip = (page - 1) * limit;
+        // Fetch listings with user details
+        const listings = await prisma.listing.findMany({
+            take: limit,
+            skip: skip,
+            include: {
+                user: true, 
+                photos: true,
+            },
+            orderBy: {
+                createdAt: 'desc', // Optional: Order by recent listings
+            },
+        }); 
+
+        // Pass the current page and total pages to the view for pagination controls
+        const totalListings = await prisma.listing.count();
+        const totalPages = Math.ceil(totalListings / limit);
+        
+        res.render('admin/marketplacemanagement', { listings, page, totalPages });
+    } catch (error) {
+        console.error('Error fetching listings:', error);
+        res.status(500).send('Error fetching listings');
+    }
+  },
+
+  async getListingPhoto (req, res) {
+    const { listingId, photoIndex } = req.params;
+
+    try {
+        const listing = await prisma.listing.findUnique({
+            where: { id: listingId },
+            include: { photos: true }
+        });
+
+        if (listing && listing.photos && listing.photos[photoIndex]) {
+            const photo = listing.photos[photoIndex];
+            // Assuming imageUrl is a base64 encoded string
+            const imgBuffer = Buffer.from(photo.imageUrl, 'base64');
+            res.writeHead(200, {
+                'Content-Type': 'image/jpeg',
+                'Content-Length': imgBuffer.length
+            });
+            res.end(imgBuffer);
+        } else {
+            res.status(404).send('Image not found');
+        }
+    } catch (error) {
+        console.error('Error fetching photo:', error);
+        res.status(500).send('Error fetching photo');
+    }
+  },
 
   async getManagerManagement(req, res) {
     try {
