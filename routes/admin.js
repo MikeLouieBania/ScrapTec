@@ -40,6 +40,9 @@ router.get('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminContr
 router.get('/marketplacemanagement', authMiddlewareAdmin.requireLogin,  adminController.getMarketplaceManagement); 
 router.get('/listings/:listingId/photos/:photoIndex', authMiddlewareAdmin.requireLogin, adminController.getListingPhoto);
 
+router.post('/listings/:listingId/approve', authMiddlewareAdmin.requireLogin, adminController.postApproveListing);
+router.post('/listings/:listingId/reject', authMiddlewareAdmin.requireLogin, adminController.postRejectListing);
+
 
 router.post('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.createDropPoint);  
 router.post('/managermanagement', authMiddlewareAdmin.requireLogin,  adminController.registerManager);

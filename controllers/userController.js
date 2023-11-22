@@ -140,6 +140,8 @@ module.exports = {
           NOT: [
             { userId: currentUserId },
             { status: "SOLD" },
+            { status: "REJECTED" },
+            { status: "PENDING" },
           ],
         },
         include: {
@@ -168,6 +170,8 @@ module.exports = {
           NOT: [
             { userId: currentUserId },
             { status: "SOLD" },
+            { status: "REJECTED" },
+            { status: "PENDING" },
           ],
         },
       });

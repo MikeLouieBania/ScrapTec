@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>User Management</title>
+    <title>Marketplace Management</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <!-- Google's Material Icons -->
@@ -80,8 +80,8 @@
         }
         
         :fullscreen img {
-            width: auto;
-            height: auto;
+            width: 90%;
+            height: 90%;
             max-width: 100%;
             max-height: 100%;
             margin: auto;
@@ -89,6 +89,31 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center; /* Centers the pagination links */
+            padding: 20px 0; /* Vertical padding */
+        }
+
+        .pagination a {
+            margin: 0 5px; /* Horizontal spacing between links */
+            padding: 5px 10px; /* Padding inside each link */
+            text-decoration: none; /* Removes the underline */
+            color: #007bff; /* Link color */
+            border: 1px solid #ddd; /* Border for the links */
+            border-radius: 5px; /* Rounded corners for the links */
+        }
+
+        .pagination a.active {
+            background-color: #007bff !important;
+            color: white !important;
+            border-color: #007bff !important;
+        } 
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd; /* Hover background color for non-active links */
         }
     </style>
 </head>
@@ -119,21 +144,17 @@
             <!-- Tabs for filtering listings -->
             <ul class="nav nav-tabs" id="listingTabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="pending-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending Review</a>
+                    <a class="nav-link <%= tab === 'pending' ? 'active' : '' %>" id="pending-tab" href="?tab=pending">Pending Review</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Approved</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="rejected-tab" data-toggle="tab" href="#rejected" role="tab" aria-controls="rejected" aria-selected="false">Rejected</a>
+                    <a class="nav-link <%= tab === 'rejected' ? 'active' : '' %>" id="rejected-tab" href="?tab=rejected">Rejected</a>
                 </li>
             </ul>
-            
-            
+    
             <!-- Tab panes for listing -->
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                    <!-- Table for pending review listings -->
+                <div class="tab-pane fade <%= tab === 'pending' || tab === 'rejected' ? 'show active' : '' %>" id="<%= tab %>" role="tabpanel">
+                    <!-- Table for listings -->
                     <table class="table">
                         <thead>
                             <tr>
@@ -141,24 +162,27 @@
                                 <th>Title</th>
                                 <th>Seller Name</th>
                                 <th>Price</th>
+                                <th>Description</th>
                                 <th>Status</th>
                                 <th>Location</th>
-                                <th>Actions</th>
+                                <th>
+                                    <% if (tab === 'pending') { %>
+                                        Actions
+                                    <% } %>
+                                </th> 
                             </tr>
                         </thead>
                         <tbody>
                             <% if (listings && listings.length > 0) { %>
                                 <% listings.forEach(listing => { %>
                                     <tr>
-                                        <td> 
+                                        <td>  
                                             <% if (listing.photos && listing.photos.length > 0) { %>
-                                                <div id="carousel<%= listing.id %>" class="carousel slide" data-ride="carousel">
+                                                <div id="carousel<%= listing.id %>" class="carousel slide" data-ride="carousel" onclick="openFullscreenCarousel('<%= listing.id %>')">
                                                     <div class="carousel-inner">
                                                         <% listing.photos.forEach((photo, index) => { %>
                                                             <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                                                <!-- <img class="d-block w-100" src="data:image/jpeg;base64,<%= photo.imageUrl.toString('base64') %>" loading="lazy" alt="Listing Image" style="width: 100px; height: 100px;"> -->  
-                                                                <img src="/admin/listings/<%= listing.id %>/photos/<%= index %>" loading="lazy" alt="Listing Image" style="width: 100px; height: auto;" onclick="openImageFullscreen(this)">
-              
+                                                                <img src="/admin/listings/<%= listing.id %>/photos/<%= index %>" class="d-block w-100" loading="lazy" alt="Listing Image" style="width: 100px; height: auto;">
                                                             </div>
                                                         <% }) %>
                                                     </div>
@@ -178,31 +202,77 @@
                                         <td><%= listing.title %></td>
                                         <td><%= listing.user.firstName %> <%= listing.user.lastName %></td>
                                         <td><%= listing.price %></td>
+                                        <td><%= listing.description %></td>
                                         <td><%= listing.status %></td>
                                         <td><%= listing.location %></td>
                                         <td>
-                                            <button class="btn btn-success">Approve</button>
-                                            <button class="btn btn-danger">Reject</button>
+                                            <% if (tab === 'pending') { %>
+                                                <form action="/admin/listings/<%= listing.id %>/approve" method="post">
+                                                    <button type="submit" class="btn btn-success">Approve</button>
+                                                </form>
+                                                <form action="/admin/listings/<%= listing.id %>/reject" method="post">
+                                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                                </form>
+                                            <% } %>
                                         </td>
                                     </tr>
-                                    <% }) %>
+                                <% }) %>
                             <% } else { %>
-                                <p>No listings available.</p>
-                            <% } %> 
-                            
+                                <tr><td colspan="7">No listings available for this tab.</td></tr>
+                            <% } %>
                         </tbody>
                     </table>
-                </div>
-                <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tab">
-                    <!-- Table for approved listings -->
-                </div>
-                <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
-                    <!-- Table for rejected listings -->
+                    <div class="pagination">
+                        <!-- First page link -->
+                        <a href="?page=1&tab=<%= tab %>">&laquo; First</a>
+                    
+                        <!-- Previous page link -->
+                        <% if (page > 1) { %>
+                            <a href="?page=<%= page - 1 %>&tab=<%= tab %>">Previous</a>
+                        <% } %>
+                    
+                        <!-- Page numbers -->
+                        <% 
+                        let startPage = Math.max(1, page - 5);
+                        let endPage = Math.min(page + 5, totalPages);
+                        for(let i = startPage; i <= endPage; i++) {  
+                            if (i === startPage && i > 1) { %>
+                                <a href="?page=<%= i - 1 %>&tab=<%= tab %>">...</a>
+                            <% }
+                            %><a href="?page=<%= i %>&tab=<%= tab %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a><%
+                            if (i === endPage && i < totalPages) { %>
+                                <a href="?page=<%= i + 1 %>&tab=<%= tab %>">...</a>
+                            <% }
+                        } 
+                        %>
+                    
+                        <!-- Next page link -->
+                        <% if (page < totalPages) { %>
+                            <a href="?page=<%= page + 1 %>&tab=<%= tab %>">Next</a>
+                        <% } %>
+                    
+                        <!-- Last page link -->
+                        <a href="?page=<%= totalPages %>&tab=<%= tab %>">Last &raquo;</a>
+                    </div>
+                    
                 </div>
             </div>
- 
         </div>
-    </div> 
+    </div>
+    
+ 
+
+    <!-- Fullscreen Carousel Modal -->
+    <div class="modal fade" id="fullscreenCarouselModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <!-- Carousel will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
@@ -210,16 +280,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        function openImageFullscreen(imgElement) {
-            if (imgElement.requestFullscreen) {
-                imgElement.requestFullscreen();
-            } else if (imgElement.webkitRequestFullscreen) { // Safari
-                imgElement.webkitRequestFullscreen();
-            } else if (imgElement.msRequestFullscreen) { // IE11
-                imgElement.msRequestFullscreen();
-            }
+        function openFullscreenCarousel(listingId) {
+            const originalCarousel = document.getElementById(`carousel${listingId}`);
+            const clonedCarousel = originalCarousel.cloneNode(true);
+            clonedCarousel.id = `fullscreenCarousel${listingId}`;
+    
+            const modalBody = document.querySelector('#fullscreenCarouselModal .modal-body');
+            modalBody.innerHTML = '';
+            modalBody.appendChild(clonedCarousel);
+    
+            // Initialize the cloned carousel
+            $(clonedCarousel).carousel();
+    
+            // Show the modal
+            $('#fullscreenCarouselModal').modal('show');
         }
     </script>
+    
     
 </body>
 

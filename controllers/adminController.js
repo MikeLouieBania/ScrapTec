@@ -10,7 +10,7 @@ function isPDF(filename) {
 }
 function isDOCX(filename) {
   return filename.toLowerCase().endsWith('.docx');
-} 
+}
 
 function addListingsToActivityLog(user, activityType, activityLog, userName) {
   if (!activityType || activityType === 'Listing Created') {
@@ -215,10 +215,10 @@ module.exports = {
           dropPointId: true
         }
       });
-  
+
       // Filter out feedbacks without a valid dropPointId
       const validFeedbacks = feedbacks.filter(fb => fb.dropPointId);
-  
+
       // Manual aggregation for drop points
       const aggregatedRatings = {};
       validFeedbacks.forEach(fb => {
@@ -229,28 +229,28 @@ module.exports = {
         aggregatedRatings[key].totalRating += fb.rating;
         aggregatedRatings[key].count++;
       });
-  
+
       // Fetch names of drop points and prepare response
       const response = await Promise.all(Object.keys(aggregatedRatings).map(async key => {
         const { totalRating, count } = aggregatedRatings[key];
         const averageRating = totalRating / count;
-  
+
         const dp = await prisma.dropPoint.findUnique({
           where: { id: key },
           select: { name: true }
         });
         const name = dp ? dp.name : 'Unknown Drop Point';
-  
+
         return { name, averageRating, count }; // Include count in the response
       }));
-  
+
       res.json(response);
     } catch (error) {
       console.error("Error fetching average ratings for drop points:", error);
       res.status(500).send('Server Error: ' + error.message);
     }
   },
-  
+
   async getRatingsDistribution(req, res) {
     try {
       const ratingsDistribution = await prisma.feedback.groupBy({
@@ -762,60 +762,63 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
-  
+
   async getMarketplaceManagement(req, res) {
     try {
-        const page = req.query.page || 1;
-        const limit = 10; // Number of listings per page
+        const page = parseInt(req.query.page) || 1;
+        const tab = req.query.tab || 'pending';
+        const limit = 10;
         const skip = (page - 1) * limit;
-        // Fetch listings with user details
+        const filter = { status: tab.toUpperCase() };
+        
         const listings = await prisma.listing.findMany({
+            where: filter,
             take: limit,
             skip: skip,
             include: {
-                user: true, 
+                user: true,
                 photos: true,
             },
             orderBy: {
-                createdAt: 'desc', // Optional: Order by recent listings
+                createdAt: 'desc',
             },
         }); 
 
-        // Pass the current page and total pages to the view for pagination controls
-        const totalListings = await prisma.listing.count();
+
+        const totalListings = await prisma.listing.count({ where: filter });
         const totalPages = Math.ceil(totalListings / limit);
-        
-        res.render('admin/marketplacemanagement', { listings, page, totalPages });
+
+        res.render('admin/marketplacemanagement', { listings, page, totalPages, tab });
     } catch (error) {
         console.error('Error fetching listings:', error);
         res.status(500).send('Error fetching listings');
     }
   },
 
-  async getListingPhoto (req, res) {
+  async getListingPhoto(req, res) {
     const { listingId, photoIndex } = req.params;
 
     try {
-        const listing = await prisma.listing.findUnique({
-            where: { id: listingId },
-            include: { photos: true }
-        });
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        include: { photos: true }
+      });
 
-        if (listing && listing.photos && listing.photos[photoIndex]) {
-            const photo = listing.photos[photoIndex];
-            // Assuming imageUrl is a base64 encoded string
-            const imgBuffer = Buffer.from(photo.imageUrl, 'base64');
-            res.writeHead(200, {
-                'Content-Type': 'image/jpeg',
-                'Content-Length': imgBuffer.length
-            });
-            res.end(imgBuffer);
-        } else {
-            res.status(404).send('Image not found');
-        }
+      if (listing && listing.photos && listing.photos[photoIndex]) {
+        const photo = listing.photos[photoIndex];
+        // Assuming imageUrl is a base64 encoded string
+        const imgBuffer = Buffer.from(photo.imageUrl, 'base64');
+        res.writeHead(200, {
+          'Content-Type': 'image/jpeg',
+          'Content-Length': imgBuffer.length
+        });
+        res.end(imgBuffer);
+      } else {
+        res.status(404).send('Image not found');
+      }
     } catch (error) {
-        console.error('Error fetching photo:', error);
-        res.status(500).send('Error fetching photo');
+      console.error('Error fetching photo:', error);
+      res.status(500).send('Error fetching photo');
     }
   },
 
@@ -824,7 +827,7 @@ module.exports = {
       const page = parseInt(req.query.page) || 1; // Get current page from query, default is 1
       const limit = 5; // Limit number of managers per page
       const skip = (page - 1) * limit; // Calculate the offset
-      const searchQuery = req.query.search || ''; 
+      const searchQuery = req.query.search || '';
       let filter = {};
 
       if (searchQuery) {
@@ -852,14 +855,14 @@ module.exports = {
         };
       }
 
-  
+
       // Fetch limited managers with offset
       const managers = await prisma.manager.findMany({
         where: filter,
         skip: skip,
         take: limit
       });
-  
+
       // Calculate total number of managers for pagination
       const totalManagers = await prisma.manager.count({ where: filter });
       const totalPages = Math.ceil(totalManagers / limit);
@@ -885,11 +888,11 @@ module.exports = {
         isAssigned: assignedManagerIds.has(manager.id)
       }));
 
-      res.render('admin/managermanagement', { 
-         managers: managersWithStatus, 
-         totalPages, 
-         currentPage: page 
-        });
+      res.render('admin/managermanagement', {
+        managers: managersWithStatus,
+        totalPages,
+        currentPage: page
+      });
     } catch (error) {
       console.error("Error fetching managers:", error);
       res.status(500).send("Internal Server Error");
@@ -899,7 +902,7 @@ module.exports = {
   async getManagerActivities(req, res) {
     try {
       const managerId = req.params.managerId; // Get manager ID from route parameter
-  
+
       // Fetch donations associated with drop points managed by this manager
       const managedDonations = await prisma.donation.findMany({
         where: {
@@ -913,7 +916,7 @@ module.exports = {
           peripherals: true, // Include peripheral data if needed
         }
       });
-  
+
       // Transform data to a more log-like structure if needed
       const activityLogs = managedDonations.map(donation => ({
         type: 'Donation Managed',
@@ -923,18 +926,18 @@ module.exports = {
         date: donation.createdAt
         // Add other relevant information
       }));
-  
+
       res.json(activityLogs); // Send log-like data as JSON response
     } catch (error) {
       console.error("Error fetching activities for manager:", error);
       res.status(500).send("Internal Server Error");
     }
   },
-  
+
   async getManagerDonations(req, res) {
     try {
       const managerId = req.params.managerId;
-  
+
       // Fetch donations where the drop point is managed by this manager
       const donations = await prisma.donation.findMany({
         where: {
@@ -948,7 +951,7 @@ module.exports = {
           // other fields as needed
         }
       });
-  
+
       res.json(donations);
     } catch (error) {
       console.error("Error fetching donations for manager:", error);
@@ -959,7 +962,7 @@ module.exports = {
   async getManagerFeedbacks(req, res) {
     try {
       const managerId = req.params.managerId;
-  
+
       // Fetch feedbacks where the drop point is managed by this manager
       const feedbacks = await prisma.feedback.findMany({
         where: {
@@ -973,27 +976,52 @@ module.exports = {
           // other fields as needed
         }
       });
-  
+
       res.json(feedbacks);
     } catch (error) {
       console.error("Error fetching feedbacks for manager:", error);
       res.status(500).send("Internal Server Error");
     }
   },
-  
-  
 
+  async postApproveListing(req, res) {
+    const { listingId } = req.params;
 
+    try {
+      await prisma.listing.update({
+        where: { id: listingId },
+        data: { status: 'AVAILABLE' }
+      });
+      res.redirect('/admin/marketplacemanagement');
+    } catch (error) {
+      console.error('Error approving listing:', error);
+      res.status(500).send('Error approving listing');
+    }
+  },
 
+  async postRejectListing(req, res) {
+    const { listingId } = req.params;
+
+    try {
+      await prisma.listing.update({
+        where: { id: listingId },
+        data: { status: 'REJECTED' }
+      });
+      res.redirect('/admin/marketplacemanagement');
+    } catch (error) {
+      console.error('Error rejecting listing:', error);
+      res.status(500).send('Error rejecting listing');
+    }
+  },
 
   async getUserManagement(req, res) {
     try {
       const { activityType, startDate, endDate, page = 1, limit = 10, dateOrder = 'desc', userEmail } = req.query;
       const skip = (page - 1) * limit;
-  
+
       let userSearchConditions = {};
       if (userEmail) userSearchConditions.email = { contains: userEmail };
-  
+
       const users = await prisma.user.findMany({
         where: userSearchConditions,
         include: {
@@ -1009,13 +1037,13 @@ module.exports = {
         skip: skip,
         take: limit,
       });
-  
+
       // Enhance users with additional details
       const enhancedUsers = users.map(user => {
         const averageRating = user.receivedRatings.length > 0
           ? user.receivedRatings.reduce((acc, rating) => acc + rating.value, 0) / user.receivedRatings.length
           : 0;
-  
+
         return {
           ...user,
           listingsCount: user.listings.length,
@@ -1023,25 +1051,25 @@ module.exports = {
           averageRating: averageRating.toFixed(1), // Rounded to 1 decimal place
         };
       });
-  
+
       let activityLog = [];
       users.forEach(user => {
         const userName = `${user.firstName} ${user.lastName}`;
         addListingsToActivityLog(user, activityType, activityLog, userName);
         addPurchasesToActivityLog(user, activityType, activityLog, userName);
       });
-  
+
       applyDateFiltersAndSort(activityLog, startDate, endDate, dateOrder);
-  
+
       const totalUsersCount = await prisma.user.count({
         where: userSearchConditions
       });
       const totalUserPages = Math.ceil(totalUsersCount / limit);
-  
+
       const paginatedActivities = paginateActivities(activityLog, skip, limit);
       const totalPages = Math.ceil(activityLog.length / limit);
       const activeTab = req.query.tab || (userEmail ? 'userDetails' : 'activityLog');
-  
+
       res.render('admin/usermanagement', {
         users: enhancedUsers,
         activityLog: paginatedActivities,
@@ -1053,8 +1081,8 @@ module.exports = {
         startDate,
         endDate,
         dateOrder,
-        userEmail 
-      });      
+        userEmail
+      });
     } catch (error) {
       console.error('Error in getUserManagement:', error);
       res.status(500).send('Error retrieving user data');
