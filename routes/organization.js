@@ -19,7 +19,14 @@ router.post('/donationForm', organizationController.getDonationForm);
 router.post('/addDonation', organizationController.getAddDonation); 
 router.get('/pledgeBasket', organizationController.getPledgeBasketPage);   
 router.post('/confirmDonation', organizationController.getConfirmDonation);
+router.post('/deleteDonation/:donationId', organizationController.postDeleteDonation);
+router.post('/editPeripheral/:peripheralId', organizationController.postUpdatePeripheral);
+router.post('/deletePeripheral/:peripheralId', organizationController.postDeletePeripheral);
+
+
 router.get('/donationsList', organizationController.getDonationsList); 
+
+router.post('/cancelDonation/:donationId', organizationController.postCancelDonation);
 router.get('/faq', organizationController.getFAQ);  
 router.get('/account', organizationController.getAccount); 
 router.get('/advertisements', organizationController.getAdvertisements);  

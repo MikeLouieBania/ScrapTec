@@ -319,8 +319,7 @@
                     <option value="">Select Status</option>
                     <option value="PENDING">Pending</option>
                     <option value="ARRIVED">Arrived</option>
-                    <option value="VERIFIED">Verified</option>
-                    <option value="REJECTED">Rejected</option>
+                    <option value="VERIFIED">Verified</option> 
                     <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
                 </select>
                 <!-- Add this within your HTML form or near the filter inputs -->
@@ -415,7 +414,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <input type="hidden" name="peripheralId" value="<%= peripheral.id %>"> 
-                                                                    <button type="submit" class="btn btn-primary btn-sm" <%= ['VERIFIED', 'REJECTED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update</button>
+                                                                    <button type="submit" class="btn btn-primary btn-sm" <%= ['VERIFIED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update</button>
                                                                 </td>
                                                             </tr>
                                                         </form>
@@ -448,11 +447,7 @@
                                 <% } else if (donation.status==='VERIFIED' ) { %>
                                     <span class="badge badge-success">
                                         <%= donation.status %>
-                                    </span>
-                                    <% } else if (donation.status==='REJECTED' ) { %>
-                                        <span class="badge badge-danger">
-                                            <%= donation.status %>
-                                        </span>
+                                    </span> 
                                         <% } else if (donation.status==='ACCEPTEDWITHISSUES' ) { %>
                                             <span class="badge badge-info">
                                                 <%= donation.status %>
@@ -484,16 +479,15 @@
                                             <input type="hidden" name="donationId" value="<%= donation.id %>">
                                             <div class="form-group">
                                                 <label for="newStatus">Select New Status:</label> 
-                                                <select class="form-control" id="newStatus" name="newStatus" <%= ['VERIFIED', 'REJECTED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>
+                                                <select class="form-control" id="newStatus" name="newStatus" <%= ['VERIFIED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>
 
                                                     <option disabled readonly selected>Select Status</option>
                                                     <option value="ARRIVED">Arrived</option>
-                                                    <option value="VERIFIED">Verified</option>
-                                                    <option value="REJECTED">Rejected</option>
+                                                    <option value="VERIFIED">Verified</option> 
                                                     <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
                                                 </select>
                                             </div> 
-                                            <button type="submit" class="btn btn-primary" <%= ['VERIFIED', 'REJECTED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update Status</button>
+                                            <button type="submit" class="btn btn-primary" <%= ['VERIFIED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update Status</button>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
