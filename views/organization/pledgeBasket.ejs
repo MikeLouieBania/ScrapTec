@@ -211,6 +211,11 @@
                                     <button type="submit" class="btn btn-success">Confirm Donations</button>
                                 </div>
                             </form>
+                            
+                            <!-- Delete Donation -->
+                            <form action="/organization/deleteDonation/<%= donation.id %>" method="POST" onsubmit="return confirmDelete()">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete Donation</button>
+                            </form>
                         </td>
                     </tr>
                     <tr>
@@ -233,12 +238,29 @@
                                                 <td><%= peripheral.type %></td>
                                                 <td><%= peripheral.brand %></td>
                                                 <td><%= peripheral.model %></td>
-                                                <td><%= peripheral.condition %></td>
-                                                <td><%= peripheral.quantity %></td>
-                                                <td><a href="/organization/editPeripheral/<%= peripheral.id %>" class="btn btn-sm btn-warning">Edit</a></td>
-                                                <td><a href="/organization/deletePeripheral/<%= peripheral.id %>" class="btn btn-sm btn-danger">Delete</a></td>
+                                                <form action="/organization/editPeripheral/<%= peripheral.id %>" method="POST">
+                                                    <td>
+                                                        <select name="condition" class="form-control">
+                                                            <option value="New" <%= peripheral.condition === 'New' ? 'selected' : '' %>>New</option>
+                                                            <option value="Used but Working" <%= peripheral.condition === 'Used but Working' ? 'selected' : '' %>>Used but Working</option>
+                                                            <option value="Not Working" <%= peripheral.condition === 'Not Working' ? 'selected' : '' %>>Not Working</option>
+                                                            <!-- Add more condition options as needed -->
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="quantity" class="form-control" value="<%= peripheral.quantity %>">
+                                                    </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-sm btn-warning">Update</button>
+                                                    </td>
+                                                </form>
+                                                <td> 
+                                                    <form action="/organization/deletePeripheral/<%= peripheral.id %>" method="POST">
+                                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                    </form> 
+                                                </td>
                                             </tr>
-                                        <% }); %>
+                                        <% }); %> 
                                     </tbody>
                                 </table>
                             </div>
@@ -254,6 +276,11 @@
      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this donation? This action cannot be undone.');
+        }
+    </script>
 </body>
 
 </html>

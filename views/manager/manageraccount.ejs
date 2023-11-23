@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Manager Account</title>
     <!-- Link to Bootstrap CSS -->
@@ -7,198 +8,326 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-      
-      .navbar .navbar-brand,
-      .navbar .nav-link {
-          color: #fff;
-          font-family: 'Roboto Slab', serif,;
-          font-weight: bold;
-          font-size: 16px;
-          margin-top: 15px;
-      }
-      
-      body {
-          padding-top: 0px;
-          margin-bottom: 60px;
-      }
 
-      .jumbotron {
-          background-color: #3498db;
-          color: #fff;
-          margin-bottom: 0;
-      }
+        .navbar .navbar-brand,
+        .navbar .nav-link {
+            color: #fff;
+            font-family: 'Roboto Slab', serif, ;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+        }
 
-      .navbar {
-          background-color: #219ebc;
-          padding: 10px 0;
-      }
+        body {
+            padding-top: 0px;
+            margin-bottom: 60px;
+        }
 
-      nav ul {
-          list-style: none;
-          text-align: center;
-      }
-        
-      nav ul li {
-          display: inline-block;
-      }
-        
-      nav ul li a {
-          display: block;
-          padding: 15px;
-          text-decoration: none;
-          color: #aaa;
-          font-weight: 800;
-          text-transform: uppercase;
-          margin: 0 10px;
-          position: relative;
-          transition: all .5s; 
-      }
-        
-      nav ul li a:hover {
-          color: #555;
-      }
-        
-      nav ul li a::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background-color: #8ecae6;
-          transform: scaleX(0);
-          transition: transform 0.5s;
-      }
-        
-      nav ul li a:hover::after {
-          transform: scaleX(1);
-      }
+        .jumbotron {
+            background-color: #3498db;
+            color: #fff;
+            margin-bottom: 0;
+        }
 
-      /* Custom Logout Button Style */
-      .btn-logout {
-        background-color: #002244;  /* Reddish color for the button */
-        border: none;
-        padding: 10px 20px;  /* Larger padding for a bigger button */
-        border-radius: 5px;  /* Rounded corners */
-        transition: background-color 0.3s;  /* Smooth transition for hover effect */
-        margin-right: 20px;
-        font-weight: bold;
-        color: white;
-        font-family: 'Roboto Slab', serif,;
-      
-      }
+        .navbar {
+            background-color: #219ebc;
+            padding: 10px 0;
+        }
 
-      .btn-logout:hover {
-        background-color: #6082B6;  /* Darker shade when hovered */
-        color: #fff;  /* White text color */
-        text-decoration: none;
-      }
+        nav ul {
+            list-style: none;
+            text-align: center;
+        }
 
-      /* Centered Button Styles */
-    .center-buttons {
-        text-align: center;
-    }
-    .center-buttons .btn {
-        display: inline-block; /* This will allow the buttons to sit side by side */
-        margin: 0 5px; /* This gives a small space between the buttons */
-    }
-    
-    .card {
-        position: relative;  /* Makes the card a reference point for absolutely positioned children */
-        margin-top: 80px;
-    }
-    
-    .circle-icon {
-        width: 60px;
-        height: 60px;
-        background-color: #219ebc;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 24px;
-        position: absolute;  /* Positions the circle relative to the card */
-        top: -30px;  /* Half the height of the circle to position it on the card's border */
-        left: 50%;   /* Centers the circle horizontally */
-        transform: translateX(-50%);  /* Ensures true centering by offsetting based on the circle's width */
-    }
-    
+        nav ul li {
+            display: inline-block;
+        }
 
+        nav ul li a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #aaa;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0 10px;
+            position: relative;
+            transition: all .5s;
+        }
+
+        nav ul li a:hover {
+            color: #555;
+        }
+
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #8ecae6;
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Custom Logout Button Style */
+        .btn-logout {
+            background-color: #002244;
+            /* Reddish color for the button */
+            border: none;
+            padding: 10px 20px;
+            /* Larger padding for a bigger button */
+            border-radius: 5px;
+            /* Rounded corners */
+            transition: background-color 0.3s;
+            /* Smooth transition for hover effect */
+            margin-right: 20px;
+            font-weight: bold;
+            color: white;
+            font-family: 'Roboto Slab', serif, ;
+
+        }
+
+        .btn-logout:hover {
+            background-color: #6082B6;
+            /* Darker shade when hovered */
+            color: #fff;
+            /* White text color */
+            text-decoration: none;
+        }
+
+        /* Centered Button Styles */
+        .center-buttons {
+            text-align: center;
+        }
+
+        .center-buttons .btn {
+            display: inline-block;
+            /* This will allow the buttons to sit side by side */
+            margin: 0 5px;
+            /* This gives a small space between the buttons */
+        }
+
+        .card {
+            position: relative;
+            /* Makes the card a reference point for absolutely positioned children */
+            margin-top: 80px;
+        }
+
+        .circle-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #219ebc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            position: absolute;
+            /* Positions the circle relative to the card */
+            top: -30px;
+            /* Half the height of the circle to position it on the card's border */
+            left: 50%;
+            /* Centers the circle horizontally */
+            transform: translateX(-50%);
+            /* Ensures true centering by offsetting based on the circle's width */
+        }
     </style>
 </head>
+
 <body>
 
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg">
-    <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-            <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
-        </li> 
-        <li class="nav-item">
-            <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
-        </li> 
-        <li class="nav-item">
-            <a class="nav-link" href="/manager/managerAccount">Account</a>
-        </li> 
-    </ul>
-    <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
-      <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
-    </form>
-</nav>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary">
+                        <%= dropPointName %>
+                    </span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/manager/managerAccount">Account</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
+            <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
+        </form>
+    </nav>
 
-<div class="container">
-    <h2>Account Information</h2>
-    <div class="card"> 
-        <div class="circle-icon">
-            <i class="large material-icons">supervisor_account</i>
-            <!-- Placeholder icon. Replace with your desired icon -->
-        </div>
-        <div class="card-body">
-            <div class="row mt-4">           
-                <!-- First Column -->
-                <div class="col-md-6">
-                    <h5 class="card-title">Manager Name</h5>
-                    <p class="card-text"><%= manager.firstName %> <%= manager.lastName %></p>
-                    
-                    <h5 class="card-title">Email Address</h5>
-                    <p class="card-text"><%= manager.email %></p>
+    <div class="container">
+        <h2>Account Information</h2>
+        <div class="card">
+            <div class="circle-icon">
+                <i class="large material-icons">supervisor_account</i>
+                <!-- Placeholder icon. Replace with your desired icon -->
+            </div>
+            <div class="card-body">
+                <div class="row mt-4">
+                    <!-- First Column -->
+                    <div class="col-md-6">
+                        <h5 class="card-title">Manager Name</h5>
+                        <p class="card-text">
+                            <%= manager.firstName %>
+                                <%= manager.lastName %>
+                        </p>
+
+                        <h5 class="card-title">Email Address</h5>
+                        <p class="card-text">
+                            <%= manager.email %>
+                        </p>
+                    </div>
+
+                    <!-- Second Column -->
+                    <div class="col-md-6">
+                        <h5 class="card-title">Phone Number</h5>
+                        <p class="card-text">
+                            <%= manager.phoneNumber ? manager.phoneNumber : 'N/A' %>
+                        </p>
+
+                        <h5 class="card-title">Address</h5>
+                        <p class="card-text">
+                            <%= manager.address ? manager.address : 'N/A' %>
+                        </p>
+                    </div>
                 </div>
 
-                <!-- Second Column -->
-                <div class="col-md-6">
-                    <h5 class="card-title">Phone Number</h5>
-                    <p class="card-text"><%= manager.phoneNumber ? manager.phoneNumber : 'N/A' %></p>
-                    
-                    <h5 class="card-title">Address</h5>
-                    <p class="card-text"><%= manager.address ? manager.address : 'N/A' %></p>
-                </div>          
+                <!-- Horizontal line to separate information from actions -->
+                <hr style="margin: 20px 0;">
+
+                <!-- Action buttons inside the card container -->
+                <div class="center-buttons">
+                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#editAccountModal">Edit
+                        Account</a>
+                    <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#changePasswordModal">Change
+                        Password</a>
+                </div>
             </div>
-            
-            <!-- Horizontal line to separate information from actions -->
-            <hr style="margin: 20px 0;">
-            
-            <!-- Action buttons inside the card container -->
-            <div class="center-buttons">
-                <a href="/manager/editaccount" class="btn btn-primary">Edit Account</a>
-                <a href="/manager/changepassword" class="btn btn-warning">Change Password</a>
+        </div>
+
+        <!-- Drop Point Information Card -->
+        <div class="card mt-5"> <!-- Added margin-top for spacing -->
+            <div class="circle-icon" style="background-color: #28a745;">
+                <!-- Different background color for distinction -->
+                <i class="large material-icons">location_on</i> <!-- Different icon for drop point -->
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Managed Drop Point</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="card-text"><strong>Name:</strong>
+                            <%= dropPointName %>
+                        </p>
+                        <p class="card-text"><strong>Location:</strong>
+                            <%= dropPointLocation %>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="card-text"><strong>Opening Time:</strong>
+                            <%= dropPointOpeningTime %>
+                        </p>
+                        <p class="card-text"><strong>Closing Time:</strong>
+                            <%= dropPointClosingTime %>
+                        </p>
+                    </div>
+                </div>
+                <p class="card-text"><strong>Description:</strong>
+                    <%= dropPointDescription %>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Edit Account Modal -->
+    <div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAccountModalLabel">Edit Account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/manager/updateaccount" method="post">
+                    <div class="modal-body">
+                        <!-- Add form fields for account editing here -->
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"
+                                value="<%= manager.phoneNumber %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" name="address"
+                                value="<%= manager.address %>">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog"
+        aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/manager/changepassword" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword">
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
 </body>
+
 </html>

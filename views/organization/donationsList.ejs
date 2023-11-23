@@ -232,17 +232,20 @@
                 <td><%= donation.expectedDateOfArrival ? new Date(donation.expectedDateOfArrival).toLocaleDateString() : 'N/A' %></td>
                 <td>
                   <% if (donation.status === 'PENDING' || donation.status === 'ARRIVED') { %>
-                    <span class="text-warning"><%= donation.points ? donation.points + " (Attainable)" : "N/A" %></span>
-                  <% } else if (donation.status === 'REJECTED') { %>
-                    <span class="text-danger">0</span>
+                    <span class="text-warning"><%= donation.points ? donation.points + " (Attainable)" : "N/A" %></span> 
                   <% } else if (donation.status === 'VERIFIED' || donation.status === 'ACCEPTEDWITHISSUES') { %>
                     <span class="text-success"><%= donation.points ? donation.points : "N/A" %></span>
                   <% } %>
                 </td>
                 
                 <td><button class="btn btn-info btn-sm" data-toggle="collapse" data-target="#donation-<%= donation.id %>">Toggle Details</button></td>
-                <td>
-                  <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cancelDonationModal-<%= donation.id %>">Cancel</button>
+                <td> 
+                  <% if (!["VERIFIED", "ARRIVED", "ACCEPTEDWITHISSUES"].includes(donation.status)) { %>
+                    <!-- Show Cancel Button if status is not one of the specified ones -->
+                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cancelDonationModal-<%= donation.id %>">Cancel</button>
+                  <% } else { %>
+                    <span class="text-muted">No actions available</span> 
+                  <% } %>
                 </td>                
               </tr>
               <!-- Collapsible Row for Donation Details -->
@@ -288,10 +291,13 @@
                     <div class="modal-body">
                       <p>Are you sure you want to cancel this donation? Forfeiture of the donation will remove all your inputs.</p>
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-danger" onclick="cancelDonation('<%= donation.id %>')">Cancel Donation</button>
-                    </div>
+                    <!-- Inside the modal in your HTML page -->
+                    <form action="/organization/cancelDonation/<%= donation.id %>" method="post">
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Cancel Donation</button>
+                      </div>
+                    </form> 
                   </div>
                 </div>
               </div>

@@ -1,112 +1,143 @@
 <!-- Navigation Bar -->
 <%- include('partials/navbar') %>
-<head>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<style>
-  /* what we do responsive*/
-  .content-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  /* Updated for Responsiveness */
-  @media (max-width: 768px) {
+
+  <head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  </head>
+  <style>
+    /* what we do responsive*/
     .content-container {
-      flex-direction: column;
-      align-items: center;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
     }
-    .text-container, .mission-text, .vision-text {
-      width: 100%;
-      max-width: 100%;
+
+    /* Updated for Responsiveness */
+    @media (max-width: 768px) {
+      .content-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .text-container,
+      .mission-text,
+      .vision-text {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      /* YouTube video container */
+      div[style*="position: relative; width: 720px; height: 400px;"] {
+        width: 100%;
+        height: auto;
+      }
+
+      iframe {
+        width: 100%;
+        height: 315px;
+        /* You can set this to maintain aspect ratio */
+      }
     }
-    /* YouTube video container */
-    div[style*="position: relative; width: 720px; height: 400px;"] {
-      width: 100%;
-      height: auto;
-    }
-    iframe {
-      width: 100%;
-      height: 315px; /* You can set this to maintain aspect ratio */
-    }
-  }
 
 
     /* Common styles for both containers */
     .text-container {
-        position: relative;
-        width: 300px;
-        height: 300px;
-        border: 5px solid white;
-        padding: 20px;
-        margin-top: 70px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
-        transition: transform 0.3s, box-shadow 0.3s; /* Add transition for hover effect */
-        background-color: rgba(255, 255, 255, 0.1); /* Add a subtle background color */
-        border-radius: 10px; /* Rounded corners */
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border: 5px solid white;
+      padding: 20px;
+      margin-top: 70px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* Add shadow for depth */
+      transition: transform 0.3s, box-shadow 0.3s;
+      /* Add transition for hover effect */
+      background-color: rgba(255, 255, 255, 0.1);
+      /* Add a subtle background color */
+      border-radius: 10px;
+      /* Rounded corners */
     }
+
     .text-container p {
-        font-size: 14px;              /* Adjusted font size */
-        line-height: 1.6;             /* Increased line height for readability */
-        font-weight: 400;             /* Adjusted font weight */
-        letter-spacing: 0.5px;       /* Slight spacing between characters */
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow for depth */
+      font-size: 14px;
+      /* Adjusted font size */
+      line-height: 1.6;
+      /* Increased line height for readability */
+      font-weight: 400;
+      /* Adjusted font weight */
+      letter-spacing: 0.5px;
+      /* Slight spacing between characters */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      /* Subtle text shadow for depth */
     }
-    
+
 
     .text-container h3 {
-        font-family: 'Josefin Sans', sans-serif;
-        font-weight: bold;
-        font-size: 30px;
-        margin-bottom: 15px; /* Add space between the title and paragraph */
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: bold;
+      font-size: 30px;
+      margin-bottom: 15px;
+      /* Add space between the title and paragraph */
     }
 
     .text-container p {
-        font-family: 'Arial', sans-serif;
-        line-height: 1.5; /* Improved line height for readability */
+      font-family: 'Arial', sans-serif;
+      line-height: 1.5;
+      /* Improved line height for readability */
     }
 
     /* Hover effect */
     .text-container:hover {
-        transform: translateY(-10px); /* Move up a bit */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Add a deeper shadow */
+      transform: translateY(-10px);
+      /* Move up a bit */
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      /* Add a deeper shadow */
     }
 
     /* For responsiveness: If the screen is small, make the boxes full width */
     @media (max-width: 768px) {
-        .text-container {
-            width: 100%;
-            margin-top: 50px;
-        }
+      .text-container {
+        width: 100%;
+        margin-top: 50px;
+      }
     }
+
     .text-container h3 {
-        font-family: 'Josefin Sans', sans-serif;
-        font-weight: bold;
-        font-size: 30px;
-        margin-bottom: 15px; /* Add space between the title and paragraph */
-        position: relative; /* To position the underline */
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: bold;
+      font-size: 30px;
+      margin-bottom: 15px;
+      /* Add space between the title and paragraph */
+      position: relative;
+      /* To position the underline */
     }
 
     .text-container h3::after {
-        content: ''; 
-        position: absolute;
-        bottom: -10px; 
-        left: 50%; /* Move the starting point to the center of the container */
-        transform: translateX(-50%); /* Shift it back by half its width to truly center it */
-        width: 80px; 
-        height: 3px; 
-        background-color: var(--underline-color, #2cd4f2);
-        border-radius: 2px; /* This will give the line rounded corners */
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      /* Move the starting point to the center of the container */
+      transform: translateX(-50%);
+      /* Shift it back by half its width to truly center it */
+      width: 80px;
+      height: 3px;
+      background-color: var(--underline-color, #2cd4f2);
+      border-radius: 2px;
+      /* This will give the line rounded corners */
     }
 
     #services .container {
-        max-width: 100%;  /* Adjust this percentage as desired */
+      max-width: 100%;
+      /* Adjust this percentage as desired */
     }
+
     .how-can-you-help {
       font-family: 'Josefin Sans', sans-serif;
       font-weight: bold;
@@ -114,167 +145,207 @@
       padding: 40px;
       text-align: center;
       color: #ffffff;
-  }
-  .how-can-you-help h2::after {
-    content: "";
-    display: block;
-    width: 50px;  /* Adjust width as needed */
-    height: 3px;
-    background-color: #00eeff;  /* Change to the color you want for the underline */
-    margin-top: 10px;  /* Add some space between the text and underline */
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  h1 {
+    }
+
+    .how-can-you-help h2::after {
+      content: "";
+      display: block;
+      width: 50px;
+      /* Adjust width as needed */
+      height: 3px;
+      background-color: #00eeff;
+      /* Change to the color you want for the underline */
+      margin-top: 10px;
+      /* Add some space between the text and underline */
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
       margin-top: 10px;
       margin-bottom: 20px;
-  }
-  
-  .pillar, .get-involved {
+    }
+
+    .pillar,
+    .get-involved {
       margin-top: -10px;
-      border-radius: 10px; /* Kept the border-radius */
+      border-radius: 10px;
+      /* Kept the border-radius */
       display: inline-block;
-      width: 23%; /* Adjust as necessary */
+      width: 23%;
+      /* Adjust as necessary */
       vertical-align: top;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow */
-      transition: all 0.3s ease; /* Added transition for hover effect */
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      /* Added shadow */
+      transition: all 0.3s ease;
+      /* Added transition for hover effect */
       padding: 15px;
       margin: 15px;
-  }
-  
-  .pillar{
-  cursor: pointer;
-}
+    }
 
-  @media (max-width: 768px) {
-    .pillar, .get-involved {
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
+    .pillar {
+      cursor: pointer;
     }
-    .how-can-you-help h1 {
-      font-size: 28px;  /* Smaller font size */
-    }
-    .pillar h2, .get-involved h2 {
-      font-size: 20px;  /* Smaller font size */
-    }
-    .pillar i.material-icons, .get-involved i.material-icons {
-      font-size: 36px;  /* Smaller icons */
-    }
-  }
-  
-  .pillar:hover {
-    transform: translateY(-10px);
-  }
 
-  #reduce {
-      background-color: 	#6495ED;
+    @media (max-width: 768px) {
+
+      .pillar,
+      .get-involved {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+      }
+
+      .how-can-you-help h1 {
+        font-size: 28px;
+        /* Smaller font size */
+      }
+
+      .pillar h2,
+      .get-involved h2 {
+        font-size: 20px;
+        /* Smaller font size */
+      }
+
+      .pillar i.material-icons,
+      .get-involved i.material-icons {
+        font-size: 36px;
+        /* Smaller icons */
+      }
+    }
+
+    .pillar:hover {
+      transform: translateY(-10px);
+    }
+
+    #reduce {
+      background-color: #6495ED;
       color: white;
-  }
-  
-  #recover {
+    }
+
+    #recover {
       background-color: #6082B6;
       color: white;
-  }
-  
-  #recycle {
+    }
+
+    #recycle {
       background-color: #4682B4;
       color: white;
-  }
-  
-  .get-involved {
-      background-color:	#4169E1;
+    }
+
+    .get-involved {
+      background-color: #4169E1;
       color: white;
-  }
-  
-  h2 {
+    }
+
+    h2 {
       font-size: 24px;
       margin-bottom: 15px;
       margin-top: 12px;
-  }
-  
-  ul {
+    }
+
+    ul {
       list-style-type: none;
       padding-left: 0;
-  }
-  
-  li {
+    }
+
+    li {
       margin: 10px 0;
-  }
-  
-  .get-started {
+    }
+
+    .get-started {
       margin-top: -5px;
       padding: 10px 20px;
       background-color: white;
       color: black;
-      border: 2px solid #ccc; /* Added border */
+      border: 2px solid #ccc;
+      /* Added border */
       cursor: pointer;
-      transition: all 0.3s ease; /* Added transition for hover effect */
-  }
-  
-  .get-started:hover {
-      background-color: #ccc;
-  }
-  
-  .modal {
-    display: none; 
-    position: fixed; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.4);
-  }
-  
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;  /* Centering */
-    padding: 20px;
-    border: 2px solid #ccc;  /* Adding a border */
-    border-radius: 10px;  /* Rounded corners */
-    width: 50%;  /* Changed width to 50% */
-    max-height: 65%;  /* Added max-height */
-    overflow-y: auto;  /* Added to enable scrolling if the content overflows */
-    color: black;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Adding a shadow for depth */
-  }
+      transition: all 0.3s ease;
+      /* Added transition for hover effect */
+    }
 
-  .close {
-    color: #aaa;
-    float: right;  /* Moves the "X" button to the right */
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  #help-section {
-    padding-top: 100px;  /* Adjust based on your needs */
-    margin-top: -100px;  /* Should be the negative of the padding */
-  }
-  .pillar i.material-icons {
-    display: block;
-  margin: 0 auto 10px auto; /* Vertically align the icon */
-  color: #fff;  /* Icon color */
-  font-size: 20px;  /* New smaller font-size */
-}
-  
+    .get-started:hover {
+      background-color: #ccc;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      /* Centering */
+      padding: 20px;
+      border: 2px solid #ccc;
+      /* Adding a border */
+      border-radius: 10px;
+      /* Rounded corners */
+      width: 50%;
+      /* Changed width to 50% */
+      max-height: 65%;
+      /* Added max-height */
+      overflow-y: auto;
+      /* Added to enable scrolling if the content overflows */
+      color: black;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* Adding a shadow for depth */
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      /* Moves the "X" button to the right */
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    #help-section {
+      padding-top: 100px;
+      /* Adjust based on your needs */
+      margin-top: -100px;
+      /* Should be the negative of the padding */
+    }
+
+    .pillar i.material-icons {
+      display: block;
+      margin: 0 auto 10px auto;
+      /* Vertically align the icon */
+      color: #fff;
+      /* Icon color */
+      font-size: 20px;
+      /* New smaller font-size */
+    }
+
     /* Organization Section Styles */
     #organization {
       padding: 100px 0;
       background: linear-gradient(to right, #6993d8, #6CA0DC);
-      font-family: 'Josefin Sans', sans-serif; /* If you want to match the font as well */
-      font-weight: bold; /* If you want to match the font weight as well */
+      font-family: 'Josefin Sans', sans-serif;
+      /* If you want to match the font as well */
+      font-weight: bold;
+      /* If you want to match the font weight as well */
       color: white;
       text-align: center;
     }
 
     .org-icon {
-      font-size: 48px;  /* You can adjust the size as needed */
-      margin-bottom: 100px;  /* Add some space between the icon and the text */
-      color: white;  /* Icon color, adjust as needed */
+      font-size: 48px;
+      /* You can adjust the size as needed */
+      margin-bottom: 100px;
+      /* Add some space between the icon and the text */
+      color: white;
+      /* Icon color, adjust as needed */
     }
-    
+
 
     #organization h2 {
       font-size: 48px;
@@ -294,7 +365,7 @@
     #organization .info-box {
       flex: 1;
       min-width: 200px;
-      max-width:300px;
+      max-width: 300px;
       padding: 20px;
       border-radius: 10px;
       background-color: rgba(255, 255, 255, 0.2);
@@ -302,64 +373,73 @@
       opacity: 0;
       transform: translateY(30px);
       transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-      transition: transform 0.3s ease;      
+      transition: transform 0.3s ease;
     }
 
     #organization .info-box:hover {
       transform: scale(1.05);
     }
 
-      #organization .info-box.visible {
-        opacity: 1;
-        transform: translateY(0) scale(1.1);      
-      }    
+    #organization .info-box.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1.1);
+    }
 
-      #organization .info-box-animate {
-        opacity: 1;
-        transform: translateY(0) scale(1.1);
-      }
-      
+    #organization .info-box-animate {
+      opacity: 1;
+      transform: translateY(0) scale(1.1);
+    }
+
 
     #organization .info-box h3 {
       font-size: 28px;
       margin-bottom: 15px;
     }
-      /* Existing donate-button styling */
-      #organization .donate-button {
-        margin-top: 50px;
-        padding: 15px 30px;
-        font-size: 20px;
-        background-color: #3e6bac;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.3s ease; /* Adding transition for smooth animation */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Adding a shadow for depth */
-      }
 
-        /* Hover effect for the donate-button */
-        #organization .donate-button:hover {
-          background-color: #98c1d9;
-          color: #ffffff;
-          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
-          transform: scale(1.05); /* Makes the button slightly larger */
-        }
+    /* Existing donate-button styling */
+    #organization .donate-button {
+      margin-top: 50px;
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: #3e6bac;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      /* Adding transition for smooth animation */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* Adding a shadow for depth */
+    }
 
-        /* Active (click) state */
-        #organization .donate-button:active {
-          background-color: #004085;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          transform: scale(1); /* Reverts back to the original size */
-        }
+    /* Hover effect for the donate-button */
+    #organization .donate-button:hover {
+      background-color: #98c1d9;
+      color: #ffffff;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      /* Deeper shadow on hover */
+      transform: scale(1.05);
+      /* Makes the button slightly larger */
+    }
+
+    /* Active (click) state */
+    #organization .donate-button:active {
+      background-color: #004085;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transform: scale(1);
+      /* Reverts back to the original size */
+    }
 
     /* CSS for the Marketplace section */
     #marketplace {
       display: flex;
       justify-content: space-between;
-      background-color: #f5f5f5; /* Light grey background */
-      border-radius: 8px; /* Rounded corners */
-      overflow: hidden; /* Hide anything that goes outside the container's boundary */
+      background-color: #f5f5f5;
+      /* Light grey background */
+      border-radius: 8px;
+      /* Rounded corners */
+      overflow: hidden;
+      /* Hide anything that goes outside the container's boundary */
     }
 
     .half {
@@ -374,69 +454,99 @@
     }
 
     .text-side {
-      padding: 40px; /* Increased padding */
-      background: linear-gradient(to right, #8babf1 , #89c4f4); /* Gradient background */
-      text-align: center; /* Center align text */
+      padding: 40px;
+      /* Increased padding */
+      background: linear-gradient(to right, #8babf1, #89c4f4);
+      /* Gradient background */
+      text-align: center;
+      /* Center align text */
       font-family: 'Josefin Sans', sans-serif;
-      color: white; /* White text color for better visibility */
+      color: white;
+      /* White text color for better visibility */
     }
 
     .text-side h2 {
-      color: #fff; /* Dark grey text color */
+      color: #fff;
+      /* Dark grey text color */
       margin-top: 10%;
       font-size: 35px;
-      margin-bottom: 20px; /* Space below the heading */
+      margin-bottom: 20px;
+      /* Space below the heading */
     }
 
     @keyframes stretchUnderline {
-      0%, 100% {
-        transform: scaleX(1); /* Start and end at original size */
+
+      0%,
+      100% {
+        transform: scaleX(1);
+        /* Start and end at original size */
       }
+
       50% {
-        transform: scaleX(1.5); /* Stretch to 1.5 times the original size at halfway point */
+        transform: scaleX(1.5);
+        /* Stretch to 1.5 times the original size at halfway point */
       }
     }
 
     .underline {
-      display: block; /* Changed to inline-block for centering */
+      display: block;
+      /* Changed to inline-block for centering */
       width: 100px;
       height: 4px;
       background-color: #c1f2f5;
       margin: 10px auto 0;
-      animation: stretchUnderline 2s infinite ease-in-out; /* Apply the animation */
+      animation: stretchUnderline 2s infinite ease-in-out;
+      /* Apply the animation */
     }
 
     .icon {
-      font-size: 48px;  /* Size of the icon */
-      color: white;  /* Color of the icon */
-      margin-bottom: 0px;  /* Space below the icon */
+      font-size: 48px;
+      /* Size of the icon */
+      color: white;
+      /* Color of the icon */
+      margin-bottom: 0px;
+      /* Space below the icon */
       margin-top: 25%;
     }
 
 
     .text-side p {
-      color: #fff; /* Light grey text color */
-      margin-bottom: 20px; /* Space below the paragraph */
+      color: #fff;
+      /* Light grey text color */
+      margin-bottom: 20px;
+      /* Space below the paragraph */
       font-size: 19px;
     }
 
     .engage-button {
-      padding: 12px 24px; /* Button padding */
-      background-color: #547fc2; /* Blue background */
-      color: white; /* White text */
-      border: none; /* No border */
-      border-radius: 4px; /* Rounded corners */
-      cursor: pointer; /* Hand cursor on hover */
-      font-family: 'Josefin Sans', sans-serif; /* New font */
-      transition: all 0.3s ease; /* Transition effect for all properties */
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Initial box shadow */
+      padding: 12px 24px;
+      /* Button padding */
+      background-color: #547fc2;
+      /* Blue background */
+      color: white;
+      /* White text */
+      border: none;
+      /* No border */
+      border-radius: 4px;
+      /* Rounded corners */
+      cursor: pointer;
+      /* Hand cursor on hover */
+      font-family: 'Josefin Sans', sans-serif;
+      /* New font */
+      transition: all 0.3s ease;
+      /* Transition effect for all properties */
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      /* Initial box shadow */
       font-size: 20px;
     }
 
     .engage-button:hover {
-      background-color: #dae5ff; /* Darker blue on hover */
-      transform: translateY(-4px); /* Move the button up */
-      box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Increase box shadow */
+      background-color: #dae5ff;
+      /* Darker blue on hover */
+      transform: translateY(-4px);
+      /* Move the button up */
+      box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2);
+      /* Increase box shadow */
     }
 
 
@@ -451,82 +561,104 @@
       }
     }
 
-      /* Styles for the draggable chat icon */
+    /* Styles for the draggable chat icon */
     .draggable-chat-icon {
       position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 1000;
-      cursor: pointer; /* cursor changes to indicate the item is draggable */
+      cursor: pointer;
+      /* cursor changes to indicate the item is draggable */
     }
 
     /* Additional styles to ensure the image is not too large */
     .draggable-chat-icon img {
-      width: 100px; /* You can adjust the size as needed */
+      width: 100px;
+      /* You can adjust the size as needed */
       height: auto;
     }
 
     /* Styles for the chatbot container */
     .chatbot-container {
       position: fixed;
-      bottom: 50px; /* Position adjusted for better visibility */
-      right: 20px;
-      width: 350px; /* Width set to your preference */
-      height: 500px; /* Height set to your preference */
-      background-color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
+      bottom: 10%;
+      right: 2%;
+      width: 350px;
+      height: 500px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
       z-index: 1001;
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Ensures the border radius is applied to child elements */
-      font-family: 'Poppins', sans-serif;
-
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+      font-family: 'Arial', sans-serif;
     }
 
     .chatbot-header {
-      background-color: #5072A7;
+      background-color: #4a69bd;
       color: white;
-      padding: 10px;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      display: flex; /* Makes the header a flex container */
-      justify-content: space-between; /* Spaces out the items */
-      align-items: center; /* Align items vertically in the center */
+      padding: 12px 15px;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .chatbot-content {
       padding: 15px;
-      padding-bottom: 80px; /* Add extra padding at the bottom */
       overflow-y: auto;
-      flex-grow: 1; /* Ensures it takes up available space */
+      flex-grow: 1;
+      max-height: calc(100% - 120px);
+      scrollbar-width: thin;
+      scrollbar-color: #4a69bd #f9f9f9;
+    }
+
+    .chatbot-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .chatbot-content::-webkit-scrollbar-track {
+      background: #f9f9f9;
+    }
+
+    .chatbot-content::-webkit-scrollbar-thumb {
+      background-color: #4a69bd;
+      border-radius: 20px;
     }
 
     /* Styles for the chatbot footer with the message input */
     .chatbot-footer {
-      margin-top: 200px; /* Adds space between the content and footer */
       padding: 10px;
       background: #f1f1f1;
       display: flex;
-      border-top: 1px solid #ccc; /* Adds a subtle line between the content and the input area */
+      align-items: center;
+      border-top: 1px solid #ccc;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .chatbot-footer input,
+    .chatbot-footer button {
+      padding: 10px;
+      margin-right: 10px;
+      border-radius: 5px;
+      font-size: 15px;
     }
 
     .chatbot-footer input {
       flex-grow: 1;
-      padding: 10px;
-      margin-right: 10px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 15px; /* Larger font size for better readability */
     }
 
     .chatbot-footer button {
-      padding: 10px 15px;
+      background-color: #4a69bd;
       color: white;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px; /* Larger font size for better readability */
     }
 
     .chatbot-close {
@@ -534,45 +666,41 @@
       background: none;
       border: none;
       color: white;
-      font-size: 24px; /* Larger close button for better interaction */
+      font-size: 24px;
+      /* Larger close button for better interaction */
       margin-left: auto;
     }
 
     /* Styles for chat messages */
     .chat-message {
+      max-width: 80%;
       margin-bottom: 10px;
       padding: 10px;
-      background-color: #f1f1f1;
-      border-radius: 5px;
+      border-radius: 10px;
       border: 1px solid #e1e1e1;
+    }
+
+    .chat-message.user {
+      background-color: #d1d8e0;
+      align-self: flex-end;
+    }
+
+    .chat-message.bot {
+      background-color: #82ccdd;
+      align-self: flex-start;
     }
 
     /* Style adjustments for better responsiveness */
     @media (max-width: 600px) {
       .chatbot-container {
-          width: 90%;
-          right: 5%; /* Center the chatbot in the viewport */
-          bottom: 10%; /* Adjust bottom position */
-          height: 70%; /* Adjust height */
+        width: 90%;
+        right: 5%;
+        bottom: 10%;
+        height: 70%;
       }
     }
 
-
-    /* Button styling */
-    .chatbot-send {
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-      border-radius: 50%;
-      outline: none;
-      transition: transform 0.3s;
-      margin-right: -10px; /* Reduce space between buttons */
-    }
-    /* Reset Button styling to match the send button */
+    .chatbot-send,
     .chatbot-reset {
       background: none;
       border: none;
@@ -584,103 +712,138 @@
       border-radius: 50%;
       outline: none;
       transition: transform 0.3s;
-      margin-right: -8px;
     }
 
-    /* Icon styling */
-  .material-symbols-outlined {
-    font-size: 24px; /* Adjust icon size as needed */
-    color: #B0C4DE; /* Icon color */
-  }
-   /* Hover effect on the icons */
-.chatbot-send:hover .material-symbols-outlined, 
-.chatbot-send:focus .material-symbols-outlined,
-.chatbot-reset:hover .material-symbols-outlined, 
-.chatbot-reset:focus .material-symbols-outlined {
-  color: #E1EBEE; /* Darker shade of blue for the hover state */
-}
+    .material-symbols-outlined {
+      font-size: 24px;
+      color: #B0C4DE;
+    }
 
+    .chatbot-send:hover .material-symbols-outlined,
+    .chatbot-reset:hover .material-symbols-outlined {
+      color: #E1EBEE;
+    }
 
-    
-    
-</style>
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      margin-top: 10px;
+    }
 
-<!-- Objective Section -->
-<section class="jumbotron text-center text-white mb-0 d-flex align-items-start justify-content-center" style="background: url('https://i.postimg.cc/T3xgwbvy/4685960.jpg'); background-size: cover; background-blend-mode: overlay; background-color: rgba(0, 0, 0, 0.5); padding: 300px 0;">
+    .quick-reply {
+      background-color: #4a69bd;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 8px 15px;
+      margin: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .quick-reply:hover {
+      background-color: #3762a6;
+    }
+  </style>
+
+  <!-- Objective Section -->
+  <section class="jumbotron text-center text-white mb-0 d-flex align-items-start justify-content-center"
+    style="background: url('https://i.postimg.cc/T3xgwbvy/4685960.jpg'); background-size: cover; background-blend-mode: overlay; background-color: rgba(0, 0, 0, 0.5); padding: 300px 0;">
     <div class="container">
-        <h1 class="display-4" style="font-family: 'Josefin Sans', sans-serif; font-size: 105px; margin-inline-start: auto;">Welcome to E-Waste Zero</h1>
-        <p class="lead" style="font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 21px">Help bridge the gap between donors and beneficiaries by donating and receiving computer parts.</p>
-        <a href="#services" style="font-family: Arial, sans-serif; font-size: 19px; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 10px 15px; border-radius: 25px; font-weight: bold; text-decoration: none">Learn More</a> 
+      <h1 class="display-4"
+        style="font-family: 'Josefin Sans', sans-serif; font-size: 105px; margin-inline-start: auto;">Welcome to E-Waste
+        Zero</h1>
+      <p class="lead" style="font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 21px">Help bridge the
+        gap between donors and beneficiaries by donating and receiving computer parts.</p>
+      <a href="#services"
+        style="font-family: Arial, sans-serif; font-size: 19px; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 10px 15px; border-radius: 25px; font-weight: bold; text-decoration: none">Learn
+        More</a>
     </div>
   </section>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
-</style>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
+  </style>
 
-<!-- What We Do -->
-<section id="services" class="container-fluid text-center" style="margin-top: -70px; padding: 150px 0; background-color: #2E5894; color: white;">
-  <div class="container-fluid">
-    <div class="container">
-      <h2 class="mb-3" style="text-align: center; font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 50px; margin-top: -20px ">What We Do</h2>
-      <div style="height:100px; overflow:auto;">
-          <p>This project proposes the creation of a web-based platform called E-Waste Zero, which is intended to expedite the process of preserving sustainable technology. The platform functions as an ecosystem that connects individuals, businesses, and organizations involved in the life cycle of sustainable technology, such as manufacturers, consumers, recyclers, and regulators.</p>
-      </div>
-      <div class="content-container" style="display: flex; justify-content: center; gap: 20px;">
-            
-           <!-- Mission Container -->
-      <div class="text-container mission-text">
-          <i class="material-icons" style="display: block; text-align: center; font-size: 24px; margin-bottom: 10px;">public</i>
-          <h3>Mission</h3>
-          <p>To lead the global movement in reducing electronic waste by promoting responsible recycling, reuse, and disposal practices. We aim to foster collaboration among businesses, governments, and consumers to build a sustainable digital future.</p>
-      </div>
+  <!-- What We Do -->
+  <section id="services" class="container-fluid text-center"
+    style="margin-top: -70px; padding: 150px 0; background-color: #2E5894; color: white;">
+    <div class="container-fluid">
+      <div class="container">
+        <h2 class="mb-3"
+          style="text-align: center; font-family: 'Josefin Sans', sans-serif; font-weight: bold; font-size: 50px; margin-top: -20px ">
+          What We Do</h2>
+        <div style="height:100px; overflow:auto;">
+          <p>This project proposes the creation of a web-based platform called E-Waste Zero, which is intended to
+            expedite the process of preserving sustainable technology. The platform functions as an ecosystem that
+            connects individuals, businesses, and organizations involved in the life cycle of sustainable technology,
+            such as manufacturers, consumers, recyclers, and regulators.</p>
+        </div>
+        <div class="content-container" style="display: flex; justify-content: center; gap: 20px;">
 
-<!-- Vision Container -->
-<div class="text-container vision-text" >
-    <i class="material-icons" style="display: block; text-align: center; font-size: 24px; margin-bottom: 10px;">visibility</i>
-    <h3>Vision</h3>
-    <p>A world where electronic products are sustainably produced, consumed, and recycled, ensuring a circular lifecycle. We envision a globe free from e-waste pollution, preserving our planet's health and resources for future generations.</p>
-</div>
+          <!-- Mission Container -->
+          <div class="text-container mission-text">
+            <i class="material-icons"
+              style="display: block; text-align: center; font-size: 24px; margin-bottom: 10px;">public</i>
+            <h3>Mission</h3>
+            <p>To lead the global movement in reducing electronic waste by promoting responsible recycling, reuse, and
+              disposal practices. We aim to foster collaboration among businesses, governments, and consumers to build a
+              sustainable digital future.</p>
+          </div>
+
+          <!-- Vision Container -->
+          <div class="text-container vision-text">
+            <i class="material-icons"
+              style="display: block; text-align: center; font-size: 24px; margin-bottom: 10px;">visibility</i>
+            <h3>Vision</h3>
+            <p>A world where electronic products are sustainably produced, consumed, and recycled, ensuring a circular
+              lifecycle. We envision a globe free from e-waste pollution, preserving our planet's health and resources
+              for future generations.</p>
+          </div>
           <!-- YouTube video container with frame -->
           <div style="position: relative; width: 720px; height: 400px; border: 5px solid white;">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/BNIF9fhVSPU?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/BNIF9fhVSPU?autoplay=1&mute=1"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
           </div>
+        </div>
       </div>
+  </section>
+
+
+
+  <!-- How Can You Help -->
+  <section class="how-can-you-help" id="help-section" style="background-color: #81C0F7;">
+    <h1>How Can You Help?</h1>
+    <div class="pillar" id="reduce">
+      <i class="material-icons" style="font-size: 48px;">local_fire_department</i>
+      <h2>Reduce</h2>
+      <ul>
+        <li>Smart Buying Choices</li>
+        <li>Extend Device Lifespan</li>
+        <li>Don't Rush to Dispose</li>
+      </ul>
     </div>
-</section>
-
-
-
-<!-- How Can You Help -->
-<section class="how-can-you-help" id="help-section" style="background-color: #81C0F7;">
-  <h1>How Can You Help?</h1>
-  <div class="pillar" id="reduce">
-    <i class="material-icons" style="font-size: 48px;">local_fire_department</i>
-    <h2>Reduce</h2>
-    <ul>
-      <li>Smart Buying Choices</li>
-      <li>Extend Device Lifespan</li>
-      <li>Don't Rush to Dispose</li>
-    </ul>
-  </div>
-  <div class="pillar" id="recover">
-    <i class="material-icons" style="font-size: 48px;">medical_services</i>
-    <h2>Recover</h2>
-    <ul>
-      <li>Donate or Sell</li>
-      <li>Data & Component Recovery</li>
-      <li>Support Recovery Programs</li>
-    </ul>
-  </div>
-  <div class="pillar" id="recycle">
-    <i class="material-icons" style="font-size: 48px;">recycling</i>
-    <h2>Recycle</h2>
-    <ul>
-      <li>Find a Local Recycling Facility</li>
-      <li>Participate in Collection Drives</li>
-      <li>Know the Guidelines</li>
-    </ul>
-  </div>
+    <div class="pillar" id="recover">
+      <i class="material-icons" style="font-size: 48px;">medical_services</i>
+      <h2>Recover</h2>
+      <ul>
+        <li>Donate or Sell</li>
+        <li>Data & Component Recovery</li>
+        <li>Support Recovery Programs</li>
+      </ul>
+    </div>
+    <div class="pillar" id="recycle">
+      <i class="material-icons" style="font-size: 48px;">recycling</i>
+      <h2>Recycle</h2>
+      <ul>
+        <li>Find a Local Recycling Facility</li>
+        <li>Participate in Collection Drives</li>
+        <li>Know the Guidelines</li>
+      </ul>
+    </div>
     <div class="get-involved">
       <h2>Get Involved</h2>
       <ul>
@@ -699,101 +862,100 @@
     </div>
   </section>
 
- <!-- Organization Section -->
- <section id="organization">
-  <span class="material-icons org-icon">business_center</span> <!-- Icon added here -->
-  <h2>Our Organization</h2>
-  <p>We are committed to reducing e-waste and promoting sustainable practices for a better future.</p>
-  <div class="info-container">
-    <div class="info-box">
-      <span class="material-icons">eco</span>
-      <h3>Mission</h3>
-      <p>Our mission is to minimize e-waste and maximize sustainability.</p>
+  <!-- Organization Section -->
+  <section id="organization">
+    <span class="material-icons org-icon">business_center</span> <!-- Icon added here -->
+    <h2>Our Organization</h2>
+    <p>We are committed to reducing e-waste and promoting sustainable practices for a better future.</p>
+    <div class="info-container">
+      <div class="info-box">
+        <span class="material-icons">eco</span>
+        <h3>Mission</h3>
+        <p>Our mission is to minimize e-waste and maximize sustainability.</p>
+      </div>
+      <div class="info-box">
+        <span class="material-icons">emoji_objects</span>
+        <h3>Values</h3>
+        <p>We value integrity, sustainability, and community engagement.</p>
+      </div>
+      <div class="info-box">
+        <span class="material-icons">engineering</span>
+        <h3>Ongoing Projects</h3>
+        <p>We are currently working on e-waste collection drives and educational programs.</p>
+      </div>
     </div>
-    <div class="info-box">
-      <span class="material-icons">emoji_objects</span>
-      <h3>Values</h3>
-      <p>We value integrity, sustainability, and community engagement.</p>
-    </div>
-    <div class="info-box">
-      <span class="material-icons">engineering</span>
-      <h3>Ongoing Projects</h3>
-      <p>We are currently working on e-waste collection drives and educational programs.</p>
-    </div>
-  </div>
-  <button class="donate-button">Donate</button>
-</section>
+    <button class="donate-button">Donate</button>
+  </section>
 
   <!-- Marketplace section with half image and half text -->
-<section id="marketplace">
-  <div class="half image-side">
-    <!-- Replace with your actual image URL -->
-    <img src="https://i.postimg.cc/prjXxfVR/cp.jpg" alt="Your image description">
-  </div>
-  <div class="half text-side">
-    <i class="fas fa-shopping-cart icon"></i> <!-- The icon -->
-    <h2>Engage in our Marketplace<span class="underline"></span></h2>
-    <p>Join our marketplace to buy, sell, or exchange electronics in an eco-friendly way. Contribute to sustainability while getting the best deals.</p>
-    <button class="engage-button">Engage Now</button>
-  </div>
+  <section id="marketplace">
+    <div class="half image-side">
+      <!-- Replace with your actual image URL -->
+      <img src="https://i.postimg.cc/prjXxfVR/cp.jpg" alt="Your image description">
+    </div>
+    <div class="half text-side">
+      <i class="fas fa-shopping-cart icon"></i> <!-- The icon -->
+      <h2>Engage in our Marketplace<span class="underline"></span></h2>
+      <p>Join our marketplace to buy, sell, or exchange electronics in an eco-friendly way. Contribute to sustainability
+        while getting the best deals.</p>
+      <button class="engage-button">Engage Now</button>
+    </div>
 
-  <!-- Draggable Chat Icon -->
-  <div id="chatIcon" class="draggable-chat-icon">
-    <img src="https://i.postimg.cc/DwQHg9tH/icons.png" alt="Chat Icon" />
-  </div>
+    <!-- Draggable Chat Icon -->
+    <div id="chatIcon" class="draggable-chat-icon">
+      <img src="https://i.postimg.cc/DwQHg9tH/icons.png" alt="Chat Icon" />
+    </div>
 
-<!-- Chatbot Interface Container -->
-<div id="chatbotContainer" class="chatbot-container" style="display:none;">
-  <div class="chatbot-header">
-    <span>Chat with us!</span>
-    <button id="closeChatbot" class="chatbot-close">&times;</button>
-  </div>
-  <div id="chatbotContent" class="chatbot-content">
-    <!-- This is where messages will appear. -->
-    <!-- Static example content - this would be dynamically generated in practice -->
-    <div class="chat-message">Hello! How can I help you today?</div>
-  </div>
-  <div class="chatbot-footer">
-    <input type="text" id="chatbotInput" placeholder="Type your message here..." />
-     
-   <!-- Send Button -->
-   <button class="chatbot-send">
-    <span class="material-symbols-outlined">send</span>
-</button>
-<!-- Reset Button with Regenerate Icon -->
-<button id="resetChatbotInput" class="chatbot-reset">
-    <span class="material-symbols-outlined">restart_alt</span>
-  </button>
-  </div>
-</div>
-</section>
+    <!-- Chatbot Interface Container -->
+    <div id="chatbotContainer" class="chatbot-container" style="display:none;">
+      <div class="chatbot-header">
+        <span>Chat with us!</span>
+        <button id="closeChatbot" class="chatbot-close">&times;</button>
+      </div>
+      <div id="chatbotContent" class="chatbot-content">
+        <!-- This is where messages will appear -->
+      </div>
+      <div class="chatbot-footer">
+        <input type="text" id="chatbotInput" placeholder="Type your message here..." />
+
+        <!-- Send Button -->
+        <button class="chatbot-send">
+          <span class="material-symbols-outlined">send</span>
+        </button>
+        <!-- Reset Button with Regenerate Icon -->
+        <button id="resetChatbotInput" class="chatbot-reset">
+          <span class="material-symbols-outlined">restart_alt</span>
+        </button>
+      </div>
+    </div>
 
 
-
+  </section>
 
 
 
-<!-- Footer -->
-<%- include('partials/footer') %>
 
-<!-- Custom CSS for body background -->
-<style>
-     html {
+
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+    <!-- Custom CSS for body background -->
+    <style>
+      html {
         scroll-behavior: smooth;
-    }
-    
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("modalWindow");
+        const span = document.getElementsByClassName("close")[0];
+        const modalText = document.getElementById("modalText");
 
-</style>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const modal = document.getElementById("modalWindow");
-    const span = document.getElementsByClassName("close")[0];
-    const modalText = document.getElementById("modalText");
-
-    document.querySelectorAll('.pillar').forEach(function(element) {
-        element.addEventListener('click', function() {
+        document.querySelectorAll('.pillar').forEach(function (element) {
+          element.addEventListener('click', function () {
             if (element.id === 'reduce') {
-                modalText.innerHTML = `
+              modalText.innerHTML = `
                 <h2>Reduce</h2>
                 <h3>Smart Buying Choices:</h3>
                 <ul>
@@ -810,7 +972,7 @@
                     <li>• Only dispose of items when they are beyond repair or reuse.</li>
                 </ul>`;
             } else if (element.id === 'recover') {
-                modalText.innerHTML = `
+              modalText.innerHTML = `
                 <h2>Recover</h2>
                 <h3>Donate or Sell:</h3>
                 <ul>
@@ -826,8 +988,8 @@
                 <ul>
                     <li>• Contribute to or volunteer in programs that aim to recover usable parts from old electronics.</li>
                 </ul>`;
-              } else if (element.id === 'recycle') {
-                modalText.innerHTML = `
+            } else if (element.id === 'recycle') {
+              modalText.innerHTML = `
                   <h2>Recycle</h2>
                   <h3>Find a Local Recycling Facility:</h3>
                   <ul>
@@ -841,58 +1003,229 @@
                   <ul>
                     <li>• Learn how to properly sort and prepare e-waste for recycling.</li>
                   </ul>`;
-              }
-              modal.style.display = "block";
-            });
+            }
+            modal.style.display = "block";
           });
-      
-          span.onclick = function() {
+        });
+
+        span.onclick = function () {
+          modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+          if (event.target == modal) {
             modal.style.display = "none";
           }
-      
-          window.onclick = function(event) {
-            if (event.target == modal) {
-              modal.style.display = "none";
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('info-box-animate');
+            } else {
+              entry.target.classList.remove('info-box-animate');
             }
+          });
+        });
+
+        document.querySelectorAll('#organization .info-box').forEach(box => {
+          observer.observe(box);
+        });
+      });
+
+      $(function () {
+        // Make the chat icon draggable
+        $("#chatIcon").draggable();
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const closeChatbot = document.getElementById('closeChatbot');
+        const sendButton = document.querySelector('.chatbot-send');
+        const resetButton = document.getElementById('resetChatbotInput');
+        const inputField = document.getElementById('chatbotInput');
+        const chatContent = document.getElementById('chatbotContent');
+
+        // Function to simulate typing indicator
+        function showTypingIndicator() {
+          const typingIndicator = document.createElement('div');
+          typingIndicator.classList.add('chat-message', 'bot');
+          typingIndicator.textContent = '...';
+          chatContent.appendChild(typingIndicator);
+          return typingIndicator;
+        }
+
+        // Function to display a message in the chat
+        function displayMessage(message, sender = 'bot') {
+          const chatMessage = document.createElement('div');
+          chatMessage.classList.add('chat-message', sender);
+          chatMessage.textContent = message;
+          chatContent.appendChild(chatMessage);
+          chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        // Function to display quick reply options
+        function displayQuickReplies(options) {
+          const repliesContainer = document.createElement('div');
+          repliesContainer.classList.add('quick-replies');
+          options.forEach(option => {
+            const replyButton = document.createElement('button');
+            replyButton.textContent = option;
+            replyButton.classList.add('quick-reply');
+            replyButton.onclick = () => handleQuickReply(option);
+            repliesContainer.appendChild(replyButton);
+          });
+          chatContent.appendChild(repliesContainer);
+        }
+
+        // Function to display follow-up questions with quick replies
+        function displayFollowUpQuestion(question, options) {
+          displayMessage(question, 'bot');
+          displayQuickReplies(options);
+        }
+
+        // Handle quick reply selection
+        function handleQuickReply(reply) {
+          processUserInput(reply);
+          document.querySelector('.quick-replies').remove();
+        }
+
+        // Function to process user input and respond accordingly
+        function processUserInput(userInput) {
+          displayMessage(userInput, 'user');
+          const typingIndicator = showTypingIndicator();
+
+          setTimeout(() => {
+            chatContent.removeChild(typingIndicator);
+            // Custom responses and follow-up questions based on user input
+            switch (userInput.toLowerCase()) {
+              case 'what the system is about':
+                displayMessage("E-Waste Zero is a web-based platform designed to expedite sustainable technology preservation. We connect individuals, businesses, and organizations in the lifecycle of sustainable technology.");
+                displayFollowUpQuestion("Would you like to know more about our mission or ongoing projects?", ["Our Mission", "Ongoing Projects", "No, Thank You"]);
+                break;
+              case 'our mission':
+                displayMessage("Our mission is to lead the global movement in reducing electronic waste by promoting responsible recycling, reuse, and disposal practices.");
+                displayFollowUpQuestion("Interested in our vision or values?", ["Our Vision", "Our Values", "No, Thank You"]);
+                break;
+              case 'ongoing projects':
+                displayMessage("We are currently working on e-waste collection drives and educational programs, and engaging in our Marketplace.");
+                displayFollowUpQuestion("Would you like to learn more about our Marketplace or how to participate in our projects?", ["Marketplace Details", "Participation in Projects", "No, Thank You"]);
+                break;
+              case 'our vision':
+                displayMessage("Our vision is a world where electronic products are sustainably produced, consumed, and recycled, ensuring a circular lifecycle.");
+                break;
+              case 'our values':
+                displayMessage("We value integrity, sustainability, and community engagement.");
+                break;
+              case 'how to register':
+                displayMessage("Organizations can register by providing their SEC Number and necessary documents like TIN or BIR files. After a verification process, they'll receive an email about their registration status.");
+                displayFollowUpQuestion("Need more details on the registration process or how to donate after registering?", ["Registration Details", "Donation Process", "No, Thank You"]);
+                break;
+              case 'registration details':
+                displayMessage("To register, visit our registration page and provide your organization's details, including SEC Number and required documents. Our team will review and verify your submission.");
+                break;
+              case 'donation process':
+                displayMessage("After registering, choose a drop point for your donation, fill out the donation form, and deliver your donation. You'll earn points for successful donations.");
+                displayFollowUpQuestion("Interested in learning about drop point details or point redemption?", ["Drop Point Details", "Point Redemption", "No, Thank You"]);
+                break;
+              case 'drop point details':
+                displayMessage("Each drop point has its address, assigned manager, and operating hours. You can choose the most convenient one for your donation.");
+                break;
+              case 'point redemption':
+                displayMessage("Earned points can be redeemed for making advertisements in selected cities or areas with registered users.");
+                break;
+              case 'benefits of the system':
+                displayMessage("Benefits include efficient e-waste management, earning points through donations, and participating in an eco-friendly marketplace.");
+                displayFollowUpQuestion("Interested in specific benefits for organizations or individual users?", ["Organization Benefits", "User Benefits", "No, Thank You"]);
+                break;
+              case 'organization benefits':
+                displayMessage("Organizations benefit through increased visibility, efficient e-waste disposal, and earning points for advertisements.");
+                break;
+              case 'user benefits':
+                displayMessage("Individual users benefit by accessing our marketplace to buy, sell, or exchange electronics in an eco-friendly way.");
+                break;
+              case 'how do i participate':
+                displayMessage("Users can participate by registering, logging in, and engaging in our marketplace to buy or sell electronics in an eco-friendly way.");
+                displayFollowUpQuestion("Would you like to know about marketplace details or other ways to participate?", ["Marketplace Details", "Other Participation Ways", "No, Thank You"]);
+                break;
+              case 'marketplace details':
+                displayMessage("Join our marketplace to buy, sell, or exchange electronics. Contribute to sustainability while getting the best deals.");
+                break;
+              case 'other participation ways':
+                displayMessage("Apart from the marketplace, you can participate in our collection drives, educational programs, and provide feedback for continuous improvement.");
+                break;
+              case 'participation in projects':
+                displayMessage("You can participate in our projects by joining our e-waste collection drives, attending educational programs, or engaging in our marketplace.");
+                break;
+              case 'no, thank you':
+                displayMessage("Alright, if you have any other questions or need assistance, feel free to ask!");
+                break;
+              case 'what is the purpose':
+                displayMessage("The purpose of E-Waste Zero is to minimize e-waste and maximize sustainability by connecting various stakeholders in the lifecycle of sustainable technology.");
+                displayFollowUpQuestion("Would you like to know more about our specific projects or how you can contribute?", ["About Projects", "How to Contribute", "No, Thank You"]);
+                break;
+              case 'how to donate':
+                displayMessage("Organizations can donate by selecting a drop point, filling out the donation form, and delivering their e-waste. This process contributes to efficient e-waste management.");
+                displayFollowUpQuestion("Need more details on the donation process or how your donations help?", ["Donation Process Details", "Impact of Donations", "No, Thank You"]);
+                break;
+              case 'donation process details':
+                displayMessage("To donate, log in to your account, choose a drop point, fill out the necessary details in the donation form, and arrange for the delivery of your e-waste.");
+                break;
+              case 'impact of donations':
+                displayMessage("Your donations help in reducing e-waste, promoting recycling and reuse, and contribute to a sustainable digital future.");
+                break;
+
+              // ... other cases ...
+              default:
+                displayMessage("I'm not sure how to respond to that. Can you please rephrase?");
+                displayQuickReplies([
+                  "What the system is about",
+                  "How to register",
+                  "How to donate",
+                  "Participation in Projects",
+                  "More Information"
+                ]);
+            }
+          }, 1500);
+        }
+
+        // Display initial greeting and options
+        function displayInitialGreeting() {
+          displayMessage("Welcome! How can I assist you today?");
+          displayQuickReplies([
+            "What the system is about",
+            "What is the purpose",
+            "How to register",
+            "How to donate",
+            "Benefits of the system",
+            "How do I participate"
+          ]);
+        }
+
+        // Event listeners for send and reset buttons
+        sendButton.addEventListener('click', function () {
+          const userMessage = inputField.value.trim();
+          if (userMessage !== '') {
+            processUserInput(userMessage);
+            inputField.value = '';
           }
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-          const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('info-box-animate');
-              } else {
-                entry.target.classList.remove('info-box-animate');
-              }
-            });
-          });
-        
-          document.querySelectorAll('#organization .info-box').forEach(box => {
-            observer.observe(box);
-          });
+        resetButton.addEventListener('click', function () {
+          chatContent.innerHTML = '';
+          displayInitialGreeting();
         });
 
-        $(function() {
-          // Make the chat icon draggable
-          $("#chatIcon").draggable();
+        // Event listeners for showing/hiding the chatbot
+        const chatIcon = document.getElementById('chatIcon'); // Ensure this element exists
+        chatIcon.onclick = () => chatbotContainer.style.display = 'block';
+        closeChatbot.onclick = () => chatbotContainer.style.display = 'none';
+
+        // Display the initial greeting when the chatbot loads
+        displayInitialGreeting();
       });
 
-        // JavaScript to handle chat icon and chatbot container
-    document.addEventListener('DOMContentLoaded', function () {
-      var chatIcon = document.getElementById('chatIcon');
-      var chatbotContainer = document.getElementById('chatbotContainer');
-      var closeChatbot = document.getElementById('closeChatbot');
 
-      // Function to show the chatbot
-      chatIcon.onclick = function() {
-          chatbotContainer.style.display = 'block';
-      };
-
-      // Function to hide the chatbot
-      closeChatbot.onclick = function() {
-          chatbotContainer.style.display = 'none';
-      };
-    });
-        
-      </script>
+    </script>

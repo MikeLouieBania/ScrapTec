@@ -14,8 +14,8 @@ router.get('/users-by-city', authMiddlewareAdmin.requireLogin, adminController.g
 router.get('/organizations-by-verification', authMiddlewareAdmin.requireLogin, adminController.getOrganizationsByVerification);
 router.get('/organization-points-over-time', authMiddlewareAdmin.requireLogin, adminController.getOrganizationPointsOverTime);
 router.get('/donations-over-time', authMiddlewareAdmin.requireLogin, adminController.getDonationsOverTime);
-router.get('/donation-status-distribution', authMiddlewareAdmin.requireLogin, adminController.getDonationStatusDistribution); 
-router.get('/average-rating-per-entity', authMiddlewareAdmin.requireLogin, adminController.getAverageRatingPerEntity);
+router.get('/donation-status-distribution', authMiddlewareAdmin.requireLogin, adminController.getDonationStatusDistribution);  
+router.get('/average-rating-per-drop-point', authMiddlewareAdmin.requireLogin, adminController.getAverageRatingPerDropPoint); 
 router.get('/ratings-distribution', authMiddlewareAdmin.requireLogin, adminController.getRatingsDistribution); 
 router.get('/ad-interactions-over-time', authMiddlewareAdmin.requireLogin, adminController.getAdInteractionsOverTime); 
 router.get('/points-spent-on-ads', authMiddlewareAdmin.requireLogin, adminController.getPointsSpentOnAds); 
@@ -30,7 +30,20 @@ router.get('/organizationmanagement', authMiddlewareAdmin.requireLogin,  adminCo
 router.get('/viewdocuments', authMiddlewareAdmin.requireLogin,  adminController.viewDocuments);
 router.get('/usermanagement', authMiddlewareAdmin.requireLogin,  adminController.getUserManagement); 
 router.get('/managermanagement', authMiddlewareAdmin.requireLogin,  adminController.getManagerManagement); 
+
+router.get('/managermanagement/logs/:managerId', authMiddlewareAdmin.requireLogin, adminController.getManagerActivities);
+router.get('/managermanagement/donations/:managerId', authMiddlewareAdmin.requireLogin, adminController.getManagerDonations);
+router.get('/managermanagement/feedbacks/:managerId', authMiddlewareAdmin.requireLogin, adminController.getManagerFeedbacks);
+
+
 router.get('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.getDropPointManagement); 
+router.get('/marketplacemanagement', authMiddlewareAdmin.requireLogin,  adminController.getMarketplaceManagement); 
+router.get('/listings/:listingId/photos/:photoIndex', authMiddlewareAdmin.requireLogin, adminController.getListingPhoto);
+
+router.post('/listings/:listingId/approve', authMiddlewareAdmin.requireLogin, adminController.postApproveListing);
+router.post('/listings/:listingId/reject', authMiddlewareAdmin.requireLogin, adminController.postRejectListing);
+
+
 router.post('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.createDropPoint);  
 router.post('/managermanagement', authMiddlewareAdmin.requireLogin,  adminController.registerManager);
 router.post('/assignManagerToDropPoint', authMiddlewareAdmin.requireLogin,  adminController.assignManagerToDropPoint); 

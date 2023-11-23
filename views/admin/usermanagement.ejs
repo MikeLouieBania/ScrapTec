@@ -3,36 +3,37 @@
 
 <head>
     <title>User Management</title>
-    <!-- Link to Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <!-- Link to Google's Material Icons -->
+    <!-- Google's Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Custom Styles -->
     <style>
         body {
-            background-color: white;
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
         }
-        /* Additional custom styles for the page */
+
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Sidebar styles */
         .sidebar {
             height: 100%;
-            width: 60px; /* Initial width just for the icons */
+            width: 60px;
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #6499E9; /* Main blue */
+            background-color: #6499E9;
             padding-top: 20px;
             transition: 0.5s;
-            z-index: 2; /* Ensure the sidebar is above the main content */
+            z-index: 2;
         }
 
         .sidebar:hover {
-            width: 200px; /* Width when hovered */
+            width: 200px;
         }
 
         .sidebar a {
@@ -47,31 +48,213 @@
         }
 
         .sidebar a .material-icons {
-            margin-right: 10px; /* Space between icon and text */
+            margin-right: 10px;
         }
 
-        /* Hide text labels by default */
         .sidebar a::after {
             content: attr(data-label);
             display: none;
         }
 
-        /* Show text labels on hover */
         .sidebar:hover a::after {
             display: inline;
         }
 
         .sidebar a:hover {
-            background-color: #4477CE; /* Darker blue on hover */
+            background-color: #4477CE;
         }
 
-        /* Main content styles */
         .main-content {
-            padding-left: 70px; /* Adjusted to avoid overlap with sidebar */
+            padding-left: 70px;
             padding-top: 20px;
             padding-right: 20px;
             padding-bottom: 20px;
-            transition: 0.5s; /* Smooth transition */
+            transition: 0.5s;
+        }
+
+        .filter-search-section {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            margin-bottom: 20px;
+        }
+
+        .filter-search-section form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-search-section select, 
+        .filter-search-section input {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .filter-search-section button, 
+        .filter-search-section .clear-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .filter-search-section .clear-button {
+            background-color: #6c757d;
+        }
+
+        .filter-search-section button:hover, 
+        .filter-search-section .clear-button:hover {
+            opacity: 0.9;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        .filter-search-section select {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23007bff"%3E%3Cpath fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+
+        .filter-search-section select:focus {
+            color: #495057;
+            background-color: #fff;
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+        
+        .user-search-section {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-search-section input[type="text"] {
+            flex-grow: 1;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+
+        .user-search-section input[type="text"]:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+        .user-search-section button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .user-search-section button:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* Clear button styles (similar to pagination) */
+        .clear-button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: black;
+            background-color: #f2f2f2;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            text-decoration: none;
+        }
+
+        .clear-button:hover {
+            background-color: #e6e6e6;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .user-search-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .user-search-section button,
+            .clear-button {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+
+        /* Adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .filter-search-section form {
+                flex-direction: column;
+            }
+
+            .filter-search-section select {
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                padding-left: 210px;
+            }
+
+            .filter-search-section form {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -80,67 +263,187 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
-        <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
-        <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
-        <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
+        <a href="/admin/organizationmanagement" data-label="Organization Management"><span
+                class="material-icons">business_center</span></a>
+        <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span
+                class="material-icons">place</span></a>
+                <a href="/admin/marketplacemanagement" data-label="Marketplace Management"><span class="material-icons">shopping_cart</span></a>
+        <a href="/admin/managermanagement" data-label="Manager Management"><span
+                class="material-icons">supervisor_account</span></a>
         <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
-        <a href="/admin/logout" data-label="Logout"><span class="material-icons">logout</span></a>
+        <a><form action="/admin/logout" method="post">
+            <button type="submit" data-label="Logout">
+              <span class="material-icons">logout</span>
+            </button>
+          </form></a> 
     </div>
-    <!-- Main content -->
-    <div class="main-content ml-200">
 
-      <div class="container">
-        <!-- Add the content of the admin dashboard here -->
-        <h1>User Management</h1> 
-        <div class="main-content ml-200">
-            <div class="container">
-                <table class="table mt-4">
-                    <thead>
-                        <tr>
-                            <th colspan="6" class="w-75 text-left">User Management</th>
-                            <th class="text-right w-25">
-                                <!-- Button for adding a user, if needed -->
-                                <button type="button" class="btn btn-primary">Add User</button>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>ID</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>City</th>
-                            <th>Gender</th>
-                            <th>Contact Number</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% users.forEach(user => { %>
-                        <tr>
-                            <td><%= user.id %></td>
-                            <td><%= user.firstName %> <%= user.lastName %></td>
-                            <td><%= user.email %></td>
-                            <td><%= user.city.name %></td> <!-- Assuming 'city' has a 'name' property -->
-                            <td><%= user.gender %></td>
-                            <td><%= user.contactNumber %></td>
-                            <td>
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Delete</button>
-                            </td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-                <!-- Pagination here -->
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="container">
+            <h1>User Management</h1>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link <%= activeTab === 'activityLog' ? 'active' : '' %>" data-toggle="tab"
+                        href="#activityLog">Activity Log</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= activeTab === 'userDetails' ? 'active' : '' %>" data-toggle="tab"
+                        href="#userDetails">User Details</a>
+                </li>
+            </ul>
+
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div id="activityLog" class="container tab-pane <%= activeTab === 'activityLog' ? 'active' : 'fade' %>">
+                    <!-- Activity Log Content -->
+                    <div class="filter-search-section">
+                        <form action="/admin/usermanagement" method="GET">
+                            <select name="activityType">
+                                <option value="" <%=!activityType ? 'selected' : '' %>>All Activities</option>
+                                <option value="Listing Created" <%=activityType==='Listing Created' ? 'selected' : '' %>
+                                    >Listing Created</option>
+                                <option value="Sale Made" <%=activityType==='Sale Made' ? 'selected' : '' %>>Sale Made
+                                </option>
+                            </select>
+                            <select name="dateOrder">
+                                <option value="desc" <%=dateOrder==='desc' ? 'selected' : '' %>>Newest First</option>
+                                <option value="asc" <%=dateOrder==='asc' ? 'selected' : '' %>>Oldest First</option>
+                            </select>
+                            <button type="submit">Filter</button>
+                            <a href="/admin/usermanagement" class="clear-button">Clear</a>
+                        </form>
+                    </div>
+
+
+                    <div class="activity-log-table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Activity Type</th>
+                                    <th>Date/Time</th>
+                                    <th>User Name</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% activityLog.forEach(function(activity) { %>
+                                    <tr>
+                                        <td>
+                                            <%= activity.activityType %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(activity.date).toLocaleString() %>
+                                        </td>
+                                        <td>
+                                            <%= activity.userName %>
+                                        </td>
+                                        <td>
+                                            <%= activity.details %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination for Activities -->
+                    <div class="pagination">
+                        <% if (currentPage> 1) { %>
+                            <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
+                            <% } %>
+                                <% for (let i=1; i <=totalPages; i++) { %>
+                                    <a href="?page=<%= i %>" class="<%= i === currentPage ? 'active' : '' %>">
+                                        <%= i %>
+                                    </a>
+                                    <% } %>
+                                        <% if (currentPage < totalPages) { %>
+                                            <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
+                                            <% } %>
+                    </div>
+                </div>
+                <div id="userDetails" class="container tab-pane <%= activeTab === 'userDetails' ? 'active' : 'fade' %>">
+
+                    <div class="user-search-section">
+                        <form action="/admin/usermanagement" method="GET">
+                            <input type="text" name="userEmail" placeholder="Search by Email">
+                            <button type="submit">Search</button>
+                            <a href="/admin/usermanagement" class="clear-button">Clear</a>
+                        </form>
+                    </div>
+
+                    <!-- User Details Content -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>City</th>  
+                                <th>Contact</th>
+                                <th>Gender</th>
+                                <th>Joined</th>
+                                <th>Listings</th>
+                                <th>Purchases</th>
+                                <th>Avg. Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let i=1 %>
+                                <% users.forEach(function(user) { %>
+                                    <tr>
+                                        <td>
+                                            <%= i++ %>
+                                        </td>
+                                        <td>
+                                            <%= user.email %>
+                                        </td>
+                                        <td>
+                                            <%= user.firstName %>
+                                                <%= user.lastName %>
+                                        </td>
+                                        <td><%= user.city.name %></td> 
+                                        <td><%= user.contactNumber %></td>
+                                        <td><%= user.gender %></td>
+                                        <td><%= user.createdAt.toDateString() %></td>
+                                        <td><%= user.listingsCount %></td>
+                                        <td><%= user.purchasesCount %></td>
+                                        <td><%= user.averageRating %></td>
+                                    </tr>
+                                    <% }); %>
+                        </tbody>
+                    </table>
+                    <!-- Pagination for User Details -->
+                    <div class="pagination">
+                        <% if (currentPage> 1) { %>
+                            <a href="?page=<%= currentPage - 1 %>&userEmail=<%= userEmail %>&tab=userDetails">&laquo;
+                                Previous</a>
+                            <% } %>
+                                <% for (let i=1; i <=totalUserPages; i++) { %>
+                                    <a href="?page=<%= i %>&userEmail=<%= userEmail %>&tab=userDetails"
+                                        class="<%= i === currentPage ? 'active' : '' %>">
+                                        <%= i %>
+                                    </a>
+                                    <% } %>
+                                        <% if (currentPage < totalUserPages) { %>
+                                            <a
+                                                href="?page=<%= currentPage + 1 %>&userEmail=<%= userEmail %>&tab=userDetails">Next
+                                                &raquo;</a>
+                                            <% } %>
+                    </div>
+
+                </div>
             </div>
         </div>
-      </div>
+    </div> 
 
-      
-    </div>
 
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+</body>
+
 </html>
