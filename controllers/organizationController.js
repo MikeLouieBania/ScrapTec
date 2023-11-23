@@ -56,7 +56,7 @@ async function calculatePoints(type, condition, quantity) {
     return totalPoints;
 }
 
-  // Function to get total points for an organization
+// Function to get total points for an organization
 async function getTotalPointsForOrganization(organizationId) {
   try {
     const donations = await prisma.donation.findMany({
@@ -117,6 +117,85 @@ async function getCitiesWithUserCounts() {
   }
 } 
 
+
+async function calculateFeedbackRatings(feedbacks) {
+  const ratingsDistribution = feedbacks.reduce((acc, feedback) => {
+    const rating = feedback.rating;
+    if (!acc[rating]) {
+      acc[rating] = 0;
+    }
+    acc[rating] += 1;
+    return acc;
+  }, {});
+
+  return Object.entries(ratingsDistribution).map(([rating, count]) => ({
+    name: rating,
+    y: count
+  }));
+}
+
+async function calculateAdvertisementEngagement(advertisements) {
+  return advertisements.map(ad => ({
+    name: ad.title,
+    data: ad.interactions.length // Number of clicks/interactions
+  }));
+}
+
+async function calculateDonationDistribution(donations) {
+  const distribution = donations.reduce((acc, donation) => {
+    // Check if dropPoint exists
+    if (donation.dropPoint) {
+      const dropPointName = donation.dropPoint.name;
+      if (!acc[dropPointName]) {
+        acc[dropPointName] = 0;
+      }
+      acc[dropPointName] += 1; // Counting number of donations
+    }
+    return acc;
+  }, {});
+
+  return Object.entries(distribution).map(([dropPoint, count]) => ({
+    name: dropPoint,
+    y: count
+  }));
+}
+
+async function calculatePointsData(advertisements) {
+  // Assuming each advertisement has 'pointsSpent' and creation date
+  const pointsData = advertisements.reduce((acc, ad) => {
+    const monthYear = ad.startDate.getMonth() + '-' + ad.startDate.getFullYear();
+    if (!acc[monthYear]) {
+      acc[monthYear] = { earned: 0, spent: 0 };
+    }
+    acc[monthYear].spent += ad.pointsSpent;
+    return acc;
+  }, {});
+
+  return Object.entries(pointsData).map(([date, data]) => ({
+    date,
+    earned: data.earned, // Calculate earned points based on your business logic
+    spent: data.spent
+  }));
+}
+
+async function calculateDonationTrend(donations) {
+  // Group donations by month and year, and sum up the donations for each month
+  const groupedDonations = donations.reduce((acc, donation) => {
+    const monthYear = donation.createdAt.getMonth() + '-' + donation.createdAt.getFullYear();
+    if (!acc[monthYear]) {
+      acc[monthYear] = 0;
+    }
+    acc[monthYear] += donation.points; // or any other metric you want to use
+    return acc;
+  }, {});
+
+  return Object.entries(groupedDonations).map(([date, totalDonations]) => ({
+    date,
+    totalDonations
+  }));
+}
+
+
 /**
  * Compute the average rating for feedbacks of a given drop point.
  * 
@@ -157,6 +236,7 @@ const updateAdStatuses = async (organizationId) => {
     console.error('Failed to update ad statuses for organization:', organizationId, error);
   }
 };
+
 
 module.exports = {
   async getDashboard(req, res) {
@@ -637,7 +717,13 @@ module.exports = {
       const organization = await prisma.organization.findUnique({
         where: { id: organizationId },
         include: {
-          donations: true, // Assuming you need to count donations
+          donations: true,
+          advertisements: {
+            include: {
+              interactions: true
+            }
+          },
+          feedbacksGiven: true
         },
       }); 
 
@@ -655,8 +741,20 @@ module.exports = {
         citiesWithCounts.sort((a, b) => a.requiredPoints - b.requiredPoints);
       }
 
+      const donationTrend = await calculateDonationTrend(organization.donations);
+      const pointsData = await calculatePointsData(organization.advertisements);
+      const donationDistribution = await calculateDonationDistribution(organization.donations);
+      const advertisementEngagement = await calculateAdvertisementEngagement(organization.advertisements);
+      const feedbackRatings = await calculateFeedbackRatings(organization.feedbacksGiven);
+
+
       res.render('organization/account', { 
         organization, 
+        donationTrend,
+        pointsData,
+        donationDistribution,
+        advertisementEngagement,
+        feedbackRatings,
         citiesWithCounts,
         activeTab: req.query.tab || 'account',
         totalDonations: organization.donations ? organization.donations.length : 0,

@@ -603,51 +603,52 @@ body {
         </div> 
         <!-- Status Tab --> 
         <div class="tab-pane <%= activeTab === 'status' ? 'show active' : '' %>" id="status" role="tabpanel" aria-labelledby="status-tab">
+         
           <!-- Milestones/Accomplishments Section -->
-<div class="milestones">
-  <h3>Milestones/Accomplishments</h3>
-  <% 
-  const levels = [
-    { name: 'Supporter', points: 1000, icon: 'rising-sun.png' },
-    { name: 'Advocate', points: 5000, icon: 'open-hand.png' },
-    { name: 'Champion', points: 10000, icon: 'torch.png' },
-    { name: 'Guardian', points: Infinity, icon: 'shield.png' }
-  ];
-  levels.forEach(level => {
-    const isAchieved = organization.lifetimePoints >= level.points;
-    const progress = Math.min((organization.lifetimePoints / level.points) * 100, 100);
-  %>
-    <div class="milestone">
-      <div class="badge milestone-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
-        <%= level.name %> Level: <%= isAchieved ? level.points : organization.lifetimePoints %> points
-        <img src="/images/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon" class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-      </div>
-    </div>
-  <% }); %>
-</div>
+          <div class="milestones">
+            <h3>Milestones/Accomplishments</h3>
+            <% 
+            const levels = [
+              { name: 'Supporter', points: 1000, icon: 'rising-sun.png' },
+              { name: 'Advocate', points: 5000, icon: 'open-hand.png' },
+              { name: 'Champion', points: 10000, icon: 'torch.png' },
+              { name: 'Guardian', points: Infinity, icon: 'shield.png' }
+            ];
+            levels.forEach(level => {
+              const isAchieved = organization.lifetimePoints >= level.points;
+              const progress = Math.min((organization.lifetimePoints / level.points) * 100, 100);
+            %>
+              <div class="milestone">
+                <div class="badge milestone-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+                  <%= level.name %> Level: <%= isAchieved ? level.points : organization.lifetimePoints %> points
+                  <img src="/images/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon" class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
 
-<!-- Donation Section -->
-<div class="donation">
-  <h3>Donation</h3>
-  <% 
-  const badges = [
-    { name: 'Bronze', donations: 1, icon: 'bronze-badge-icon.png' },
-    { name: 'Silver', donations: 5, icon: 'silver-badge-icon.png' },
-    { name: 'Gold', donations: 10, icon: 'gold-badge-icon.png' },
-    { name: 'Platinum', donations: 20, icon: 'platinum-badge-icon.png' }
-  ];
-  badges.forEach(badge => {
-    const isAchieved = totalDonations >= badge.donations;
-  %>
-    <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
-      <%= badge.name %> Badge
-      <img src="/images/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
-    </div>
-  <% }); %>
-</div>
+          <!-- Donation Section -->
+          <div class="donation">
+            <h3>Donation</h3>
+            <% 
+            const badges = [
+              { name: 'Bronze', donations: 1, icon: 'bronze-badge-icon.png' },
+              { name: 'Silver', donations: 5, icon: 'silver-badge-icon.png' },
+              { name: 'Gold', donations: 10, icon: 'gold-badge-icon.png' },
+              { name: 'Platinum', donations: 20, icon: 'platinum-badge-icon.png' }
+            ];
+            badges.forEach(badge => {
+              const isAchieved = totalDonations >= badge.donations;
+            %>
+              <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+                <%= badge.name %> Badge
+                <img src="/images/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
+              </div>
+            <% }); %>
+          </div>
 
           
 
@@ -655,7 +656,21 @@ body {
           <!-- Charts Section -->
           <div class="charts">
               <h3>Analytics</h3> 
-              <!-- Add more chart containers as needed -->
+  
+              <!-- Container for Donation Trend Over Time -->
+              <div id="donationTrendChartContainer"></div>
+              
+              <!-- Container for Points Earned vs Points Redeemed -->
+              <div id="pointsChartContainer"></div>
+              
+              <!-- Container for Donation Distribution by Drop Point -->
+              <div id="donationDistributionChartContainer"></div>
+              
+              <!-- Container for Advertisement Engagement -->
+              <div id="advertisementEngagementChartContainer"></div>
+              
+              <!-- Container for Feedback Ratings -->
+              <div id="feedbackRatingsChartContainer"></div>
           </div>
 
         </div>
@@ -665,6 +680,8 @@ body {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const citySearchInput = document.getElementById('citySearch');
@@ -699,6 +716,88 @@ body {
 
         setActiveTab();
       });
+
+
+      var donationTrend = <%- JSON.stringify(donationTrend) %>;
+      var pointsData = <%- JSON.stringify(pointsData) %>;
+      var donationDistribution = <%- JSON.stringify(donationDistribution) %>;
+      var advertisementEngagement = <%- JSON.stringify(advertisementEngagement) %>;
+      var feedbackRatings = <%- JSON.stringify(feedbackRatings) %>;
+      
+      Highcharts.chart('donationTrendChartContainer', {
+          chart: { type: 'line' },
+          title: { text: 'Donation Trend Over Time' },
+          xAxis: {
+              categories: donationTrend.map(item => item.date)
+          },
+          yAxis: {
+              title: { text: 'Total Donations' }
+          },
+          series: [{
+              name: 'Donations',
+              data: donationTrend.map(item => item.totalDonations)
+          }]
+      });
+
+
+      Highcharts.chart('pointsChartContainer', {
+          chart: { type: 'bar' },
+          title: { text: 'Points Earned vs Points Redeemed' },
+          xAxis: {
+              categories: pointsData.map(item => item.date)
+          },
+          yAxis: { min: 0, title: { text: 'Total Points' } },
+          series: [{
+              name: 'Earned',
+              data: pointsData.map(item => item.earned)
+          }, {
+              name: 'Spent',
+              data: pointsData.map(item => item.spent)
+          }]
+      });
+
+      Highcharts.chart('donationDistributionChartContainer', {
+          chart: { type: 'pie' },
+          title: { text: 'Donation Distribution by Drop Point' },
+          series: [{
+              name: 'Donations',
+              colorByPoint: true,
+              data: donationDistribution
+          }]
+      });
+
+      Highcharts.chart('advertisementEngagementChartContainer', {
+        chart: { type: 'bar' },
+        title: { text: 'Advertisement Engagement' },
+        xAxis: {
+            categories: advertisementEngagement.map(ad => ad.name)
+        },
+        yAxis: {
+            min: 0,
+            title: { text: 'Interactions' }
+        },
+        series: [{
+            name: 'Clicks/Interactions',
+            data: advertisementEngagement.map(ad => ad.data)
+          }]
+      });
+
+      Highcharts.chart('feedbackRatingsChartContainer', {
+          chart: { type: 'bar' },
+          title: { text: 'Feedback Ratings' },
+          xAxis: {
+              categories: feedbackRatings.map(item => item.name)
+          },
+          yAxis: {
+              min: 0,
+              title: { text: 'Number of Feedbacks' }
+          },
+          series: [{
+              name: 'Ratings',
+              data: feedbackRatings.map(item => item.y)
+          }]
+      });
+
 
     </script>
   </body>
