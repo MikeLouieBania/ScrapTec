@@ -634,37 +634,32 @@ module.exports = {
   async getAccount(req, res) { 
     try {
       const organizationId = req.session.organization.id;
-      // Directly fetch the organization's data, including totalPoints and lifetimePoints
       const organization = await prisma.organization.findUnique({
         where: { id: organizationId },
+        include: {
+          donations: true, // Assuming you need to count donations
+        },
       }); 
 
-      // Get cities with user counts
       let citiesWithCounts = await getCitiesWithUserCounts();
       citiesWithCounts = citiesWithCounts.map(city => {
-          let requiredPoints;
-          if (city.usersCount > 1000) {
-              requiredPoints = 2500; // Tier 1
-          } else if (city.usersCount >= 500) {
-              requiredPoints = 2000;  // Tier 2
-          } else {
-              requiredPoints = 1500;  // Tier 3
-          }
-          return {...city, requiredPoints};
+        let requiredPoints = city.usersCount > 500 ? 1000 :
+                             city.usersCount >= 250 ? 500 : 250;
+        return {...city, requiredPoints};
       });
-  
+
       const sortOrder = req.query.sort || 'none';
       if (sortOrder === 'highest') {
         citiesWithCounts.sort((a, b) => b.requiredPoints - a.requiredPoints);
       } else if (sortOrder === 'lowest') {
         citiesWithCounts.sort((a, b) => a.requiredPoints - b.requiredPoints);
-      } 
-  
-      // Render the view with the organization's data
+      }
+
       res.render('organization/account', { 
         organization, 
         citiesWithCounts,
-        activeTab: req.query.tab || 'account'
+        activeTab: req.query.tab || 'account',
+        totalDonations: organization.donations ? organization.donations.length : 0,
       }); 
     } catch (error) {
       console.error("Error fetching account data:", error);

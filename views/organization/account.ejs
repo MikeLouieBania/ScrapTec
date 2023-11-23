@@ -365,13 +365,28 @@ body {
     }
     
     
-    .points-container {
-      /* Styles specific to the points container */
+    .milestone .progress, .milestone .progress-bar {
+      height: 20px;
     }
-    
-    .badge-success, .badge-warning {
-      /* Styles for badges */
+
+    .progress-bar {
+      background-color: #4caf50; /* Green color for progress */
     }
+
+    .not-achieved .progress-bar {
+      background-color: #ccc; /* Grey color for incomplete progress */
+    }
+
+    .badge.achieved img {
+      opacity: 1; /* Full color for achieved badges */
+    }
+
+    .badge.not-achieved img {
+      opacity: 0.5; /* Greyed-out look for unachieved badges */
+    }
+
+
+
     
     
     
@@ -588,12 +603,62 @@ body {
         </div> 
         <!-- Status Tab --> 
         <div class="tab-pane <%= activeTab === 'status' ? 'show active' : '' %>" id="status" role="tabpanel" aria-labelledby="status-tab">
-  
-          <!-- Status Content Here -->
-          <h3>Status</h3>
-          <p>Information about your organization's status can go here.</p>
+          <!-- Milestones/Accomplishments Section -->
+<div class="milestones">
+  <h3>Milestones/Accomplishments</h3>
+  <% 
+  const levels = [
+    { name: 'Supporter', points: 1000, icon: 'rising-sun.png' },
+    { name: 'Advocate', points: 5000, icon: 'open-hand.png' },
+    { name: 'Champion', points: 10000, icon: 'torch.png' },
+    { name: 'Guardian', points: Infinity, icon: 'shield.png' }
+  ];
+  levels.forEach(level => {
+    const isAchieved = organization.lifetimePoints >= level.points;
+    const progress = Math.min((organization.lifetimePoints / level.points) * 100, 100);
+  %>
+    <div class="milestone">
+      <div class="badge milestone-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+        <%= level.name %> Level: <%= isAchieved ? level.points : organization.lifetimePoints %> points
+        <img src="/images/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon" class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
+    </div>
+  <% }); %>
+</div>
+
+<!-- Donation Section -->
+<div class="donation">
+  <h3>Donation</h3>
+  <% 
+  const badges = [
+    { name: 'Bronze', donations: 1, icon: 'bronze-badge-icon.png' },
+    { name: 'Silver', donations: 5, icon: 'silver-badge-icon.png' },
+    { name: 'Gold', donations: 10, icon: 'gold-badge-icon.png' },
+    { name: 'Platinum', donations: 20, icon: 'platinum-badge-icon.png' }
+  ];
+  badges.forEach(badge => {
+    const isAchieved = totalDonations >= badge.donations;
+  %>
+    <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+      <%= badge.name %> Badge
+      <img src="/images/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
+    </div>
+  <% }); %>
+</div>
+
+          
+
+
+          <!-- Charts Section -->
+          <div class="charts">
+              <h3>Analytics</h3> 
+              <!-- Add more chart containers as needed -->
+          </div>
+
+        </div>
  
     </div>
 
