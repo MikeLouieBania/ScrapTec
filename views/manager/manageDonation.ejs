@@ -7,200 +7,245 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style>
-   
-    body
-    {
-        font-family: 'Poppins', sans-serif; /* Updated font family to 'Poppins' */
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Updated font family to 'Poppins' */
 
-    }
-       /* Additional custom styles for the page */
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-
-      
-      .navbar .navbar-brand,
-      .navbar .nav-link {
-          color: #fff;
-          font-family: 'Roboto Slab', serif,;
-          font-weight: bold;
-          font-size: 16px;
-          margin-top: 15px;
-      }
-      
-      body {
-          padding-top: 0px;
-          margin-bottom: 60px;
-      }
-
-      .jumbotron {
-          background-color: #3498db;
-          color: #fff;
-          margin-bottom: 0;
-      }
-
-      .navbar {
-          background-color: #219ebc;
-          padding: 10px 0;
-      }
-
-      nav ul {
-          list-style: none;
-          text-align: center;
-      }
-        
-      nav ul li {
-          display: inline-block;
-      }
-        
-      nav ul li a {
-          display: block;
-          padding: 15px;
-          text-decoration: none;
-          color: #aaa;
-          font-weight: 800;
-          text-transform: uppercase;
-          margin: 0 10px;
-          position: relative;
-          transition: all .5s; 
-      }
-        
-      nav ul li a:hover {
-          color: #555;
-      }
-        
-      nav ul li a::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background-color: #8ecae6;
-          transform: scaleX(0);
-          transition: transform 0.5s;
-      }
-        
-      nav ul li a:hover::after {
-          transform: scaleX(1);
-      }
-
-      /* Custom Logout Button Style */
-      .btn-logout {
-        background-color: #002244;  /* Reddish color for the button */
-        border: none;
-        padding: 10px 20px;  /* Larger padding for a bigger button */
-        border-radius: 5px;  /* Rounded corners */
-        transition: background-color 0.3s;  /* Smooth transition for hover effect */
-        margin-right: 20px;
-        font-weight: bold;
-        color: white;
-        font-family: 'Roboto Slab', serif,;
-      
-      }
-
-      .btn-logout:hover {
-        background-color: #6082B6;  /* Darker shade when hovered */
-        color: #fff;  /* White text color */
-        text-decoration: none;
-      }
-
-    /* status modal header */
-        #statusModalLabel {
-            text-align: center; /* Centers the text */
-            display: block; /* Ensures the element behaves as a block-level element */
-            width: 100%; /* Ensures the element spans the full width */
         }
-        
-        .modal-header {         
-            background-color: #4B9CD3; /* Example background color */
-            color: #fff; /* Example text color */
-            padding: 10px; /* Example padding */
-            border-bottom: 1px solid #dee2e6; /* Example bottom border */
+
+        /* Additional custom styles for the page */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+
+        .navbar .navbar-brand,
+        .navbar .nav-link {
+            color: #fff;
+            font-family: 'Roboto Slab', serif, ;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        body {
+            padding-top: 0px;
+            margin-bottom: 60px;
+        }
+
+        .jumbotron {
+            background-color: #3498db;
+            color: #fff;
+            margin-bottom: 0;
+        }
+
+        .navbar {
+            background-color: #219ebc;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #aaa;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0 10px;
+            position: relative;
+            transition: all .5s;
+        }
+
+        nav ul li a:hover {
+            color: #555;
+        }
+
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #8ecae6;
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Custom Logout Button Style */
+        .btn-logout {
+            background-color: #002244;
+            /* Reddish color for the button */
+            border: none;
+            padding: 10px 20px;
+            /* Larger padding for a bigger button */
+            border-radius: 5px;
+            /* Rounded corners */
+            transition: background-color 0.3s;
+            /* Smooth transition for hover effect */
+            margin-right: 20px;
+            font-weight: bold;
+            color: white;
+            font-family: 'Roboto Slab', serif, ;
+
+        }
+
+        .btn-logout:hover {
+            background-color: #6082B6;
+            /* Darker shade when hovered */
+            color: #fff;
+            /* White text color */
+            text-decoration: none;
+        }
+
+        /* status modal header */
+        #statusModalLabel {
+            text-align: center;
+            /* Centers the text */
+            display: block;
+            /* Ensures the element behaves as a block-level element */
+            width: 100%;
+            /* Ensures the element spans the full width */
+        }
+
+        .modal-header {
+            background-color: #4B9CD3;
+            /* Example background color */
+            color: #fff;
+            /* Example text color */
+            padding: 10px;
+            /* Example padding */
+            border-bottom: 1px solid #dee2e6;
+            /* Example bottom border */
         }
 
         .table-wrapper {
             position: relative;
-            width: 100%; /* Keeps the width as is */
+            width: 100%;
+            /* Keeps the width as is */
         }
-        
+
         .table-custom {
-            width: 150%; /* Keeps the original width */
-            border-collapse: collapse; /* Collapse borders so they become single lines */
-            margin-top: 60px; /* Keeps the space between the search bar and the table */
-            margin-left: -150px; /* Keeps the table shifted to the left */
+            width: 150%;
+            /* Keeps the original width */
+            border-collapse: collapse;
+            /* Collapse borders so they become single lines */
+            margin-top: 60px;
+            /* Keeps the space between the search bar and the table */
+            margin-left: -150px;
+            /* Keeps the table shifted to the left */
         }
-        
-        .table-custom th, .table-custom td {
-            padding: 15px 20px; /* Updated padding to match .table */
-            border: 1px solid #dee2e6; /* Keeps the borders as is */
-            text-align: left; /* Keeps text aligned to the left */
-            font-family: 'Poppins', sans-serif; /* Updated font family to 'Poppins' */
-            font-size: 16px; /* Updated font size to match .table */
-            color: #212529; /* Sets text color to a standard dark for readability */
+
+        .table-custom th,
+        .table-custom td {
+            padding: 15px 20px;
+            /* Updated padding to match .table */
+            border: 1px solid #dee2e6;
+            /* Keeps the borders as is */
+            text-align: left;
+            /* Keeps text aligned to the left */
+            font-family: 'Poppins', sans-serif;
+            /* Updated font family to 'Poppins' */
+            font-size: 16px;
+            /* Updated font size to match .table */
+            color: #212529;
+            /* Sets text color to a standard dark for readability */
         }
-        
+
         /* Zebra striping for rows */
         .table-custom tr:nth-child(even) {
-            background-color: #f2f2f2; /* Keeps the zebra striping as is */
+            background-color: #f2f2f2;
+            /* Keeps the zebra striping as is */
         }
-        
+
         /* Hover effect for rows (excluding header) */
         .table-custom tbody tr:hover {
-            background-color: #f1f3f5; /* Light grey background on row hover to match .table */
+            background-color: #f1f3f5;
+            /* Light grey background on row hover to match .table */
         }
-        
+
         /* Table header styling */
         .table-custom thead tr {
-            background-color: #f8f9fa; /* Light grey header background to match .table */
-            color: #495057; /* Dark grey color for text to match .table */
-            border-bottom: 2px solid #dee2e6; /* Heavier bottom border for header to match .table */
-            text-align: center; /* Center-align the header text */
-            font-weight: bold; /* Makes header text bold */
+            background-color: #f8f9fa;
+            /* Light grey header background to match .table */
+            color: #495057;
+            /* Dark grey color for text to match .table */
+            border-bottom: 2px solid #dee2e6;
+            /* Heavier bottom border for header to match .table */
+            text-align: center;
+            /* Center-align the header text */
+            font-weight: bold;
+            /* Makes header text bold */
         }
-        
+
         /* Action button styling */
         .action-btn {
-            border: none; /* Removes the border */
-            background: none; /* Removes the background */
-            cursor: pointer; /* Keeps the cursor as pointer */
-            margin-right: 5px; /* Right margin to separate action buttons */
+            border: none;
+            /* Removes the border */
+            background: none;
+            /* Removes the background */
+            cursor: pointer;
+            /* Keeps the cursor as pointer */
+            margin-right: 5px;
+            /* Right margin to separate action buttons */
         }
-        
-        .action-btn:hover {
-            color: #007BFF; /* Blue color on hover to match .table-custom thead */
-        }
-        
 
-   
+        .action-btn:hover {
+            color: #007BFF;
+            /* Blue color on hover to match .table-custom thead */
+        }
+
+
+
 
         /* Search bar styling */
         .search-input {
             position: absolute;
-            top: -45px; /* Adjusted position to account for the added margin */
+            top: -45px;
+            /* Adjusted position to account for the added margin */
             right: 0;
             padding: 5px 10px;
             border: 1px solid #ccc;
             border-radius: 3px;
-            margin-bottom: 10px; /* New margin added to the bottom of the search bar */
+            margin-bottom: 10px;
+            /* New margin added to the bottom of the search bar */
         }
 
         /* Pagination styling */
         .table-wrapper {
-            position: relative; /* This ensures that absolute positioning is relative to this container */
-            padding-bottom: 70px; /* Add padding to make space for the pagination */
+            position: relative;
+            /* This ensures that absolute positioning is relative to this container */
+            padding-bottom: 70px;
+            /* Add padding to make space for the pagination */
         }
-        
+
         .pagination {
             position: absolute;
-            bottom: 10px; /* Adjust this value as needed */
-            right: -230px; /* Aligns the pagination to the right */
-            left: 0; /* Ensures the pagination can still be centered if needed */
-            justify-content: flex-end; /* This will align the pagination items to the right */
+            bottom: 10px;
+            /* Adjust this value as needed */
+            right: -230px;
+            /* Aligns the pagination to the right */
+            left: 0;
+            /* Ensures the pagination can still be centered if needed */
+            justify-content: flex-end;
+            /* This will align the pagination items to the right */
         }
-        
+
 
         .pagination a {
             margin: 0 5px;
@@ -225,32 +270,31 @@
 </head>
 
 <body>
-    
+
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary"><%= dropPointName %></span></a>
+                <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary">
+                        <%= dropPointName %>
+                    </span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
-            </li> 
-            <li class="nav-item">
-                <a class="nav-link" href="/manager/expectedArrivals">Expected Arrivals</a>
-            </li> 
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/manager/managerAccount">Account</a>
-            </li> 
+            </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
-          <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
+            <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
         </form>
     </nav>
 
     <div class="container">
         <h2>Manage Donations</h2>
-       
+
         <div class="table-wrapper">
             <!-- Table to List Donations -->
             <table class="table-custom">
@@ -264,46 +308,83 @@
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
-            <!-- Search bar placed above the table on the right -->
-            <input type="text" class="search-input" placeholder="Search...">
+                <!-- Search bar placed above the table on the right -->
+                <!-- <input type="text" class="search-input" placeholder="Search..."> -->
+                <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+                <!-- Filter by Expected Date of Arrival -->
+                <input type="date" id="filterDate" class="filter-input" placeholder="Filter by Date">
 
-                        <!-- Pagination -->
-                    <div class="pagination">
-                    <a href="#">&laquo;</a> <!-- Previous page -->
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">&raquo;</a> <!-- Next page -->
-                </div>
-            </div>
-                        
-            <tbody>
-                <% donations.forEach(function(donation, index) { %>
+                <!-- Filter by Status -->
+                <select id="filterStatus" class="filter-input">
+                    <option value="">Select Status</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="ARRIVED">Arrived</option>
+                    <option value="VERIFIED">Verified</option> 
+                    <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
+                </select>
+                <!-- Add this within your HTML form or near the filter inputs -->
+                <select id="sortOrder" class="filter-input">
+                    <option value="expectedDateOfArrival_asc">Date of Arrival (Ascending)</option>
+                    <option value="expectedDateOfArrival_desc">Date of Arrival (Descending)</option>  
+                </select>
 
-                    <tr>
-                        <td><%= index + 1 %></td>
-                        <td><%= donation.organization.organizationname %></td>
-                        <td><%= donation.expectedDateOfArrival ? new Date(donation.expectedDateOfArrival).toLocaleDateString() : 'N/A' %></td>
-                        <td>
-                            <!-- Add a button to open a modal for peripherals -->
-                            <button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#peripheralsModal<%= index %>">
-                                View Peripherals
-                            </button>
-                            <!-- Modal for peripherals -->
-                            <div class="modal fade" id="peripheralsModal<%= index %>" tabindex="-1" role="dialog" aria-labelledby="peripheralsModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="peripheralsModalLabel">Peripherals for <%= donation.organization.organizationname %></h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Check if donation.peripherals is defined -->
-                                            <% if (donation.peripherals) { %>
+
+                <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+                <button id="clearFilters" class="btn btn-secondary">Clear Filters</button>
+
+
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <a href="?page=1">&laquo;</a>
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                      <% if(i == 1 || i == totalPages || i == currentPage || i == currentPage - 1 || i == currentPage + 1) { %>
+                        <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+                      <% } else if(i == currentPage - 2 || i == currentPage + 2) { %>
+                        <span>...</span>
+                      <% } %>
+                    <% } %>
+                    <a href="?page=<%= totalPages %>">&raquo;</a>
+                  </div>
+                                   
+
+        </div>
+
+        <tbody>
+            <% donations.forEach(function(donation, index) { %>
+
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= donation.organization.organizationname %>
+                    </td>
+                    <td>
+                        <%= donation.expectedDateOfArrival ? new
+                            Date(donation.expectedDateOfArrival).toLocaleDateString() : 'N/A' %>
+                    </td>
+                    <td>
+                        <!-- Add a button to open a modal for peripherals -->
+                        <button class="btn btn-primary btn-sm" type="button" data-toggle="modal"
+                            data-target="#peripheralsModal<%= index %>">
+                            View Peripherals
+                        </button>
+                        <!-- Modal for peripherals -->
+                        <div class="modal fade" id="peripheralsModal<%= index %>" tabindex="-1" role="dialog"
+                            aria-labelledby="peripheralsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="peripheralsModalLabel">Peripherals for <%=
+                                                donation.organization.organizationname %>
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <% if (donation.peripherals) { %>
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
@@ -312,95 +393,114 @@
                                                             <th>Model</th>
                                                             <th>Condition</th>
                                                             <th>Quantity</th>
-                                                            <% /* Add other attributes you want to verify */ %>
-                                                            <th>Actions</th> <!-- New column for actions -->
+                                                            <th>Update</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <% donation.peripherals.forEach(function(peripheral) { %>
-                                                            <tr>
+                                                        <% donation.peripherals.forEach(function(peripheral, peripheralIndex) { %>
+                                                        <form action="/manager/updatePeripheral" method="post">
+                                                            <tr id="peripheralRow<%= peripheralIndex %>">
                                                                 <td><%= peripheral.type %></td>
                                                                 <td><%= peripheral.brand %></td>
                                                                 <td><%= peripheral.model %></td>
-                                                                <td><%= peripheral.condition %></td>
-                                                                <td><%= peripheral.quantity %></td>
-                                                                <% /* Add other input fields for attributes you want to verify */ %>
                                                                 <td>
-                                                                    <button class="btn btn-primary btn-sm" onclick="updatePeripheral(<%= index %>, '<%= peripheral.id %>')">Update</button>
+                                                                    <select class="form-control" name="condition" id="condition<%= peripheralIndex %>">
+                                                                        <option value="Used but Working" <%= peripheral.condition === "Used but Working" ? "selected" : "" %>>Used but Working</option>
+                                                                        <option value="New" <%= peripheral.condition === "New" ? "selected" : "" %>>New</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control" name="quantity" value="<%= peripheral.quantity %>" id="quantity<%= peripheralIndex %>">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="hidden" name="peripheralId" value="<%= peripheral.id %>"> 
+                                                                    <button type="submit" class="btn btn-primary btn-sm" <%= ['VERIFIED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update</button>
                                                                 </td>
                                                             </tr>
+                                                        </form>
                                                         <% }) %>
                                                     </tbody>
                                                 </table>
-                                            <% } else { %>
-                                                <p>No peripherals available</p>
-                                            <% } %>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
+                                        <% } else { %>
+                                            <p>No peripherals available</p>
+                                        <% } %>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
-                        </td>
-                        <td> 
-                            <!-- Display different verification statuses -->
-                            <% if (donation.status === 'PENDING') { %>
-                                <span class="badge badge-warning"><%= donation.status %></span>
-                            <% } else if (donation.status === 'ARRIVED') { %>
-                                <span class="badge badge-primary"><%= donation.status %></span>
-                            <% } else if (donation.status === 'VERIFIED') { %>
-                                <span class="badge badge-success"><%= donation.status %></span>
-                            <% } else if (donation.status === 'REJECTED') { %>
-                                <span class="badge badge-danger"><%= donation.status %></span>
-                            <% } else if (donation.status === 'ACCEPTEDWITHISSUES') { %>
-                                <span class="badge badge-info"><%= donation.status %></span>
-                            <% } %>
-                            
-                        </td>
-                        <td> 
-                            <!-- Button to open a modal for status update -->
-                            <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="modal" data-target="#statusModal<%= index %>">
-                                Update Status
-                            </button>
-                            <!-- Modal for status update -->
-                            <div class="modal fade" id="statusModal<%= index %>" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="statusModalLabel">Update Donation Status</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Status update form -->
-                                            <form action="/manager/updateDonationStatus" method="post">
-                                                <!-- Hidden input for the donation ID -->
-                                                <input type="hidden" name="donationId" value="<%= donation.id %>">
-                                                <div class="form-group">
-                                                    <label for="newStatus">Select New Status:</label>
-                                                    <select class="form-control" id="newStatus" name="newStatus">
-                                                        <option disabled readonly selected>Select Status</option>
-                                                        <option value="ARRIVED">Arrived</option>
-                                                        <option value="VERIFIED">Verified</option>
-                                                        <option value="REJECTED">Rejected</option>
-                                                        <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
-                                                    </select>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Update Status</button>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
+                        </div>
+
+
+                    </td>
+                    <td>
+                        <!-- Display different verification statuses -->
+                        <% if (donation.status==='PENDING' ) { %>
+                            <span class="badge badge-warning">
+                                <%= donation.status %>
+                            </span>
+                            <% } else if (donation.status==='ARRIVED' ) { %>
+                                <span class="badge badge-primary">
+                                    <%= donation.status %>
+                                </span>
+                                <% } else if (donation.status==='VERIFIED' ) { %>
+                                    <span class="badge badge-success">
+                                        <%= donation.status %>
+                                    </span> 
+                                        <% } else if (donation.status==='ACCEPTEDWITHISSUES' ) { %>
+                                            <span class="badge badge-info">
+                                                <%= donation.status %>
+                                            </span>
+                                            <% } %>
+
+                    </td>
+                    <td>
+                        <!-- Button to open a modal for status update -->
+                        <button class="btn btn-outline-dark btn-sm" type="button" data-toggle="modal"
+                            data-target="#statusModal<%= index %>">
+                            Update Status
+                        </button>
+                        <!-- Modal for status update -->
+                        <div class="modal fade" id="statusModal<%= index %>" tabindex="-1" role="dialog"
+                            aria-labelledby="statusModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="statusModalLabel">Update Donation Status</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Status update form -->
+                                        <form action="/manager/updateDonationStatus" method="post">
+                                            <!-- Hidden input for the donation ID -->
+                                            <input type="hidden" name="donationId" value="<%= donation.id %>">
+                                            <div class="form-group">
+                                                <label for="newStatus">Select New Status:</label> 
+                                                <select class="form-control" id="newStatus" name="newStatus" <%= ['VERIFIED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>
+
+                                                    <option disabled readonly selected>Select Status</option>
+                                                    <option value="ARRIVED">Arrived</option>
+                                                    <option value="VERIFIED">Verified</option> 
+                                                    <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
+                                                </select>
+                                            </div> 
+                                            <button type="submit" class="btn btn-primary" <%= ['VERIFIED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>Update Status</button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
-                            </div>  
-                        </td>
-                    </tr>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
                 <% }) %>
-            </tbody>
+        </tbody>
         </table>
 
     </div>
@@ -410,7 +510,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchQuery = e.target.value;
+            window.location.href = `/manager/manageDonation?search=${searchQuery}`;
+        });
+
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            const filterDate = document.getElementById('filterDate').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+            let query = '/manager/manageDonation?';
+
+            if (filterDate) {
+                query += `date=${filterDate}&`;
+            }
+            if (filterStatus) {
+                query += `status=${filterStatus}&`;
+            }
+            if (sortOrder) {
+                query += `sort=${sortOrder}`;
+            }
+
+            window.location.href = query;
+        });
+
+        document.getElementById('clearFilters').addEventListener('click', function() {
+            window.location.href = '/manager/manageDonation';
+        });
+
+
+    </script>
 
 </body>
 

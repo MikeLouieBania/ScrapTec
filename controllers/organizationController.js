@@ -36,8 +36,10 @@ async function calculatePoints(type, condition, quantity) {
   
     // Criteria for condition
     if (condition === 'New') {
-      conditionPoints += 1;
+      conditionPoints += 2;
     } else if (condition === 'Used but Working') {
+      conditionPoints += 1;
+    } else if (condition === 'Not Working') {
       conditionPoints += 0.5;
     }
   
@@ -52,7 +54,7 @@ async function calculatePoints(type, condition, quantity) {
     const totalPoints = points + quantityBonus;
   
     return totalPoints;
-  }
+}
 
   // Function to get total points for an organization
 async function getTotalPointsForOrganization(organizationId) {
@@ -127,7 +129,6 @@ function computeAverageRating(feedbacks) {
   const totalRating = feedbacks.reduce((sum, feedback) => sum + feedback.rating, 0);
   return totalRating / feedbacks.length;
 }
-
  
 const updateAdStatuses = async (organizationId) => {
   try {
@@ -156,7 +157,6 @@ const updateAdStatuses = async (organizationId) => {
     console.error('Failed to update ad statuses for organization:', organizationId, error);
   }
 };
-
 
 module.exports = {
   async getDashboard(req, res) {
@@ -457,6 +457,135 @@ module.exports = {
     }
   },
 
+  async postDeleteDonation(req, res) {
+    try {
+      const donationId = req.params.donationId;
+  
+      // Delete all peripherals associated with the donation
+      await prisma.peripheral.deleteMany({
+        where: { donationId: donationId }
+      });
+  
+      // After deleting peripherals, delete the donation
+      await prisma.donation.delete({
+        where: { id: donationId }
+      });
+  
+      res.redirect('/organization/pledgeBasket');
+    } catch (error) {
+      console.error("Error deleting donation:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postUpdatePeripheral(req, res) {
+    try {
+      const peripheralId = req.params.peripheralId;
+      const { condition, quantity } = req.body;
+  
+      // Fetch the existing peripheral details
+      const existingPeripheral = await prisma.peripheral.findUnique({
+        where: { id: peripheralId }
+      });
+  
+      if (!existingPeripheral) {
+        throw new Error("Peripheral not found");
+      }
+  
+      // Calculate the points for the existing and updated peripheral
+      const existingPoints = await calculatePoints(existingPeripheral.type, existingPeripheral.condition, existingPeripheral.quantity);
+      const updatedPoints = await calculatePoints(existingPeripheral.type, condition, parseInt(quantity));
+  
+      // Update the peripheral
+      await prisma.peripheral.update({
+        where: { id: peripheralId },
+        data: { condition: condition, quantity: parseInt(quantity) }
+      });
+  
+      // Calculate the difference in points
+      const pointsDifference = updatedPoints - existingPoints;
+  
+      // Fetch the current total points of the donation
+      const donation = await prisma.donation.findUnique({
+        where: { id: existingPeripheral.donationId }
+      });
+  
+      if (!donation) {
+        throw new Error("Associated donation not found");
+      }
+  
+      // Update the donation's points
+      await prisma.donation.update({
+        where: { id: existingPeripheral.donationId },
+        data: { points: donation.points + pointsDifference }
+      });
+  
+      res.redirect('/organization/pledgeBasket');
+    } catch (error) {
+      console.error("Error updating peripheral:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postDeletePeripheral(req, res) {
+    try {
+      const peripheralId = req.params.peripheralId;
+  
+      // Fetch the existing peripheral details
+      const existingPeripheral = await prisma.peripheral.findUnique({
+        where: { id: peripheralId }
+      });
+  
+      if (!existingPeripheral) {
+        throw new Error("Peripheral not found");
+      }
+  
+      // Calculate the points for the existing peripheral
+      const existingPoints = await calculatePoints(existingPeripheral.type, existingPeripheral.condition, existingPeripheral.quantity);
+  
+      // Delete the peripheral
+      await prisma.peripheral.delete({
+        where: { id: peripheralId }
+      });
+  
+      // Check the number of peripherals left in the donation
+      const remainingPeripherals = await prisma.peripheral.count({
+        where: { donationId: existingPeripheral.donationId }
+      });
+  
+      if (remainingPeripherals === 0) {
+        // Option 1: Delete the donation if this was the last peripheral
+        await prisma.donation.delete({
+          where: { id: existingPeripheral.donationId }
+        });
+        // Or, Option 2: Update the status of the donation
+        // await prisma.donation.update({
+        //   where: { id: existingPeripheral.donationId },
+        //   data: { status: "Empty" } // or any appropriate status
+        // });
+      } else {
+        // Update the donation's points by subtracting the points of the deleted peripheral
+        const donation = await prisma.donation.findUnique({
+          where: { id: existingPeripheral.donationId }
+        });
+  
+        if (!donation) {
+          throw new Error("Associated donation not found");
+        }
+  
+        await prisma.donation.update({
+          where: { id: existingPeripheral.donationId },
+          data: { points: donation.points - existingPoints }
+        });
+      }
+  
+      res.redirect('/organization/pledgeBasket');
+    } catch (error) {
+      console.error("Error deleting peripheral:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
   async getDonationsList(req, res) {
     try {
       const organizationId = req.session.organization.id;
@@ -476,6 +605,23 @@ module.exports = {
       res.render('organization/donationsList', { donations: donations });
     } catch (error) {
       console.error("Error fetching donations:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postCancelDonation(req, res) {
+    try {
+      const donationId = req.params.donationId; 
+      
+      // Delete or update the donation status
+      await prisma.donation.update({
+        where: { id: donationId },
+        data: { isSubmitted: false, status: 'CANCELLED' } // or use delete if you want to completely remove the record
+      });
+  
+      res.redirect('/organization/donationsList'); // Redirect back to the donations list or send a success response
+    } catch (error) {
+      console.error("Error canceling donation:", error);
       res.status(500).send("Internal Server Error");
     }
   },

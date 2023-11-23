@@ -146,13 +146,15 @@
         <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
         <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
         <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
+        <a href="/admin/marketplacemanagement" data-label="Marketplace Management"><span class="material-icons">shopping_cart</span></a>
         <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
         <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
         <a><form action="/admin/logout" method="post">
             <button type="submit" data-label="Logout">
               <span class="material-icons">logout</span>
             </button>
-          </form></a>
+          </form></a> 
+
     </div>
 
     
@@ -389,8 +391,6 @@
                 });
             });      
                         
-
-
             // Fetch and render organizations by verification status chart
             $.get('/admin/organizations-by-verification', function(data) {
                 Highcharts.chart('organizations-by-verification-chart', {
@@ -492,61 +492,69 @@
                     });
                 });
             
-            // Fetch and render average rating per organization or drop point
-            $.get('/admin/average-rating-per-entity', function(data) { 
-                if (Array.isArray(data) && data.length > 0) {
-                    Highcharts.chart('average-rating-bubble-chart', {
-                        chart: {
-                            type: 'bubble',
-                            plotBorderWidth: 1,
-                            zoomType: 'xy'
-                        },
+            // Fetch and render average rating per drop point
+            $.get('/admin/average-rating-per-drop-point', function(data) { 
+            if (Array.isArray(data) && data.length > 0) {
+                Highcharts.chart('average-rating-bubble-chart', {
+                    chart: {
+                        type: 'bubble',
+                        plotBorderWidth: 1,
+                        zoomType: 'xy'
+                    },
+                    title: {
+                        text: 'Average Ratings and Feedback Volume of Drop Points'
+                    },
+                    xAxis: {
                         title: {
-                            text: 'Average Ratings and Feedback Volume'
+                            text: 'Average Rating'
                         },
-                        xAxis: {
-                            title: {
-                                text: 'Average Rating'
-                            },
-                            labels: {
-                                formatter: function() {
-                                    return this.value.toFixed(2); // Format to two decimal points
-                                }
+                        labels: {
+                            formatter: function() {
+                                return this.value.toFixed(2); // Format to two decimal points
                             }
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Total Number of Ratings'
                         },
-                        yAxis: {
-                            title: {
-                                text: 'Feedback Count'
+                        visible: true
+                    },
+                    tooltip: {
+                        useHTML: true,
+                        headerFormat: '<table>',
+                        pointFormat: '<tr><th colspan="2"><h3>{point.name}</h3></th></tr>' +
+                                    '<tr><th>Average Rating:</th><td>{point.x} stars</td></tr>' +
+                                    '<tr><th>Total Ratings:</th><td>{point.y}</td></tr>',
+                        footerFormat: '</table>',
+                        followPointer: true
+                    },
+                    plotOptions: {
+                        bubble: {
+                            minSize: '10%',
+                            maxSize: '120%',
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}: {point.x}'
                             }
-                        },
-                        tooltip: {
-                            pointFormat: '{point.name}: <b>{point.x} stars</b>, {point.y} feedbacks'
-                        },
-                        plotOptions: {
-                            bubble: {
-                                minSize: '10%',
-                                maxSize: '120%',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.name}: {point.y}'
-                                }
-                            }
-                        },
-                        series: [{
-                            data: data.map(item => ({
-                                x: parseFloat(item.averageRating.toFixed(2)),
-                                y: parseInt(item.count, 10),
-                                name: item.name
-                            })),
-                            name: 'Organizations & Drop Points'
-                        }]
-                    });
-                } else {
-                    console.error('No data received for average ratings');
-                }
+                        }
+                    },
+                    series: [{
+                        data: data.map(item => ({
+                            x: parseFloat(item.averageRating.toFixed(2)),
+                            y: item.count,
+                            name: item.name
+                        })),
+                        name: 'Drop Points'
+                    }]
+                });
+            } else {
+                console.error('No data received for average ratings');
+            }
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error('Error fetching average ratings:', textStatus, errorThrown);
             });
+
 
             // Fetch and render histogram for distribution of ratings
             $.get('/admin/ratings-distribution', function(data) {
