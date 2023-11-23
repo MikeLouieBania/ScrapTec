@@ -253,6 +253,16 @@
             }
         }
 
+        .buttons-container {
+            display: inline-block; /* Align items in a line */
+        }
+        
+        .buttons-container form,
+        .buttons-container button {
+            display: inline-block; /* Display buttons inline */
+            margin-right: 10px; /* Space between buttons */
+        }
+        
 
 </style>
 
@@ -293,6 +303,7 @@
         </h2>
         <div class="row">
             <div class="col-md-6">
+                <div class="buttons-container">
                 <!-- Save/Unsave Listing Button -->
                 <% if (!existingSavedListing) { %>
                     <form action="/user/saveListing/<%= listing.id %>" method="POST">
@@ -302,7 +313,8 @@
                     <!-- Use a button to trigger AJAX call to unsave a listing -->
                     <button onclick="unsaveListing('<%= listing.id %>')" class="btn btn-danger">Unsave Listing</button>
                 <% } %>
-
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal">Report Listing</button>
+            </div>
                 <p>Price: $<%= listing.price %>
                 </p>
                 <p>Category: <%= listing.category.name %>
