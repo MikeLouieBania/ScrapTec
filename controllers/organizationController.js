@@ -658,8 +658,7 @@ module.exports = {
         citiesWithCounts.sort((a, b) => b.requiredPoints - a.requiredPoints);
       } else if (sortOrder === 'lowest') {
         citiesWithCounts.sort((a, b) => a.requiredPoints - b.requiredPoints);
-      }
-      console.log("Sorted Cities:", citiesWithCounts);
+      } 
   
       // Render the view with the organization's data
       res.render('organization/account', { 
