@@ -7,6 +7,7 @@
     <title>Selling Conversation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body{
@@ -179,14 +180,28 @@
             background: transparent;
             border: none;
             color: #007bff;
+            transition: color 0.3s; /* Smooth transition for color change */
         }
 
         button[type="submit"]:hover, button#load-older-messages:hover, button#load-newer-messages:hover {
-            color: #0056b3;
+            color: #0056b3; /* Change text color on hover */
+            background: transparent; /* Ensure background doesn't change */
+            box-shadow: none; /* Remove any shadow if it exists */
         }
+        /* Styling for primary button */
         .btn-primary {
             float: right; /* Align button to the right */
             margin-top: 2px; /* Adjust top margin as needed */
+            background-color: #6699CC; /* Default background color */
+            border: none; /* Removes default border */
+            border-radius: 5px; /* Rounded corners */
+            color: white; /* Text color */
+            transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+        }
+        .btn-primary:hover {
+            background-color: #557DA8; /* Darker shade on hover */
+            color: white; /* Keep text color white on hover */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
         }
 
         /* File input field */
@@ -215,6 +230,10 @@
             font-size: 0.85rem;
             color: #666;
         }
+        .btn-more-options {
+            margin-top: -10px; /* Adjust this value as needed to move the button upwards */
+        }
+        
 
     </style>
 </head>
@@ -325,22 +344,20 @@
 
                                     <!-- Dropdown for More Options -->
                                     <div class="btn-group mt-2">
-                                        <button type="button" class="btn btn-secondary dropdown-toggle"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle btn-more-options"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             More Options
                                         </button>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" href="#">See Details</a>
-
-                                            <!-- Sub-dropdown for Price Offer -->
                                             <div class="dropdown-divider"></div>
                                             <h6 class="dropdown-header">Price Offer</h6>
-                                            <!-- Placeholder dropdown items for price offers. Update with actual options -->
                                             <a class="dropdown-item" href="#">Offer 1</a>
                                             <a class="dropdown-item" href="#">Offer 2</a>
                                             <a class="dropdown-item" href="#">Offer 3</a>
                                         </div>
                                     </div>
+
                                     <!-- End of Dropdown for More Options -->
 
                                 </div>
