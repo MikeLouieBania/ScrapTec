@@ -108,7 +108,7 @@ async function getCitiesWithUserCounts() {
       name: city.name,
       id: city.id, // Include the ID 
       usersCount: city.users.length,
-    })); 
+    }));  
 
     return citiesWithCounts;
   } catch (error) {
@@ -638,7 +638,7 @@ module.exports = {
       const organization = await prisma.organization.findUnique({
         where: { id: organizationId },
       }); 
-  
+
       // Get cities with user counts
       let citiesWithCounts = await getCitiesWithUserCounts();
       citiesWithCounts = citiesWithCounts.map(city => {
@@ -653,10 +653,19 @@ module.exports = {
           return {...city, requiredPoints};
       });
   
+      const sortOrder = req.query.sort || 'none';
+      if (sortOrder === 'highest') {
+        citiesWithCounts.sort((a, b) => b.requiredPoints - a.requiredPoints);
+      } else if (sortOrder === 'lowest') {
+        citiesWithCounts.sort((a, b) => a.requiredPoints - b.requiredPoints);
+      }
+      console.log("Sorted Cities:", citiesWithCounts);
+  
       // Render the view with the organization's data
       res.render('organization/account', { 
         organization, 
-        citiesWithCounts
+        citiesWithCounts,
+        activeTab: req.query.tab || 'account'
       }); 
     } catch (error) {
       console.error("Error fetching account data:", error);

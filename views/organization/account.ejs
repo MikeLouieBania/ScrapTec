@@ -419,22 +419,23 @@ body {
       </h2>
       
       <!-- Nav tabs -->
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#account">Account Settings</a>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item"> 
+          <a class="nav-link <%= activeTab === 'account' ? 'active' : '' %>" id="account-tab" data-toggle="tab" href="#account" role="tab" aria-controls="account" aria-selected="<%= activeTab === 'account' %>">Account Settings</a>
         </li> 
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#redeem">Redeem</a>
+          <a class="nav-link <%= activeTab === 'redeem' ? 'active' : '' %>" id="redeem-tab" data-toggle="tab" href="#redeem" role="tab" aria-controls="redeem" aria-selected="<%= activeTab === 'redeem' %>">Redeem</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#status">Status</a>
+          <a class="nav-link <%= activeTab === 'status' ? 'active' : '' %>" id="status-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="<%= activeTab === 'status' %>">Status</a>
         </li>
       </ul>
 
       <!-- Tab panes -->
       <div class="tab-content mt-4">
-        <!-- Account Tab -->
-        <div class="tab-pane active" id="account">
+        <!-- Account Tab --> 
+        <div class="tab-pane <%= activeTab === 'account' ? 'show active' : '' %>" id="account" role="tabpanel" aria-labelledby="account-tab">
+  
           <!-- Account Content Here -->
           <h3>Account Settings</h3>
           <p><strong>Organization Name:</strong> <%= organization.organizationname %></p>
@@ -450,8 +451,9 @@ body {
             <p><strong>No Profile Picture</strong></p>
           <% } %>
         </div>  
-        <!-- Redeem Tab -->
-        <div class="tab-pane" id="redeem">
+        <!-- Redeem Tab --> 
+        <div class="tab-pane <%= activeTab === 'redeem' ? 'show active' : '' %>" id="redeem" role="tabpanel" aria-labelledby="redeem-tab">
+  
           <div class="row">
             <!-- Side Navigation -->
             <div class="col-md-3">
@@ -460,11 +462,11 @@ body {
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span></div>
               <input type="text" id="citySearch" class="form-control" placeholder="Search Cities">
-              </div>
+              </div>  
               <div class="list-group mt-3">
-                <a href="#" class="list-group-item list-group-item-action">Highest Points Required</a>
-                <a href="#" class="list-group-item list-group-item-action">Lowest Points Required</a>
-              </div>
+                <a href="/organization/account?tab=redeem&sort=highest" class="list-group-item list-group-item-action">Highest Points Required</a>
+                <a href="/organization/account?tab=redeem&sort=lowest" class="list-group-item list-group-item-action">Lowest Points Required</a> 
+              </div> 
               <h4 class="mt-4">Redeem History</h4>
               <div class="list-group">
                 <a href="/organization/advertisements" class="list-group-item list-group-item-action">Advertisements</a> 
@@ -543,7 +545,7 @@ body {
                         Cities
                     </h4> 
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="cityCardsContainer">
                   <div class="row">
                     <!-- Loop through cities and display as cards -->
                     <% citiesWithCounts.forEach((city) => {
@@ -584,8 +586,9 @@ body {
             </div>
           </div>
         </div> 
-        <!-- Status Tab -->
-        <div class="tab-pane" id="status">
+        <!-- Status Tab --> 
+        <div class="tab-pane <%= activeTab === 'status' ? 'show active' : '' %>" id="status" role="tabpanel" aria-labelledby="status-tab">
+  
           <!-- Status Content Here -->
           <h3>Status</h3>
           <p>Information about your organization's status can go here.</p>
@@ -597,5 +600,41 @@ body {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const citySearchInput = document.getElementById('citySearch');
+        const cityCardsContainer = document.getElementById('cityCardsContainer'); // Add this ID to your city cards container in HTML
+
+        citySearchInput.addEventListener('input', (e) => {
+          const searchText = e.target.value.toLowerCase();
+          filterCities(searchText);
+        });
+
+        function filterCities(searchText) {
+          const cityCards = cityCardsContainer.getElementsByClassName('city-card');
+          Array.from(cityCards).forEach(card => {
+            const cityName = card.querySelector('.card-title').textContent.toLowerCase();
+            if (cityName.includes(searchText)) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+        // Function to maintain the active tab based on URL parameters
+        const setActiveTab = () => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const tab = urlParams.get('tab');
+          if (tab) {
+            $('.nav-tabs .nav-link').removeClass('active');
+            $('.tab-content .tab-pane').removeClass('active');
+            $(`#myTab a[href="#${tab}"]`).tab('show');
+          }
+        };
+
+        setActiveTab();
+      });
+
+    </script>
   </body>
 </html>
