@@ -1,75 +1,62 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <title>My Account</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-
-  <style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      overflow-x: hidden;
-      /* Prevent horizontal scrollbar */
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
+  <head>
+    <title>My Account</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 
+    <style> 
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden; /* Prevent horizontal scrollbar */
+      }
+      
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      
     /* Custom CSS for enhanced city card */
     .city-card {
-      background-color: #fff;
-      /* Light background for the card */
-      border-radius: 8px;
-      /* Rounded corners for the card */
+      background-color: #fff; /* Light background for the card */
+      border-radius: 8px; /* Rounded corners for the card */
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-      padding: 20px;
-      /* Internal padding for content */
-      margin: 10px 0;
-      /* Add some margin to the top and bottom of each card */
+      padding: 20px; /* Internal padding for content */
+      margin: 10px 0; /* Add some margin to the top and bottom of each card */
     }
-
+    
     .city-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      /* More pronounced shadow on hover */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
     }
-
+    
     .city-details {
       margin-top: 10px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      /* Align items vertically */
+      align-items: center; /* Align items vertically */
     }
-
+    
     .city-actions {
       margin-top: 15px;
       text-align: center;
     }
-
+    
     .city-name {
-      font-size: 1.25rem;
-      /* Increase the font size for city name */
-      font-weight: 600;
-      /* Make the city name bolder */
+      font-size: 1.25rem; /* Increase the font size for city name */
+      font-weight: 600; /* Make the city name bolder */
     }
-
+    
     .city-info {
-      color: #666;
-      /* Slightly muted color for less important info */
-      font-size: 0.9rem;
-      /* Adjust font size for details */
+      color: #666; /* Slightly muted color for less important info */
+      font-size: 0.9rem; /* Adjust font size for details */
     }
-
+    
 
     /* Style the "Explore" button */
     .city-actions a.btn-primary {
@@ -80,7 +67,7 @@
       border-radius: 4px;
       text-decoration: none;
       transition: background-color 0.3s ease;
-      font-weight: bold;
+      font-weight: bold;      
     }
 
     .city-actions a.btn-primary:hover {
@@ -88,121 +75,116 @@
     }
 
     .progress-bar {
-      background-color: #6CB4EE;
-      /* Replace with your desired hex color code */
+      background-color:#6CB4EE; /* Replace with your desired hex color code */
     }
-
+    
     /* Navigation Bar Styles */
-    .navbar.navbar-expand-lg.navbar-light.bg-light {
-      background-color: #219ebc !important;
-      padding: 10px 0;
-    }
+.navbar.navbar-expand-lg.navbar-light.bg-light {
+  background-color: #219ebc !important;
+  padding: 10px 0;
+}
 
-    .navbar .nav-link {
-      color: white !important;
-      font-family: 'Roboto Slab', serif, ;
-      font-weight: bold;
-      font-size: 16px;
-      margin-top: 15px;
-      display: block;
-      padding: 15px;
-      text-decoration: none;
-      text-transform: uppercase;
-      margin: 0 10px;
-      position: relative;
-      transition: all .5s;
-    }
+.navbar .nav-link {
+  color: white !important;
+  font-family: 'Roboto Slab', serif,;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 15px;
+  display: block;
+  padding: 15px;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0 10px;
+  position: relative;
+  transition: all .5s;
+}
 
-    .navbar .nav-link::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background-color: #8ecae6;
-      transform: scaleX(0);
-      transition: transform 0.5s;
-    }
+.navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #8ecae6;
+  transform: scaleX(0);
+  transition: transform 0.5s;
+}
 
-    .navbar .nav-link:hover::after {
-      transform: scaleX(1);
-    }
+.navbar .nav-link:hover::after {
+  transform: scaleX(1);
+}
 
-    .navbar-brand {
-      color: white !important;
-      font-family: 'Roboto Slab', serif, ;
-      font-weight: bold;
-      font-size: 16px;
-      margin-top: -9px;
-      /* Align with .nav-link */
-      margin-left: 15px;
-    }
+.navbar-brand {
+  color: white !important;
+  font-family: 'Roboto Slab', serif,;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: -9px; /* Align with .nav-link */
+  margin-left: 15px;
+}
 
-    .navbar-light .navbar-toggler-icon {
-      background-color: white;
-    }
+.navbar-light .navbar-toggler-icon {
+  background-color: white;
+}
 
-    /* Custom Logout Button Style */
-    .btn-outline-success {
-      background-color: #002244 !important;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-      margin-right: 20px;
-      font-weight: bold;
-      color: white !important;
-      font-family: 'Roboto Slab', serif, ;
-    }
+/* Custom Logout Button Style */
+.btn-outline-success {
+  background-color: #002244 !important;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin-right: 20px;
+  font-weight: bold;
+  color: white !important;
+  font-family: 'Roboto Slab', serif,;
+}
 
-    .btn-outline-success:hover {
-      background-color: #6082B6 !important;
-      color: #fff !important;
-      text-decoration: none;
-    }
+.btn-outline-success:hover {
+  background-color: #6082B6 !important;
+  color: #fff !important;
+  text-decoration: none;
+}
 
-    /* Body */
-    body {
-      padding-top: 0px;
-      margin-bottom: 60px;
-    }
+/* Body */
+body {
+  padding-top: 0px;
+  margin-bottom: 60px;  
+}
 
-    /* Reduce Bottom Spacing of Navbar */
-    .navbar {
-      padding-bottom: 1px !important;
-    }
+/* Reduce Bottom Spacing of Navbar */
+.navbar {
+  padding-bottom: 1px !important;
+}
 
 
     /* Nav Tabs */
     .tab-pane {
-      margin-left: 100px;
-      /* Adjust the value as needed for your design */
-      margin-right: 100px;
-      /* Adjust the value as needed for your design */
+      margin-left: 100px; /* Adjust the value as needed for your design */
+      margin-right: 100px; /* Adjust the value as needed for your design */
     }
-
+    
 
     /* This CSS will center the nav-tabs */
     .nav-tabs {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
     }
 
     .nav-tabs .nav-item .nav-link {
       border: none !important;
     }
-
+    
     .nav-tabs .nav-item .nav-link.active {
       background-color: transparent !important;
       color: #6699CC !important;
       position: relative;
       border: none !important;
-      border-bottom: 4px solid transparent !important;
-      /* To maintain the height of the tab */
+      border-bottom: 4px solid transparent !important; /* To maintain the height of the tab */
     }
-
+    
     .nav-tabs .nav-item .nav-link.active::after {
       content: "";
       border-bottom: 4px solid #6699CC;
@@ -212,18 +194,18 @@
       bottom: -1px;
       border-radius: 5px 5px 0 0;
     }
-
+    
     .card {
       padding: 15px;
       border: 1px solid #ddd;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
+    
     .card-header {
       padding: 0;
       border: none;
     }
-
+    
     .btn-link {
       color: #5072A7;
       font-weight: bold;
@@ -231,57 +213,52 @@
       text-decoration: none;
       transition: all 0.3s ease;
     }
-
+    
     .btn-link:hover {
       color: #002D62;
       text-decoration: none;
     }
-
+    
     .card-body {
       font-size: 16px;
       line-height: 1.5;
     }
-
+    
     ul {
       padding-left: 20px;
     }
-
+    
     li {
       margin-bottom: 10px;
     }
-
+    
     strong {
       font-weight: bold;
     }
 
     .container h2 {
-      margin-top: 20px;
-      /* Adjust the value according to your preference */
+      margin-top: 20px; /* Adjust the value according to your preference */
       color: #333;
       font-size: 2rem;
       margin-bottom: 1.5rem;
-    }
+    }    
 
     #citySearch {
       border-radius: 10px;
       border: 1px solid #ccc;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 10px 40px 10px 50px;
-      /* Adjust padding to make room for the icon */
+      padding: 10px 40px 10px 50px;  /* Adjust padding to make room for the icon */
       font-size: 1rem;
       line-height: 1.5;
       width: 100%;
-      outline: none;
-      /* Removes the outline to use a custom border style */
-      position: relative;
-      /* To position the icon absolutely inside the input */
+      outline: none; /* Removes the outline to use a custom border style */
+      position: relative; /* To position the icon absolutely inside the input */
     }
-
+    
     #citySearch::placeholder {
-      color: #aaa;
-      /* Placeholder text color */
+      color: #aaa; /* Placeholder text color */
     }
-
+    
     .input-group-text {
       border-radius: 10px;
       border: none;
@@ -289,71 +266,68 @@
       background-color: transparent;
       position: absolute;
       z-index: 10;
-      left: 8px;
-      /* Adjust as needed based on actual size of the icon */
+      left: 8px; /* Adjust as needed based on actual size of the icon */
       top: 50%;
       transform: translateY(-50%);
-      color: #aaa;
-      /* Icon color */
+      color: #aaa; /* Icon color */
     }
-
+    
     .input-group {
       position: relative;
       display: flex;
       align-items: center;
     }
-
+    
     .input-group-prepend .input-group-text {
       background: none;
       border: none;
     }
-
+    
     /* Focus state for the input */
     #citySearch:focus {
       border-color: #80bdff;
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
-
+    
     .list-group {
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
+    
     .list-group-item {
       border: none;
       padding: 15px 20px;
       color: #333;
     }
-
+    
     .list-group-item:hover {
       background-color: #f8f9fa;
     }
-
-    .list-group-item-action.active,
-    .list-group-item-action:active {
+    
+    .list-group-item-action.active, .list-group-item-action:active {
       background-color: #007bff;
       color: #fff;
     }
-
+    
     .list-group-item:first-child {
       border-top-right-radius: 15px;
       border-top-left-radius: 15px;
     }
-
+    
     .list-group-item:last-child {
       border-bottom-right-radius: 15px;
       border-bottom-left-radius: 15px;
     }
-
+    
     .mt-3 {
       margin-top: 1rem !important;
     }
-
+    
     .mt-4 {
       margin-top: 1.5rem !important;
     }
-
+    
     .form-control {
       display: block;
       width: 100%;
@@ -367,7 +341,6 @@
       border-radius: 0.25rem;
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
-
     .container {
       padding-right: 0;
       padding-left: 0;
@@ -375,358 +348,320 @@
       margin-left: auto;
       max-width: 100%;
     }
-
-
-
+    
+    
+    
     #specific-section {
       background-image: url('https://i.postimg.cc/BQTWxf6C/vivid-blurred-colorful-wallpaper-background.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      margin: 0;
-      /* Ensure no margin is applied */
-      padding: 40px 0;
-      /* Adjust top and bottom padding only */
+      margin: 0; /* Ensure no margin is applied */
+      padding: 40px 0; /* Adjust top and bottom padding only */
       height: 300px;
       text-align: center;
       color: white;
-      display: block;
-      /* This will take the full width available */
+      display: block; /* This will take the full width available */
     }
-
-
-    .milestone .progress,
-    .milestone .progress-bar {
+    
+    
+    .milestone .progress, .milestone .progress-bar {
       height: 20px;
     }
 
     .progress-bar {
-      background-color: #4caf50;
-      /* Green color for progress */
+      background-color: #4caf50; /* Green color for progress */
     }
 
     .not-achieved .progress-bar {
-      background-color: #ccc;
-      /* Grey color for incomplete progress */
+      background-color: #ccc; /* Grey color for incomplete progress */
     }
 
     .badge.achieved img {
-      opacity: 1;
-      /* Full color for achieved badges */
+      opacity: 1; /* Full color for achieved badges */
     }
 
     .badge.not-achieved img {
-      opacity: 0.5;
-      /* Greyed-out look for unachieved badges */
-    }
-  </style>
-</head>
+      opacity: 0.5; /* Greyed-out look for unachieved badges */
+    } 
 
-<body>
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/organization/donationsList">Donations</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/organization/faq">FAQ</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/organization/account">Account</a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
-      </form>
-    </div>
-  </nav>
-
-  <div class="container">
-    <!-- Points and Org Name -->
-    <h2 class="mb-4" id="specific-section">
-      <%= organization.organizationname %>
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+                </li>  
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/faq">FAQ</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/organization/account">Account</a>
+                </li>
+            </ul> 
+            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+            </form>
+        </div>
+    </nav>
+    
+    <div class="container" >
+      <!-- Points and Org Name -->
+      <h2 class="mb-4" id="specific-section"> 
+        <%= organization.organizationname %> 
         <div class="points-container">
-          <span class="badge badge-success">Spendable Points: <%= organization.totalPoints %></span>
+          <span class="badge badge-success">Spendable Points: <%= organization.totalPoints %></span> 
           <span class="badge badge-warning">Lifetime Points: <%= organization.lifetimePoints %></span>
         </div>
-    </h2>
+      </h2>
+      
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item"> 
+          <a class="nav-link <%= activeTab === 'account' ? 'active' : '' %>" id="account-tab" data-toggle="tab" href="#account" role="tab" aria-controls="account" aria-selected="<%= activeTab === 'account' %>">Account Settings</a>
+        </li> 
+        <li class="nav-item">
+          <a class="nav-link <%= activeTab === 'redeem' ? 'active' : '' %>" id="redeem-tab" data-toggle="tab" href="#redeem" role="tab" aria-controls="redeem" aria-selected="<%= activeTab === 'redeem' %>">Redeem</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= activeTab === 'status' ? 'active' : '' %>" id="status-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="<%= activeTab === 'status' %>">Status</a>
+        </li>
+      </ul>
 
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link <%= activeTab === 'account' ? 'active' : '' %>" id="account-tab" data-toggle="tab"
-          href="#account" role="tab" aria-controls="account" aria-selected="<%= activeTab === 'account' %>">Account
-          Settings</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= activeTab === 'redeem' ? 'active' : '' %>" id="redeem-tab" data-toggle="tab"
-          href="#redeem" role="tab" aria-controls="redeem" aria-selected="<%= activeTab === 'redeem' %>">Redeem</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <%= activeTab === 'status' ? 'active' : '' %>" id="status-tab" data-toggle="tab"
-          href="#status" role="tab" aria-controls="status" aria-selected="<%= activeTab === 'status' %>">Status</a>
-      </li>
-    </ul>
-
-    <!-- Tab panes -->
-    <div class="tab-content mt-4">
-      <!-- Account Tab -->
-      <div class="tab-pane <%= activeTab === 'account' ? 'show active' : '' %>" id="account" role="tabpanel"
-        aria-labelledby="account-tab">
-
-        <!-- Account Content Here -->
-        <h3>Account Settings</h3>
-        <p><strong>Organization Name:</strong>
-          <%= organization.organizationname %>
-        </p>
-        <p><strong>Business Email:</strong>
-          <%= organization.email %>
-        </p>
-        <p><strong>Company Address:</strong>
-          <%= organization.address %>
-        </p>
-        <p><strong>Contact Number:</strong>
-          <%= organization.contactNumber %>
-        </p>
-        <p><strong>SEC Registration Number:</strong>
-          <%= organization.secRegistrationNumber %>
-        </p>
-
-        <% if (organization.profilePicture) { %>
-          <p><strong>Profile Picture:</strong></p>
-          <img src="data:image/jpeg;base64, <%= organization.profilePicture.toString('base64') %>" alt="Profile Picture"
-            style="max-width: 200px;" />
+      <!-- Tab panes -->
+      <div class="tab-content mt-4">
+        <!-- Account Tab --> 
+        <div class="tab-pane <%= activeTab === 'account' ? 'show active' : '' %>" id="account" role="tabpanel" aria-labelledby="account-tab">
+  
+          <!-- Account Content Here -->
+          <h3>Account Settings</h3>
+          <p><strong>Organization Name:</strong> <%= organization.organizationname %></p>
+          <p><strong>Business Email:</strong> <%= organization.email %></p> 
+          <p><strong>Company Address:</strong> <%= organization.address %></p> 
+          <p><strong>Contact Number:</strong> <%= organization.contactNumber %></p> 
+          <p><strong>SEC Registration Number:</strong> <%= organization.secRegistrationNumber %></p> 
+          
+          <% if (organization.profilePicture) { %>
+            <p><strong>Profile Picture:</strong></p>
+            <img src="data:image/jpeg;base64, <%= organization.profilePicture.toString('base64') %>" alt="Profile Picture" style="max-width: 200px;"/>
           <% } else { %>
             <p><strong>No Profile Picture</strong></p>
-            <% } %>
-      </div>
-      <!-- Redeem Tab -->
-      <div class="tab-pane <%= activeTab === 'redeem' ? 'show active' : '' %>" id="redeem" role="tabpanel"
-        aria-labelledby="redeem-tab">
-
-        <div class="row">
-          <!-- Side Navigation -->
-          <div class="col-md-3">
-            <h4>Filter by Points</h4>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-              </div>
+          <% } %>
+        </div>  
+        <!-- Redeem Tab --> 
+        <div class="tab-pane <%= activeTab === 'redeem' ? 'show active' : '' %>" id="redeem" role="tabpanel" aria-labelledby="redeem-tab">
+  
+          <div class="row">
+            <!-- Side Navigation -->
+            <div class="col-md-3">
+              <h4>Filter by Points</h4>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span></div>
               <input type="text" id="citySearch" class="form-control" placeholder="Search Cities">
+              </div>  
+              <div class="list-group mt-3">
+                <a href="/organization/account?tab=redeem&sort=highest" class="list-group-item list-group-item-action">Highest Points Required</a>
+                <a href="/organization/account?tab=redeem&sort=lowest" class="list-group-item list-group-item-action">Lowest Points Required</a> 
+              </div> 
+              <h4 class="mt-4">Redeem History</h4>
+              <div class="list-group">
+                <a href="/organization/advertisements" class="list-group-item list-group-item-action">Advertisements</a> 
+              </div>
             </div>
-            <div class="list-group mt-3">
-              <a href="/organization/account?tab=redeem&sort=highest"
-                class="list-group-item list-group-item-action">Highest Points Required</a>
-              <a href="/organization/account?tab=redeem&sort=lowest"
-                class="list-group-item list-group-item-action">Lowest Points Required</a>
-            </div>
-            <h4 class="mt-4">Redeem History</h4>
-            <div class="list-group">
-              <a href="/organization/advertisements" class="list-group-item list-group-item-action">Advertisements</a>
-            </div>
-          </div>
 
-          <!-- Main Content -->
-          <div class="col-md-9">
-
-            <!-- Redeem for Advertisements -->
-            <div class="card">
-              <div class="card-header" id="redeemAdHeader">
-                <h4 class="mb-0">
-                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#redeemAdCollapse"
-                    aria-expanded="false" aria-controls="redeemAdCollapse">
-                    Redeem for Advertisements
-                  </button>
-                </h4>
-              </div>
-              <div id="redeemAdCollapse" class="collapse show" aria-labelledby="redeemAdHeader">
-                <div class="card-body">
-                  <p>You can redeem your points to run advertisements in the User Marketplace. Here are the options:</p>
-                  <ul>
-                    <li><strong>Basic Ad (1 week):</strong> 10 points</li>
-                    <li><strong>Premium Ad (2 weeks):</strong> 20 points</li>
-                  </ul>
+            <!-- Main Content -->
+            <div class="col-md-9">
+                    
+              <!-- Redeem for Advertisements -->
+              <div class="card">
+                <div class="card-header" id="redeemAdHeader">
+                  <h4 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#redeemAdCollapse" aria-expanded="false" aria-controls="redeemAdCollapse">
+                      Redeem for Advertisements
+                    </button>
+                  </h4>
                 </div>
-              </div>
-            </div>
-            <!-- Ad Targeting and Ranking -->
-            <div class="card mt-3">
-              <div class="card-header" id="targetRankHeader">
-                <h4 class="mb-0">
-                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#targetRankCollapse"
-                    aria-expanded="false" aria-controls="targetRankCollapse">
-                    Advertisement Targeting and Ranking
-                  </button>
-                </h4>
-              </div>
-              <div id="targetRankCollapse" class="collapse" aria-labelledby="targetRankHeader">
-                <div class="card-body">
-                  <p>Your ads' exposure will automatically be determined by your organization's total donation points in
-                    the selected city. The higher your donation points, the more prominently your ad will be displayed.
-                  </p>
-                  <ul>
-                    <li><strong>City Selection:</strong> Choose the city where you want your ad to be displayed.</li>
-                    <li><strong>Automatic Ranking:</strong> Ads will be automatically ranked and displayed based on
-                      total donation points in the selected city.</li>
-                  </ul>
-                  <p>
-                    Your current ranking based on donations:
-                    <span class="badge badge-info">
-                      <%= organization.lifetimePoints %>
-                    </span> points
-                  </p>
+                <div id="redeemAdCollapse" class="collapse show" aria-labelledby="redeemAdHeader">
+                  <div class="card-body">
+                    <p>You can redeem your points to run advertisements in the User Marketplace. Here are the options:</p>
+                    <ul>
+                      <li><strong>Basic Ad (1 week):</strong> 10 points</li>
+                      <li><strong>Premium Ad (2 weeks):</strong> 20 points</li>
+                    </ul> 
+                  </div>
                 </div>
-              </div>
-            </div>
-            <!-- Ad Expiry -->
-            <div class="card mt-3">
-              <div class="card-header" id="expiryHeader">
-                <h4 class="mb-0">
-                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#expiryCollapse"
-                    aria-expanded="false" aria-controls="expiryCollapse">
-                    Advertisement Expiry
-                  </button>
-                </h4>
-              </div>
-              <div id="expiryCollapse" class="collapse" aria-labelledby="expiryHeader">
-                <div class="card-body">
-                  <p>All advertisements have an expiration period:</p>
-                  <ul>
-                    <li><strong>Basic Ad:</strong> Expires after 1 week</li>
-                    <li><strong>Premium Ad:</strong> Expires after 2 weeks</li>
-                  </ul>
-                  <p>You will be notified via email before your ad expires.</p>
+              </div> 
+              <!-- Ad Targeting and Ranking -->
+              <div class="card mt-3">
+                <div class="card-header" id="targetRankHeader">
+                  <h4 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#targetRankCollapse" aria-expanded="false" aria-controls="targetRankCollapse">
+                      Advertisement Targeting and Ranking
+                    </button>
+                  </h4>
                 </div>
-              </div>
-            </div>
-            <!-- City Cards Section -->
-            <div class="card mt-3">
-              <div class="card-header">
-                <h4 class="mb-0">
-                  Cities
-                </h4>
-              </div>
-              <div class="card-body" id="cityCardsContainer">
-                <div class="row">
-                  <!-- Loop through cities and display as cards -->
-                  <% citiesWithCounts.forEach((city)=> {
-                    let percentage = (organization.totalPoints / city.requiredPoints) * 100;
-                    if (percentage > 100) percentage = 100; // Ensures the percentage doesn't exceed 100
+                <div id="targetRankCollapse" class="collapse" aria-labelledby="targetRankHeader">
+                  <div class="card-body">
+                    <p>Your ads' exposure will automatically be determined by your organization's total donation points in the selected city. The higher your donation points, the more prominently your ad will be displayed.</p>
+                    <ul>
+                      <li><strong>City Selection:</strong> Choose the city where you want your ad to be displayed.</li>
+                      <li><strong>Automatic Ranking:</strong> Ads will be automatically ranked and displayed based on total donation points in the selected city.</li>
+                    </ul>
+                    <p>
+                      Your current ranking based on donations: 
+                      <span class="badge badge-info"><%= organization.lifetimePoints %></span> points
+                    </p>
+                  </div>
+                </div>
+              </div> 
+              <!-- Ad Expiry -->
+              <div class="card mt-3">
+                <div class="card-header" id="expiryHeader">
+                  <h4 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#expiryCollapse" aria-expanded="false" aria-controls="expiryCollapse">
+                      Advertisement Expiry
+                    </button>
+                  </h4>
+                </div>
+                <div id="expiryCollapse" class="collapse" aria-labelledby="expiryHeader">
+                  <div class="card-body">
+                    <p>All advertisements have an expiration period:</p>
+                    <ul>
+                      <li><strong>Basic Ad:</strong> Expires after 1 week</li>
+                      <li><strong>Premium Ad:</strong> Expires after 2 weeks</li>
+                    </ul>
+                    <p>You will be notified via email before your ad expires.</p>
+                  </div>
+                </div>
+              </div> 
+              <!-- City Cards Section -->
+              <div class="card mt-3">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        Cities
+                    </h4> 
+                </div>
+                <div class="card-body" id="cityCardsContainer">
+                  <div class="row">
+                    <!-- Loop through cities and display as cards -->
+                    <% citiesWithCounts.forEach((city) => {
+                        let percentage = (organization.totalPoints / city.requiredPoints) * 100;
+                        if (percentage > 100) percentage = 100; // Ensures the percentage doesn't exceed 100
                     %>
                     <div class="col-md-4">
-                      <!-- Enhanced city card -->
-                      <div class="card mb-4 city-card">
-                        <div class="card-body">
-                          <h5 class="card-title">
-                            <%= city.name %>
-                          </h5>
-                          <p class="card-text">Total Users: <%= city.usersCount %>
-                          </p>
-
-                          <!-- Progress bar indicating points towards advertising in this city -->
-                          <div class="progress mb-2">
-                            <div class="progress-bar" role="progressbar" style="width: <%= percentage %>%;"
-                              aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                          <p>
-                            <%= organization.totalPoints %> / <%= city.requiredPoints %> points
-                          </p>
-
-                          <div class="city-actions">
-                            <% if (organization.totalPoints>= city.requiredPoints) { %>
-                              <a href="/organization/advertise/<%= city.id %>" class="btn btn-primary">Advertise in <%=
-                                  city.name %></a>
-                              <% } else { %>
-                                <button class="btn btn-secondary" disabled>Insufficient Points</button>
-                                <% } %>
-                          </div>
+                        <!-- Enhanced city card -->
+                        <div class="card mb-4 city-card">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= city.name %></h5>
+                                <p class="card-text">Total Users: <%= city.usersCount %></p> 
+                
+                                <!-- Progress bar indicating points towards advertising in this city -->
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar" style="width: <%= percentage %>%;" aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <p><%= organization.totalPoints %> / <%= city.requiredPoints %> points</p>
+                
+                                <div class="city-actions"> 
+                                    <% if (organization.totalPoints >= city.requiredPoints) { %>
+                                        <a href="/organization/advertise/<%= city.id %>" class="btn btn-primary">Advertise in <%= city.name %></a>
+                                    <% } else { %>
+                                        <button class="btn btn-secondary" disabled>Insufficient Points</button>
+                                    <% } %> 
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                    <% }); %>
+                    <% }); %>                                      
                 </div>
-
+                
+              </div>
+              
               </div>
 
+
             </div>
-
-
           </div>
-        </div>
-      </div>
-      <!-- Status Tab -->
-      <div class="tab-pane <%= activeTab === 'status' ? 'show active' : '' %>" id="status" role="tabpanel"
-        aria-labelledby="status-tab">
-
-        <!-- Milestones/Accomplishments Section -->
-        <div class="milestones">
-          <h3>Milestones/Accomplishments</h3>
-          <% const levels=[ { name: 'Supporter' , points: 1000, icon: 'rising-sun.png' }, { name: 'Advocate' , points:
-            5000, icon: 'open-hand.png' }, { name: 'Champion' , points: 10000, icon: 'torch.png' }, { name: 'Guardian' ,
-            points: Infinity, icon: 'shield.png' } ]; levels.forEach(level=> {
-            const isAchieved = organization.lifetimePoints >= level.points;
-            const progress = Math.min((organization.lifetimePoints / level.points) * 100, 100);
+        </div> 
+        <!-- Status Tab --> 
+        <div class="tab-pane <%= activeTab === 'status' ? 'show active' : '' %>" id="status" role="tabpanel" aria-labelledby="status-tab">
+         
+          <!-- Milestones/Accomplishments Section -->
+          <div class="milestones">
+            <h3>Milestones/Accomplishments</h3>
+            <% 
+            const levels = [
+              { name: 'Supporter', points: 1000, icon: 'rising-sun.png' },
+              { name: 'Advocate', points: 5000, icon: 'open-hand.png' },
+              { name: 'Champion', points: 10000, icon: 'torch.png' },
+              { name: 'Guardian', points: Infinity, icon: 'shield.png' }
+            ];
+            levels.forEach(level => {
+              const isAchieved = organization.lifetimePoints >= level.points;
+              const progress = Math.min((organization.lifetimePoints / level.points) * 100, 100);
             %>
-            <div class="milestone">
-              <div class="badge milestone-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
-                <%= level.name %> Level: <%= isAchieved ? level.points : organization.lifetimePoints %> points
-                    <img src="/images/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon"
-                      class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: <%= progress %>%"
-                        aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+              <div class="milestone">
+                <div class="badge milestone-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+                  <%= level.name %> Level: <%= isAchieved ? level.points : organization.lifetimePoints %> points
+                  <img src="/images/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon" class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
               </div>
-            </div>
             <% }); %>
-        </div>
+          </div>
 
-        <!-- Donation Section -->
-        <div class="donation">
-          <h3>Donation</h3>
-          <% const badges=[ { name: 'Bronze' , donations: 1, icon: 'bronze-badge-icon.png' }, { name: 'Silver' ,
-            donations: 5, icon: 'silver-badge-icon.png' }, { name: 'Gold' , donations: 10, icon: 'gold-badge-icon.png'
-            }, { name: 'Platinum' , donations: 20, icon: 'platinum-badge-icon.png' } ]; badges.forEach(badge=> {
-            const isAchieved = totalDonations >= badge.donations;
+          <!-- Donation Section -->
+          <div class="donation">
+            <h3>Donation</h3>
+            <% 
+            const badges = [
+              { name: 'Bronze', donations: 1, icon: 'bronze-badge-icon.png' },
+              { name: 'Silver', donations: 5, icon: 'silver-badge-icon.png' },
+              { name: 'Gold', donations: 10, icon: 'gold-badge-icon.png' },
+              { name: 'Platinum', donations: 20, icon: 'platinum-badge-icon.png' }
+            ];
+            badges.forEach(badge => {
+              const isAchieved = totalDonations >= badge.donations;
             %>
-            <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
-              <%= badge.name %> Badge
-                <img src="/images/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>"
-                  alt="<%= badge.name %> Badge Icon">
-            </div>
+              <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+                <%= badge.name %> Badge
+                <img src="/images/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
+              </div>
             <% }); %>
+          </div> 
+
+          <!-- Charts Section -->
+          <div class="charts">
+              <h3>Analytics</h3> 
+  
+              <!-- Container for Donation Trend Over Time -->
+              <div id="donationTrendChartContainer"></div>
+              
+              <!-- Container for Points Earned vs Points Redeemed -->
+              <div id="pointsChartContainer"></div>
+              
+              <!-- Container for Donation Distribution by Drop Point -->
+              <div id="donationDistributionChartContainer"></div>
+              
+              <!-- Container for Advertisement Engagement -->
+              <div id="advertisementEngagementChartContainer"></div>
+               
+          </div>
+
         </div>
-
-        <!-- Charts Section -->
-        <div class="charts">
-          <h3>Analytics</h3>
-
-          <!-- Container for Donation Trend Over Time -->
-          <div id="donationTrendChartContainer"></div>
-
-          <!-- Container for Points Earned vs Points Redeemed -->
-          <div id="pointsChartContainer"></div>
-
-          <!-- Container for Donation Distribution by Drop Point -->
-          <div id="donationDistributionChartContainer"></div>
-
-          <!-- Container for Advertisement Engagement -->
-          <div id="advertisementEngagementChartContainer"></div>
-
-        </div>
-
-      </div>
-
+ 
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -740,7 +675,7 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    <script src="https://code.highcharts.com/modules/treemap.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script> 
     <script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -782,139 +717,139 @@
       });
 
 
-      var donationTrend = <% - JSON.stringify(donationTrend) %>;
-      var pointsData = <% - JSON.stringify(pointsData) %>;
-      var donationDistribution = <% - JSON.stringify(donationDistribution) %>;
-      var { chartData, drilldownSeries } = <% - JSON.stringify(advertisementEngagement) %>;
+      var donationTrend = <%- JSON.stringify(donationTrend) %>;
+      var pointsData = <%- JSON.stringify(pointsData) %>; 
+      var donationDistribution = <%- JSON.stringify(donationDistribution) %>;
+      var { chartData, drilldownSeries } = <%- JSON.stringify(advertisementEngagement) %>; 
 
       Highcharts.chart('donationTrendChartContainer', {
-        chart: {
-          type: 'area',
-          zoomType: 'x' // Enable zooming on the x-axis
+        chart: { 
+            type: 'area',
+            zoomType: 'x' // Enable zooming on the x-axis
         },
-        title: {
-          text: 'Donation Trend Over Time'
+        title: { 
+            text: 'Donation Trend Over Time' 
         },
         xAxis: {
-          categories: donationTrend.map(item => item.date),
-          title: { text: 'Month/Year' }
+            categories: donationTrend.map(item => item.date),
+            title: { text: 'Month/Year' }
         },
         yAxis: {
-          title: { text: 'Number of Donations' },
-          allowDecimals: false
+            title: { text: 'Number of Donations' },
+            allowDecimals: false
         },
         tooltip: {
-          shared: true,
-          valueSuffix: ' donations'
+            shared: true,
+            valueSuffix: ' donations'
         },
         plotOptions: {
-          area: {
-            marker: {
-              enabled: false,
-              symbol: 'circle',
-              radius: 2,
-              states: {
-                hover: {
-                  enabled: true
+            area: {
+                marker: {
+                    enabled: false,
+                    symbol: 'circle',
+                    radius: 2,
+                    states: {
+                        hover: {
+                            enabled: true
+                        }
+                    }
                 }
-              }
             }
-          }
         },
         series: [{
-          name: 'Total Donations',
-          data: donationTrend.map(item => item.totalDonations)
+            name: 'Total Donations',
+            data: donationTrend.map(item => item.totalDonations)
         }],
         responsive: {
-          rules: [{
-            condition: {
-              maxWidth: 500
-            },
-            chartOptions: {
-              legend: {
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom'
-              }
-            }
-          }]
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
         },
         accessibility: {
-          description: 'A chart showing the trend of donations over time.'
+            description: 'A chart showing the trend of donations over time.'
         }
-      });
-
+    });
+      
       Highcharts.chart('pointsChartContainer', {
-        chart: {
-          type: 'column'
-        },
-        title: {
-          text: 'Points Earned vs Points Redeemed'
-        },
-        xAxis: {
-          categories: pointsData.map(item => item.date),
-          crosshair: true
-        },
-        yAxis: {
-          min: 0,
-          title: { text: 'Total Points' }
-        },
-        tooltip: {
-          headerFormat: '<b>{point.x}</b><br/>',
-          pointFormat: '{series.name}: {point.y}<br/>'
-        },
-        plotOptions: {
-          column: {
-            stacking: 'normal',
-            dataLabels: {
-              enabled: true
-            }
-          }
-        },
-        series: [{
-          name: 'Earned',
-          data: pointsData.map(item => item.earned)
-        }, {
-          name: 'Spent',
-          data: pointsData.map(item => item.spent)
-        }],
-        responsive: {
-          rules: [{
-            condition: {
-              maxWidth: 500
-            },
-            chartOptions: {
-              legend: {
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom'
+          chart: { 
+              type: 'column'
+          },
+          title: { 
+              text: 'Points Earned vs Points Redeemed' 
+          },
+          xAxis: {
+              categories: pointsData.map(item => item.date),
+              crosshair: true
+          },
+          yAxis: { 
+              min: 0, 
+              title: { text: 'Total Points' }
+          },
+          tooltip: {
+              headerFormat: '<b>{point.x}</b><br/>',
+              pointFormat: '{series.name}: {point.y}<br/>'
+          },
+          plotOptions: {
+              column: {
+                  stacking: 'normal',
+                  dataLabels: {
+                      enabled: true
+                  }
               }
-            }
-          }]
-        },
-        accessibility: {
-          description: 'A chart showing the comparison of points earned and points spent over time.'
-        }
+          },
+          series: [{
+              name: 'Earned',
+              data: pointsData.map(item => item.earned)
+          }, {
+              name: 'Spent',
+              data: pointsData.map(item => item.spent)
+          }],
+          responsive: {
+              rules: [{
+                  condition: {
+                      maxWidth: 500
+                  },
+                  chartOptions: {
+                      legend: {
+                          layout: 'horizontal',
+                          align: 'center',
+                          verticalAlign: 'bottom'
+                      }
+                  }
+              }]
+          },
+          accessibility: {
+              description: 'A chart showing the comparison of points earned and points spent over time.'
+          }
       });
-
+      
       Highcharts.chart('donationDistributionChartContainer', {
-        series: [{
-          type: 'treemap',
-          layoutAlgorithm: 'squarified',
-          data: donationDistribution.map(item => ({
-            name: item.name,
-            value: item.value
-          }))
-        }],
-        title: {
-          text: 'Donation Distribution by Drop Point'
-        },
-        tooltip: {
-          pointFormat: '{point.name}: <b>{point.value}</b> donations'
-        }
-      });
+    series: [{
+      type: 'treemap',
+      layoutAlgorithm: 'squarified',
+      data: donationDistribution.map(item => ({
+        name: item.name,
+        value: item.value
+      }))
+    }],
+    title: {
+      text: 'Donation Distribution by Drop Point'
+    },
+    tooltip: {
+      pointFormat: '{point.name}: <b>{point.value}</b> donations'
+    }
+  });
 
-
+  
       Highcharts.chart('advertisementEngagementChartContainer', {
         chart: { type: 'column' },
         title: { text: 'Advertisement Engagement' },
@@ -927,8 +862,7 @@
         series: [{ name: 'Advertisements', colorByPoint: true, data: chartData }],
         drilldown: { series: drilldownSeries }
       });
-
+      
     </script>
-</body>
-
+  </body>
 </html>
