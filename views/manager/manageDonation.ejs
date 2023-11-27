@@ -213,18 +213,61 @@
 
 
 
-        /* Search bar styling */
-        .search-input {
-            position: absolute;
-            top: -45px;
-            /* Adjusted position to account for the added margin */
-            right: 0;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            margin-bottom: 10px;
-            /* New margin added to the bottom of the search bar */
+        /* Search and Filter Section Styling */
+        .search-input,
+        .filter-input {
+        padding: 10px;
+        margin-right: 10px; /* Adds space between each input field */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .filter-input {
+        padding: 5px 10px; /* Adjust padding for select inputs */
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+    }
+    
+    /* Button Styling */
+    .btn {
+        margin-right: 10px; /* Adds space between buttons */
+        padding: 10px 20px; /* Adequate padding for buttons */
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+    
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 768px) {
+        .search-input,
+        .filter-input,
+        .btn {
+            margin-bottom: 10px; /* Stack inputs and buttons vertically with space */
+            width: 100%; /* Full width for smaller screens */
         }
+    }
+
 
         /* Pagination styling */
         .table-wrapper {
@@ -308,6 +351,7 @@
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
+
                 <!-- Search bar placed above the table on the right -->
                 <!-- <input type="text" class="search-input" placeholder="Search..."> -->
                 <input type="text" id="searchInput" class="search-input" placeholder="Search...">
@@ -322,6 +366,7 @@
                     <option value="VERIFIED">Verified</option> 
                     <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
                 </select>
+
                 <!-- Add this within your HTML form or near the filter inputs -->
                 <select id="sortOrder" class="filter-input">
                     <option value="expectedDateOfArrival_asc">Date of Arrival (Ascending)</option>

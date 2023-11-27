@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <!-- Google's Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
     <!-- Custom Styles -->
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         .container {
@@ -64,19 +66,22 @@
             background-color: #4477CE;
         }
 
+        /* Main Content Styling */
         .main-content {
-            padding-left: 70px;
-            padding-top: 20px;
-            padding-right: 20px;
-            padding-bottom: 20px;
+            padding-left: 70px;   /* Left padding */
+            padding-top: 20px;    /* Top padding */
+            padding-right: 50px;  /* Increased right padding */
+            padding-bottom: 20px; /* Bottom padding */
             transition: 0.5s;
         }
+            
 
+        /* Filter Search Section Styling */
         .filter-search-section {
             background-color: #fff;
             padding: 15px;
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
 
@@ -87,15 +92,17 @@
             gap: 10px;
         }
 
+        /* Filter Search Inputs and Selects */
         .filter-search-section select, 
         .filter-search-section input {
             flex: 1;
             min-width: 150px;
         }
 
+        /* Buttons in Filter Search Section */
         .filter-search-section button, 
         .filter-search-section .clear-button {
-            background-color: #007bff;
+            background-color: #318CE7;
             color: white;
             border: none;
             padding: 6px 12px;
@@ -107,11 +114,14 @@
             background-color: #6c757d;
         }
 
+        /* Hover Effects for Buttons */
         .filter-search-section button:hover, 
         .filter-search-section .clear-button:hover {
-            opacity: 0.9;
+            opacity: 0.85;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
+        /* Pagination Styling */
         .pagination {
             display: flex;
             justify-content: center;
@@ -122,49 +132,23 @@
             margin: 0 5px;
             padding: 5px 10px;
             text-decoration: none;
-            color: #007bff;
+            color: #000;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
 
         .pagination a.active {
-            background-color: #007bff;
+            background-color: #72A0C1;
             color: white;
-            border-color: #007bff;
+            border-color: #72A0C1;
         }
 
         .pagination a:hover:not(.active) {
-            background-color: #ddd;
+            background-color: #5f9fb5;
+            border-color: white;
         }
 
-        .filter-search-section select {
-            display: block;
-            width: 100%;
-            padding: 0.375rem 1.75rem 0.375rem 0.75rem;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            appearance: none;
-            background-image: url('data:image/svg+xml;charset=UTF8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23007bff"%3E%3Cpath fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/%3E%3C/svg%3E');
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 16px 12px;
-        }
-
-        .filter-search-section select:focus {
-            color: #495057;
-            background-color: #fff;
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-        }
-
-        
+        /* User Search Section Styling */
         .user-search-section {
             margin-bottom: 20px;
             display: flex;
@@ -183,7 +167,6 @@
 
         .user-search-section input[type="text"]:focus {
             border-color: #80bdff;
-            outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
         }
 
@@ -193,8 +176,8 @@
             line-height: 1.5;
             border-radius: 0.25rem;
             color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
+            background-color: #318CE7;
+            border-color: #318CE7;
         }
 
         .user-search-section button:hover {
@@ -202,13 +185,13 @@
             border-color: #0056b3;
         }
 
-        /* Clear button styles (similar to pagination) */
+        /* Clear Button Styles */
         .clear-button {
             padding: 0.5rem 1rem;
             font-size: 1rem;
             line-height: 1.5;
-            color: black;
-            background-color: #f2f2f2;
+            color: white;
+            background-color: #6c757d;
             border: 1px solid #ced4da;
             border-radius: 0.25rem;
             text-decoration: none;
@@ -217,20 +200,63 @@
         .clear-button:hover {
             background-color: #e6e6e6;
         }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .user-search-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .user-search-section button,
-            .clear-button {
-                width: 100%;
-                margin-top: 10px;
-            }
+            /* General Table Styling */
+        .table {
+            width: 120%; /* Full width of the container */
+            border-collapse: separate; /* Changes to separate to allow outer borders */
+            border-spacing: 0; /* Removes spacing between cells */
+            border: 1px solid #dee2e6; /* Outer border for the entire table */
         }
+
+        /* Table Header and Data Cells Styling */
+        .table th, .table td {
+            padding: 8px; /* Adequate padding within cells */
+            text-align: left; /* Aligns text to the left */
+            border-bottom: 1px solid #dee2e6; /* Horizontal line between rows */
+            border-right: 1px solid #dee2e6; /* Vertical line between columns */
+        }
+
+        /* Removing Right Border from Last Column for Aesthetic Reasons */
+        .table th:last-child, .table td:last-child {
+            border-right: none;
+        }
+
+        /* Table Header Styling */
+        .table th {
+            background-color: #f8f9fa; /* Light background for headers */
+            font-weight: bold; /* Bold font for headers */
+        }
+
+        /* Zebra Striping for Rows */
+        .table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2; /* Light color for odd rows */
+        }
+
+        /* Hover Effect for Rows */
+        .table tbody tr:hover {
+            background-color: #e9ecef; /* Slight change on row hover */
+        }
+        /* Nav Tabs Styling */
+        .nav-tabs .nav-item .nav-link {
+            color: #495057; /* Default color for non-active tabs */
+            /* Additional default styling as needed */
+        }
+
+        /* Active Nav Tab Styling */
+        .nav-tabs .nav-item .nav-link.active {
+            color: #fff; /* White text for better contrast */
+            background-color: #72A0C1; /* Your specified color for active state */
+            border-color: #72A0C1; /* Border color to match */
+        }
+
+        /* Hover Effect for Nav Tabs */
+        .nav-tabs .nav-item .nav-link:hover {
+            background-color: #5f9fb5; /* Slightly darker shade on hover for visual feedback */
+            color: #fff; /* White text on hover */
+        }
+
+
+                
 
         /* Adjustments for smaller screens */
         @media (max-width: 768px) {

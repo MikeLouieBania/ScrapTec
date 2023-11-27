@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <!-- Google's Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Custom Styles -->
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         .container {
@@ -64,21 +65,63 @@
             background-color: #4477CE;
         }
 
+       /* Main Content Styling */
         .main-content {
-            padding-left: 70px;
-            padding-top: 20px;
-            padding-right: 20px;
-            padding-bottom: 20px;
-            transition: 0.5s;
-        }
-        .table {
-            margin-top: 20px;
+            padding: 20px 20px 20px 70px; /* Consolidated padding */
+            transition: 0.5s; /* Smooth transition for layout changes */
         }
 
-        .btn {
-            margin-right: 10px;
+        /* Table Styling */
+        .table {
+            margin-top: 20px; /* Space above the table */
+            width: 100%; /* Full width */
+            margin-bottom: 20px; /* Space below the table */
+            border-collapse: collapse; /* Collapse borders for a cleaner look */
         }
-        
+
+        .table th, .table td {
+            padding: 8px; /* Padding inside cells */
+            text-align: left; /* Align text to the left */
+            border-bottom: 1px solid #dee2e6; /* Border for separation */
+        }
+
+        .table th {
+            background-color: #f8f9fa; /* Light background for headers */
+            font-weight: bold; /* Bold font for headers */
+        }
+
+        .table tbody tr:hover {
+            background-color: #f2f2f2; /* Slight change on row hover */
+        }
+
+        /* Tabs Styling */
+        .nav-tabs .nav-item {
+            margin-right: 5px; /* Adds space to the right of each tab */
+            margin-bottom: -1px; /* Aligns tabs with the bottom border */
+        }
+
+        .nav-tabs .nav-link {
+            color: #000; /* Black text color */
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+
+        .nav-tabs .nav-link.active, 
+        .nav-tabs .nav-link:hover {
+            color: #fff; /* White text for better contrast */
+            background-color: #72A0C1; /* Specified color for active and hover states */
+            border-color: #72A0C1; /* Border color to match */
+        }
+
+        /* Button Styling */
+        .btn {
+            margin-right: 10px; /* Space to the right of each button */
+            /* Additional button styles can be added here */
+        }
+
+        /* Fullscreen Image Styling */
         :fullscreen img {
             width: 90%;
             height: 90%;
@@ -91,30 +134,51 @@
             transform: translate(-50%, -50%);
         }
 
+        /* Pagination Styling */
         .pagination {
             display: flex;
-            justify-content: center; /* Centers the pagination links */
+            justify-content: center; /* Center the pagination links */
             padding: 20px 0; /* Vertical padding */
         }
 
         .pagination a {
             margin: 0 5px; /* Horizontal spacing between links */
             padding: 5px 10px; /* Padding inside each link */
-            text-decoration: none; /* Removes the underline */
-            color: #007bff; /* Link color */
-            border: 1px solid #ddd; /* Border for the links */
-            border-radius: 5px; /* Rounded corners for the links */
+            text-decoration: none; /* Removes underline */
+            color: #000; /* Link color */
+            border: 1px solid #ddd; /* Border for links */
+            border-radius: 5px; /* Rounded corners for links */
+            transition: background-color 0.2s; /* Smooth background transition */
         }
 
-        .pagination a.active {
-            background-color: #007bff !important;
-            color: white !important;
-            border-color: #007bff !important;
-        } 
-
+        .pagination a.active, 
         .pagination a:hover:not(.active) {
-            background-color: #ddd; /* Hover background color for non-active links */
+            background-color: #72A0C1; /* Using the specified color for active and hover states */
+            color: white; /* White text for better contrast */
+            border-color: #72A0C1; /* Border color to match */
         }
+
+        /* Button Styling for Approve/Reject */
+        .btn-success, .btn-danger {
+            padding: 6px 12px;
+            font-size: 14px;
+            margin-right: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .btn-success:hover {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+            
+
+
     </style>
 </head>
 
@@ -134,7 +198,8 @@
             <button type="submit" data-label="Logout">
               <span class="material-icons">logout</span>
             </button>
-          </form></a> 
+          </form>
+        </a> 
     </div>
 
     <!-- Main content -->
