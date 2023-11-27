@@ -365,18 +365,25 @@ body {
     }
     
     
-    .points-container {
-      /* Styles specific to the points container */
+    .milestone .progress, .milestone .progress-bar {
+      height: 20px;
     }
-    
-    .badge-success, .badge-warning {
-      /* Styles for badges */
+
+    .progress-bar {
+      background-color: #4caf50; /* Green color for progress */
     }
-    
-    
-    
-    
-    
+
+    .not-achieved .progress-bar {
+      background-color: #ccc; /* Grey color for incomplete progress */
+    }
+
+    .badge.achieved img {
+      opacity: 1; /* Full color for achieved badges */
+    }
+
+    .badge.not-achieved img {
+      opacity: 0.5; /* Greyed-out look for unachieved badges */
+    } 
 
     </style>
   </head>
@@ -419,22 +426,23 @@ body {
       </h2>
       
       <!-- Nav tabs -->
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#account">Account Settings</a>
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item"> 
+          <a class="nav-link <%= activeTab === 'account' ? 'active' : '' %>" id="account-tab" data-toggle="tab" href="#account" role="tab" aria-controls="account" aria-selected="<%= activeTab === 'account' %>">Account Settings</a>
         </li> 
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#redeem">Redeem</a>
+          <a class="nav-link <%= activeTab === 'redeem' ? 'active' : '' %>" id="redeem-tab" data-toggle="tab" href="#redeem" role="tab" aria-controls="redeem" aria-selected="<%= activeTab === 'redeem' %>">Redeem</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#status">Status</a>
+          <a class="nav-link <%= activeTab === 'status' ? 'active' : '' %>" id="status-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="<%= activeTab === 'status' %>">Status</a>
         </li>
       </ul>
 
       <!-- Tab panes -->
       <div class="tab-content mt-4">
-        <!-- Account Tab -->
-        <div class="tab-pane active" id="account">
+        <!-- Account Tab --> 
+        <div class="tab-pane <%= activeTab === 'account' ? 'show active' : '' %>" id="account" role="tabpanel" aria-labelledby="account-tab">
+  
           <!-- Account Content Here -->
           <h3>Account Settings</h3>
           <p><strong>Organization Name:</strong> <%= organization.organizationname %></p>
@@ -450,8 +458,9 @@ body {
             <p><strong>No Profile Picture</strong></p>
           <% } %>
         </div>  
-        <!-- Redeem Tab -->
-        <div class="tab-pane" id="redeem">
+        <!-- Redeem Tab --> 
+        <div class="tab-pane <%= activeTab === 'redeem' ? 'show active' : '' %>" id="redeem" role="tabpanel" aria-labelledby="redeem-tab">
+  
           <div class="row">
             <!-- Side Navigation -->
             <div class="col-md-3">
@@ -460,11 +469,11 @@ body {
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span></div>
               <input type="text" id="citySearch" class="form-control" placeholder="Search Cities">
-              </div>
+              </div>  
               <div class="list-group mt-3">
-                <a href="#" class="list-group-item list-group-item-action">Highest Points Required</a>
-                <a href="#" class="list-group-item list-group-item-action">Lowest Points Required</a>
-              </div>
+                <a href="/organization/account?tab=redeem&sort=highest" class="list-group-item list-group-item-action">Highest Points Required</a>
+                <a href="/organization/account?tab=redeem&sort=lowest" class="list-group-item list-group-item-action">Lowest Points Required</a> 
+              </div> 
               <h4 class="mt-4">Redeem History</h4>
               <div class="list-group">
                 <a href="/organization/advertisements" class="list-group-item list-group-item-action">Advertisements</a> 
@@ -543,7 +552,7 @@ body {
                         Cities
                     </h4> 
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="cityCardsContainer">
                   <div class="row">
                     <!-- Loop through cities and display as cards -->
                     <% citiesWithCounts.forEach((city) => {
@@ -584,18 +593,276 @@ body {
             </div>
           </div>
         </div> 
-        <!-- Status Tab -->
-        <div class="tab-pane" id="status">
-          <!-- Status Content Here -->
-          <h3>Status</h3>
-          <p>Information about your organization's status can go here.</p>
+        <!-- Status Tab --> 
+        <div class="tab-pane <%= activeTab === 'status' ? 'show active' : '' %>" id="status" role="tabpanel" aria-labelledby="status-tab">
+         
+          <!-- Milestones/Accomplishments Section -->
+          <div class="milestones">
+            <h3>Milestones/Accomplishments</h3>
+            <% 
+            const levels = [
+              { name: 'Supporter', points: 1000, icon: 'rising-sun.png' },
+              { name: 'Advocate', points: 5000, icon: 'open-hand.png' },
+              { name: 'Champion', points: 10000, icon: 'torch.png' },
+              { name: 'Guardian', points: Infinity, icon: 'shield.png' }
+            ];
+            levels.forEach(level => {
+              const isAchieved = organization.lifetimePoints >= level.points;
+              const progress = Math.min((organization.lifetimePoints / level.points) * 100, 100);
+            %>
+              <div class="milestone">
+                <div class="badge milestone-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+                  <%= level.name %> Level: <%= isAchieved ? level.points : organization.lifetimePoints %> points
+                  <img src="/images/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon" class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+
+          <!-- Donation Section -->
+          <div class="donation">
+            <h3>Donation</h3>
+            <% 
+            const badges = [
+              { name: 'Bronze', donations: 1, icon: 'bronze-badge-icon.png' },
+              { name: 'Silver', donations: 5, icon: 'silver-badge-icon.png' },
+              { name: 'Gold', donations: 10, icon: 'gold-badge-icon.png' },
+              { name: 'Platinum', donations: 20, icon: 'platinum-badge-icon.png' }
+            ];
+            badges.forEach(badge => {
+              const isAchieved = totalDonations >= badge.donations;
+            %>
+              <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
+                <%= badge.name %> Badge
+                <img src="/images/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
+              </div>
+            <% }); %>
+          </div> 
+
+          <!-- Charts Section -->
+          <div class="charts">
+              <h3>Analytics</h3> 
+  
+              <!-- Container for Donation Trend Over Time -->
+              <div id="donationTrendChartContainer"></div>
+              
+              <!-- Container for Points Earned vs Points Redeemed -->
+              <div id="pointsChartContainer"></div>
+              
+              <!-- Container for Donation Distribution by Drop Point -->
+              <div id="donationDistributionChartContainer"></div>
+              
+              <!-- Container for Advertisement Engagement -->
+              <div id="advertisementEngagementChartContainer"></div>
+               
+          </div>
+
         </div>
-      </div>
  
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/treemap.js"></script> 
+    <script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/boxplot.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const citySearchInput = document.getElementById('citySearch');
+        const cityCardsContainer = document.getElementById('cityCardsContainer'); // Add this ID to your city cards container in HTML
+
+        citySearchInput.addEventListener('input', (e) => {
+          const searchText = e.target.value.toLowerCase();
+          filterCities(searchText);
+        });
+
+        function filterCities(searchText) {
+          const cityCards = cityCardsContainer.getElementsByClassName('city-card');
+          Array.from(cityCards).forEach(card => {
+            const cityName = card.querySelector('.card-title').textContent.toLowerCase();
+            if (cityName.includes(searchText)) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+        // Function to maintain the active tab based on URL parameters
+        const setActiveTab = () => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const tab = urlParams.get('tab');
+          if (tab) {
+            $('.nav-tabs .nav-link').removeClass('active');
+            $('.tab-content .tab-pane').removeClass('active');
+            $(`#myTab a[href="#${tab}"]`).tab('show');
+          }
+        };
+
+        setActiveTab();
+      });
+
+
+      var donationTrend = <%- JSON.stringify(donationTrend) %>;
+      var pointsData = <%- JSON.stringify(pointsData) %>; 
+      var donationDistribution = <%- JSON.stringify(donationDistribution) %>;
+      var { chartData, drilldownSeries } = <%- JSON.stringify(advertisementEngagement) %>; 
+
+      Highcharts.chart('donationTrendChartContainer', {
+        chart: { 
+            type: 'area',
+            zoomType: 'x' // Enable zooming on the x-axis
+        },
+        title: { 
+            text: 'Donation Trend Over Time' 
+        },
+        xAxis: {
+            categories: donationTrend.map(item => item.date),
+            title: { text: 'Month/Year' }
+        },
+        yAxis: {
+            title: { text: 'Number of Donations' },
+            allowDecimals: false
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' donations'
+        },
+        plotOptions: {
+            area: {
+                marker: {
+                    enabled: false,
+                    symbol: 'circle',
+                    radius: 2,
+                    states: {
+                        hover: {
+                            enabled: true
+                        }
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Total Donations',
+            data: donationTrend.map(item => item.totalDonations)
+        }],
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        },
+        accessibility: {
+            description: 'A chart showing the trend of donations over time.'
+        }
+    });
+      
+      Highcharts.chart('pointsChartContainer', {
+          chart: { 
+              type: 'column'
+          },
+          title: { 
+              text: 'Points Earned vs Points Redeemed' 
+          },
+          xAxis: {
+              categories: pointsData.map(item => item.date),
+              crosshair: true
+          },
+          yAxis: { 
+              min: 0, 
+              title: { text: 'Total Points' }
+          },
+          tooltip: {
+              headerFormat: '<b>{point.x}</b><br/>',
+              pointFormat: '{series.name}: {point.y}<br/>'
+          },
+          plotOptions: {
+              column: {
+                  stacking: 'normal',
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+          },
+          series: [{
+              name: 'Earned',
+              data: pointsData.map(item => item.earned)
+          }, {
+              name: 'Spent',
+              data: pointsData.map(item => item.spent)
+          }],
+          responsive: {
+              rules: [{
+                  condition: {
+                      maxWidth: 500
+                  },
+                  chartOptions: {
+                      legend: {
+                          layout: 'horizontal',
+                          align: 'center',
+                          verticalAlign: 'bottom'
+                      }
+                  }
+              }]
+          },
+          accessibility: {
+              description: 'A chart showing the comparison of points earned and points spent over time.'
+          }
+      });
+      
+      Highcharts.chart('donationDistributionChartContainer', {
+    series: [{
+      type: 'treemap',
+      layoutAlgorithm: 'squarified',
+      data: donationDistribution.map(item => ({
+        name: item.name,
+        value: item.value
+      }))
+    }],
+    title: {
+      text: 'Donation Distribution by Drop Point'
+    },
+    tooltip: {
+      pointFormat: '{point.name}: <b>{point.value}</b> donations'
+    }
+  });
+
+  
+      Highcharts.chart('advertisementEngagementChartContainer', {
+        chart: { type: 'column' },
+        title: { text: 'Advertisement Engagement' },
+        xAxis: { type: 'category' },
+        yAxis: { title: { text: 'Interactions' } },
+        legend: { enabled: false },
+        plotOptions: {
+          series: { borderWidth: 0, dataLabels: { enabled: true } }
+        },
+        series: [{ name: 'Advertisements', colorByPoint: true, data: chartData }],
+        drilldown: { series: drilldownSeries }
+      });
+      
+    </script>
   </body>
 </html>

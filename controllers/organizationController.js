@@ -56,7 +56,7 @@ async function calculatePoints(type, condition, quantity) {
     return totalPoints;
 }
 
-  // Function to get total points for an organization
+// Function to get total points for an organization
 async function getTotalPointsForOrganization(organizationId) {
   try {
     const donations = await prisma.donation.findMany({
@@ -108,14 +108,120 @@ async function getCitiesWithUserCounts() {
       name: city.name,
       id: city.id, // Include the ID 
       usersCount: city.users.length,
-    })); 
+    }));  
 
     return citiesWithCounts;
   } catch (error) {
     console.error("Error fetching cities with user counts:", error);
     return []; // Return an empty array if an error occurs
   }
-} 
+}
+
+async function calculateAdvertisementEngagement(advertisements) {
+  const drilldownData = {};
+
+  advertisements.forEach(ad => {
+    ad.interactions.forEach(interaction => {
+      const day = interaction.clickedAt.getDate();
+      const month = interaction.clickedAt.getMonth() + 1;
+      const year = interaction.clickedAt.getFullYear();
+      const dateKey = `${day}-${month}-${year}`;
+      const key = `${ad.title} | ${dateKey}`;
+
+      if (!drilldownData[ad.title]) {
+        drilldownData[ad.title] = {};
+      }
+      if (!drilldownData[ad.title][dateKey]) {
+        drilldownData[ad.title][dateKey] = 0;
+      }
+      drilldownData[ad.title][dateKey]++;
+    });
+  });
+
+  const chartData = Object.keys(drilldownData).map(title => {
+    const totalInteractions = Object.values(drilldownData[title]).reduce((sum, count) => sum + count, 0);
+    return {
+      name: title,
+      y: totalInteractions,
+      drilldown: title
+    };
+  }).sort((a, b) => b.y - a.y); // Sort by total interactions in descending order
+
+  const drilldownSeries = Object.entries(drilldownData).map(([title, data]) => {
+    const sortedData = Object.entries(data).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+    return {
+      name: title,
+      id: title,
+      data: sortedData.map(([date, count]) => [date, count])
+    };
+  });
+
+  return { chartData, drilldownSeries };
+}
+
+
+async function calculateDonationDistribution(donations) {
+  const distributionMap = {};
+
+  donations.forEach(donation => {
+    const dropPointId = donation.dropPointId;
+    if (dropPointId) {
+      distributionMap[dropPointId] = (distributionMap[dropPointId] || 0) + 1;
+    }
+  });
+
+  const distribution = await Promise.all(
+    Object.entries(distributionMap).map(async ([dropPointId, count]) => {
+      const dropPoint = await prisma.dropPoint.findUnique({
+        where: { id: dropPointId }
+      });
+      return { name: dropPoint.name, value: count };
+    })
+  );
+
+  return distribution;
+}
+
+async function calculatePointsData(advertisements, donations) {
+  const pointsData = {};
+
+  // Accumulate points spent on advertisements
+  advertisements.forEach(ad => {
+    const monthYear = (ad.startDate.getMonth() + 1) + '-' + ad.startDate.getFullYear();
+    pointsData[monthYear] = pointsData[monthYear] || { earned: 0, spent: 0 };
+    pointsData[monthYear].spent += ad.pointsSpent;
+  });
+
+  // Accumulate points earned from donations
+  donations.forEach(donation => {
+    const monthYear = (donation.createdAt.getMonth() + 1) + '-' + donation.createdAt.getFullYear();
+    pointsData[monthYear] = pointsData[monthYear] || { earned: 0, spent: 0 };
+    pointsData[monthYear].earned += donation.points || 0; // Assuming 'points' field represents points earned
+  });
+
+  return Object.entries(pointsData).map(([date, data]) => ({
+    date,
+    earned: data.earned,
+    spent: data.spent
+  }));
+}
+
+async function calculateDonationTrend(donations) {
+  const groupedDonations = donations.reduce((acc, donation) => {
+    const monthYear = (donation.createdAt.getMonth() + 1) + '-' + donation.createdAt.getFullYear();
+    if (!acc[monthYear]) {
+      acc[monthYear] = 0;
+    }
+    acc[monthYear]++;
+    return acc;
+  }, {});
+
+  return Object.entries(groupedDonations).map(([date, totalDonations]) => ({
+    date,
+    totalDonations
+  }));
+}
+
 
 /**
  * Compute the average rating for feedbacks of a given drop point.
@@ -157,6 +263,7 @@ const updateAdStatuses = async (organizationId) => {
     console.error('Failed to update ad statuses for organization:', organizationId, error);
   }
 };
+
 
 module.exports = {
   async getDashboard(req, res) {
@@ -634,36 +741,43 @@ module.exports = {
   async getAccount(req, res) { 
     try {
       const organizationId = req.session.organization.id;
-      // Directly fetch the organization's data, including totalPoints and lifetimePoints
       const organization = await prisma.organization.findUnique({
         where: { id: organizationId },
-      }); 
-  
-      // Get cities with user counts
-      let citiesWithCounts = await getCitiesWithUserCounts();
-      citiesWithCounts = citiesWithCounts.map(city => {
-          let requiredPoints;
-          if (city.usersCount > 1000) {
-              requiredPoints = 2500; // Tier 1
-          } else if (city.usersCount >= 500) {
-              requiredPoints = 2000;  // Tier 2
-          } else {
-              requiredPoints = 1500;  // Tier 3
-          }
-          return {...city, requiredPoints};
+        include: {
+          donations: true,
+          advertisements: {
+            include: {
+              interactions: true
+            }
+          },
+          feedbacksGiven: true
+        },
       });
   
-      // Render the view with the organization's data
+      const citiesWithCounts = await getCitiesWithUserCounts();
+  
+      const donationTrend = await calculateDonationTrend(organization.donations);
+      const pointsData = await calculatePointsData(organization.advertisements, organization.donations);
+      const donationDistribution = await calculateDonationDistribution(organization.donations);
+      const advertisementEngagement = await calculateAdvertisementEngagement(organization.advertisements); 
+  
       res.render('organization/account', { 
         organization, 
-        citiesWithCounts
+        donationTrend,
+        pointsData,
+        donationDistribution,
+        advertisementEngagement,
+        feedbackRatings,
+        citiesWithCounts,
+        activeTab: req.query.tab || 'account',
+        totalDonations: organization.donations ? organization.donations.length : 0,
       }); 
     } catch (error) {
       console.error("Error fetching account data:", error);
       res.status(500).send("Internal Server Error");
     }
   },
-
+  
   async getAdvertisements(req, res) { 
     const organizationId = req.session.organization.id;
     const organization = await prisma.organization.findUnique({
