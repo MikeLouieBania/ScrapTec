@@ -90,14 +90,10 @@
         /* Custom Logout Button Style */
         .btn-logout {
             background-color: #002244;
-            /* Reddish color for the button */
             border: none;
             padding: 10px 20px;
-            /* Larger padding for a bigger button */
             border-radius: 5px;
-            /* Rounded corners */
             transition: background-color 0.3s;
-            /* Smooth transition for hover effect */
             margin-right: 20px;
             font-weight: bold;
             color: white;
@@ -107,208 +103,223 @@
 
         .btn-logout:hover {
             background-color: #6082B6;
-            /* Darker shade when hovered */
             color: #fff;
-            /* White text color */
             text-decoration: none;
         }
 
         /* status modal header */
         #statusModalLabel {
             text-align: center;
-            /* Centers the text */
             display: block;
-            /* Ensures the element behaves as a block-level element */
             width: 100%;
-            /* Ensures the element spans the full width */
         }
 
         .modal-header {
             background-color: #4B9CD3;
-            /* Example background color */
             color: #fff;
-            /* Example text color */
             padding: 10px;
-            /* Example padding */
             border-bottom: 1px solid #dee2e6;
-            /* Example bottom border */
         }
 
         .table-wrapper {
             position: relative;
             width: 100%;
-            /* Keeps the width as is */
         }
 
         .table-custom {
             width: 150%;
-            /* Keeps the original width */
             border-collapse: collapse;
-            /* Collapse borders so they become single lines */
             margin-top: 60px;
-            /* Keeps the space between the search bar and the table */
             margin-left: -150px;
-            /* Keeps the table shifted to the left */
         }
 
         .table-custom th,
         .table-custom td {
             padding: 15px 20px;
-            /* Updated padding to match .table */
             border: 1px solid #dee2e6;
-            /* Keeps the borders as is */
             text-align: left;
-            /* Keeps text aligned to the left */
             font-family: 'Poppins', sans-serif;
-            /* Updated font family to 'Poppins' */
             font-size: 16px;
-            /* Updated font size to match .table */
             color: #212529;
-            /* Sets text color to a standard dark for readability */
         }
 
         /* Zebra striping for rows */
         .table-custom tr:nth-child(even) {
             background-color: #f2f2f2;
-            /* Keeps the zebra striping as is */
         }
 
         /* Hover effect for rows (excluding header) */
         .table-custom tbody tr:hover {
             background-color: #f1f3f5;
-            /* Light grey background on row hover to match .table */
         }
 
         /* Table header styling */
         .table-custom thead tr {
             background-color: #f8f9fa;
-            /* Light grey header background to match .table */
             color: #495057;
-            /* Dark grey color for text to match .table */
             border-bottom: 2px solid #dee2e6;
-            /* Heavier bottom border for header to match .table */
             text-align: center;
-            /* Center-align the header text */
             font-weight: bold;
-            /* Makes header text bold */
         }
 
         /* Action button styling */
         .action-btn {
             border: none;
-            /* Removes the border */
             background: none;
-            /* Removes the background */
             cursor: pointer;
-            /* Keeps the cursor as pointer */
             margin-right: 5px;
-            /* Right margin to separate action buttons */
         }
 
         .action-btn:hover {
             color: #007BFF;
-            /* Blue color on hover to match .table-custom thead */
         }
 
 
 
 
-        /* Search and Filter Section Styling */
-        .search-input,
+       /* Search bar styling */
+       .filter-container {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 10px;
+        margin-left: -150px !important;
+        padding-top: 6vh;
+        width: 100%; /* Ensure the container takes the full width */
+        }
+
+        
         .filter-input {
-        padding: 10px;
-        margin-right: 10px; /* Adds space between each input field */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .filter-input {
-        padding: 5px 10px; /* Adjust padding for select inputs */
-        border-radius: 4px;
-        background-color: #f8f9fa;
-        border: 1px solid #ddd;
-    }
-    
-    /* Button Styling */
-    .btn {
-        margin-right: 10px; /* Adds space between buttons */
-        padding: 10px 20px; /* Adequate padding for buttons */
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    
-    .btn-primary {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-    }
-    
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-    
-    .btn-secondary {
-        background-color: #6c757d;
-        color: #fff;
-        border: none;
-    }
-    
-    .btn-secondary:hover {
-        background-color: #5a6268;
-    }
-    
-    /* Responsive adjustments for smaller screens */
-    @media (max-width: 768px) {
-        .search-input,
-        .filter-input,
-        .btn {
-            margin-bottom: 10px; /* Stack inputs and buttons vertically with space */
-            width: 100%; /* Full width for smaller screens */
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
         }
-    }
 
+        .filter-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0,123,255,.5);
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 20px; /* Adjust the padding as needed */
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow: hidden; /* Prevent content from spilling out */
+            text-overflow: ellipsis; /* Add an ellipsis if the text is too long to fit */
+            min-width: 100px; /* Adjust as needed to fit your content */
+            /* width: 150px; Uncomment and adjust if a fixed width is desired */
+        }
+
+
+        .btn-primary {
+            background-color: #6699CC;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5072A7;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+
+        /* Specificity increased by targeting the button with all its classes */
+        .btn.btn-outline-dark.btn-sm {
+            background-color: #0076CE !important; /* Overriding Bootstrap styles */
+            color: white !important;
+            border-color: #0076CE !important; /* Match the border color to the background */
+        }
+
+        /* Change hover styles */
+        .btn.btn-outline-dark.btn-sm:hover {
+            background-color: #5a8ebc !important; /* A darker shade for hover */
+            border-color: #5a8ebc !important; /* Match the border color to the hover background */
+        }
+
+        /* Adjust disabled button if needed */
+        .btn.btn-outline-dark.btn-sm:disabled {
+            background-color: #a0b1c4 !important;
+            border-color: #a0b1c4 !important;
+            cursor: not-allowed !important;
+        }
+
+        .search-input {
+            padding: 6px 10px; /* Increased padding for better appearance and usability */
+            border: 2px solid #ddd; /* Subtle border */
+            border-radius: 4px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            font-size: 16px; /* Slightly larger font size for readability */
+            transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+        }
+        
+        .search-input::placeholder { /* Style the placeholder text */
+            color: #999;
+            opacity: 1; /* Full opacity placeholder text */
+        }
+        
+        .search-input:focus {
+            outline: none; /* Remove the default focus outline */
+            border-color: #007bff; /* Highlighted border color when focused */
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Enhanced shadow on focus */
+        }
+        
+
+        
 
         /* Pagination styling */
         .table-wrapper {
             position: relative;
-            /* This ensures that absolute positioning is relative to this container */
             padding-bottom: 70px;
-            /* Add padding to make space for the pagination */
         }
 
         .pagination {
             position: absolute;
             bottom: 10px;
-            /* Adjust this value as needed */
             right: -230px;
-            /* Aligns the pagination to the right */
             left: 0;
-            /* Ensures the pagination can still be centered if needed */
             justify-content: flex-end;
-            /* This will align the pagination items to the right */
         }
 
 
         .pagination a {
             margin: 0 5px;
             padding: 5px 10px;
-            border: 1px solid #007BFF;
-            color: #007BFF;
+            border: 1px solid #6699CC;
+            color: #6699CC;
             text-decoration: none;
             border-radius: 3px;
             transition: background-color 0.3s;
         }
 
         .pagination a:hover {
-            background-color: #007BFF;
+            background-color: #6699CC;
             color: white;
         }
 
         .pagination a.active {
-            background-color: #007BFF;
+            background-color: #6699CC;
             color: white;
         }
+
+        
     </style>
 </head>
 
@@ -336,7 +347,7 @@
     </nav>
 
     <div class="container">
-        <h2>Manage Donations</h2>
+  
 
         <div class="table-wrapper">
             <!-- Table to List Donations -->
@@ -351,31 +362,36 @@
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
-
-                <!-- Search bar placed above the table on the right -->
-                <!-- <input type="text" class="search-input" placeholder="Search..."> -->
-                <input type="text" id="searchInput" class="search-input" placeholder="Search...">
-                <!-- Filter by Expected Date of Arrival -->
-                <input type="date" id="filterDate" class="filter-input" placeholder="Filter by Date">
-
-                <!-- Filter by Status -->
-                <select id="filterStatus" class="filter-input">
-                    <option value="">Select Status</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="ARRIVED">Arrived</option>
-                    <option value="VERIFIED">Verified</option> 
-                    <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
-                </select>
-
-                <!-- Add this within your HTML form or near the filter inputs -->
-                <select id="sortOrder" class="filter-input">
-                    <option value="expectedDateOfArrival_asc">Date of Arrival (Ascending)</option>
-                    <option value="expectedDateOfArrival_desc">Date of Arrival (Descending)</option>  
-                </select>
-
-
-                <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
-                <button id="clearFilters" class="btn btn-secondary">Clear Filters</button>
+               
+              
+                <div class="filter-container">
+                    <!-- Filter by Expected Date of Arrival -->
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+                    <input type="date" id="filterDate" class="filter-input" placeholder="Filter by Date">
+                
+                    <!-- Filter by Status -->
+                    <select id="filterStatus" class="filter-input">
+                        <option value="">Select Status</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="ARRIVED">Arrived</option>
+                        <option value="VERIFIED">Verified</option> 
+                        <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
+                    </select>
+                
+                    <!-- Date of Arrival Sorting -->
+                    <select id="sortOrder" class="filter-input">
+                        <option value="expectedDateOfArrival_asc">Date of Arrival (Ascending)</option>
+                        <option value="expectedDateOfArrival_desc">Date of Arrival (Descending)</option>  
+                    </select>
+                
+                    <!-- Buttons Container -->
+                    <div class="buttons-container">
+                        <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+                        <button id="clearFilters" class="btn btn-secondary">Clear Filters</button>
+                    </div>
+                </div>
+                
+                
 
 
 

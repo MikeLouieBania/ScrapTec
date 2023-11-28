@@ -233,6 +233,19 @@
         #create-listing-form .mb-3 {
             margin-bottom: 16px;
         }
+        #image-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            grid-gap: 10px; /* Adjust the gap between images */
+            padding: 10px;
+        }
+        
+        #image-previews img {
+            width: 100%; /* Make images take up the full width of the grid column */
+            height: auto; /* Keep the original aspect ratio of the images */
+            object-fit: cover; /* This makes sure that images cover the area without stretching */
+        }
+        
     </style>
 </head>
 
