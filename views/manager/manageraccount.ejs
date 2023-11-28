@@ -6,7 +6,12 @@
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Poppins', sans-serif; /* Ensure this is spelled correctly */
+        }
+        
         /* Additional custom styles for the page */
         .container {
             max-width: 800px;
@@ -18,7 +23,7 @@
         .navbar .navbar-brand,
         .navbar .nav-link {
             color: #fff;
-            font-family: 'Roboto Slab', serif, ;
+            font-family: 'Poppins', sans-serif !important; 
             font-weight: bold;
             font-size: 16px;
             margin-top: 15px;
@@ -27,6 +32,9 @@
         body {
             padding-top: 0px;
             margin-bottom: 60px;
+            font-family: 'Poppins', sans-serif; 
+
+            
         }
 
         .jumbotron {
@@ -84,18 +92,15 @@
         /* Custom Logout Button Style */
         .btn-logout {
             background-color: #002244;
-            /* Reddish color for the button */
             border: none;
             padding: 10px 20px;
-            /* Larger padding for a bigger button */
             border-radius: 5px;
-            /* Rounded corners */
             transition: background-color 0.3s;
-            /* Smooth transition for hover effect */
             margin-right: 20px;
             font-weight: bold;
             color: white;
-            font-family: 'Roboto Slab', serif, ;
+            font-family: 'Poppins', sans-serif !important;
+
 
         }
 
@@ -119,10 +124,15 @@
             /* This gives a small space between the buttons */
         }
 
+        .card-title {
+            font-weight: bold;
+        }
+        
         .card {
             position: relative;
             /* Makes the card a reference point for absolutely positioned children */
             margin-top: 80px;
+             font-family: 'Poppins', sans-serif; 
         }
 
         .circle-icon {
@@ -165,7 +175,12 @@
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
-            <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
+            <button class="btn btn-logout my-2 my-sm-0" type="submit" 
+            style="font-family: 'Poppins', sans-serif; background-color: #002244; border: none; padding: 10px 20px; border-radius: 5px; color: white; font-weight: bold;" 
+            onmouseover="this.style.backgroundColor='#6082B6'" 
+            onmouseout="this.style.backgroundColor='#002244'">LOGOUT</button>
+    
+
         </form>
     </nav>
 

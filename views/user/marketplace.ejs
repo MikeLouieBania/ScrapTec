@@ -161,6 +161,10 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
+        .col-lg-3 {
+            position: relative;
+            top: 30px; /* This moves the button downwards by 20 pixels */
+        }        
 
         .image-button:hover {
             background-color: #a8dadc;
@@ -502,45 +506,6 @@
             margin-top: auto; /* Push the price to the bottom of the card */
         }
 
- 
-  
-        
-        /* Change color of "Sort by Price" label */
-        .sort-price-section label {
-            color: black;
-            /* Change this color to your liking */
-            font-weight: bold;
-        }
-
-        /* Change color of price label (e.g., 5000) */
-        .sort-price-section #priceLabel {
-            color: black;
-            /* Change this color to your liking */
-            font-weight: bold;
-        }
-
-        /* Change color of the range input slider thumb (the draggable part) and the track */
-        .sort-price-section input[type="range"]::-webkit-slider-thumb {
-            background-color: #2ecc71;
-            /* Change this color to your liking */
-        }
-
-        .sort-price-section input[type="range"]::-webkit-slider-runnable-track {
-            background-color: #72A0C1;
-            /* Change this color to your liking */
-        }
-
-        /* For Firefox */
-        .sort-price-section input[type="range"]::-moz-range-thumb {
-            background-color: #2ecc71;
-            /* Change this color to your liking */
-        }
-
-        .sort-price-section input[type="range"]::-moz-range-track {
-            background-color: #ecf0f1;
-            /* Change this color to your liking */
-        }
-
         /* modal  window */
         .custom-modal .modal-dialog {
             max-width: 50%;
@@ -758,7 +723,7 @@
             color: rgba(0, 0, 0, .3);
         }
 
-            /* Style for pagination */
+        /* Style for pagination */
         .pagination {
             display: flex;
             justify-content: flex-end; /* Align pagination items to the right */
@@ -796,6 +761,32 @@
             max-width: 250px; /* Keep the maximum size for the cards */
             margin: 5px auto; /* Reduced margin, auto centers the card within the column */
         }
+        
+        /* price range */
+        .price-range-selector {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            gap: 20px;
+            margin-left: 23%; /* Adds left margin to move the fields to the right */
+        }
+        
+        .price-field {
+            display: flex;
+            align-items: center;
+        }
+        
+        .price-field label {
+            margin-right: 10px;
+        }
+        
+        .price-field input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        
 
  
         
@@ -887,6 +878,15 @@
                         <path d="M3 4.5H21M3 12H21M3 19.5H13" stroke="White" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg> Filter by </button>
             </div>
+
+              <!-- Price Range Selector -->
+                <div class="price-range-selector">
+                    <label for="min-price">Min Price:</label>
+                    <input type="number" id="min-price" name="min-price" placeholder="Min">
+
+                    <label for="max-price">Max Price:</label>
+                    <input type="number" id="max-price" name="max-price" placeholder="Max">
+                </div>
 
             <div class="row flex-wrap">
               <% listings.forEach(listing=> { %>
@@ -1106,12 +1106,6 @@
             modal.style.display = "none";
         }
     }
-    // Update the current slider value (each time you drag the slider handle)
-    document.getElementById("priceSlider").oninput = function() {
-        document.getElementById("priceLabel").innerHTML = this.value;
-        // Here you can also call a function to sort your products based on the selected price
-    }
-
     function showProductDetails(event, productId) {
         event.preventDefault(); // Get the product card using the data attribute
         let productCard = document.querySelector(`[data-product-id="${productId}"]`);
