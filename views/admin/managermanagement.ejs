@@ -7,9 +7,10 @@
   <title>Manager Management</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #f4f4f4;
       margin: 0;
       padding: 0;
@@ -71,72 +72,358 @@
       }
     }
 
+        /* Table Responsive Section */
     .table-responsive {
       margin-top: 20px;
+      overflow-x: auto; /* Ensures table is scrollable on smaller screens */
     }
 
+    /* Modal Dialog */
     .modal-dialog {
-      max-width: 800px;
+      max-width: 800px; /* Limits the maximum width */
+      margin: 30px auto; /* Centers the modal and adds spacing from top */
     }
 
+    /* Modal Header */
     .modal-header {
-      background: #007bff;
-      color: #fff;
+      background: #007bff; /* Bright blue background */
+      color: #fff; /* White text */
+      border-bottom: 1px solid #e9ecef; /* Light border for separation */
+      padding: 15px; /* Increased padding for better spacing */
     }
 
+    /* Modal Body */
     .modal-body {
-      background: #f8f9fa;
+      background: #f8f9fa; /* Light grey background */
+      padding: 20px; /* More padding for spacious feel */
     }
 
+    /* Modal Footer */
     .modal-footer {
-      background: #f8f9fa;
+      background: #f8f9fa; /* Consistent with modal body */
+      border-top: 1px solid #e9ecef; /* Light border for separation */
+      padding: 15px; /* Increased padding for better alignment */
     }
 
+    /* Form Controls */
     .form-control {
-      font-size: 14px;
+      font-size: 14px; /* Maintain the font size */
+      border-radius: 4px; /* Slightly rounded corners */
+      border: 1px solid #ced4da; /* Light grey border */
     }
 
+    /* Primary Buttons */
     .btn-primary {
-      background-color: #007bff;
-      border: none;
+      background-color: #007bff; /* Bright blue background */
+      border: none; /* Removes border */
+      transition: background-color 0.2s; /* Smooth transition for hover effect */
     }
 
     .btn-primary:hover {
-      background-color: #0056b3;
+      background-color: #0056b3; /* Darker blue on hover */
     }
 
+    /* Search Section */
     .search-section {
-      padding: 15px 0;
+      padding: 15px 0; /* Vertical padding only */
     }
 
     .search-input {
-      margin-bottom: 10px;
+      margin-bottom: 10px; /* Space below the input field */
     }
 
+    /* Details Button */
     .details-button {
-      background-color: #007bff;
-      border-color: #007bff;
-      color: white;
+      background-color: #007bff; /* Bright blue background */
+      border-color: #007bff; /* Matching border color */
+      color: white; /* White text */
+      transition: background-color 0.2s; /* Smooth transition for hover effect */
     }
 
     .details-button:hover {
-      background-color: #0056b3;
-      border-color: #004085;
+      background-color: #0056b3; /* Darker blue on hover */
+      border-color: #004085; /* Even darker border on hover */
     }
 
+    /* Detail Tabs Content */
     #detailTabsContent .tab-pane {
-      max-height: 400px;
-      /* Adjust height as needed */
-      overflow-y: scroll;
+      max-height: 400px; /* Sets a maximum height */
+      overflow-y: auto; /* Allows vertical scrolling */
     }
 
-    /* Style for modal tabs */
+    /* Style for Modal Tabs */
     .nav-tabs .nav-item.show .nav-link,
     .nav-tabs .nav-link.active {
-      color: #495057;
-      background-color: #fff;
-      border-color: #dee2e6 #dee2e6 #fff;
+      color: #495057; /* Dark grey text */
+      background-color: #fff; /* White background */
+      border-color: #dee2e6 #dee2e6 #fff; /* Border color adjustments */
+      border-radius: 0.25rem 0.25rem 0 0; /* Rounded corners on top */
     }
+
+    /* Manager Management Table Enhancements */
+
+    .table {
+        width: 110%; /* Adjust width as needed */
+        max-width: none;
+        border-collapse: collapse; /* Ensures borders are collapsed into a single border */
+    }
+    
+    .table th, .table td {
+        border: 1px solid #dee2e6; /* Light grey border for both headers and cells */
+        padding: 8px; /* Adequate padding for text */
+        text-align: left; /* Aligns text to the left; adjust as needed */
+    }
+    .table td button {
+      display: block; /* Makes the button a block element */
+      margin: auto; /* Auto margin on both sides centers the block element */
+  }
+    
+    .table thead th {
+        background-color: #f8f9fa; /* Light background for header */
+        color: #333; /* Dark text for contrast */
+        text-align: center;
+    }
+    
+    .table tbody tr:nth-child(odd) {
+        background-color: #f2f2f2; /* Zebra striping for odd rows */
+    }
+    
+    .table tbody tr:hover {
+        background-color: #e9ecef; /* Slight change in background on hover */
+    }      
+        
+    .table.manager-management {
+      border-collapse: separate;
+      border-spacing: 0 15px; /* Adds spacing between rows */
+    }
+
+    .table.manager-management thead th {
+      background-color: #2E8BC0; /* Header color */
+      color: white; /* Text color for header */
+      font-size: 18px; /* Slightly larger font for headers */
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+
+    .table.manager-management tbody td {
+      background-color: #FFFFFF; /* White background for each cell */
+      padding: 15px;
+      border: 1px solid #E7E9EB; /* Light border for each cell */
+      border-style: solid none; /* Borders only on top and bottom */
+    }
+
+    .table.manager-management tr {
+      border-radius: 8px; /* Rounded corners for rows */
+    }
+
+    .table.manager-management th:first-child,
+    .table.manager-management td:first-child {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    .table.manager-management th:last-child,
+    .table.manager-management td:last-child {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      text-align: center; /* Center align for the buttons */
+    }
+
+    /* Enhancements for header row with title and button */
+    .table.manager-management th[colspan="6"] {
+      text-align: left; /* Left align title */
+      font-size: 22px; /* Larger font size for the title */
+      font-weight: bold;
+    }
+
+    /* Enhancements for the Register a Manager button */
+    .btn.reg-button {
+      background-color: #4CAF50; /* Green color */
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: background-color 0.3s;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Adds shadow for depth */
+      transform: translateX(-30px); 
+    }
+
+    .btn.reg-button:hover {
+      background-color: #45a049; /* Darker green on hover */
+    }
+
+    /* Details Button Style */
+    .btn.details-button {
+      background-color: #6499E9; /* Blue color */
+      color: white;
+      padding: 8px 16px;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    .btn.details-button:hover {
+      background-color: #4477CE; /* Darker blue on hover */
+    }
+    /* Modal Header Styling */
+    .modal-header {
+      background-color: #5072A7; /* Deeper blue for the header */
+      color: white; /* White text for contrast */
+      display: flex; /* Use flexbox to align children */
+      justify-content: center; /* Center content horizontally */
+      align-items: center; /* Center content vertically */  
+    }
+
+    .modal-header .modal-title {
+      font-weight: bold; /* Emphasizing the title */
+      font-size: 18px; /* Adjust font size as needed */
+      white-space: nowrap; /* Prevents the title from breaking into multiple lines */
+      overflow: hidden; /* Hides overflow text */
+      text-overflow: ellipsis; /* Adds an ellipsis to truncated text */
+      flex-grow: 1; /* Allows the title to take up available space */
+      text-align: center; /* Centers the title text */
+    }
+
+    .modal-header .close {
+      color: white; /* Ensuring visibility of the close button */
+    }
+
+    /* Modal Body Styling */
+    .modal-body {
+      font-size: 14px; 
+      background-color: #f8f9fa; /* Keeping a light background for the body */
+    }
+
+    /* Navigation Tabs Styling */
+    .nav-tabs .nav-link {
+      color: #000;
+      font-size: 14px; 
+      margin-right: 2px; /* Small gap between tabs */
+      border: 1px solid transparent; /* Invisible border when not active */
+      border-radius: 4px 4px 0 0; /* Rounded top corners for tabs */
+    }
+
+    .nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
+      background-color: #72A0C1; /* Lighter blue for active tab and hover */
+      border-color: #dee2e6 #dee2e6 transparent; /* Border colors */
+      color: white; /* White text for active tab */
+    }
+
+    /* Tab Content Styling */
+    .tab-content {
+      background-color: #fff; /* White background for content */
+      border: 1px solid #dee2e6; /* Border around content area */
+      border-top: none; /* Removing top border to merge with tabs */
+    }
+
+    .tab-pane {
+      padding: 10px; /* Padding inside each tab pane */
+    }
+
+    /* Button Styling inside Modal */
+    .details-button, .btn-primary {
+      background-color: #6699CC; /* Main blue color for buttons */
+      border-color: #6699CC; /* Matching border color */
+      color: white; /* White text for buttons */
+    }
+
+    .details-button:hover, .btn-primary:hover {
+      background-color: #5078A0; /* Slightly darker blue for hover */
+      border-color: #5078A0; /* Matching border color for hover */
+    }
+          /* Pagination Container */
+    .pagination {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      justify-content: center; /* Center the pagination */
+    }
+
+    /* Pagination Items */
+    .pagination .page-item {
+      margin: 0 5px; /* Adds space between items */
+    }
+
+    .pagination .page-link {
+      color: #000; /* Primary color for links */
+      background-color: #fff;
+      border: 1px solid #dee2e6;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 5px; /* Rounded corners */
+      transition: color 0.2s, background-color 0.2s, border-color 0.2s; /* Smooth transition for hover effects */
+    }
+
+    /* Hover Effect */
+    .pagination .page-link:hover {
+      color: #0056b3; /* Darker shade on hover */
+      background-color: #e9ecef; /* Slight background change on hover */
+      border-color: #d3d9df;
+    }
+
+    /* Active Page Styling */
+    .pagination .page-item.active .page-link {
+      color: #fff;
+      background-color: #72A0C1; /* Highlight color for active page */
+      border-color: #72A0C1;
+    }
+
+    /* Previous and Next Button Styling */
+    .pagination .page-item:first-child .page-link,
+    .pagination .page-item:last-child .page-link {
+      border-radius: 5px; /* Consistent rounded corners */
+      /* Other styles can remain the same as .page-link */
+    }
+
+    /* Container for the search section */
+    .search-section {
+      display: flex; /* Use flexbox for layout */
+      justify-content: flex-start; /* Center items horizontally */
+      padding: 10px; /* Padding around the section */
+      gap: 8px; /* Space between input and button */
+      margin-top: 30px; /* Margin to move the section downwards */
+    }
+
+
+    /* Style for the search input */
+    .form-control.search-input {
+      width: 50%; /* Explicitly set the width of the search bar */
+      max-width: 300px; /* Maximum width, adjust as needed */
+      padding: 8px 12px; /* Padding inside the input */
+      border-radius: 4px; /* Rounded corners */
+      border: 1px solid #ced4da; /* Border color */
+      font-size: 14px; /* Font size */
+    }
+    /* Style for the clear button */
+    .btn-secondary {
+      padding: 10px 16px; 
+      border-radius: 5px; /* Consistent rounded corners */
+      font-size: 15px;
+      background-color: #6c757d; /* Dark grey background */
+      color: white; /* White text for contrast */
+      border: none; /* Removing border */
+      transition: background-color 0.2s, box-shadow 0.2s; /* Smooth transition for hover and focus */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268; /* Slightly darker shade on hover */
+    }
+
+    /* Responsive Design: Adjust layout on smaller screens */
+    @media (max-width: 600px) {
+      .search-section {
+          flex-direction: column; /* Stack elements vertically on small screens */
+          align-items: flex-start; /* Align items to the left on small screens */
+          gap: 5px; /* Smaller gap */
+      }
+    }
+    .form-control.search-input {
+      width: 50%; /* Full width on smaller screens */
+      max-width: none; /* Remove max-width restriction */
+  }
+
+
   </style>
 
 </head>

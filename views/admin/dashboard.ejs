@@ -82,59 +82,78 @@
 
         /* Main content styles */
         .main-content {
-            padding-left: 70px; /* Adjusted to avoid overlap with sidebar */
-            padding-top: 20px;
-            padding-right: 20px;
-            padding-bottom: 20px;
-            transition: 0.5s; /* Smooth transition */
+            padding: 20px;
+            padding-left: 150px; /* Increased left padding to move content away from the sidebar */
+            background-color: #f4f7fa; /* Light background for the dashboard */
         }
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #007BFF; /* Main blue */
-        }
-
-        .sidebar a button {
-            background: none;
-            border: none;
-            color: inherit;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
-        }
-
-        /* Chart Container Improvements */
-        .chart-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 20px;
-        }
-
-        /* Chart Styling */
-        .chart {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 15px;
-            height: 400px;
+        .container-fluid {
+            max-width: 1200px; /* Limiting max width for better readability */
+            margin: auto; /* Centering the container */
         }
 
         .section-title {
-            color: #007BFF;
-            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
         }
-
+        
+        /* Card-like container for charts */
+        .chart {
+            background-color: #fff;
+            padding: 20px; /* Adjusted padding for consistency */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            margin-bottom: 30px; /* Space below each chart */
+        }
+        
+        /* Adjustments for responsive grid layout */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px; /* Adjusted margin for row */
+        }
+        
+        .col-lg-6, .col-md-6 {
+            padding: 15px; /* Padding for columns */
+            box-sizing: border-box; /* Include padding in width calculation */
+            flex: 0 0 50%; /* Adjust based on grid system */
+            max-width: 50%; /* Adjust based on grid system */
+        }
+        
+        /* Make the height of chart containers consistent */
+        .chart {
+            min-height: 320px; /* Adjust based on your content */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Height adjustment for specific chart with ID */
         #users-by-city-chart {
-            height: 800px; /* Adjust height for the map */
+            height: 670px; /* Make chart height responsive to content */
         }
-
-
-        /* Responsive Main Content */
-        @media (min-width: 768px) {
-            .main-content {
-                padding-left: 200px; /* Adjust for expanded sidebar */
+        
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .col-lg-6, .col-md-6 {
+                flex: 0 0 100%; /* Full width on smaller screens */
+                max-width: 100%; /* Full width on smaller screens */
             }
+            
+            .container-fluid {
+                padding: 0; /* Remove padding on smaller screens for edge-to-edge layout */
+            }
+        }
+        
+        /* Style adjustments for titles within charts */
+        .chart-title {
+            font-size: 18px; /* Smaller font size for chart titles */
+            color: #555; /* Darker color for better readability */
+            margin-bottom: 15px; /* Space below title */
+            text-align: center; /* Center-align titles */
         }
     </style>
 </head>
@@ -177,7 +196,6 @@
             <!-- Organization Insights -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="section-title">Organization Insights</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <div id="organizations-by-verification-chart" class="chart"></div>
@@ -192,7 +210,6 @@
             <!-- Donation Analysis  -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="section-title">Donation Analysis</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <div id="donations-over-time-chart" class="chart"></div>
@@ -207,7 +224,6 @@
             <!-- Feedback and Ratings -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="section-title">Feedback and Ratings</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <div id="average-rating-bubble-chart" class="chart"></div>
@@ -222,7 +238,6 @@
             <!-- Advertisement Performance -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="section-title">Advertisement Performance</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <div id="ad-interactions-line-chart" class="chart"></div>
@@ -237,7 +252,6 @@
             <!-- Sales and Listings -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="section-title">Sales and Listings</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <div id="listings-per-category-chart" class="chart"></div>
@@ -252,7 +266,6 @@
             <!-- Message and Conversation Insights Section -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="section-title">Message and Conversation Insights</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <div id="messages-per-user-chart" class="chart"></div>
@@ -267,7 +280,6 @@
             <!-- General Analytics Section -->
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="section-title">General Analytics</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <div id="user-activity-heatmap" class="chart"></div>
