@@ -606,6 +606,7 @@ body {
               { name: 'Champion', points: 10000, icon: 'torch.png' },
               { name: 'Guardian', points: Infinity, icon: 'shield.png' }
             ];
+
             levels.forEach(level => {
               const isAchieved = organization.lifetimePoints >= level.points;
               const progress = Math.min((organization.lifetimePoints / level.points) * 100, 100);
@@ -613,7 +614,7 @@ body {
               <div class="milestone">
                 <div class="badge milestone-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
                   <%= level.name %> Level: <%= isAchieved ? level.points : organization.lifetimePoints %> points
-                  <img src="/images/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon" class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
+                  <img src="/icons/<%= level.icon %>" alt="<%= level.name %> Level Icon" class="<%= isAchieved ? '' : 'not-achieved-icon' %>">
                   <div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
