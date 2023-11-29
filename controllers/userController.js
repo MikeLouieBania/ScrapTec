@@ -192,7 +192,72 @@ module.exports = {
   
       // Calculate total pages
       const totalPages = Math.ceil(totalListings / limit);
-  
+
+      // Fetch conversations where the current user is a participant
+      const conversations = await prisma.conversation.findMany({
+        where: {
+          OR: [
+            { user1Id: currentUserId },
+            { user2Id: currentUserId }
+          ]
+        },
+        include: {
+          messages: true // Include all messages
+        }
+      });
+
+      // Calculate the total number of unread messages received by the user
+      let totalUnreadMessages = 0;
+      conversations.forEach(conversation => {
+        const unreadReceivedMessages = conversation.messages.filter(message => 
+          !message.read && message.senderId !== currentUserId
+        );
+        totalUnreadMessages += unreadReceivedMessages.length;
+      });
+
+      // Fetch sales where the current user is the buyer
+      const sales = await prisma.sale.findMany({
+        where: {
+          buyerId: currentUserId,
+        },
+        include: {
+          listing: true, // Including listing to check for related ratings
+          rating: true   // Including rating information
+        }
+      });
+
+      // Count sales where feedback (rating) is pending
+      let totalFeedbackBuyingNotifications = sales.reduce((count, sale) => {
+        // Check if there's a rating associated with this sale given by the buyer
+        const feedbackGiven = sale.rating.some(rating => rating.raterId === currentUserId);
+        return count + (feedbackGiven ? 0 : 1);
+      }, 0);
+      
+      
+      // Fetch Sales for Listings Owned by the User
+      const userSales = await prisma.sale.findMany({
+        where: {
+          listing: {
+            userId: currentUserId, // Listings where the user is the seller
+            status: "SOLD"        // Considering only sold listings
+          }
+        },
+        include: {
+          listing: true,
+          rating: true // Include ratings associated with the sale
+        }
+      });
+
+      // Count sales where the seller's feedback to the buyer is pending
+      let totalFeedbackSellerNotifications = userSales.reduce((count, sale) => {
+        // Check if the seller (current user) has given feedback
+        const feedbackGivenBySeller = sale.rating.some(rating => 
+          rating.raterId === currentUserId && rating.type === "SELLER_TO_BUYER"
+        );
+        return count + (feedbackGivenBySeller ? 0 : 1);
+      }, 0);
+
+
       // Render the marketplace page
       res.render('user/marketplace', {
         user: req.session.user,
@@ -200,7 +265,10 @@ module.exports = {
         conditions: conditions,
         categories: categories,
         currentPage: page,
-        totalPages: totalPages
+        totalPages: totalPages,
+        totalUnreadMessages,
+        totalFeedbackBuyingNotifications,
+        totalFeedbackSellerNotifications
       });
   
     } catch (error) {
@@ -529,7 +597,6 @@ module.exports = {
         res.status(500).json({ error: 'Internal server error' });
     }
   },
-
   
   async getSellingListings(req, res) {
     try {
@@ -889,6 +956,7 @@ module.exports = {
 
       res.render('user/inbox', {
         user: req.session.user,
+        userId,
         sellingConversations,
         buyingConversations
       });
@@ -946,6 +1014,23 @@ module.exports = {
           conversationId: conversation.id,
         },
       });
+
+      // Identify unread received messages 
+      const unreadReceivedMessages = conversation.messages.filter(msg => 
+        !msg.read && msg.senderId !== userId // Filter for messages not read and not sent by the user
+      );
+
+      // Update unread received messages to mark as read
+      if (unreadReceivedMessages.length > 0) {
+        await prisma.message.updateMany({
+          where: {
+            id: { in: unreadReceivedMessages.map(msg => msg.id) }
+          },
+          data: {
+            read: true
+          }
+        });
+      }
 
       res.render('user/buyConversation', {
         user: req.session.user,
@@ -1187,6 +1272,23 @@ module.exports = {
           conversationId: conversation.id,
         },
       });
+
+      // Identify unread received messages 
+      const unreadReceivedMessages = conversation.messages.filter(msg => 
+        !msg.read && msg.senderId !== userId // Filter for messages not read and not sent by the user
+      );
+
+      // Update unread received messages to mark as read
+      if (unreadReceivedMessages.length > 0) {
+        await prisma.message.updateMany({
+          where: {
+            id: { in: unreadReceivedMessages.map(msg => msg.id) }
+          },
+          data: {
+            read: true
+          }
+        });
+      }
 
       res.render('user/sellConversation', {
         user: req.session.user,

@@ -782,7 +782,19 @@
             border-radius: 4px;
         }
         
-        
+        .notification-badge {
+            background-color: #007bff; /* Blue color */
+            color: white;
+            font-size: 0.75em; /* Adjust size as needed */
+            padding: 3px 6px;
+            border-radius: 50%; /* Circular shape */
+            position: relative;
+            top: -10px; /* Adjust positioning as needed */
+            left: 5px;
+            box-shadow: 0px 0px 1px black; /* Optional: adds a slight shadow for depth */
+        }
+
+
 
  
         
@@ -850,14 +862,23 @@
             <a href="inbox" class="menu-item">
               <span class="icon inbox"></span>
               Inbox
+              <% if (totalUnreadMessages > 0) { %>
+                <span class="notification-badge"><%= totalUnreadMessages %></span>
+              <% } %>
             </a>
             <a href="buyListing" class="menu-item">
               <span class="icon buying"></span>
               Buying
+              <% if (totalFeedbackBuyingNotifications > 0) { %>
+                  <span class="notification-badge"><%= totalFeedbackBuyingNotifications %></span>
+              <% } %>
             </a>
             <a href="sellListing" class="menu-item">
               <span class="icon selling"></span>
               Selling
+              <% if (totalFeedbackSellerNotifications > 0) { %>
+                  <span class="notification-badge"><%= totalFeedbackSellerNotifications %></span>
+              <% } %>
             </a>
             <a href="createListing" class="listahan">
               <span class="icon lists"></span>
