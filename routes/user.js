@@ -14,6 +14,8 @@ router.post('/record-click', userController.postRecordAdClick);
 router.get('/listing/:id', userController.getListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
+router.get('/editListing/:listingId', userController.getEditListing);
+router.post('/updateListing/:listingId', userController.postUpdateListing);
 router.get('/sellListing', userController.getSellingListings); 
 router.post('/rate-buyer/:buyerId', userController.postRateBuyer);
 router.get('/buyListing', userController.getBuyListings); 

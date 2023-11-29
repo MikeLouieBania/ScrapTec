@@ -312,8 +312,11 @@
                 <% } else { %>
                     <!-- Use a button to trigger AJAX call to unsave a listing -->
                     <button onclick="unsaveListing('<%= listing.id %>')" class="btn btn-danger">Unsave Listing</button>
-                <% } %>
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal">Report Listing</button>
+                <% } %> 
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#reportModal">Report Listing</button>
+                 
+
+                
             </div>
                 <p>Price: $<%= listing.price %>
                 </p>
@@ -426,6 +429,51 @@
                 </div>
                 <% } %>
 
+                <!-- Report Listing Modal -->
+                <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="reportModalLabel">Report Listing</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                        <form id="reportForm">
+                            <div class="form-group">
+                            <label for="reportReason">Let us know what's going on</label>
+                            <select class="form-control" id="reportReason" name="reportReason" required>
+                                <option value="">Select a reason</option>
+                                <option value="inaccurateDescription">Inaccurate Description</option>
+                                <option value="promotingBusiness">Promoting a Business</option>
+                                <option value="animalSales">Animal Sales</option>
+                                <option value="noIntentToSell">No Intent to Sell</option>
+                                <option value="weaponOrDrugSales">Weapon or Drug Sales</option>
+                                <option value="sexualizedContent">Sexualized Content or Adult Products</option>
+                                <option value="discrimination">Discrimination</option>
+                                <option value="abusiveContent">Abusive or Harmful Content</option>
+                                <option value="scam">Scam</option>
+                                <option value="counterfeit">Appears to be Counterfeit</option>
+                                <option value="childAbuse">Child Abuse</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                            <label for="additionalComments">Additional Comments</label>
+                            <textarea class="form-control" id="additionalComments" name="additionalComments" rows="3"></textarea>
+                            </div>
+                            <input type="hidden" name="listingId" value="<%= listing.id %>">
+                            <div class="modal-footer"> 
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Report</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
                     <script>
@@ -536,7 +584,31 @@
                         });
 
                     </script>
-
+                    
+                    <script>
+                        $(document).ready(function() {
+                          $('#reportForm').on('submit', function(e) {
+                            e.preventDefault();
+                            
+                            var formData = $(this).serialize();
+                            
+                            $.ajax({
+                              type: 'POST',
+                              url: '/user/reportListing', // Your endpoint to process the report
+                              data: formData,
+                              success: function(response) {
+                                // You can add more sophisticated error checking here
+                                $('#reportModal').modal('hide');
+                                alert('Listing reported successfully.');
+                              },
+                              error: function(xhr, status, error) {
+                                alert('An error occurred. Please try again.');
+                              }
+                            });
+                          });
+                        });
+                      </script>
+                      
     </div>
 </body>
 

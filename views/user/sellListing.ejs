@@ -256,7 +256,7 @@
                         <h2 class="card-title">
                             <%= listing.title %>
                         </h2>
-                        <p class="card-text">Price: $<%= listing.price %>
+                        <p class="card-text">Price: ₱<%= listing.price %>
                         </p>
                         <p class="card-text">Category: <%= listing.category.name %>
                         </p>
@@ -267,8 +267,8 @@
 
                         <p class="card-text">Status: <%= listing.status %>
                         </p>
-                        <a href="/editListing/<%= listing.id %>" class="btn btn-primary edit-button">Edit</a>
-                        <a href="/deleteListing/<%= listing.id %>" class="btn btn-danger delete-button">Delete</a>
+                        <a href="/user/editListing/<%= listing.id %>" class="btn btn-primary edit-button">Edit</a>
+                        <a href="/user/deleteListing/<%= listing.id %>" class="btn btn-danger delete-button">Delete</a>
                         <!-- Mark as Sold Button -->
                         <% if (listing.sales && listing.sales.length> 0) { %>
                             <% listing.sales.forEach(sale=> { %>

@@ -368,6 +368,79 @@ module.exports = {
     }
   },
 
+  async getEditListing(req, res) {
+    try {
+      const listingId = req.params.listingId;
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        include: {
+          photos: true,
+          category: true,
+          condition: true,
+        },
+      });
+  
+      if (!listing) {
+        return res.status(404).send("Listing not found");
+      }
+  
+      // Prepend the MIME type to each image's base64 data, if available
+      if (listing.photos && listing.photos.length > 0) {
+        listing.photos.forEach(photo => {
+          if (photo.imageUrl) {
+            // Assuming you store the image extension in the photo object
+            const mimeType = getMimeType(photo.extension);
+            photo.imageUrl = mimeType + photo.imageUrl.toString('base64');
+          }
+        });
+      }
+  
+      const categories = await prisma.category.findMany();
+      const conditions = await prisma.condition.findMany();
+      const userId = req.session.user.id;
+  
+      res.render('user/editListing', { 
+        listing, 
+        categories, 
+        conditions, 
+        userId
+      });
+    } catch (error) {
+      console.error("Error loading edit listing page:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postUpdateListing(req, res) {
+    try {
+      const { title, description, categoryId, conditionId, location, price } = req.body;
+      const listingId = req.params.listingId;
+  
+      // Ensure categoryId is provided
+      if (!categoryId) {
+        return res.status(400).send("Category ID is required");
+      }
+  
+      // Update the listing in the database
+      const updatedListing = await prisma.listing.update({
+        where: { id: listingId },
+        data: {
+          title: title,
+          description: description,
+          categoryId: categoryId,
+          conditionId: conditionId,
+          location: location,
+          price: parseFloat(price),
+        },
+      });
+  
+      res.redirect('/user/sellListing');
+    } catch (error) {
+      console.error("Error updating listing:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
   async getSellingListings(req, res) {
     try {
       const userId = req.session.user.id;
