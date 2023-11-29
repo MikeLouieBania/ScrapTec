@@ -441,6 +441,56 @@ module.exports = {
     }
   },
 
+  async updateListingImages(req, res) {
+    try { 
+        const listingId = req.params.listingId;
+        const newImages = req.files;
+
+        // Correctly handle parsing of removedImages
+        let removedImages = [];
+        if (req.body.removedImages) {
+            removedImages = JSON.parse(req.body.removedImages);
+        }
+
+        const listing = await prisma.listing.findUnique({
+            where: { id: listingId },
+            include: { photos: true },
+        });
+
+        if (!listing) {
+            return res.status(404).json({ error: 'Listing not found' });
+        }
+
+        // Handle new images
+        const newPhotos = newImages.map(image => {
+            const base64String = image.buffer.toString('base64');
+            return {
+                imageUrl: base64String,
+                listingId: listing.id,
+            };
+        });
+
+        if (newPhotos.length > 0) {
+            await prisma.photo.createMany({ data: newPhotos });
+        }
+
+        // Remove specified images from the database
+        if (removedImages.length > 0) {
+            await prisma.photo.deleteMany({
+                where: {
+                    id: { in: removedImages },
+                    listingId: listingId
+                }
+            });
+        }
+
+        res.status(200).json({ message: 'Images updated successfully', listing });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  
   async getSellingListings(req, res) {
     try {
       const userId = req.session.user.id;

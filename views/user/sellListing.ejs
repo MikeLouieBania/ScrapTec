@@ -187,6 +187,47 @@
             margin: 20px auto;
         }
 
+        .image-edit-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .current-images {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-right: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-container img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .remove-image-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .add-images {
+            flex-basis: 200px;
+        }
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -247,7 +288,7 @@
                                     <img class="d-block w-100 slider-image" src="<%= photo.imageUrl %>" style="width: 200px; height: 200px;"
                                         alt="<%= listing.title %>">
                                 </div>
-                                <% }) %>
+                            <% }) %>
                         </div>
                     </div>
 
@@ -291,12 +332,12 @@
 
                                                             <% } %>
                                 </p>
-                                <% }) %>
-                                    <% } else if (listing.status.toLowerCase()==='available' ) { %>
-                                        <button class="btn btn-success mark-sold-button" data-toggle="modal"
-                                            data-target="#markAsSoldModal" data-listing-id="<%= listing.id %>">Mark as
-                                            Sold</button>
-                                        <% } %>
+                            <% }) %>
+                        <% } else if (listing.status.toLowerCase()==='available' ) { %>
+                            <button class="btn btn-success mark-sold-button" data-toggle="modal" data-target="#markAsSoldModal" data-listing-id="<%= listing.id %>">Mark as Sold</button>
+                        <% } %>
+                         <a href="#" class="btn btn-primary edit-button" data-toggle="modal" data-target="#imageEditModal" data-listing-id="<%= listing.id %>" data-images='<%= JSON.stringify(listing.photos) %>'>Edit Images</a>
+
                     </div>
                 </div>
                 <% }) %>
@@ -366,6 +407,36 @@
                         </div>
                     </div>
 
+                    <!-- Image Edit Modal -->
+                    <div class="modal fade" id="imageEditModal" tabindex="-1" role="dialog" aria-labelledby="imageEditModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageEditModalLabel">Edit Images</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="image-edit-form" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <div class="image-edit-container">
+                                            <div id="current-images" class="current-images">
+                                                <!-- Current images will be displayed here -->
+                                            </div>
+                                            <div id="add-images" class="add-images">
+                                                <input type="file" id="new-image" name="newImages" class="form-control-file" multiple accept=".jpg,.jpeg,.png,.gif"> 
+                                                <button type="button" id="add-image-button" class="btn btn-primary mt-2">Add Image</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" id="save-images-button">Update Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
         </div>
     </main>
@@ -482,6 +553,109 @@
                     alert('Error marking listing as sold. Please try again.');
                 }
             });
+        });
+
+        $(document).ready(function () {
+            let currentImages = [];
+            let removedImages = []; 
+            const maxImages = 5;
+
+            // Function to convert image to Base64
+            function readImageAsBase64(file, callback) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    callback(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            $('#imageEditModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget);
+                const listingId = button.data('listing-id'); // Capture the listingId
+                currentImages = JSON.parse(button.attr('data-images'));
+                loadCurrentImages();
+                
+                // Store the listingId in a variable accessible to the submit function
+                $('#image-edit-form').data('listing-id', listingId);
+            });
+
+            function loadCurrentImages() {
+                const currentImagesContainer = $('#current-images');
+                currentImagesContainer.empty();
+
+                currentImages.forEach((image, index) => {
+                    const imageUrl = image.imageUrl;
+                    const removeButton = currentImages.length > 1 
+                        ? `<button class="btn btn-danger remove-image-button" data-image-index="${index}">Remove</button>`
+                        : '';
+                    currentImagesContainer.append(
+                        `<div class="image-container">
+                            <img src="${imageUrl}" alt="Listing Image" class="img-thumbnail" width="150" height="150">
+                            ${removeButton}
+                        </div>`
+                    );
+                });
+
+                // Disable add button if image limit is reached
+                $('#add-image-button').prop('disabled', currentImages.length >= maxImages);
+            }
+            
+            $('#add-image-button').click(function () {
+                const fileInput = $('#new-image')[0];
+                if (fileInput.files) {
+                    // Only process files if the total number of images after addition does not exceed maxImages
+                    const filesToAdd = Array.from(fileInput.files).slice(0, maxImages - currentImages.length);
+
+                    filesToAdd.forEach(file => {
+                        readImageAsBase64(file, (base64String) => {
+                            currentImages.push({ imageUrl: base64String });
+                            loadCurrentImages();
+                        });
+                    });
+                }
+            });
+
+            $('#current-images').on('click', '.remove-image-button', function () {
+                const imageIndex = $(this).data('image-index');
+                if (currentImages.length > 1) {
+                    removedImages.push(currentImages[imageIndex].id);
+                    currentImages.splice(imageIndex, 1); // Remove the image from the array
+                    loadCurrentImages(); // Refresh the images display
+                }
+            });
+
+            $('#image-edit-form').submit(function (event) {
+                event.preventDefault();
+
+                // Retrieve the listingId from the form data
+                const listingId = $(this).data('listing-id');
+
+                // Serialize the form data, including images
+                const formData = new FormData(this);
+                formData.append('listingId', listingId); // Add the listingId
+
+                // Append removed images as a JSON string
+                formData.append('removedImages', JSON.stringify(removedImages));
+
+                // Send the data via AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: `/user/update-images/${listingId}`, // Update with your route URL
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        // Handle the success response here, e.g., show a success message
+                        $('#imageEditModal').modal('hide');
+                    },
+                    error: function (error) {
+                        // Handle errors, e.g., display an error message
+                        console.error('Error updating images:', error);
+                    },
+                });
+            });
+
+
         });
 
 
