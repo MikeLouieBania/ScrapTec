@@ -611,11 +611,7 @@
             display: inline-block;
             vertical-align: middle;
         }
-
-        .icon.notification {
-            background-image: url('https://icons.veryicon.com/png/o/object/material-design-icons/notifications-1.png');
-            background-size: cover;
-        }
+ 
 
         .icon.inbox {
             background-image: url('https://freepngimg.com/thumb/email_marketing/142734-symbol-vector-email-free-photo.png');
@@ -846,11 +842,7 @@
               <!-- The Unicode character represents a magnifying glass icon -->
             </div>
           </div>
-          <div class="menu">
-            <a href="#notifications" class="menu-item">
-              <span class="icon notification"></span>
-              Notifications
-            </a>
+          <div class="menu"> 
             <a href="inbox" class="menu-item">
               <span class="icon inbox"></span>
               Inbox
@@ -1136,5 +1128,30 @@
         document.getElementById('MapModals').style.display = 'none';
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+      $('#reportForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = $(this).serialize();
+        
+        $.ajax({
+          type: 'POST',
+          url: '/user/reportListing', // Your endpoint to process the report
+          data: formData,
+          success: function(response) {
+            // You can add more sophisticated error checking here
+            $('#reportModal').modal('hide');
+            alert('Listing reported successfully.');
+          },
+          error: function(xhr, status, error) {
+            alert('An error occurred. Please try again.');
+          }
+        });
+      });
+    });
+  </script>
+  
 
 </html>
