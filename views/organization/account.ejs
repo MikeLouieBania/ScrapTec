@@ -22,141 +22,154 @@
       
     /* Custom CSS for enhanced city card */
     .city-card {
-      background-color: #fff; /* Light background for the card */
-      border-radius: 8px; /* Rounded corners for the card */
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-      padding: 20px; /* Internal padding for content */
-      margin: 10px 0; /* Add some margin to the top and bottom of each card */
+      background-color: #fff; /* Crisp white background */
+      border-radius: 10px; /* More pronounced rounded corners */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Softer shadow for depth */
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      padding: 25px; /* More spacious padding for content */
+      margin: 15px 0; /* Increased margin for better spacing */
     }
-    
+    .city-card .card-title {
+      font-weight: bold; /* Bold font weight for the title */
+      font-size: 1.5rem; /* Larger font size for prominence */
+      color: #34577C; /* Subtle color variation for elegance */
+  }  
+
     .city-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+      transform: translateY(-7px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
     }
-    
+
     .city-details {
-      margin-top: 10px;
+      margin-top: 15px;
       display: flex;
       justify-content: space-between;
-      align-items: center; /* Align items vertically */
+      align-items: center; /* Vertically center items */
+      flex-wrap: wrap; /* Allow items to wrap in smaller screens */
     }
-    
+
     .city-actions {
-      margin-top: 15px;
+      margin-top: 20px;
       text-align: center;
     }
-    
+
     .city-name {
-      font-size: 1.25rem; /* Increase the font size for city name */
-      font-weight: 600; /* Make the city name bolder */
-    }
-    
+      font-size: 1.5rem; /* Larger font size for prominence */
+      font-weight: bold; /* Bold font weight for the title */
+      color: #34577C; /* Subtle color variation for elegance */
+  }
+  
     .city-info {
-      color: #666; /* Slightly muted color for less important info */
-      font-size: 0.9rem; /* Adjust font size for details */
+      color: #555; /* Darker for better readability */
+      font-size: 1rem; /* Standard font size for details */
     }
-    
 
     /* Style the "Explore" button */
     .city-actions a.btn-primary {
-      background-color: #5072A7;
+      background-color: #5584AC; /* Updated button color */
       color: #fff;
       border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
+      padding: 10px 20px; /* More generous padding for button */
+      border-radius: 5px; /* Rounded corners for the button */
       text-decoration: none;
-      transition: background-color 0.3s ease;
-      font-weight: bold;      
+      transition: background-color 0.3s, transform 0.3s ease;
+      font-size: 1rem; /* Standard font size for buttons */
     }
 
     .city-actions a.btn-primary:hover {
-      background-color: #6699CC;
+      background-color: #6B9BC7; /* Lighter shade on hover */
+      transform: translateY(-3px); /* Slight lift effect on hover */
     }
 
     .progress-bar {
-      background-color:#6CB4EE; /* Replace with your desired hex color code */
+      background-color: #6CB4EE; /* Preserved your desired hex color code */
+      border-radius: 3px; /* Rounded corners for progress bar */
     }
+    .card-header h4 {
+      font-weight: bold; /* Bold font weight for the header */
+      font-size: 1.6rem; /* Slightly larger font size for header prominence */
+      color: #34577C; /* Optional: Subtle color variation for elegance */
+  }  
     
     /* Navigation Bar Styles */
-.navbar.navbar-expand-lg.navbar-light.bg-light {
-  background-color: #219ebc !important;
-  padding: 10px 0;
-}
+    .navbar.navbar-expand-lg.navbar-light.bg-light {
+      background-color: #219ebc !important;
+      padding: 10px 0;
+    }
 
-.navbar .nav-link {
-  color: white !important;
-  font-family: 'Roboto Slab', serif,;
-  font-weight: bold;
-  font-size: 16px;
-  margin-top: 15px;
-  display: block;
-  padding: 15px;
-  text-decoration: none;
-  text-transform: uppercase;
-  margin: 0 10px;
-  position: relative;
-  transition: all .5s;
-}
+    .navbar .nav-link {
+      color: white !important;
+      font-family: 'Roboto Slab', serif,;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 15px;
+      display: block;
+      padding: 15px;
+      text-decoration: none;
+      text-transform: uppercase;
+      margin: 0 10px;
+      position: relative;
+      transition: all .5s;
+    }
 
-.navbar .nav-link::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: #8ecae6;
-  transform: scaleX(0);
-  transition: transform 0.5s;
-}
+    .navbar .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #8ecae6;
+      transform: scaleX(0);
+      transition: transform 0.5s;
+    }
 
-.navbar .nav-link:hover::after {
-  transform: scaleX(1);
-}
+    .navbar .nav-link:hover::after {
+      transform: scaleX(1);
+    }
 
-.navbar-brand {
-  color: white !important;
-  font-family: 'Roboto Slab', serif,;
-  font-weight: bold;
-  font-size: 16px;
-  margin-top: -9px; /* Align with .nav-link */
-  margin-left: 15px;
-}
+    .navbar-brand {
+      color: white !important;
+      font-family: 'Roboto Slab', serif,;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: -9px; /* Align with .nav-link */
+      margin-left: 15px;
+    }
 
-.navbar-light .navbar-toggler-icon {
-  background-color: white;
-}
+    .navbar-light .navbar-toggler-icon {
+      background-color: white;
+    }
 
-/* Custom Logout Button Style */
-.btn-outline-success {
-  background-color: #002244 !important;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-  margin-right: 20px;
-  font-weight: bold;
-  color: white !important;
-  font-family: 'Roboto Slab', serif,;
-}
+    /* Custom Logout Button Style */
+    .btn-outline-success {
+      background-color: #002244 !important;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      margin-right: 20px;
+      font-weight: bold;
+      color: white !important;
+      font-family: 'Roboto Slab', serif,;
+    }
 
-.btn-outline-success:hover {
-  background-color: #6082B6 !important;
-  color: #fff !important;
-  text-decoration: none;
-}
+    .btn-outline-success:hover {
+      background-color: #6082B6 !important;
+      color: #fff !important;
+      text-decoration: none;
+    }
 
-/* Body */
-body {
-  padding-top: 0px;
-  margin-bottom: 60px;  
-}
+    /* Body */
+    body {
+      padding-top: 0px;
+      margin-bottom: 60px;  
+    }
 
-/* Reduce Bottom Spacing of Navbar */
-.navbar {
-  padding-bottom: 1px !important;
-}
+    /* Reduce Bottom Spacing of Navbar */
+    .navbar {
+      padding-bottom: 1px !important;
+    }
 
 
     /* Nav Tabs */
@@ -385,6 +398,44 @@ body {
       opacity: 0.5; /* Greyed-out look for unachieved badges */
     } 
 
+      /* General Styles for Charts Section */
+    .charts {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f8f9fa; /* Light background for the section */
+      border-radius: 8px; /* Rounded corners */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+      margin-bottom: 20px; /* Space below the section */
+    }
+
+    .charts h3 {
+      color: #333; /* Dark color for the heading */
+      font-size: 1.8rem; /* Larger font size for prominence */
+      font-weight: bold; /* Bold font weight for heading */
+      margin-bottom: 15px; /* Space below the heading */
+      text-align: center; /* Center align the heading */
+    }
+
+    /* Styles for Individual Chart Containers */
+    #donationTrendChartContainer,
+    #pointsChartContainer,
+    #donationDistributionChartContainer,
+    #advertisementEngagementChartContainer {
+      background-color: #ffffff; /* White background for each chart container */
+      padding: 15px; /* Padding inside the container */
+      border-radius: 5px; /* Rounded corners */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Subtle shadow for each container */
+      margin-bottom: 15px; /* Space between chart containers */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .charts {
+          padding: 10px;
+      }
+    }
+
+
     </style>
   </head>
   <body>
@@ -545,6 +596,7 @@ body {
                   </div>
                 </div>
               </div> 
+
               <!-- City Cards Section -->
               <div class="card mt-3">
                 <div class="card-header">

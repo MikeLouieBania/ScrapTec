@@ -767,7 +767,6 @@ module.exports = {
         pointsData,
         donationDistribution,
         advertisementEngagement,
-        feedbackRatings,
         citiesWithCounts,
         activeTab: req.query.tab || 'account',
         totalDonations: organization.donations ? organization.donations.length : 0,
