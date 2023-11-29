@@ -131,21 +131,45 @@ module.exports = {
     try {
       const currentUserId = req.session.user.id;
       const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10; // Adjusted default limit to 10
+      const limit = parseInt(req.query.limit) || 10;
       const skip = (page - 1) * limit;
   
-      // Fetch all listings except for the ones made by the currently logged-in user
+      // Building the where clause for filters
+      let whereClause = {
+        userId: { not: currentUserId },
+        status: { notIn: ["SOLD", "REJECTED"] },
+      };
+  
+      // Search filter
+      if (req.query.search) {
+        whereClause.title = { contains: req.query.search, mode: 'insensitive' };
+      }
+  
+      // Price range filter
+      if (req.query['min-price'] || req.query['max-price']) {
+        whereClause.price = {};
+        if (req.query['min-price']) whereClause.price.gte = parseFloat(req.query['min-price']);
+        if (req.query['max-price']) whereClause.price.lte = parseFloat(req.query['max-price']);
+      }
+  
+      // Condition and category filters
+      if (req.query.condition) {
+        whereClause.conditionId = { in: Array.isArray(req.query.condition) ? req.query.condition : [req.query.condition] };
+      }
+      if (req.query.category) {
+        whereClause.categoryId = { in: Array.isArray(req.query.category) ? req.query.category : [req.query.category] };
+      }
+  
+      // Fetch conditions and categories
+      const [conditions, categories] = await Promise.all([
+        prisma.condition.findMany(),
+        prisma.category.findMany()
+      ]);
+  
+      // Fetch filtered listings
       const listings = await prisma.listing.findMany({
-        where: {
-          NOT: [
-            { userId: currentUserId },
-            { status: "SOLD" },
-            { status: "REJECTED" }, 
-          ],
-        },
-        include: {
-          photos: true, // Include photos of the listings
-        },
+        where: whereClause,
+        include: { photos: true },
         skip: skip,
         take: limit,
       });
@@ -163,24 +187,18 @@ module.exports = {
         }
       });
   
-      // Fetch the total count of listings for pagination
-      const totalListings = await prisma.listing.count({
-        where: {
-          NOT: [
-            { userId: currentUserId },
-            { status: "SOLD" },
-            { status: "REJECTED" }, 
-          ],
-        },
-      });
+      // Fetch total count of listings for pagination
+      const totalListings = await prisma.listing.count({ where: whereClause });
   
       // Calculate total pages
       const totalPages = Math.ceil(totalListings / limit);
   
-      // Render the marketplace page without the selectedAds
+      // Render the marketplace page
       res.render('user/marketplace', {
         user: req.session.user,
         listings: listings,
+        conditions: conditions,
+        categories: categories,
         currentPage: page,
         totalPages: totalPages
       });
