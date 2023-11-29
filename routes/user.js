@@ -18,6 +18,8 @@ router.post('/createListing', upload, userController.postCreateListing);
 router.get('/editListing/:listingId', userController.getEditListing);
 router.post('/updateListing/:listingId', userController.postUpdateListing); 
 router.post('/update-images/:listingId', uploadNewImage, userController.updateListingImages);
+router.delete('/deleteListing/:listingId', userController.deleteListing);
+
 
 router.get('/sellListing', userController.getSellingListings); 
 router.post('/rate-buyer/:buyerId', userController.postRateBuyer);

@@ -482,14 +482,36 @@ module.exports = {
                     listingId: listingId
                 }
             });
-        }
+        } 
 
-        res.status(200).json({ message: 'Images updated successfully', listing });
+        res.redirect('/user/sellListing');
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });
     }
   },
+
+  async deleteListing(req, res) {
+    try {
+        const listingId = req.params.listingId;
+
+        // Delete associated photos first
+        await prisma.photo.deleteMany({
+            where: { listingId: listingId }
+        });
+
+        // Then delete the listing
+        await prisma.listing.delete({
+            where: { id: listingId }
+        });
+
+        res.status(200).json({ message: 'Listing deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting listing:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
   
   async getSellingListings(req, res) {
     try {
