@@ -78,7 +78,7 @@
     }
 
     .navbar-light .navbar-toggler-icon {
-      background-color: white;
+      background-color: #219ebc;
     }
 
     /* Custom Logout Button Style */
@@ -212,6 +212,79 @@
       }
     }
 
+      /* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) { 
+  .navbar-brand, .nav-link {
+      font-size: 14px;
+      margin-top: 0; /* Adjust alignment */
+  }
+
+  .btn-outline-success, .card .btn {
+      padding: 8px 15px;
+      font-size: 14px;
+  }
+
+  .city-card, .card {
+      margin-bottom: 15px; /* Spacing between cards */
+  }
+
+  .dashboard-header {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .chart-container {
+      width: 90vw;
+      height: 30vh;
+  }
+
+  .card-body {
+      padding: 15px; /* Adjust padding */
+  }
+
+  .card-title, .card-text {
+      font-size: 14px; /* Adjust font size */
+  }
+}
+
+  /* Medium devices (tablets, 768px and up) */
+  @media (max-width: 768px) {
+    .navbar-brand, .nav-link {
+        font-size: 15px;
+    }
+
+    .btn-outline-success, .card .btn {
+        padding: 9px 18px;
+        font-size: 15px;
+    }
+
+    .city-card, .card {
+        margin-bottom: 20px;
+    }
+
+    .dashboard-header {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .chart-container {
+        width: 85vw;
+        height: 35vh;
+    }
+
+    .card-body {
+        padding: 18px;
+    }
+
+    .card-title, .card-text {
+        font-size: 16px;
+    }
+  }
+
+  /* Large devices (desktops, 992px and up) */
+  @media (min-width: 992px) {
+    /* Styles for larger screens can remain as they are */
+  }
 
   </style>
 </head>

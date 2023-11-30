@@ -41,7 +41,7 @@
     }
 
     .navbar-light .navbar-toggler-icon {
-        background-color: white;
+        background-color: #219ebc;
     }
 
     /* Custom Logout Button Style */
@@ -142,7 +142,35 @@
   .table tbody tr:hover {
     background-color: #eef6fc;
   }
-  
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+        .navbar-brand, .nav-link, .btn-outline-success {
+            font-size: 14px; /* Smaller font size for better readability */
+            
+        }
+
+        .table thead th, .table tbody td {
+            padding: 0.5rem; /* Smaller padding for table cells */
+        }
+    }
+
+         @media (max-width: 576px) {
+        .navbar-nav {
+            margin-top: 10px; /* Adjust navbar for smaller screens */
+        }
+
+        .nav-link {
+            padding: 10px; /* Smaller padding for nav links */
+            font-size: 14px; /* Smaller font size for nav links */
+        }
+
+        .table {
+            font-size: 14px; /* Smaller font size for table */
+        }
+    }
+    
+        
     </style>
 </head>
 
