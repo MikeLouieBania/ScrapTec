@@ -149,8 +149,6 @@
                 color: #fff;
                 opacity: 1;
               }
-              
-              
             
             .modal-title {
                 font-size: 1.5rem;
@@ -184,7 +182,7 @@
                 padding: 10px;
                 margin-bottom: 1rem;
                 width: 100%;
-                box-sizing: border-box;
+                box-sizing: border-box;;
             }
             
             /* Button styling */
@@ -313,7 +311,7 @@
         }
 
         .navbar-light .navbar-toggler-icon {
-            background-color: white;
+            background-color: #219ebc;
         }
 
         /* Custom Logout Button Style */
@@ -422,7 +420,73 @@
             margin-left: 5px;
           }
           
-          
+            /* Styles for the drop points container and cards */
+        #dropPointsContainer .col-md-4 {
+            margin-bottom: 20px; /* Space below each card */
+        }
+
+        /* Additional margin to create gaps between cards */
+        #dropPointsContainer .col-md-4 {
+            padding-right: 10px; /* Right padding for each column */
+            padding-left: 10px; /* Left padding for each column */
+        }
+                
+        /* Small devices (landscape phones, 576px and up) */
+        @media (min-width: 576px) { 
+            .container, .dashboard-container {
+                padding: 10px;
+            }
+        }
+
+        /* Medium devices (tablets, 768px and up) */
+        @media (min-width: 768px) { 
+            .container, .dashboard-container {
+                padding: 15px;
+            }
+        }
+
+        /* Large devices (desktops, 992px and up) */
+        @media (min-width: 992px) { 
+            .container, .dashboard-container {
+                padding: 20px;
+            }
+        }
+
+        /* Extra large devices (large desktops, 1200px and up) */
+        @media (min-width: 1200px) { 
+            .container, .dashboard-container {
+                max-width: 800px;
+            }
+        }
+
+        /* Adjusting font sizes for smaller screens */
+        @media (max-width: 768px) {
+            .navbar-brand, .nav-link {
+                font-size: 14px;
+            }
+
+            .card-header h2, .card-header button {
+                font-size: 0.9rem;
+            }
+
+            .modal-title, .modal-body p, .modal-body h5 {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Adjusting card image sizes for smaller screens */
+        @media (max-width: 576px) {
+            .card img {
+                height: 150px;
+            }
+        }
+
+        /* Adjusting modal map container for smaller screens */
+        @media (max-width: 768px) {
+            .modal-map-container {
+                height: 300px;
+            }
+        }
 
     </style>
 </head>
