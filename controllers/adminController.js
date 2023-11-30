@@ -1004,13 +1004,18 @@ module.exports = {
     const { listingId } = req.params;
   
     try {
+      // Fetch the listing details
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        include: {
+          user: true // Include the user who posted the listing
+        }
+      });
+  
       // Fetch all reports related to the listing
       const reports = await prisma.report.findMany({
         where: { listingId: listingId },
-        include: {
-          reportedBy: true, // Include the user who made the report
-          listing: true     // Include the listing details
-        }
+        include: { reportedBy: true } // Include the user who made the report
       });
   
       // Clear reports for the listing
@@ -1035,7 +1040,7 @@ module.exports = {
           subject: 'Report Review Update',
           html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
                   <h1>Report Update</h1>
-                  <p>Your report for the listing titled "${report.listing.title}" has been reviewed. We have found that this listing does not violate our marketplace policies.</p>
+                  <p>Your report for the listing titled "${listing.title}" has been reviewed. We have found that this listing does not violate our marketplace policies.</p>
                   <p>Thank you for helping us maintain a safe and trustworthy marketplace.</p>
                   <p>Best regards,</p>
                   <p>CycleUpTech Team</p>
@@ -1051,6 +1056,7 @@ module.exports = {
       res.status(500).send('Error approving listing');
     }
   },
+  
 
   async postRejectListing(req, res) {
     const { listingId } = req.params;
