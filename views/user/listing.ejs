@@ -318,7 +318,7 @@
 
                 
             </div>
-                <p>Price: $<%= listing.price %>
+                <p>Price: ₱<%= listing.price %>
                 </p>
                 <p>Category: <%= listing.category.name %>
                 </p>
@@ -432,182 +432,191 @@
                 <!-- Report Listing Modal -->
                 <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="reportModalLabel">Report Listing</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="reportModalLabel">Report Listing</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="reportForm">
+                                    <div class="form-group">
+                                        <label>Let us know what's going on</label>
+                                        <div class="checkbox-group">
+                                            <div><input type="checkbox" id="inaccurateDescription" name="reportReason[]" value="inaccurateDescription"> <label for="inaccurateDescription">Inaccurate Description</label></div>
+                                            <div><input type="checkbox" id="promotingBusiness" name="reportReason[]" value="promotingBusiness"> <label for="promotingBusiness">Promoting a Business</label></div>
+                                            <div><input type="checkbox" id="animalSales" name="reportReason[]" value="animalSales"> <label for="animalSales">Animal Sales</label></div>
+                                            <div><input type="checkbox" id="noIntentToSell" name="reportReason[]" value="noIntentToSell"> <label for="noIntentToSell">No Intent to Sell</label></div>
+                                            <div><input type="checkbox" id="weaponOrDrugSales" name="reportReason[]" value="weaponOrDrugSales"> <label for="weaponOrDrugSales">Weapon or Drug Sales</label></div>
+                                            <div><input type="checkbox" id="sexualizedContent" name="reportReason[]" value="sexualizedContent"> <label for="sexualizedContent">Sexualized Content or Adult Products</label></div>
+                                            <div><input type="checkbox" id="discrimination" name="reportReason[]" value="discrimination"> <label for="discrimination">Discrimination</label></div>
+                                            <div><input type="checkbox" id="abusiveContent" name="reportReason[]" value="abusiveContent"> <label for="abusiveContent">Abusive or Harmful Content</label></div>
+                                            <div><input type="checkbox" id="scam" name="reportReason[]" value="scam"> <label for="scam">Scam</label></div>
+                                            <div><input type="checkbox" id="counterfeit" name="reportReason[]" value="counterfeit"> <label for="counterfeit">Appears to be Counterfeit</label></div>
+                                            <div><input type="checkbox" id="childAbuse" name="reportReason[]" value="noIntentToSell"> <label for="childAbuse">Child Abuse</label></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="additionalComments">Additional Comments</label>
+                                        <textarea class="form-control" id="additionalComments" name="additionalComments" rows="3"></textarea>
+                                    </div>
+                                    <input type="hidden" name="listingId" value="<%= listing.id %>">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger">Report</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                        <form id="reportForm">
-                            <div class="form-group">
-                            <label for="reportReason">Let us know what's going on</label>
-                            <select class="form-control" id="reportReason" name="reportReason" required>
-                                <option value="">Select a reason</option>
-                                <option value="inaccurateDescription">Inaccurate Description</option>
-                                <option value="promotingBusiness">Promoting a Business</option>
-                                <option value="animalSales">Animal Sales</option>
-                                <option value="noIntentToSell">No Intent to Sell</option>
-                                <option value="weaponOrDrugSales">Weapon or Drug Sales</option>
-                                <option value="sexualizedContent">Sexualized Content or Adult Products</option>
-                                <option value="discrimination">Discrimination</option>
-                                <option value="abusiveContent">Abusive or Harmful Content</option>
-                                <option value="scam">Scam</option>
-                                <option value="counterfeit">Appears to be Counterfeit</option>
-                                <option value="childAbuse">Child Abuse</option>
-                            </select>
-                            </div>
-                            <div class="form-group">
-                            <label for="additionalComments">Additional Comments</label>
-                            <textarea class="form-control" id="additionalComments" name="additionalComments" rows="3"></textarea>
-                            </div>
-                            <input type="hidden" name="listingId" value="<%= listing.id %>">
-                            <div class="modal-footer"> 
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-danger">Report</button>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
                     </div>
                 </div>
-                
 
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-                    <script>
-                        function unsaveListing(listingId) {
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <script>
+                    function unsaveListing(listingId) {
+                        $.ajax({
+                            url: `/user/unsaveListing/${listingId}`,
+                            method: 'POST',
+                            success: function(response) {
+                            alert('Listing unsaved successfully!');
+                            location.reload(); // Reload the page to reflect changes
+                            // Optionally remove the listing from the DOM or update the button state here
+                            },
+                            error: function(xhr, status, error) {
+                            console.error('Error unsaving listing:', error);
+                            alert('Error unsaving listing. Please try again.');
+                            }
+                        });
+                        } 
+                </script>
+
+                <script>
+                    var map;
+
+                    function computeCircleSizeFromBbox(bbox) {
+                        if (!bbox || bbox.length !== 4) {
+                            return 5; // default circle size
+                        }
+                        const width = Math.abs(bbox[2] - bbox[0]);
+                        const height = Math.abs(bbox[3] - bbox[1]);
+                        const diagonalLength = Math.sqrt(width * width + height * height);
+                        return diagonalLength * 300;
+                    }
+
+                    function updateMapAndPreview(coordinates, bbox) {
+                        map.flyTo({ center: coordinates, zoom: 15 });
+
+                        // Check if the circle layer already exists, if it does, remove it
+                        if (map.getLayer('location-circle')) {
+                            map.removeLayer('location-circle');
+                            map.removeSource('location-circle');
+                        }
+
+                        // Compute circle size from bounding box
+                        const circleSize = computeCircleSizeFromBbox(bbox);
+
+                        // Add the circle layer at the selected location
+                        map.addLayer({
+                            'id': 'location-circle',
+                            'type': 'circle',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'FeatureCollection',
+                                    'features': [{
+                                        'type': 'Feature',
+                                        'geometry': {
+                                            'type': 'Point',
+                                            'coordinates': coordinates
+                                        },
+                                        'properties': {
+                                            'radius': circleSize
+                                        }
+                                    }]
+                                }
+                            },
+                            'paint': {
+                                'circle-radius': ['get', 'radius'], // Use a data-driven style for the circle radius
+                                'circle-color': '#007cbf',
+                                'circle-opacity': 0.5
+                            }
+                        });
+                    }
+
+                    function geocodeLocation(location, callback) {
+                        fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data && data.features && data.features[0]) {
+                                    const coordinates = data.features[0].center;
+                                    const bbox = data.features[0].bbox;
+                                    callback(null, coordinates, bbox);
+                                } else {
+                                    callback(new Error("Failed to geocode location"));
+                                }
+                            })
+                            .catch(error => {
+                                callback(error);
+                            });
+                    }
+
+                    geocodeLocation('<%= listing.location %>', function (error, coordinates, bbox) {
+                        if (error) {
+                            console.error(error);
+                            return;
+                        }
+
+                        mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';
+                        map = new mapboxgl.Map({
+                            container: 'map',
+                            style: 'mapbox://styles/mapbox/streets-v11',
+                            center: coordinates,
+                            zoom: 14
+                        });
+
+                        map.on('load', function () {
+                            updateMapAndPreview(coordinates, bbox);
+                        });
+                    });
+
+                </script>
+                
+                <script>
+                    $(document).ready(function() {
+                        $('#reportForm').submit(function(e) {
+                            e.preventDefault();
+                
+                            const formData = {
+                                reportReasons: $('input[name="reportReason[]"]:checked').map(function() {
+                                    return this.value;
+                                }).get(),
+                                additionalComments: $('#additionalComments').val(),
+                                listingId: $('input[name="listingId"]').val()
+                            };
+                
                             $.ajax({
-                                url: `/user/unsaveListing/${listingId}`,
-                                method: 'POST',
+                                url: '/user/report-listing',
+                                type: 'POST',
+                                data: JSON.stringify(formData),
+                                contentType: 'application/json; charset=utf-8',
+                                dataType: 'json',
                                 success: function(response) {
-                                alert('Listing unsaved successfully!');
-                                location.reload(); // Reload the page to reflect changes
-                                // Optionally remove the listing from the DOM or update the button state here
+                                    // Handle success - maybe show a message to the user
+                                    alert('Report submitted successfully');
+                                    window.location.href = '/user/marketplace';
+                                    $('#reportModal').modal('hide');
                                 },
                                 error: function(xhr, status, error) {
-                                console.error('Error unsaving listing:', error);
-                                alert('Error unsaving listing. Please try again.');
+                                    // Handle error
+                                    alert('Error submitting report');
                                 }
                             });
-                            } 
-                    </script>
-
-                    <script>
-                        var map;
-
-                        function computeCircleSizeFromBbox(bbox) {
-                            if (!bbox || bbox.length !== 4) {
-                                return 5; // default circle size
-                            }
-                            const width = Math.abs(bbox[2] - bbox[0]);
-                            const height = Math.abs(bbox[3] - bbox[1]);
-                            const diagonalLength = Math.sqrt(width * width + height * height);
-                            return diagonalLength * 300;
-                        }
-
-                        function updateMapAndPreview(coordinates, bbox) {
-                            map.flyTo({ center: coordinates, zoom: 15 });
-
-                            // Check if the circle layer already exists, if it does, remove it
-                            if (map.getLayer('location-circle')) {
-                                map.removeLayer('location-circle');
-                                map.removeSource('location-circle');
-                            }
-
-                            // Compute circle size from bounding box
-                            const circleSize = computeCircleSizeFromBbox(bbox);
-
-                            // Add the circle layer at the selected location
-                            map.addLayer({
-                                'id': 'location-circle',
-                                'type': 'circle',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'FeatureCollection',
-                                        'features': [{
-                                            'type': 'Feature',
-                                            'geometry': {
-                                                'type': 'Point',
-                                                'coordinates': coordinates
-                                            },
-                                            'properties': {
-                                                'radius': circleSize
-                                            }
-                                        }]
-                                    }
-                                },
-                                'paint': {
-                                    'circle-radius': ['get', 'radius'], // Use a data-driven style for the circle radius
-                                    'circle-color': '#007cbf',
-                                    'circle-opacity': 0.5
-                                }
-                            });
-                        }
-
-                        function geocodeLocation(location, callback) {
-                            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data && data.features && data.features[0]) {
-                                        const coordinates = data.features[0].center;
-                                        const bbox = data.features[0].bbox;
-                                        callback(null, coordinates, bbox);
-                                    } else {
-                                        callback(new Error("Failed to geocode location"));
-                                    }
-                                })
-                                .catch(error => {
-                                    callback(error);
-                                });
-                        }
-
-                        geocodeLocation('<%= listing.location %>', function (error, coordinates, bbox) {
-                            if (error) {
-                                console.error(error);
-                                return;
-                            }
-
-                            mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';
-                            map = new mapboxgl.Map({
-                                container: 'map',
-                                style: 'mapbox://styles/mapbox/streets-v11',
-                                center: coordinates,
-                                zoom: 14
-                            });
-
-                            map.on('load', function () {
-                                updateMapAndPreview(coordinates, bbox);
-                            });
                         });
-
-                    </script>
-                    
-                    <script>
-                        $(document).ready(function() {
-                          $('#reportForm').on('submit', function(e) {
-                            e.preventDefault();
-                            
-                            var formData = $(this).serialize();
-                            
-                            $.ajax({
-                              type: 'POST',
-                              url: '/user/reportListing', // Your endpoint to process the report
-                              data: formData,
-                              success: function(response) {
-                                // You can add more sophisticated error checking here
-                                $('#reportModal').modal('hide');
-                                alert('Listing reported successfully.');
-                              },
-                              error: function(xhr, status, error) {
-                                alert('An error occurred. Please try again.');
-                              }
-                            });
-                          });
-                        });
-                      </script>
+                    });
+                </script>
+                
                       
     </div>
 </body>

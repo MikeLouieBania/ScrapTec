@@ -13,6 +13,7 @@ router.get('/marketplace', userController.getMarketplace);
 router.get('/ads', userController.getAdsForCity);
 router.post('/record-click', userController.postRecordAdClick);
 router.get('/listing/:id', userController.getListing);
+router.post('/report-listing', userController.postReportListing);
 router.get('/createListing', userController.getCreateListing);
 router.post('/createListing', upload, userController.postCreateListing);
 router.get('/editListing/:listingId', userController.getEditListing);

@@ -133,10 +133,19 @@ module.exports = {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
       const skip = (page - 1) * limit;
+
+      // Fetch IDs of listings reported by the current user
+      const reportedListings = await prisma.report.findMany({
+        where: { reportedById: currentUserId },
+        select: { listingId: true }
+      });
+      const reportedListingIds = reportedListings.map(report => report.listingId);
+  
   
       // Building the where clause for filters
       let whereClause = {
         userId: { not: currentUserId },
+        id: { notIn: reportedListingIds },
         status: { notIn: ["SOLD", "REJECTED"] },
       };
   
@@ -394,6 +403,28 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   }, 
+
+  async postReportListing(req, res) {
+    try {
+        const { reportReasons, additionalComments, listingId } = req.body;
+        const reportedById = req.session.user.id;
+
+        // Create a new report
+        await prisma.report.create({
+            data: {
+                listingId: listingId,
+                reportedById: reportedById,
+                reason: reportReasons.join(', '), // Join the reasons into a single string
+                comments: additionalComments
+            }
+        });
+
+        res.json({ success: true, message: 'Report submitted successfully' });
+    } catch (error) {
+        console.error("Error submitting report:", error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
 
   async getCreateListing(req, res) {
     try {
