@@ -917,7 +917,7 @@
             %>
               <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
                 <%= badge.name %> Badge
-                <img src="/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
+                <img src="/icons/<%= badge.icon %>" class="<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
               </div>
             <% }); %>
           </div> 
