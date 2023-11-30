@@ -319,7 +319,7 @@
     }
     
     .list-group-item-action.active, .list-group-item-action:active {
-      background-color: #007bff;
+      background-color: #6699CC;
       color: #fff;
     }
     
@@ -434,6 +434,169 @@
           padding: 10px;
       }
     }
+      /* Milestones/Accomplishments Section Styles */
+    .milestones {
+      text-align: center; /* Center-align the content */
+      padding: 20px;
+      background-color: #f8f9fa; /* Light background for the section */
+      border-radius: 8px; /* Rounded corners */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+      margin: 20px 0; /* Margin above and below the section */
+    }
+
+    .milestones h3 {
+      font-size: 1.8rem; /* Large font size for section heading */
+      font-weight: bold; /* Bold font weight for heading */
+      color: #333; /* Dark color for heading for better contrast */
+      margin-bottom: 30px; /* Space below the heading */
+    }
+
+    .milestone {
+      display: inline-block; /* Display milestones side by side */
+      width: 190px; /* Fixed width for each milestone */
+      margin: 10px; /* Space around each milestone */
+      vertical-align: top; /* Align the tops of inline-block elements */
+    }
+
+    .milestone-badge {
+      background-color: #fff; /* White background for the badge */
+      padding: 10px; /* Padding inside the badge */
+      border-radius: 8px; /* Rounded corners for badge */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for badge */
+      margin-bottom: 10px; /* Space below the badge */
+      margin-top: 10px;
+      display: block; /* Display as a block for width to take effect */
+    }
+
+    .milestone-badge img {
+      width: 75px; /* Smaller width for the icons */
+      height: auto; /* Keep the aspect ratio of the image */
+      display: block; /* Center the image in the container */
+      margin: 0 auto 15px; /* Auto margins for horizontal centering and spacing from the text */
+    }
+
+    .milestone-badge.achieved {
+      background-color: #e7f5ff; /* Light blue background for achieved milestones */
+    }
+
+    .milestone-badge.not-achieved {
+      background-color: #f0f0f0; /* Light gray background for not achieved milestones */
+      color: #ccc; /* Grayed out text color */
+    }
+
+    .milestone-badge.not-achieved img {
+      filter: grayscale(100%); /* Grayscale filter for not achieved icons */
+    }
+
+    .milestone-badge p {
+      font-size: 1rem; /* Smaller font size for points text */
+      margin: 5px 0; /* Remove default margins */
+      color: #333; /* Dark text for better readability */
+    }
+
+    .milestone-badge .progress {
+      height: 12px; /* Thinner progress bar for subtlety */
+      background-color: #f0f0f0; /* Light gray background for progress bar */
+      border-radius: 5px; /* Rounded corners for progress bar */
+      margin: 15px 0; /* Spacing above and below the progress bar */
+      overflow: hidden; /* Ensures the inner bar stays within the rounded corners */
+    }
+
+    .milestone-badge .progress-bar {
+      background-color: #4c6ef5; /* Bright blue for the progress fill */
+      border-radius: 5px; /* Rounded corners for the progress fill */
+      transition: width 0.6s ease; /* Smooth transition for the progress bar animation */
+    }
+
+    .milestone-badge .progress-bar.achieved {
+      background-color: #28a745; /* Green color for achieved milestones */
+    }
+
+    /* Styles for Milestone Titles */
+    .milestone-title {
+      font-weight: 600; /* Semi-bold for titles */
+      color: #333; /* Dark color for better readability */
+      font-size: 1.2rem; /* Readable font size for titles */
+      margin-top: 10px; /* Space above the title */
+    }
+
+    /* Responsive Design Adjustments */
+    @media (max-width: 768px) {
+      .milestone {
+          width: 100%; /* Full width for smaller screens */
+          margin-bottom: 25px; /* Increase space between stacked milestones */
+      }
+
+      .milestone-badge img {
+          width: 60px; /* Adjust icon size for smaller screens if necessary */
+      }
+
+      .milestone-title {
+          font-size: 1rem; /* Adjust title size for smaller screens if necessary */
+      }
+}
+
+
+      /* Donation Section Styles */
+    .donation {
+      text-align: center; /* Center-align the content */
+      padding: 20px;
+      background-color: #f8f9fa; /* Light background for the section */
+      border-radius: 8px; /* Rounded corners */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+      margin: 20px 0; /* Margin above and below the section */
+    }
+
+    .donation h3 {
+      font-size: 1.8rem; /* Large font size for section heading */
+      font-weight: bold; /* Bold font weight for heading */
+      color: #333; /* Dark color for heading for better contrast */
+      margin-bottom: 30px; /* Space below the heading */
+    }
+
+    .donation-badge {
+      display: inline-block; /* Display badges side by side */
+      width: 180px; /* Fixed width for each badge */
+      margin: 10px; /* Space around each badge */
+      vertical-align: top; /* Align the tops of inline-block elements */
+      background-color: #fff; /* White background for the badge */
+      padding: 20px; /* Padding inside the badge */
+      border-radius: 8px; /* Rounded corners for badge */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for badge */
+      transition: transform 0.2s ease-in-out; /* Smooth transition for hover effects */
+    }
+
+    .donation-badge img {
+      width: 75px; /* Size of the icons */
+      height: auto; /* Keep the aspect ratio of the image */
+      display: block; /* Center the image in the container */
+      margin: 0 auto 15px; /* Auto margins for horizontal centering and spacing from the text */
+    }
+
+    .donation-badge.achieved img {
+      /* Add styles for achieved badges, if needed */
+    }
+
+    .donation-badge.not-achieved img {
+      filter: grayscale(100%); /* Grayscale filter for not achieved icons */
+    }
+
+    .donation-badge p {
+      font-size: 1rem; /* Font size for text */
+      margin: 5px 0; /* Margin for spacing */
+      color: #333; /* Text color for better readability */
+    }
+
+    /* Responsive Design for Donation Badges */
+    @media (max-width: 768px) {
+      .donation-badge {
+          width: 100%; /* Full width for smaller screens */
+          margin-bottom: 20px; /* More space between badges */
+      }
+    }
+
+
+
 
 
     </style>
@@ -654,9 +817,9 @@
             <% 
             const levels = [
               { name: 'Supporter', points: 1000, icon: 'rising-sun.png' },
-              { name: 'Advocate', points: 5000, icon: 'open-hand.png' },
-              { name: 'Champion', points: 10000, icon: 'torch.png' },
-              { name: 'Guardian', points: Infinity, icon: 'shield.png' }
+              { name: 'Advocate', points: 5000, icon: 'open-hands.png' },
+              { name: 'Champion', points: 10000, icon: 'olympic-flame.png' },
+              { name: 'Guardian', points: Infinity, icon: 'defence.png' }
             ];
 
             levels.forEach(level => {
@@ -680,17 +843,17 @@
             <h3>Donation</h3>
             <% 
             const badges = [
-              { name: 'Bronze', donations: 1, icon: 'bronze-badge-icon.png' },
-              { name: 'Silver', donations: 5, icon: 'silver-badge-icon.png' },
-              { name: 'Gold', donations: 10, icon: 'gold-badge-icon.png' },
-              { name: 'Platinum', donations: 20, icon: 'platinum-badge-icon.png' }
+              { name: 'Bronze', donations: 1, icon: 'bronze-badge.png' },
+              { name: 'Silver', donations: 5, icon: 'silver-badge.png' },
+              { name: 'Gold', donations: 10, icon: 'gold-badge.png' },
+              { name: 'Platinum', donations: 20, icon: 'platinum.png' }
             ];
             badges.forEach(badge => {
               const isAchieved = totalDonations >= badge.donations;
             %>
               <div class="badge donation-badge <%= isAchieved ? 'achieved' : 'not-achieved' %>">
                 <%= badge.name %> Badge
-                <img src="/images/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
+                <img src="/icons/<%= isAchieved ? badge.icon : 'greyed-out-' + badge.icon %>" alt="<%= badge.name %> Badge Icon">
               </div>
             <% }); %>
           </div> 
