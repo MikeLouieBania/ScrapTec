@@ -778,13 +778,6 @@ module.exports = {
             { status: 'AVAILABLE' }
           ]
         };
-      } else if (tab === 'rejected') {
-        whereClause = {
-          AND: [
-            { reports: { some: {} } },
-            { status: 'REJECTED' }
-          ]
-        };
       }
       
       const listings = await prisma.listing.findMany({
@@ -1056,7 +1049,6 @@ module.exports = {
       res.status(500).send('Error approving listing');
     }
   },
-  
 
   async postRejectListing(req, res) {
     const { listingId } = req.params;
@@ -1074,11 +1066,18 @@ module.exports = {
           }
         }
       });
+
+      // Delete associated photos and reports
+      await prisma.photo.deleteMany({
+        where: { listingId: listingId }
+      });
+      await prisma.report.deleteMany({
+        where: { listingId: listingId }
+      });
   
-      // Update listing status to REJECTED
-      await prisma.listing.update({
-        where: { id: listingId },
-        data: { status: 'REJECTED' }
+      // Delete the listing
+      await prisma.listing.delete({
+        where: { id: listingId }
       });
   
       // Create email transporter
