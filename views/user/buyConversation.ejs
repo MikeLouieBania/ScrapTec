@@ -306,9 +306,8 @@
                             enctype="multipart/form-data" class="mt-4">
 
                             <input type="hidden" name="listing_id" value="<%= conversation.listing.id %>">
-
-                            <textarea name="message" class="form-control" placeholder="Type your message...">
-                            </textarea>
+                            <textarea name="message" class="form-control"
+                            placeholder="Type your message..."></textarea>
                             <!-- File Input and Label -->
                             <input type="file" name="image" id="file-input" accept="image/*">
                             <label for="file-input" class="file-label">
@@ -318,28 +317,6 @@
                             <!-- Send Button -->
                             <button type="submit" class="btn btn-primary mt-2">
                                 <i class="fa fa-paper-plane"></i> Send
-
-
-                                <!-- Dropdown for More Options -->
-                                <div class="btn-group mt-2">
-                                    <button type="button" class="btn btn-secondary dropdown-toggle"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        More Options
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">See Details</a>
-
-                                        <!-- Sub-dropdown for Price Offer -->
-                                        <div class="dropdown-divider"></div>
-                                        <h6 class="dropdown-header">Price Offer</h6>
-                                        <!-- Placeholder dropdown items for price offers. Update with actual options -->
-                                        <a class="dropdown-item" href="#">Offer 1</a>
-                                        <a class="dropdown-item" href="#">Offer 2</a>
-                                        <a class="dropdown-item" href="#">Offer 3</a>
-                                    </div>
-                                </div>
-                                <!-- End of Dropdown for More Options -->
-
                             </div>
                         </form>
         </div>
@@ -441,6 +418,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
+        var userId = '<%= user.id %>'
 
         // Join the conversation room
         socket.emit('join_room', 'conversation_<%= conversation.id %>');
@@ -466,6 +444,14 @@
 
                 // The "Load Newer Messages" button should be hidden on initial load
                 $('#load-newer-messages').hide();
+
+                // If the message is not sent by the current user, mark it as read
+                if (data.senderId !== userId) {
+                    socket.emit('mark_message_as_read', {
+                        messageId: data.message.id,
+                        conversationId: data.conversationId
+                    });
+                }
             }
         });
 

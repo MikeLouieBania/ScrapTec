@@ -54,6 +54,19 @@ io.on('connection', function(socket) {
       socket.join(room);
   });
 
+  // Handler for marking a message as read
+  socket.on('mark_message_as_read', function(data) {
+      prisma.message.update({
+          where: { id: data.messageId },
+          data: { read: true }
+      }).then(updatedMessage => {
+          // Optionally notify clients or perform additional actions
+          // console.log('Message marked as read:', data.messageId);
+      }).catch(error => {
+          console.error('Error marking message as read:', error);
+      });
+  }); 
+
   // ... rest of your code
 });
 

@@ -249,8 +249,11 @@
                                 <h5 class="card-title mb-0">
                                     <%= conversation.listing.title %>
                                 </h5>
-                                <span class="badge <% if (!conversation.messages[conversation.messages.length - 1].read) { %>bg-primary<% } else { %>bg-secondary<% } %>">
-                                    <% if (!conversation.messages[conversation.messages.length - 1].read) { %>New<% } else { %>Read<% } %>
+                                <span class="badge 
+                                    <% if (!conversation.messages[conversation.messages.length - 1].read && conversation.messages[conversation.messages.length - 1].senderId !== userId) { %>bg-primary<% } 
+                                    else { %>bg-secondary<% } %>">
+                                    <% if (!conversation.messages[conversation.messages.length - 1].read && conversation.messages[conversation.messages.length - 1].senderId !== userId) { %>New<% } 
+                                    else { %>Read<% } %>
                                 </span>
                             </div>
                             <p class="card-text">
@@ -273,8 +276,11 @@
                                 <h5 class="card-title mb-0">
                                     <%= conversation.listing.title %>
                                 </h5>
-                                <span class="badge <% if (!conversation.messages[conversation.messages.length - 1].read) { %>bg-primary<% } else { %>bg-secondary<% } %>">
-                                    <% if (!conversation.messages[conversation.messages.length - 1].read) { %>New<% } else { %>Read<% } %>
+                                <span class="badge 
+                                    <% if (!conversation.messages[conversation.messages.length - 1].read && conversation.messages[conversation.messages.length - 1].senderId !== userId) { %>bg-primary<% } 
+                                    else { %>bg-secondary<% } %>">
+                                    <% if (!conversation.messages[conversation.messages.length - 1].read && conversation.messages[conversation.messages.length - 1].senderId !== userId) { %>New<% } 
+                                    else { %>Read<% } %>
                                 </span>
                             </div>
                             <p class="card-text">
