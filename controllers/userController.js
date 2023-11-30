@@ -406,7 +406,7 @@ module.exports = {
 
   async postReportListing(req, res) {
     try {
-        const { reportReasons, additionalComments, listingId } = req.body;
+        const { reportReasons, listingId } = req.body;
         const reportedById = req.session.user.id;
 
         // Create a new report
@@ -414,8 +414,7 @@ module.exports = {
             data: {
                 listingId: listingId,
                 reportedById: reportedById,
-                reason: reportReasons.join(', '), // Join the reasons into a single string
-                comments: additionalComments
+                reason: reportReasons.join(', '), // Join the reasons into a single string 
             }
         });
 

@@ -1002,17 +1002,49 @@ module.exports = {
 
   async postApproveListing(req, res) {
     const { listingId } = req.params;
-
+  
     try {
+      // Fetch all reports related to the listing
+      const reports = await prisma.report.findMany({
+        where: { listingId: listingId },
+        include: {
+          reportedBy: true, // Include the user who made the report
+          listing: true     // Include the listing details
+        }
+      });
+  
       // Clear reports for the listing
       await prisma.report.deleteMany({
         where: { listingId: listingId }
       });
-      
-      await prisma.listing.update({
-        where: { id: listingId },
-        data: { status: 'AVAILABLE' }
+  
+      // Create email transporter
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
       });
+  
+      // Notify each user who reported the listing
+      reports.forEach(report => {
+        const mailOptions = {
+          from: process.env.EMAIL_USERNAME,
+          to: report.reportedBy.email,
+          subject: 'Report Review Update',
+          html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+                  <h1>Report Update</h1>
+                  <p>Your report for the listing titled "${report.listing.title}" has been reviewed. We have found that this listing does not violate our marketplace policies.</p>
+                  <p>Thank you for helping us maintain a safe and trustworthy marketplace.</p>
+                  <p>Best regards,</p>
+                  <p>CycleUpTech Team</p>
+                </div>`
+        };
+  
+        transporter.sendMail(mailOptions);
+      });
+  
       res.redirect('/admin/marketplacemanagement');
     } catch (error) {
       console.error('Error approving listing:', error);
@@ -1022,12 +1054,70 @@ module.exports = {
 
   async postRejectListing(req, res) {
     const { listingId } = req.params;
-
+  
     try {
+      // Fetch the listing along with the user details
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        include: {
+          user: true,
+          reports: {
+            include: {
+              reportedBy: true // Include the users who made the reports
+            }
+          }
+        }
+      });
+  
+      // Update listing status to REJECTED
       await prisma.listing.update({
         where: { id: listingId },
         data: { status: 'REJECTED' }
       });
+  
+      // Create email transporter
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+  
+      // Notify the user who posted the listing
+      const mailOptionsPoster = {
+        from: process.env.EMAIL_USERNAME,
+        to: listing.user.email,
+        subject: 'Listing Rejection Notice',
+        html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+                <h1>Listing Rejection</h1>
+                <p>Your listing titled "${listing.title}" has been reviewed and found in violation of our marketplace policies. As a result, it has been removed from the marketplace.</p>
+                <p>For more information, please contact our support team.</p>
+                <p>Best regards,</p>
+                <p>CycleUpTech Team</p>
+              </div>`
+      };
+
+      transporter.sendMail(mailOptionsPoster);
+
+      // Notify users who made the reports
+      listing.reports.forEach(report => {
+        const mailOptionsReporter = {
+          from: process.env.EMAIL_USERNAME,
+          to: report.reportedBy.email,
+          subject: 'Report Update on Listing',
+          html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+                  <h1>Report Review Update</h1>
+                  <p>Your report on the listing titled "${listing.title}" has been reviewed. The listing has been found in violation of our guidelines and removed from the marketplace.</p>
+                  <p>Thank you for your vigilance in helping maintain a safe and trustworthy marketplace.</p>
+                  <p>Best regards,</p>
+                  <p>CycleUpTech Team</p>
+                </div>`
+        };
+
+        transporter.sendMail(mailOptionsReporter);
+      });
+  
       res.redirect('/admin/marketplacemanagement');
     } catch (error) {
       console.error('Error rejecting listing:', error);

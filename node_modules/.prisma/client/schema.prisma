@@ -201,8 +201,7 @@
     listingId   String   @map("listing_id") @db.ObjectId
     reportedBy  User     @relation("ReportsMadeByUser", fields: [reportedById], references: [id])
     reportedById String  @map("reported_by_id") @db.ObjectId
-    reason      String   // Enum or String explaining the reason for the report
-    comments    String?  // Optional additional comments
+    reason      String   // Enum or String explaining the reason for the report 
     createdAt   DateTime @default(now())
   }
 
