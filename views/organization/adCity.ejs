@@ -34,7 +34,7 @@
         }
 
         .navbar-light .navbar-toggler-icon {
-            background-color: white;
+            background-color: #219ebc;
         }
 
         /* Custom Logout Button Style */
@@ -170,7 +170,66 @@
         /* No specific styles here, it will take the default or other specified styles */
         }
 
-  
+            /* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) { 
+    .navbar-brand, .nav-link {
+        font-size: 14px;
+        margin-top: 0; /* Adjust alignment */
+    }
+
+    .btn-outline-success {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    .col-md-8, .col-md-4 {
+        padding: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .col-md-8 h2, .col-md-8 p.lead {
+        font-size: 16px; /* Adjust font size */
+    }
+
+    .nav-link {
+        padding: 10px;
+        margin: 0 5px;
+    }
+}
+
+    /* Medium devices (tablets, 768px and up) */
+    @media (max-width: 768px) {
+    .navbar-brand, .nav-link {
+        font-size: 15px;
+    }
+
+    .btn-outline-success {
+        padding: 9px 18px;
+        font-size: 15px;
+    }
+
+    .col-md-8, .col-md-4 {
+        padding: 18px;
+        margin-top: 25px;
+        margin-bottom: 25px;
+    }
+
+    .col-md-8 h2, .col-md-8 p.lead {
+        font-size: 18px;
+    }
+
+    .nav-link {
+        padding: 12px;
+        margin: 0 7px;
+    }
+    }
+
+    /* Large devices (desktops, 992px and up) */
+    @media (min-width: 992px) {
+        /* Styles for larger screens can remain as they are */
+    }
+    
     </style>
 </head>
 <body>

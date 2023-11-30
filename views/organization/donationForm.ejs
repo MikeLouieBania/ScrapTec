@@ -40,7 +40,7 @@
     }
 
     .navbar-light .navbar-toggler-icon {
-        background-color: white;
+        background-color: #219ebc;
     }
 
     /* Custom Logout Button Style */
@@ -169,6 +169,66 @@
       background-color: #6699CC;;
     }
     
+        /* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) { 
+  .navbar-brand, .nav-link {
+      font-size: 14px;
+      margin-top: 0; /* Adjust alignment */
+  }
+
+  .btn-outline-success, .btn-primary {
+      padding: 8px 15px;
+      font-size: 14px;
+  }
+
+  .container {
+      width: 95%;
+      padding: 15px;
+  }
+
+  .form-control, .form-control-static {
+      font-size: 13px; /* Smaller font size for form elements */
+  }
+
+  .nav-link {
+      padding: 10px; /* Reduced padding */
+      font-size: 14px; /* Smaller font size */
+  }
+}
+
+    /* Medium devices (tablets, 768px and up) */
+    @media (max-width: 768px) {
+      .navbar-brand, .nav-link {
+          font-size: 15px;
+      }
+
+      .btn-outline-success, .btn-primary {
+          padding: 9px 18px;
+          font-size: 15px;
+      }
+
+      .container {
+          width: 90%;
+          padding: 18px;
+      }
+
+      .form-control, .form-control-static {
+          font-size: 14px;
+      }
+
+      .nav-link {
+          padding: 12px;
+          font-size: 15px;
+      }
+    }
+
+    /* Large devices (desktops, 992px and up) */
+    @media (min-width: 992px) {
+      /* Styles for larger screens can remain as they are */
+      .container {
+          max-width: 800px; /* Ensuring the container doesn't get too wide on large screens */
+      }
+    }
     
 
     </style>
