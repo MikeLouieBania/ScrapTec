@@ -465,13 +465,11 @@
         .card {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            margin: 0.5rem 1rem; /* Reduced top and bottom margin */
+            margin: 0.5rem; /* Uniform margin */
             display: flex;
             flex-direction: column;
-            min-height: 300px; /* Minimum height for all cards */
-            min-width: 300px;
-            height: 100%; /* Make sure all cards take up the same height */
-            width: 100%;
+            height: auto; /* Auto height to accommodate content */
+            width: 100%; /* Full width within the grid column */
         }
 
 
@@ -567,13 +565,15 @@
         
         
         .menu {
-            width: 25%;
+            width: 80%;
+            max-width: 300px;
             height: 300px;
             background-color: #246aec00;
             color: #fff;
             position: relative;
             top: 5%;
-            right: 25%;
+            right: 0;
+            margin-right: 10%;
           }
       
         .menu-item {
@@ -668,6 +668,15 @@
             .card-fixed-width {
                 width: 100%; /* Full width for very small screens */
                 margin: 0 0 10px; /* Only bottom margin */
+            }
+        }
+
+        /* Media query for larger screens */
+        @media (min-width: 768px) {
+            .menu {
+                width: 25%; /* width for larger screens */
+                right: 25%; /* Adjust positioning for larger screens */
+                margin-right: 0; /* Resetting margin */
             }
         }
 
@@ -921,7 +930,7 @@
                         <div class="carousel-inner">
                           <% listing.photos.forEach(function(photo, index) { %>
                             <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                              <img class="d-block w-100 slider-image" src="<%= photo.imageUrl %>" style="width: 300px; height: 300px; overflow: hidden;"
+                              <img class="d-block w-100 slider-image" src="<%= photo.imageUrl %>" style=" max-width: 300px; height: 250px; overflow: hidden;"
                                 alt="<%= listing.title %>">
                             </div>
                             <% }) %>
