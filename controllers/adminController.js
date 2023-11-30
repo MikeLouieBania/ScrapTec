@@ -765,33 +765,49 @@ module.exports = {
 
   async getMarketplaceManagement(req, res) {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const tab = req.query.tab || 'pending';
-        const limit = 10;
-        const skip = (page - 1) * limit;
-        const filter = { status: tab.toUpperCase() };
-        
-        const listings = await prisma.listing.findMany({
-            where: filter,
-            take: limit,
-            skip: skip,
-            include: {
-                user: true,
-                photos: true,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-        }); 
-
-
-        const totalListings = await prisma.listing.count({ where: filter });
-        const totalPages = Math.ceil(totalListings / limit);
-
-        res.render('admin/marketplacemanagement', { listings, page, totalPages, tab });
+      const page = parseInt(req.query.page) || 1;
+      const tab = req.query.tab || 'pending';
+      const limit = 10;
+      const skip = (page - 1) * limit;
+      
+      let whereClause;
+      if (tab === 'pending') {
+        whereClause = {
+          AND: [
+            { reports: { some: {} } },
+            { status: 'AVAILABLE' }
+          ]
+        };
+      } else if (tab === 'rejected') {
+        whereClause = {
+          AND: [
+            { reports: { some: {} } },
+            { status: 'REJECTED' }
+          ]
+        };
+      }
+      
+      const listings = await prisma.listing.findMany({
+        where: whereClause,
+        include: {
+          user: true,
+          photos: true,
+          reports: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: limit,
+        skip: skip
+      });
+  
+      const totalListings = await prisma.listing.count({ where: whereClause });
+      const totalPages = Math.ceil(totalListings / limit);
+  
+      res.render('admin/marketplacemanagement', { listings, page, totalPages, tab });
     } catch (error) {
-        console.error('Error fetching listings:', error);
-        res.status(500).send('Error fetching listings');
+      console.error('Error fetching listings:', error);
+      res.status(500).send('Error fetching listings');
     }
   },
 
@@ -988,6 +1004,11 @@ module.exports = {
     const { listingId } = req.params;
 
     try {
+      // Clear reports for the listing
+      await prisma.report.deleteMany({
+        where: { listingId: listingId }
+      });
+      
       await prisma.listing.update({
         where: { id: listingId },
         data: { status: 'AVAILABLE' }

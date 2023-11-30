@@ -209,10 +209,10 @@
             <!-- Tabs for filtering listings -->
             <ul class="nav nav-tabs" id="listingTabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link <%= tab === 'pending' ? 'active' : '' %>" id="pending-tab" href="?tab=pending">Pending Review</a>
+                    <a class="nav-link <%= tab === 'pending' ? 'active' : '' %>" id="pending-tab" href="?tab=pending">Reported Listings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <%= tab === 'rejected' ? 'active' : '' %>" id="rejected-tab" href="?tab=rejected">Rejected</a>
+                    <a class="nav-link <%= tab === 'rejected' ? 'active' : '' %>" id="rejected-tab" href="?tab=rejected">Remove Listing</a>
                 </li>
             </ul>
     
@@ -230,6 +230,7 @@
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Location</th>
+                                <th>Report Reasons</th>
                                 <th>
                                     <% if (tab === 'pending') { %>
                                         Actions
@@ -271,19 +272,25 @@
                                         <td><%= listing.status %></td>
                                         <td><%= listing.location %></td>
                                         <td>
+                                            <!-- Display report reasons -->
+                                            <% listing.reports.forEach(report => { %>
+                                                <p><%= report.reason %></p>
+                                            <% }) %>
+                                        </td>
+                                        <td>
                                             <% if (tab === 'pending') { %>
                                                 <form action="/admin/listings/<%= listing.id %>/approve" method="post">
-                                                    <button type="submit" class="btn btn-success">Approve</button>
+                                                    <button type="submit" class="btn btn-success">Approve Listing</button>
                                                 </form>
                                                 <form action="/admin/listings/<%= listing.id %>/reject" method="post">
-                                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                                    <button type="submit" class="btn btn-danger">Reject Listing</button>
                                                 </form>
                                             <% } %>
                                         </td>
                                     </tr>
                                 <% }) %>
                             <% } else { %>
-                                <tr><td colspan="7">No listings available for this tab.</td></tr>
+                                <tr><td colspan="7">No reported listings available for review</td></tr>
                             <% } %>
                         </tbody>
                     </table>
