@@ -131,21 +131,54 @@ module.exports = {
     try {
       const currentUserId = req.session.user.id;
       const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10; // Adjusted default limit to 10
+      const limit = parseInt(req.query.limit) || 10;
       const skip = (page - 1) * limit;
+
+      // Fetch IDs of listings reported by the current user
+      const reportedListings = await prisma.report.findMany({
+        where: { reportedById: currentUserId },
+        select: { listingId: true }
+      });
+      const reportedListingIds = reportedListings.map(report => report.listingId);
   
-      // Fetch all listings except for the ones made by the currently logged-in user
+  
+      // Building the where clause for filters
+      let whereClause = {
+        userId: { not: currentUserId },
+        id: { notIn: reportedListingIds },
+        status: { notIn: ["SOLD", "REJECTED"] },
+      };
+  
+      // Search filter
+      if (req.query.search) {
+        whereClause.title = { contains: req.query.search, mode: 'insensitive' };
+      }
+  
+      // Price range filter
+      if (req.query['min-price'] || req.query['max-price']) {
+        whereClause.price = {};
+        if (req.query['min-price']) whereClause.price.gte = parseFloat(req.query['min-price']);
+        if (req.query['max-price']) whereClause.price.lte = parseFloat(req.query['max-price']);
+      }
+  
+      // Condition and category filters
+      if (req.query.condition) {
+        whereClause.conditionId = { in: Array.isArray(req.query.condition) ? req.query.condition : [req.query.condition] };
+      }
+      if (req.query.category) {
+        whereClause.categoryId = { in: Array.isArray(req.query.category) ? req.query.category : [req.query.category] };
+      }
+  
+      // Fetch conditions and categories
+      const [conditions, categories] = await Promise.all([
+        prisma.condition.findMany(),
+        prisma.category.findMany()
+      ]);
+  
+      // Fetch filtered listings
       const listings = await prisma.listing.findMany({
-        where: {
-          NOT: [
-            { userId: currentUserId },
-            { status: "SOLD" },
-            { status: "REJECTED" }, 
-          ],
-        },
-        include: {
-          photos: true, // Include photos of the listings
-        },
+        where: whereClause,
+        include: { photos: true },
         skip: skip,
         take: limit,
       });
@@ -163,26 +196,88 @@ module.exports = {
         }
       });
   
-      // Fetch the total count of listings for pagination
-      const totalListings = await prisma.listing.count({
-        where: {
-          NOT: [
-            { userId: currentUserId },
-            { status: "SOLD" },
-            { status: "REJECTED" }, 
-          ],
-        },
-      });
+      // Fetch total count of listings for pagination
+      const totalListings = await prisma.listing.count({ where: whereClause });
   
       // Calculate total pages
       const totalPages = Math.ceil(totalListings / limit);
-  
-      // Render the marketplace page without the selectedAds
+
+      // Fetch conversations where the current user is a participant
+      const conversations = await prisma.conversation.findMany({
+        where: {
+          OR: [
+            { user1Id: currentUserId },
+            { user2Id: currentUserId }
+          ]
+        },
+        include: {
+          messages: true // Include all messages
+        }
+      });
+
+      // Calculate the total number of unread messages received by the user
+      let totalUnreadMessages = 0;
+      conversations.forEach(conversation => {
+        const unreadReceivedMessages = conversation.messages.filter(message => 
+          !message.read && message.senderId !== currentUserId
+        );
+        totalUnreadMessages += unreadReceivedMessages.length;
+      });
+
+      // Fetch sales where the current user is the buyer
+      const sales = await prisma.sale.findMany({
+        where: {
+          buyerId: currentUserId,
+        },
+        include: {
+          listing: true, // Including listing to check for related ratings
+          rating: true   // Including rating information
+        }
+      });
+
+      // Count sales where feedback (rating) is pending
+      let totalFeedbackBuyingNotifications = sales.reduce((count, sale) => {
+        // Check if there's a rating associated with this sale given by the buyer
+        const feedbackGiven = sale.rating.some(rating => rating.raterId === currentUserId);
+        return count + (feedbackGiven ? 0 : 1);
+      }, 0);
+      
+      
+      // Fetch Sales for Listings Owned by the User
+      const userSales = await prisma.sale.findMany({
+        where: {
+          listing: {
+            userId: currentUserId, // Listings where the user is the seller
+            status: "SOLD"        // Considering only sold listings
+          }
+        },
+        include: {
+          listing: true,
+          rating: true // Include ratings associated with the sale
+        }
+      });
+
+      // Count sales where the seller's feedback to the buyer is pending
+      let totalFeedbackSellerNotifications = userSales.reduce((count, sale) => {
+        // Check if the seller (current user) has given feedback
+        const feedbackGivenBySeller = sale.rating.some(rating => 
+          rating.raterId === currentUserId && rating.type === "SELLER_TO_BUYER"
+        );
+        return count + (feedbackGivenBySeller ? 0 : 1);
+      }, 0);
+
+
+      // Render the marketplace page
       res.render('user/marketplace', {
         user: req.session.user,
         listings: listings,
+        conditions: conditions,
+        categories: categories,
         currentPage: page,
-        totalPages: totalPages
+        totalPages: totalPages,
+        totalUnreadMessages,
+        totalFeedbackBuyingNotifications,
+        totalFeedbackSellerNotifications
       });
   
     } catch (error) {
@@ -309,6 +404,27 @@ module.exports = {
     }
   }, 
 
+  async postReportListing(req, res) {
+    try {
+        const { reportReasons, listingId } = req.body;
+        const reportedById = req.session.user.id;
+
+        // Create a new report
+        await prisma.report.create({
+            data: {
+                listingId: listingId,
+                reportedById: reportedById,
+                reason: reportReasons.join(', '), // Join the reasons into a single string 
+            }
+        });
+
+        res.json({ success: true, message: 'Report submitted successfully' });
+    } catch (error) {
+        console.error("Error submitting report:", error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
   async getCreateListing(req, res) {
     try {
       // Fetch categories and conditions to populate the dropdowns
@@ -368,6 +484,150 @@ module.exports = {
     }
   },
 
+  async getEditListing(req, res) {
+    try {
+      const listingId = req.params.listingId;
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        include: {
+          photos: true,
+          category: true,
+          condition: true,
+        },
+      });
+  
+      if (!listing) {
+        return res.status(404).send("Listing not found");
+      }
+  
+      // Prepend the MIME type to each image's base64 data, if available
+      if (listing.photos && listing.photos.length > 0) {
+        listing.photos.forEach(photo => {
+          if (photo.imageUrl) {
+            // Assuming you store the image extension in the photo object
+            const mimeType = getMimeType(photo.extension);
+            photo.imageUrl = mimeType + photo.imageUrl.toString('base64');
+          }
+        });
+      }
+  
+      const categories = await prisma.category.findMany();
+      const conditions = await prisma.condition.findMany();
+      const userId = req.session.user.id;
+  
+      res.render('user/editListing', { 
+        listing, 
+        categories, 
+        conditions, 
+        userId
+      });
+    } catch (error) {
+      console.error("Error loading edit listing page:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postUpdateListing(req, res) {
+    try {
+      const { title, description, categoryId, conditionId, location, price } = req.body;
+      const listingId = req.params.listingId;
+  
+      // Ensure categoryId is provided
+      if (!categoryId) {
+        return res.status(400).send("Category ID is required");
+      }
+  
+      // Update the listing in the database
+      const updatedListing = await prisma.listing.update({
+        where: { id: listingId },
+        data: {
+          title: title,
+          description: description,
+          categoryId: categoryId,
+          conditionId: conditionId,
+          location: location,
+          price: parseFloat(price),
+        },
+      });
+  
+      res.redirect('/user/sellListing');
+    } catch (error) {
+      console.error("Error updating listing:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async updateListingImages(req, res) {
+    try { 
+        const listingId = req.params.listingId;
+        const newImages = req.files;
+
+        // Correctly handle parsing of removedImages
+        let removedImages = [];
+        if (req.body.removedImages) {
+            removedImages = JSON.parse(req.body.removedImages);
+        }
+
+        const listing = await prisma.listing.findUnique({
+            where: { id: listingId },
+            include: { photos: true },
+        });
+
+        if (!listing) {
+            return res.status(404).json({ error: 'Listing not found' });
+        }
+
+        // Handle new images
+        const newPhotos = newImages.map(image => {
+            const base64String = image.buffer.toString('base64');
+            return {
+                imageUrl: base64String,
+                listingId: listing.id,
+            };
+        });
+
+        if (newPhotos.length > 0) {
+            await prisma.photo.createMany({ data: newPhotos });
+        }
+
+        // Remove specified images from the database
+        if (removedImages.length > 0) {
+            await prisma.photo.deleteMany({
+                where: {
+                    id: { in: removedImages },
+                    listingId: listingId
+                }
+            });
+        } 
+
+        res.redirect('/user/sellListing');
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  async deleteListing(req, res) {
+    try {
+        const listingId = req.params.listingId;
+
+        // Delete associated photos first
+        await prisma.photo.deleteMany({
+            where: { listingId: listingId }
+        });
+
+        // Then delete the listing
+        await prisma.listing.delete({
+            where: { id: listingId }
+        });
+
+        res.status(200).json({ message: 'Listing deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting listing:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+  
   async getSellingListings(req, res) {
     try {
       const userId = req.session.user.id;
@@ -726,6 +986,7 @@ module.exports = {
 
       res.render('user/inbox', {
         user: req.session.user,
+        userId,
         sellingConversations,
         buyingConversations
       });
@@ -783,6 +1044,23 @@ module.exports = {
           conversationId: conversation.id,
         },
       });
+
+      // Identify unread received messages 
+      const unreadReceivedMessages = conversation.messages.filter(msg => 
+        !msg.read && msg.senderId !== userId // Filter for messages not read and not sent by the user
+      );
+
+      // Update unread received messages to mark as read
+      if (unreadReceivedMessages.length > 0) {
+        await prisma.message.updateMany({
+          where: {
+            id: { in: unreadReceivedMessages.map(msg => msg.id) }
+          },
+          data: {
+            read: true
+          }
+        });
+      }
 
       res.render('user/buyConversation', {
         user: req.session.user,
@@ -1024,6 +1302,23 @@ module.exports = {
           conversationId: conversation.id,
         },
       });
+
+      // Identify unread received messages 
+      const unreadReceivedMessages = conversation.messages.filter(msg => 
+        !msg.read && msg.senderId !== userId // Filter for messages not read and not sent by the user
+      );
+
+      // Update unread received messages to mark as read
+      if (unreadReceivedMessages.length > 0) {
+        await prisma.message.updateMany({
+          where: {
+            id: { in: unreadReceivedMessages.map(msg => msg.id) }
+          },
+          data: {
+            read: true
+          }
+        });
+      }
 
       res.render('user/sellConversation', {
         user: req.session.user,
