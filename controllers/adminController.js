@@ -765,33 +765,42 @@ module.exports = {
 
   async getMarketplaceManagement(req, res) {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const tab = req.query.tab || 'pending';
-        const limit = 10;
-        const skip = (page - 1) * limit;
-        const filter = { status: tab.toUpperCase() };
-        
-        const listings = await prisma.listing.findMany({
-            where: filter,
-            take: limit,
-            skip: skip,
-            include: {
-                user: true,
-                photos: true,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-        }); 
-
-
-        const totalListings = await prisma.listing.count({ where: filter });
-        const totalPages = Math.ceil(totalListings / limit);
-
-        res.render('admin/marketplacemanagement', { listings, page, totalPages, tab });
+      const page = parseInt(req.query.page) || 1;
+      const tab = req.query.tab || 'pending';
+      const limit = 10;
+      const skip = (page - 1) * limit;
+      
+      let whereClause;
+      if (tab === 'pending') {
+        whereClause = {
+          AND: [
+            { reports: { some: {} } },
+            { status: 'AVAILABLE' }
+          ]
+        };
+      }
+      
+      const listings = await prisma.listing.findMany({
+        where: whereClause,
+        include: {
+          user: true,
+          photos: true,
+          reports: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: limit,
+        skip: skip
+      });
+  
+      const totalListings = await prisma.listing.count({ where: whereClause });
+      const totalPages = Math.ceil(totalListings / limit);
+  
+      res.render('admin/marketplacemanagement', { listings, page, totalPages, tab });
     } catch (error) {
-        console.error('Error fetching listings:', error);
-        res.status(500).send('Error fetching listings');
+      console.error('Error fetching listings:', error);
+      res.status(500).send('Error fetching listings');
     }
   },
 
@@ -986,12 +995,54 @@ module.exports = {
 
   async postApproveListing(req, res) {
     const { listingId } = req.params;
-
+  
     try {
-      await prisma.listing.update({
+      // Fetch the listing details
+      const listing = await prisma.listing.findUnique({
         where: { id: listingId },
-        data: { status: 'AVAILABLE' }
+        include: {
+          user: true // Include the user who posted the listing
+        }
       });
+  
+      // Fetch all reports related to the listing
+      const reports = await prisma.report.findMany({
+        where: { listingId: listingId },
+        include: { reportedBy: true } // Include the user who made the report
+      });
+  
+      // Clear reports for the listing
+      await prisma.report.deleteMany({
+        where: { listingId: listingId }
+      });
+  
+      // Create email transporter
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+  
+      // Notify each user who reported the listing
+      reports.forEach(report => {
+        const mailOptions = {
+          from: process.env.EMAIL_USERNAME,
+          to: report.reportedBy.email,
+          subject: 'Report Review Update',
+          html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+                  <h1>Report Update</h1>
+                  <p>Your report for the listing titled "${listing.title}" has been reviewed. We have found that this listing does not violate our marketplace policies.</p>
+                  <p>Thank you for helping us maintain a safe and trustworthy marketplace.</p>
+                  <p>Best regards,</p>
+                  <p>CycleUpTech Team</p>
+                </div>`
+        };
+  
+        transporter.sendMail(mailOptions);
+      });
+  
       res.redirect('/admin/marketplacemanagement');
     } catch (error) {
       console.error('Error approving listing:', error);
@@ -1001,12 +1052,77 @@ module.exports = {
 
   async postRejectListing(req, res) {
     const { listingId } = req.params;
-
+  
     try {
-      await prisma.listing.update({
+      // Fetch the listing along with the user details
+      const listing = await prisma.listing.findUnique({
         where: { id: listingId },
-        data: { status: 'REJECTED' }
+        include: {
+          user: true,
+          reports: {
+            include: {
+              reportedBy: true // Include the users who made the reports
+            }
+          }
+        }
       });
+
+      // Delete associated photos and reports
+      await prisma.photo.deleteMany({
+        where: { listingId: listingId }
+      });
+      await prisma.report.deleteMany({
+        where: { listingId: listingId }
+      });
+  
+      // Delete the listing
+      await prisma.listing.delete({
+        where: { id: listingId }
+      });
+  
+      // Create email transporter
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+  
+      // Notify the user who posted the listing
+      const mailOptionsPoster = {
+        from: process.env.EMAIL_USERNAME,
+        to: listing.user.email,
+        subject: 'Listing Rejection Notice',
+        html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+                <h1>Listing Rejection</h1>
+                <p>Your listing titled "${listing.title}" has been reviewed and found in violation of our marketplace policies. As a result, it has been removed from the marketplace.</p>
+                <p>For more information, please contact our support team.</p>
+                <p>Best regards,</p>
+                <p>CycleUpTech Team</p>
+              </div>`
+      };
+
+      transporter.sendMail(mailOptionsPoster);
+
+      // Notify users who made the reports
+      listing.reports.forEach(report => {
+        const mailOptionsReporter = {
+          from: process.env.EMAIL_USERNAME,
+          to: report.reportedBy.email,
+          subject: 'Report Update on Listing',
+          html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+                  <h1>Report Review Update</h1>
+                  <p>Your report on the listing titled "${listing.title}" has been reviewed. The listing has been found in violation of our guidelines and removed from the marketplace.</p>
+                  <p>Thank you for your vigilance in helping maintain a safe and trustworthy marketplace.</p>
+                  <p>Best regards,</p>
+                  <p>CycleUpTech Team</p>
+                </div>`
+        };
+
+        transporter.sendMail(mailOptionsReporter);
+      });
+  
       res.redirect('/admin/marketplacemanagement');
     } catch (error) {
       console.error('Error rejecting listing:', error);

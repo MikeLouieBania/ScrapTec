@@ -209,16 +209,13 @@
             <!-- Tabs for filtering listings -->
             <ul class="nav nav-tabs" id="listingTabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link <%= tab === 'pending' ? 'active' : '' %>" id="pending-tab" href="?tab=pending">Pending Review</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= tab === 'rejected' ? 'active' : '' %>" id="rejected-tab" href="?tab=rejected">Rejected</a>
-                </li>
+                    <a class="nav-link <%= tab === 'pending' ? 'active' : '' %>" id="pending-tab">Reported Listings</a>
+                </li> 
             </ul>
     
             <!-- Tab panes for listing -->
             <div class="tab-content">
-                <div class="tab-pane fade <%= tab === 'pending' || tab === 'rejected' ? 'show active' : '' %>" id="<%= tab %>" role="tabpanel">
+                <div class="tab-pane fade <%= tab === 'pending' ? 'show active' : '' %>" id="<%= tab %>" role="tabpanel">
                     <!-- Table for listings -->
                     <table class="table">
                         <thead>
@@ -230,6 +227,7 @@
                                 <th>Description</th>
                                 <th>Status</th>
                                 <th>Location</th>
+                                <th>Report Reasons</th>
                                 <th>
                                     <% if (tab === 'pending') { %>
                                         Actions
@@ -271,19 +269,47 @@
                                         <td><%= listing.status %></td>
                                         <td><%= listing.location %></td>
                                         <td>
+                                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#reportModal<%= listing.id %>">
+                                                View Reports
+                                            </button>
+                                        </td>
+
+                                        <div class="modal fade" id="reportModal<%= listing.id %>" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel<%= listing.id %>" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="reportModalLabel<%= listing.id %>">Reports for <%= listing.title %></h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul>
+                                                            <% listing.reports.forEach(report => { %>
+                                                                <li><%= report.reason %>: <%= report.comments %></li>
+                                                            <% }) %>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <td>
                                             <% if (tab === 'pending') { %>
                                                 <form action="/admin/listings/<%= listing.id %>/approve" method="post">
-                                                    <button type="submit" class="btn btn-success">Approve</button>
+                                                    <button type="submit" class="btn btn-success">Dismiss</button>
                                                 </form>
                                                 <form action="/admin/listings/<%= listing.id %>/reject" method="post">
-                                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                                    <button type="submit" class="btn btn-danger">Remove</button>
                                                 </form>
                                             <% } %>
                                         </td>
                                     </tr>
                                 <% }) %>
                             <% } else { %>
-                                <tr><td colspan="7">No listings available for this tab.</td></tr>
+                                <tr><td colspan="7">No reported listings available for review</td></tr>
                             <% } %>
                         </tbody>
                     </table>
@@ -343,7 +369,8 @@
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+
     <script>
         function openFullscreenCarousel(listingId) {
             const originalCarousel = document.getElementById(`carousel${listingId}`);

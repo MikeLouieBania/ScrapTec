@@ -782,7 +782,19 @@
             border-radius: 4px;
         }
         
-        
+        .notification-badge {
+            background-color: #007bff; /* Blue color */
+            color: white;
+            font-size: 0.75em; /* Adjust size as needed */
+            padding: 3px 6px;
+            border-radius: 50%; /* Circular shape */
+            position: relative;
+            top: -10px; /* Adjust positioning as needed */
+            left: 5px;
+            box-shadow: 0px 0px 1px black; /* Optional: adds a slight shadow for depth */
+        }
+
+
 
  
         
@@ -792,7 +804,7 @@
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top shift">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/user/marketplace">
             <img src="https://i.postimg.cc/qqK1pXMX/DALL-E-2023-11-13-17-07-22-An-impactful-and-memorable-logo-for-a-website-about-reusing-old-compute.png" alt="" class="navbar-logo">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -837,23 +849,36 @@
           <div class="col-md-3"> <!-- Using col-md-3 for the search bar -->
 
             <div class="search-box">
-              <ion-icon name="search" class="search-icon"></ion-icon>
-              <input type="text" class="input-search" placeholder="Search for products...">
-              <!-- The Unicode character represents a magnifying glass icon -->
+                <form class="search-box" method="get" action="/user/marketplace">
+                    <ion-icon name="search" class="search-icon"></ion-icon>
+                    <input type="text" class="input-search" name="search" placeholder="Search for products...">
+                </form>
+                              
             </div>
+
+            
           </div>
           <div class="menu"> 
             <a href="inbox" class="menu-item">
               <span class="icon inbox"></span>
               Inbox
+              <% if (totalUnreadMessages > 0) { %>
+                <span class="notification-badge"><%= totalUnreadMessages %></span>
+              <% } %>
             </a>
             <a href="buyListing" class="menu-item">
               <span class="icon buying"></span>
               Buying
+              <% if (totalFeedbackBuyingNotifications > 0) { %>
+                  <span class="notification-badge"><%= totalFeedbackBuyingNotifications %></span>
+              <% } %>
             </a>
             <a href="sellListing" class="menu-item">
               <span class="icon selling"></span>
               Selling
+              <% if (totalFeedbackSellerNotifications > 0) { %>
+                  <span class="notification-badge"><%= totalFeedbackSellerNotifications %></span>
+              <% } %>
             </a>
             <a href="createListing" class="listahan">
               <span class="icon lists"></span>
@@ -872,13 +897,17 @@
             </div>
 
               <!-- Price Range Selector -->
+              <form id="price-range-form" method="get" action="/user/marketplace">
                 <div class="price-range-selector">
                     <label for="min-price">Min Price:</label>
                     <input type="number" id="min-price" name="min-price" placeholder="Min">
-
                     <label for="max-price">Max Price:</label>
                     <input type="number" id="max-price" name="max-price" placeholder="Max">
                 </div>
+                <button type="submit" style="width: 150px; margin-top: 20px;">Apply Price Range</button>
+            </form>
+            
+            
 
             <div class="row flex-wrap">
               <% listings.forEach(listing=> { %>
@@ -982,50 +1011,40 @@
           </footer>
           <!-- End Footer Section -->
         </div>
-
         <!-- Modal -->
-        <div id="myModal" class="modal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <!-- Your categories and conditions code here -->
-            <!-- Condition -->
-            <!-- Category Selector -->
-            <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Categories</h4>
-            <div class="categories-list">
-              <div class="categories-item">
-                <input type="checkbox" id="action">
-                <label for="action">Action</label>
-              </div>
-              <div class="categories-item">
-                <input type="checkbox" id="action-adventure">
-                <label for="action-adventure">Action & Adventure</label>
-              </div>
-              <div class="categories-item">
-                <input type="checkbox" id="adventure">
-                <label for="adventure">Adventure</label>
-              </div>
-              <!-- Add more categories similarly -->
+        <form id="condition-category-form" method="get" action="/user/marketplace">
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <!-- Condition -->
+                    <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Condition</h4>
+                    <div class="categories-list">
+                        <!-- Dynamically populate conditions -->
+                        <% conditions.forEach(condition => { %>
+                        <div class="categories-item">
+                            <input type="checkbox" id="<%= condition.name %>" name="condition" value="<%= condition.id %>">
+                            <label for="<%= condition.name %>"><%= condition.name %></label>
+                        </div>
+                        <% }) %>
+                    </div>
+                    <!-- Category Selector -->
+                    <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Categories</h4>
+                    <div class="categories-list">
+                        <!-- Dynamically populate categories -->
+                        <% categories.forEach(category => { %>
+                        <div class="categories-item">
+                            <input type="checkbox" id="<%= category.name %>" name="category" value="<%= category.id %>">
+                            <label for="<%= category.name %>"><%= category.name %></label>
+                        </div>
+                        <% }) %>
+                    </div>
+                    <button type="submit" style="width: 150px; margin-top: 20px;">Apply Filter</button>
+                </div>
             </div>
-
-            <h4 style="color: rgb(102, 97, 97); font-size: 27px; margin-top: 10px;">Condition</h4>
-            <div class="categories-list">
-              <div class="categories-item">
-                <input type="checkbox" id="action">
-                <label for="action">Action</label>
-              </div>
-              <div class="categories-item">
-                <input type="checkbox" id="action-adventure">
-                <label for="action-adventure">Action & Adventure</label>
-              </div>
-              <div class="categories-item">
-                <input type="checkbox" id="adventure">
-                <label for="adventure">Adventure</label>
-              </div>
-              <!-- Add more categories similarly -->
-            </div>
-            <button type="submitz" style="width: 150px; left: 100%;">Apply Filter</button>
-          </div>
-        </div>
+        </form>
+        
+        
+  
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -1152,6 +1171,8 @@
       });
     });
   </script>
+
+ 
   
 
 </html>
