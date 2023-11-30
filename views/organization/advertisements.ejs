@@ -9,7 +9,7 @@
 
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -142,6 +142,7 @@
       align-items: center;
     }
 
+    /* Chart Container Styles */
     .chart-container {
       position: relative;
       margin: auto;
@@ -149,20 +150,68 @@
       width: 80vw;
     }
 
+    /* Card Chart Styles */
     .card-chart {
       margin-top: 20px;
     }
 
+    /* Card Styles */
     .card {
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
+      background-color: #fff; /* White background for clarity */
+      border: none; /* Removes default border */
+      border-radius: 12px; /* Rounded corners for a modern look */
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* Deeper shadow for depth */
+      transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+      overflow: hidden; /* Ensures content fits within the rounded corners */
     }
 
     .card:hover {
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-      transform: scale(1.02);
+      transform: translateY(-5px); /* Slight lift on hover */
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* Increased shadow on hover for emphasis */
     }
+
+    .card-img-top {
+      width: 100%;
+      height: auto; /* Adjust height as needed */
+      object-fit: cover; /* Ensures image covers the card top area */
+    }
+
+    .card-body {
+      padding: 20px; /* Spacious padding for content */
+    }
+
+    .card-title {
+      color: #5072A7; /* Highlight color for titles */
+      font-weight: bold; /* Bold font for titles */
+      margin-bottom: 10px; /* Space below the title */
+    }
+
+    .card-text {
+      color: #666; /* Subtle color for text */
+      line-height: 1.5; /* Improved line spacing for readability */
+    }
+
+    /* Button Styles within Card */
+    .card .btn {
+      background-color: #5072A7; /* Primary button color */
+      color: white; /* Text color */
+      border-radius: 5px; /* Rounded corners for buttons */
+      padding: 8px 15px; /* Padding for buttons */
+      border: none; /* Removes default border */
+      transition: background-color 0.2s ease; /* Smooth transition for hover */
+    }
+
+    .card .btn:hover {
+      background-color: #0066b2; /* Darker shade on hover */
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .card {
+          margin-bottom: 20px; /* Spacing between cards on smaller screens */
+      }
+    }
+
 
   </style>
 </head>
@@ -210,7 +259,7 @@
         <div class="col-md-4 mb-4">
           <div class="card">
             <!-- Assuming imageUrl is a base64 encoded image -->
-            <img src="data:image/png;base64,<%= ad.imageUrl.toString('base64') %>" class="card-img-top"
+            <img src="data:image/png;base64,<%= ad.imageUrl.toString('base64') %>" class="card-img-top" style="width: 349x; height: 300px; overflow: hidden;"
               alt="<%= ad.title %>">
             <div class="card-body">
               <h5 class="card-title">
