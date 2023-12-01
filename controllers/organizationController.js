@@ -754,7 +754,19 @@ module.exports = {
         },
       });
   
-      const citiesWithCounts = await getCitiesWithUserCounts();
+      let citiesWithCounts = await getCitiesWithUserCounts();
+      citiesWithCounts = citiesWithCounts.map(city => {
+          let requiredPoints;
+          if (city.usersCount > 1000) {
+              requiredPoints = 2500; // Tier 1
+          } else if (city.usersCount >= 500) {
+              requiredPoints = 2000;  // Tier 2
+          } else {
+              requiredPoints = 1500;  // Tier 3
+          }
+          return {...city, requiredPoints};
+      });
+  
   
       const donationTrend = await calculateDonationTrend(organization.donations);
       const pointsData = await calculatePointsData(organization.advertisements, organization.donations);
