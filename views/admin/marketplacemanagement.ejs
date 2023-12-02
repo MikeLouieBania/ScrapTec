@@ -67,9 +67,10 @@
 
        /* Main Content Styling */
         .main-content {
-            padding: 20px 20px 20px 70px; /* Consolidated padding */
+            padding: 20px 20px 20px 100px; /* Adjust left padding to create more space from the sidebar */
             transition: 0.5s; /* Smooth transition for layout changes */
         }
+
 
         /* Table Styling */
         .table {
@@ -158,25 +159,103 @@
             border-color: #72A0C1; /* Border color to match */
         }
 
-        /* Button Styling for Approve/Reject */
+        /* Button Styling */
+        .form-group {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 10px; /* Space between buttons */
+        }
         .btn-success, .btn-danger {
-            padding: 6px 12px;
-            font-size: 14px;
-            margin-right: 5px;
-            border-radius: 4px;
-            transition: background-color 0.2s, border-color 0.2s;
+            padding: 8px 15px;
+            font-size: 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Full width for buttons */
         }
 
-        .btn-success:hover {
+        .btn-success {
             background-color: #28a745;
             border-color: #28a745;
         }
 
-        .btn-danger:hover {
+        .btn-danger {
             background-color: #dc3545;
             border-color: #dc3545;
         }
-            
+
+        .btn-success:hover, .btn-success:focus {
+            background-color: #218838;
+            border-color: #1e7e34;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5);
+        }
+
+        .btn-danger:hover, .btn-danger:focus {
+            background-color: #c82333;
+            border-color: #bd2130;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5);
+        }
+
+            /* Modal Body Styling */
+        .modal-body {
+            padding: 20px; /* Ample padding for readability */
+            background-color: #fff; /* Clean white background */
+        }
+
+        .modal-body ul {
+            list-style-type: none; /* Removes default bullet points */
+            padding-left: 0; /* Aligns list items with the rest of the content */
+            margin: 0; /* Removes default margin */
+        }
+
+        .modal-body ul li {
+            margin-bottom: 10px; /* Spacing between list items */
+            padding-left: 15px; /* Indent text for better readability */
+            position: relative; /* For positioning the custom bullet */
+        }
+
+        .modal-body ul li:before {
+            content: '•'; /* Custom bullet symbol */
+            color: #007bff; /* Give the bullet a distinct color */
+            font-size: 20px; /* Slightly larger bullet size */
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* Modal Footer Styling */
+        .modal-footer {
+            padding: 15px;
+            text-align: right; /* Aligns the Close button to the right */
+            background-color: #f8f9fa; /* Light grey background */
+            border-top: 1px solid #dee2e6; /* Subtle top border for a refined look */
+        }
+
+        /* Close Button Styling */
+        .btn-secondary {
+            color: #fff; /* White text for better readability */
+            background-color: #6c757d; /* Neutral color for the Close button */
+            border-color: #6c757d;
+            padding: 6px 12px; /* Standard padding */
+            border-radius: 4px; /* Slightly rounded corners */
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268; /* Darker shade on hover */
+            border-color: #545b62;
+        }
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .main-content {
+                padding-left: 100px; /* Increase left padding for medium screens */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding-left: 20px; /* Reduce left padding for very small screens */
+            }
+        }
 
 
     </style>
@@ -205,7 +284,6 @@
     <!-- Main content -->
     <div class="main-content">
         <div class="container">
-            <h1>Marketplace Management</h1>
             <!-- Tabs for filtering listings -->
             <ul class="nav nav-tabs" id="listingTabs" role="tablist">
                 <li class="nav-item">
@@ -298,12 +376,15 @@
                                         </div>
                                         <td>
                                             <% if (tab === 'pending') { %>
-                                                <form action="/admin/listings/<%= listing.id %>/approve" method="post">
-                                                    <button type="submit" class="btn btn-success">Dismiss</button>
-                                                </form>
-                                                <form action="/admin/listings/<%= listing.id %>/reject" method="post">
-                                                    <button type="submit" class="btn btn-danger">Remove</button>
-                                                </form>
+                                                <!-- HTML -->
+                                                <div class="form-group">
+                                                    <form action="/admin/listings/<%= listing.id %>/approve" method="post" class="form-inline">
+                                                        <button type="submit" class="btn btn-success">Dismiss</button>
+                                                    </form>
+                                                    <form action="/admin/listings/<%= listing.id %>/reject" method="post" class="form-inline">
+                                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                                    </form>
+                                                </div>
                                             <% } %>
                                         </td>
                                     </tr>
