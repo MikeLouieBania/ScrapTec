@@ -51,6 +51,7 @@
 
         .navbar-toggler {
             border: none;
+            margin-right: auto;
         }
     
         .navbar-toggler-icon {
@@ -59,6 +60,7 @@
             height: 30px;
             vertical-align: middle;
             background-image: none;
+            
         }
     
         .navbar-toggler-icon:after,
@@ -72,7 +74,8 @@
         }
         .navbar-light .navbar-toggler-icon {
             background-color: #219ebc;
-          }      
+          }   
+
 
         nav ul {
             list-style: none;
@@ -153,6 +156,7 @@
 
         .card-title {
             font-weight: bold;
+            margin-top: 10px;
         }
         
         .card {
@@ -179,77 +183,91 @@
         }
 
             /* Responsive Styles */
-@media (max-width: 768px) {
-    .navbar {
-        padding: 5px 0;
+    @media (max-width: 768px) {
+        .navbar {
+            padding: 5px 0;
+        }
+
+        nav ul li {
+            display: block;
+            margin: 5px 0;
+        }
+
+        nav ul li a {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .center-buttons .btn {
+            display: block;
+            margin: 10px auto;
+        }
+
+        .card {
+            margin-top: 40px;
+        }
+
+        .circle-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            top: -25px;
+        }
     }
 
-    nav ul li {
-        display: block;
-        margin: 5px 0;
-    }
+    @media (max-width: 576px) {
+        .container {
+            padding: 10px;
+        }
 
-    nav ul li a {
-        padding: 10px;
-        font-size: 14px;
-    }
+        .navbar .navbar-brand,
+        .navbar .nav-link {
+            font-size: 14px;
+        }
 
-    .center-buttons .btn {
-        display: block;
-        margin: 10px auto;
+        .btn-logout {
+            padding: 8px 15px;
+            font-size: 14px;
+            
+        }
     }
+    @media (max-width: 991px) { /* Adjust this breakpoint as needed */
+        .navbar-collapse {
+            text-align: center;
+        }
 
-    .card {
-        margin-top: 40px;
+        .navbar-collapse .form-inline {
+            display: block;
+            margin-top: 10px; /* Add some space above the button */
+        }
     }
-
-    .circle-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-        top: -25px;
-    }
-}
-
-@media (max-width: 576px) {
-    .container {
-        padding: 10px;
-    }
-
-    .navbar .navbar-brand,
-    .navbar .nav-link {
-        font-size: 14px;
-    }
-
-    .btn-logout {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
-}
     </style>
 </head>
 
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon">
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">             
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary">
-                            <%= dropPointName %>
-                        </span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/manager/managerAccount">Account</a>
-                </li>
-            </ul>
+           <!-- Navigation Bar -->
+           <nav class="navbar navbar-expand-lg" style="background-color: #219ebc;">
+            <!-- Navbar Toggler Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar content -->
+            <div class="collapse navbar-collapse" id="navbarNav">             
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary">
+                                <%= dropPointName %>
+                            </span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/manager/managerAccount">Account</a>
+                    </li>
+                </ul>
             <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
                 <button class="btn btn-logout my-2 my-sm-0" type="submit" 
                 style="font-family: 'Poppins', sans-serif; background-color: #002244; border: none; padding: 10px 20px; border-radius: 5px; color: white; font-weight: bold;" 

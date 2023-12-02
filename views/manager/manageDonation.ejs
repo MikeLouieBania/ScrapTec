@@ -107,6 +107,34 @@
             text-decoration: none;
         }
 
+            
+        .navbar-toggler {
+            border: none;
+            margin-right: auto;
+        }
+    
+        .navbar-toggler-icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            background-image: none;
+            
+        }
+    
+        .navbar-toggler-icon:after,
+        .navbar-toggler-icon:before,
+        .navbar-toggler-icon div {
+            content: '';
+            display: block;
+            height: 3px;
+            margin: 5px 0;
+            background-color: #fff; /* Change color if needed */
+        }
+        .navbar-light .navbar-toggler-icon {
+            background-color: #219ebc;
+          }   
+
         /* status modal header */
         #statusModalLabel {
             text-align: center;
@@ -281,9 +309,6 @@
             box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Enhanced shadow on focus */
         }
         
-
-        
-
         /* Pagination styling */
         .table-wrapper {
             position: relative;
@@ -318,7 +343,60 @@
             background-color: #6699CC;
             color: white;
         }
+              /* Additional responsive styles */
+            @media (max-width: 768px) {
 
+            .table-custom {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+                margin-left: 0 !important;
+            }
+
+            .pagination {
+                position: static;
+                margin-top: 20px;
+                justify-content: center;
+            }
+        }
+
+            /* Custom Navbar Toggler Styles */
+            .navbar-toggler {
+                border: none;
+                margin-right: auto;
+            }
+
+            .navbar-toggler-icon {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                vertical-align: middle;
+                background-image: none;
+            }
+
+            .navbar-toggler-icon:after,
+            .navbar-toggler-icon:before,
+            .navbar-toggler-icon div {
+                content: '';
+                display: block;
+                height: 3px;
+                margin: 5px 0;
+                background-color: #fff; /* Change color if needed */
+            }
+
+            /* Center the logout button on smaller screens */
+            @media (max-width: 992px) {
+                .navbar-collapse .form-inline {
+                    display: flex;
+                    justify-content: center;
+                    width: 100%;
+                    margin-top: 10px;
+                }
+            }
         
     </style>
 </head>
@@ -326,25 +404,35 @@
 <body>
 
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary">
-                        <%= dropPointName %>
-                    </span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/manager/managerAccount">Account</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
-            <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
-        </form>
+  
+          <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg" style="background-color: #219ebc;">
+        <!-- Navbar Toggler Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar content -->
+        <div class="collapse navbar-collapse" id="navbarNav">             
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/manager/dashboard">Dashboard - <span class="badge badge-secondary">
+                            <%= dropPointName %>
+                        </span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/manager/manageDonation">Manage Donations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/manager/managerAccount">Account</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
+                <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
+            </form>
+        </div>
     </nav>
+
 
     <div class="container">
   

@@ -92,6 +92,45 @@
             color: white;
         }
 
+            /* Responsive Styles */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px;
+                margin-top: 20%;
+            }
+
+            .login-container h2 {
+                font-size: 24px; /* Smaller font size for the heading */
+            }
+
+            .icon-lock {
+                font-size: 40px; /* Smaller icon size */
+            }
+
+            .form-control, .input-group-text, .btn-primary {
+                font-size: 14px; /* Smaller font size for form elements */
+            }
+
+            .btn-primary {
+                padding: 8px 15px; /* Smaller padding for the button */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .login-container {
+                padding: 20px;
+                margin-top: 30%; /* More margin at the top for very small screens */
+            }
+
+            .login-container h2 {
+                font-size: 20px; /* Even smaller font size for the heading */
+            }
+
+            .icon-lock {
+                font-size: 35px; /* Further reduce the icon size */
+            }
+        }
+
     </style>
 </head>
 <body>
