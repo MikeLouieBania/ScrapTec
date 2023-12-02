@@ -423,6 +423,111 @@
       max-width: none; /* Remove max-width restriction */
   }
 
+            /* Responsive Styles for Main Content */
+
+    @media (max-width: 992px) {
+      .main-content {
+          padding-left: 100px; /* Increase left padding */
+      }
+
+      .table-responsive {
+          margin-top: 10px;
+      }
+
+      .modal-dialog {
+          max-width: 90%; /* Adjust modal width */
+      }
+
+      .form-control, .btn-primary, .details-button {
+          font-size: 13px; /* Adjust font size */
+      }
+
+      .search-section .search-input {
+          width: 100%; /* Full width for search input */
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+          padding-left: 80px; /* Adjust padding for smaller screens */
+      }
+
+      .table {
+          width: 100%; /* Full width for tables */
+      }
+
+      .modal-dialog {
+          margin: 15px; /* Adjust modal margin */
+      }
+
+      .nav-tabs .nav-link {
+          font-size: 12px; /* Smaller font size for tabs */
+      }
+
+      .search-section {
+          flex-direction: column; /* Stack search elements vertically */
+          align-items: stretch; /* Stretch items to full width */
+      }
+
+      .search-section .search-input,
+      .search-section .btn-secondary {
+          width: 100%; /* Full width for search elements */
+      }
+    }
+
+    @media (max-width: 576px) {
+      .main-content {
+          padding-left: 60px; /* Minimal padding for very small screens */
+      }
+
+      .table th, .table td {
+          padding: 5px; /* Smaller padding for table cells */
+          font-size: 12px; /* Smaller font size for table text */
+      }
+
+      .modal-header, .modal-body, .modal-footer {
+          padding: 10px; /* Reduce padding in modal */
+      }
+
+      .form-control, .btn-primary, .details-button {
+          padding: 6px 10px; /* Adjust padding for form elements and buttons */
+          font-size: 12px; /* Smaller font size */
+      }
+
+      .pagination .page-link {
+          padding: 3px 6px; /* Smaller padding for pagination links */
+          font-size: 12px; /* Smaller font size for pagination text */
+      }
+    }
+
+    /* Responsive Styles for "Register a Manager" Button */
+
+    @media (max-width: 992px) {
+      .btn.reg-button {
+          font-size: 14px; /* Slightly smaller font size */
+          padding: 8px 15px; /* Adjust padding */
+          transform: translateX(-20px); /* Adjust horizontal position */
+      }
+    }
+
+    @media (max-width: 768px) {
+      .btn.reg-button {
+          font-size: 13px; /* Further reduce font size */
+          padding: 6px 12px; /* Further reduce padding */
+          transform: translateX(-10px); /* Adjust horizontal position */
+          width: auto; /* Auto width for better fit */
+      }
+    }
+
+    @media (max-width: 576px) {
+      .btn.reg-button {
+          font-size: 12px; /* Smallest font size */
+          padding: 5px 10px; /* Minimal padding */
+          transform: translateX(0); /* Reset horizontal position */
+          width: 100%; /* Full width for very small screens */
+      }
+    }
+
 
   </style>
 

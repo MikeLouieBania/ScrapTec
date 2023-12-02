@@ -255,33 +255,53 @@
             color: #fff; /* White text on hover */
         }
 
+        /* Responsive Styles for Main Content */
 
-                
-
-        /* Adjustments for smaller screens */
-        @media (max-width: 768px) {
-            .filter-search-section form {
-                flex-direction: column;
-            }
-
-            .filter-search-section select {
-                margin-bottom: 10px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 200px;
-            }
-
+        @media (max-width: 992px) {
+            /* Adjustments for medium-sized screens and smaller */
             .main-content {
-                padding-left: 210px;
+                padding-left: 100px; /* Increase left padding to avoid overlap with sidebar */
             }
 
-            .filter-search-section form {
-                flex-direction: column;
+            /* Adjustments for tables or other elements as needed */
+            .table {
+                width: 100%; /* Full width for better readability */
+                margin-left: 0; /* Align table with the main content */
+            }
+
+            /* Other adjustments as needed */
+        }
+
+        @media (max-width: 768px) {
+            /* Adjustments for small screens */
+            .main-content {
+                padding-left: 80px; /* Slightly less padding for smaller screens */
+            }
+
+            /* Adjust font sizes, margins, or other properties for smaller screens */
+            .table th, .table td {
+                padding: 5px; /* Smaller padding within table cells */
             }
         }
+
+        @media (max-width: 576px) {
+            /* Adjustments for extra small screens */
+            .main-content {
+                padding-left: 60px; /* Minimal padding for very small screens */
+            }
+
+            /* Further adjustments for tables or other elements */
+            .table th, .table td {
+                font-size: 14px; /* Smaller font size for table content */
+            }
+
+            /* Additional adjustments for other elements as needed */
+        }
+
+        /* You can add more media queries for specific adjustments on different screen sizes */
+
+
+    
     </style>
 </head>
 
@@ -307,7 +327,6 @@
     <!-- Main content -->
     <div class="main-content">
         <div class="container">
-            <h1>User Management</h1>
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">

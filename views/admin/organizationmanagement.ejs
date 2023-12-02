@@ -170,26 +170,74 @@
         color: white;             /* Set the hover color to match the default color */
         text-decoration: none;   /* Remove any underline on hover */
     }
-    
 
 
+    /* Style for the dropdown and button */
+    .status-dropdown {
+      display: inline-block;
+      vertical-align: middle;
+    }
 
+    .update-status-btn {
+      vertical-align: middle;
+    }
 
-/* Style for the dropdown and button */
-.status-dropdown {
-  display: inline-block;
-  vertical-align: middle;
+    .btn-link {
+      padding-left: 0;
+      padding-right: 0;
+      text-decoration: none;
+      color: #007bff;  /* Blue color, similar to Bootstrap's .btn-link */
+    }
+
+        /* Responsive Styles for Tablets */
+@media (max-width: 768px) {
+  .main-content {
+      padding-left: 60px; /* Adjust padding for smaller screens */
+  }
+
+  .nav-tabs {
+      width: 100%; /* Full width for nav tabs */
+  }
+
+  .nav-link {
+      width: auto; /* Auto width for nav links */
+      padding: 10px; /* Adjust padding for smaller screens */
+    }
+
+    .table {
+        width: 100%; /* Full width for tables */
+        margin-left: 0; /* Reset margin */
+    }
+
+    .table th, .table td {
+        padding: 8px; /* Adjust padding for table cells */
+    }
+
+    .status-dropdown, .update-status-btn {
+        display: block; /* Stack dropdown and button */
+        width: 100%; /* Full width */
+        margin-top: 10px; /* Add space between stacked elements */
+    }
 }
 
-.update-status-btn {
-  vertical-align: middle;
-}
+/* Responsive Styles for Mobile Phones */
+@media (max-width: 576px) {
+    .main-content {
+        padding-left: 20px; /* Reduce padding for very small screens */
+        padding-right: 20px; /* Add padding to the right */
+    }
 
-.btn-link {
-  padding-left: 0;
-  padding-right: 0;
-  text-decoration: none;
-  color: #007bff;  /* Blue color, similar to Bootstrap's .btn-link */
+    .nav-tabs .nav-link {
+        font-size: 14px; /* Smaller font size for nav links */
+    }
+
+    .table th, .table td {
+        padding: 5px; /* Further reduce padding for table cells */
+    }
+
+    .btn-link {
+        font-size: 14px; /* Smaller font size for button links */
+    }
 }
 
     </style>
@@ -216,7 +264,6 @@
     <!-- Main content -->
     <div class="main-content ml-200">
       <div class="container">
-        <h1>Organization Management</h1>
         <!-- Tabs for filtering organizations -->
         <ul class="nav nav-tabs">
           <li class="nav-item">
