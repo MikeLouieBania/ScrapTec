@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=1024, user-scalable=no">
     <title>E-Waste Zero</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
@@ -23,12 +23,11 @@
         body {
       
             /* Adjusted the padding for navbar */
-            overflow-x: hidden;
             margin-bottom: 60px;
             background-color: #F0F8FF;  
             font-family: 'Poppins', sans-serif;  
         }
-
+   
         .navbar {
             background-color: #219ebc;
             padding: 10px 0;
@@ -146,6 +145,9 @@
         .close:focus {
             color: #333;
         }
+       
+       
+   
 
         /* Filter By Button */
         .image-button {
@@ -175,35 +177,28 @@
             outline: none;
         }
 
-        /* Apply Modal Button Styling */
-        button[type="submitz"] {
-            background-color: #219ebc;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            /* Space at the top */
-            display: block;
-            /* Make it a block element */
-            width: 100%;
-            /* Full width */
-            text-align: center;
-            /* Center the text */
+      /* Apply Filter Button Styling */
+        .apply-filter-btn {
+            width: 150px; /* Fixed width */
+            margin-top: 20px; /* Top margin */
+            padding: 10px 15px; /* Padding for better touch area */
+            background-color: #4B9CD3; /* Primary button color */
+            color: white; /* Text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Cursor changes to pointer to indicate it's clickable */
+            transition: background-color 0.3s, box-shadow 0.2s; /* Smooth transition for hover effects */
+            font-weight: bold; /* Bold text */
+            text-align: center; /* Center the text */
+            display: block; /* Block level for better control */
+            margin-left: auto; /* Center the button horizontally */
+            margin-right: auto; /* Center the button horizontally */
         }
 
-        button[type="submitz"]:hover {
-            background-color: #a8dadc;
-            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        button[type="submitz"]:focus {
-            outline: none;
+        .apply-filter-btn:hover, .apply-filter-btn:focus {
+            background-color: #0056b3; /* Darker shade for hover and focus */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            outline: none; /* Remove outline on focus for cleaner look */
         }
 
         /* Search Bar Customization */
@@ -505,30 +500,56 @@
         }
 
         /* modal  window */
-        .custom-modal .modal-dialog {
-            max-width: 50%;
-            /* Adjust this value to your preference */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%; /* Adjust this value to decrease the size */
+            border-radius: 10px; /* Optional: Adds rounded corners */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); /* Optional: Adds shadow for depth */
         }
-
-        .custom-modal .modal-content {
-            background-color: #f8f8f8;
-            /* Adjust this value to your preference */
-            border-radius: 15px;
-            /* Rounded corners */
+        
+        /* Additional styling for modal elements */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
-
-        /* Custom styles for centered modal content and buttons */
-        .custom-modal .modal-body,
-        .custom-modal .modal-footer {
-            text-align: center;
+        
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
         }
-
-        .custom-modal .modal-footer {
+        
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .categories-list {
             display: flex;
-            justify-content: center;
-            /* Horizontally center buttons */
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
         }
-
+        
+        .categories-item {
+            margin: 5px;
+        }
+        
+        
         #productModalImage {
             width: 80%;
             /* Adjust this value as desired */
@@ -767,45 +788,90 @@
             margin: 5px auto; /* Reduced margin, auto centers the card within the column */
         }
         
-        /* price range */
-        .price-range-selector {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 20px;
-            gap: 20px;
-            margin-left: 23%; /* Adds left margin to move the fields to the right */
-        }
-        
-        .price-field {
-            display: flex;
-            align-items: center;
-        }
-        
-        .price-field label {
-            margin-right: 10px;
-        }
-        
-        .price-field input {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        
-        .notification-badge {
-            background-color: #007bff; /* Blue color */
-            color: white;
-            font-size: 0.75em; /* Adjust size as needed */
-            padding: 3px 6px;
-            border-radius: 50%; /* Circular shape */
-            position: relative;
-            top: -10px; /* Adjust positioning as needed */
-            left: 5px;
-            box-shadow: 0px 0px 1px black; /* Optional: adds a slight shadow for depth */
-        }
+  /* Price Range Selector */
+.price-range-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Align items to the start */
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: -20px; /* Keep top margin */
+    margin-bottom: 30px; /* Keep bottom margin */
+    width: 600px; /* Set a fixed width */
+    margin-left: 200px; /* Center the container */
+    margin-right: auto; /* Center the container */
+}
+
+.price-range-selector label {
+    margin-right: 5px; /* Right margin for labels */
+    font-weight: bold;
+}
+
+.price-range-selector input[type="number"] {
+    width: 80px; /* Fixed width for input fields */
+    padding: 1px;
+    margin-right: 10px; /* Right margin for input fields */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.apply-price-range-btn {
+    padding: 8px 16px;
+    background-color: #4B9CD3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px; /* Adjusted left margin for button */
+}
+
+.apply-price-range-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .price-range-selector {
+        /* Take full width on small screens and adjust padding */
+        width: calc(100% - 20px); /* Subtracting padding */
+        padding: 10px;
+    }
+
+    .price-range-selector input[type="number"],
+    .price-range-selector .apply-price-range-btn {
+        margin-right: 5px; /* Reduce the right margin on small screens */
+    }
+}
 
 
 
- 
+
+
+        /* Custom styles for the advertisement carousel */
+
+        #adCarousel {
+            width: 100%; /* Ensure the carousel takes the full width of its container */
+            margin: auto; /* Center the carousel */
+        }
+
+        .carousel-inner {
+            overflow: hidden; /* Hide the overflow content */
+        }
+
+        .carousel-item {
+            text-align: center; /* Center the content inside each carousel item */
+        }
+
+        .carousel-item img {
+            width: 100%; /* Make images responsive */
+            height: auto; /* Maintain aspect ratio */
+            max-height: 400px; /* Optional: Set a maximum height */
+        }
+
+               
         
     </style>
 </head>
@@ -906,17 +972,16 @@
             </div>
 
               <!-- Price Range Selector -->
-              <form id="price-range-form" method="get" action="/user/marketplace">
-                <div class="price-range-selector">
-                    <label for="min-price">Min Price:</label>
-                    <input type="number" id="min-price" name="min-price" placeholder="Min">
-                    <label for="max-price">Max Price:</label>
-                    <input type="number" id="max-price" name="max-price" placeholder="Max">
-                </div>
-                <button type="submit" style="width: 150px; margin-top: 20px;">Apply Price Range</button>
-            </form>
-            
-            
+                <form id="price-range-form" method="get" action="/user/marketplace">
+                    <div class="price-range-selector">
+                        <label for="min-price">Min Price:</label>
+                        <input type="number" id="min-price" name="min-price" placeholder="Min">
+                        <label for="max-price">Max Price:</label>
+                        <input type="number" id="max-price" name="max-price" placeholder="Max">
+                        <button type="submit" class="apply-price-range-btn">Apply Price Range</button>
+                    </div>
+                </form>
+
 
             <div class="row flex-wrap">
               <% listings.forEach(listing=> { %>
@@ -1047,7 +1112,8 @@
                         </div>
                         <% }) %>
                     </div>
-                    <button type="submit" style="width: 150px; margin-top: 20px;">Apply Filter</button>
+                    <button type="submit" class="apply-filter-btn">Apply Filter</button>
+
                 </div>
             </div>
         </form>
