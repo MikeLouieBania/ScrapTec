@@ -8,20 +8,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js">
         src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js'></script>
-    <link rel='stylesheet'
-        href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css'
-        type='text/css' />
+    <link rel='stylesheet'href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css'type='text/css'/>
 
     <style>
         body{
             font-family: 'Poppins', sans-serif;
-            overflow: hidden;
+          
         }
 
         /* Navigation Bar Styles */
@@ -71,7 +72,7 @@
         }
         
         .navbar-light .navbar-toggler-icon {
-            background-color: white;
+            background-color: #219ebc;
         }
         
         /* Custom Logout Button Style */
@@ -104,10 +105,10 @@
 
         /* Additional styles for the preview pane */
         #preview-pane {
-            max-width: 600px;
+            max-width: 700px;
             margin-top: 1rem; /* Reduced from mt-5 to 1rem */
             margin-left: auto;
-            margin-right: 30px;
+            margin-right: 50px;
             padding: 15px;
             background-color: #f8f9fa;
             border-radius: 5px;
@@ -213,7 +214,7 @@
         }
     
         #create-listing-form .btn-primary {
-            background-color: #007bff;
+            background-color: #4B9CD3;
             color: white;
         }
     
@@ -245,7 +246,73 @@
             height: auto; /* Keep the original aspect ratio of the images */
             object-fit: cover; /* This makes sure that images cover the area without stretching */
         }
-        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            /* Adjust the preview pane */
+            #preview-pane {
+                margin-top: 1rem;
+                margin-right: 15px; /* Adjust right margin */
+                top: 0; /* Reset top position */
+            }
+
+            /* Adjust the create listing form */
+            #create-listing-form {
+                margin: 2rem auto; /* Adjust top margin */
+                padding-top: 2rem; /* Adjust padding top */
+                margin-left: 15px; /* Adjust left margin */
+                margin-right: 15px; /* Adjust right margin */
+            }
+
+            /* Adjust image previews for smaller screens */
+            #image-previews {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Adjust grid column size */
+            }
+        }
+
+        @media (max-width: 576px) {
+            /* Adjustments for small screens like smartphones */
+            /* Adjust the preview pane for smaller screens */
+            #preview-pane {
+                margin-top: 0.5rem;
+                margin-right: 10px; /* Adjust right margin */
+                margin-left: 10px; /* Adjust left margin */
+            }
+
+            /* Adjust the create listing form for smaller screens */
+            #create-listing-form {
+                margin: 1rem auto; /* Adjust top margin */
+                padding-top: 1rem; /* Adjust padding top */
+                margin-left: 10px; /* Adjust left margin */
+                margin-right: 10px; /* Adjust right margin */
+            }
+
+            /* Adjust image previews for very small screens */
+            #image-previews {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Adjust grid column size */
+            }
+        }
+
+        /* Responsive adjustments for navbar */
+        @media (max-width: 992px) {
+            .navbar-collapse {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .navbar .nav-item, .navbar .navbar-brand {
+                width: 100%;
+                text-align: center;
+            }
+
+            .navbar .btn-outline-success {
+                display: block; /* Make the button a block element */
+                width: auto; /* Reset width */
+                margin-left: -200%; /* Align the button to the left */
+                margin-top: 10px; /* Add some space above the button */
+                margin-bottom: 10px; /* Add some space below the button */
+            }
+        }
     </style>
 </head>
 

@@ -61,7 +61,7 @@
         }
         
         .navbar-light .navbar-toggler-icon {
-            background-color: white;
+            background-color: #219ebc;
         }
         
         /* Custom Logout Button Style */
@@ -181,6 +181,30 @@
                 height: 80px;
             }
         }
+
+        /* Responsive Navbar Adjustments */
+        @media (max-width: 768px) {
+        .navbar-collapse {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .navbar .nav-link,
+        .navbar .form-inline {
+            width: 100%;
+            text-align: center;
+            margin-top: 10px; /* Adds space between items */
+        }
+
+        .navbar .form-inline {
+            justify-content: center; /* Center the logout button */
+        }
+
+        .btn-outline-success {
+            width: auto; /* Prevents the button from expanding */
+        }
+    }
 
     </style>
 </head>

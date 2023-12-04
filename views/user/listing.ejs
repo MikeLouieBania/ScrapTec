@@ -64,7 +64,7 @@
     }
     
     .navbar-light .navbar-toggler-icon {
-        background-color: white;
+        background-color: #219ebc;
     }
     
     /* Custom Logout Button Style */
@@ -129,8 +129,8 @@
         }
 
         .btn-outline-primary {
-            border-color: #007bff;
-            color: #007bff;
+            border-color: #0066b2;
+            color: #0066b2;
         }
 
         .btn-outline-primary:hover {
@@ -139,8 +139,8 @@
         }
 
         .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+            background-color: #0066b2;
+            border-color: #0066b2;
             box-shadow: none; /* Optional: remove if you prefer a shadow */
         }
 
@@ -262,7 +262,33 @@
             display: inline-block; /* Display buttons inline */
             margin-right: 10px; /* Space between buttons */
         }
-        
+
+        /* Responsive Navbar Adjustments */
+        @media (max-width: 768px) {
+            .navbar-collapse {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .navbar .nav-link,
+            .form-inline {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px; /* Adds spacing between items */
+            }
+
+            .form-inline {
+                display: flex;
+                justify-content: center; /* Centers the logout button */
+            }
+
+            .btn-outline-success {
+                width: auto; /* Prevents the button from expanding */
+                padding: 10px 20px; /* Keeps original padding */
+            }
+        }
+
 
 </style>
 

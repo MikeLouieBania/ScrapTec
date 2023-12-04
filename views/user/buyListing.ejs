@@ -61,7 +61,7 @@
         }
         
         .navbar-light .navbar-toggler-icon {
-            background-color: white;
+            background-color: #219ebc;
         }
         
         /* Custom Logout Button Style */
@@ -83,88 +83,105 @@
             text-decoration: none;
         }
 
-        /* Page title styling */
-        .page-title {
-            color: #333;
-            margin-bottom: 2rem;
-            text-align: center; /* Center the title if that fits your design */
-        }
+      /* Page title styling */
+.page-title {
+    color: #333;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2rem; /* Larger font size for emphasis */
+    font-weight: bold; /* Bold for impact */
+}
 
-        /* Card container styling */
-        .listing-container .card {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 0.5rem; /* Rounded corners for the cards */
-            overflow: hidden; /* Ensures the content does not flow outside the card's border-radius */
-            transition: transform 0.3s ease-in-out; /* Animation on hover */
-        }
+/* Card container styling */
+.listing-container .card {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Deeper shadow for a 3D effect */
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth hover transition */
+    background-color: #ffffff; /* Pure white background for a clean look */
+}
 
-        .listing-container .card:hover {
-            transform: translateY(-5px); /* Slight lift effect on hover */
-        }
+.listing-container .card:hover {
+    transform: translateY(-5px); /* Maintain lift effect on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover for a floating effect */
+}
 
-        /* Card image styling */
-        .card-image-container {
-            width: 100%; /* Full width of the container */
-            padding: 0.5rem; /* Padding around the image */
-        }
+/* Card image styling */
+.card-image-container {
+    width: 100%;
+    padding: 0;
+}
 
-        .card-img-top {
-            width: 100%; /* Full width to fit container */
-            height: auto; /* Maintain aspect ratio */
-            object-fit: cover; /* Cover the frame, might crop the image */
-            border-radius: 0.25rem; /* Rounded corners for the images */
-        }
+.card-img-top {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.25rem 0.25rem 0 0; /* Rounded top corners */
+}
 
-        /* Card body styling */
-        .card-body {
-            padding: 1rem; /* Padding inside the card */
-        }
+/* Card body styling */
+.card-body {
+    padding: 1rem;
+}
 
-        .card-body h5 {
-            color: #007bff; /* Theme color for the title */
-            margin-bottom: 1rem;
-        }
+.card-body h5 {
+    color: #007bff; /* Keep theme color */
+    margin-bottom: 1rem;
+    font-weight: 600; /* Slightly bolder title */
+}
 
-        .card-body .card-text {
-            color: #555;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
+.card-body .card-text {
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
 
-        /* Ratings and stars styling */
-        .rating {
-            display: flex;
-            align-items: center;
-        }
+/* Ratings and stars styling */
+.rating {
+    display: flex;
+    align-items: center;
+}
 
-        .rating > span {
-            color: #ffc107; /* Gold color for stars */
-            margin-right: 0.25rem;
-        }
+.rating > span {
+    color: #ffc107; /* Gold color for stars */
+    margin-right: 0.25rem;
+}
 
-        .rating-comment {
-            flex-grow: 1;
-            font-size: 0.9rem;
-            color: #666;
-        }
+.rating-comment {
+    flex-grow: 1;
+    font-size: 0.9rem;
+    color: #666;
+}
 
-        /* Style for the submit rating button */
-        .rate-button {
-            width: 100%; /* Full width button */
-        }
+/* Style for the submit rating button */
+.rate-button {
+    background-color: #28a745; /* Green for action */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px; /* Slightly rounded */
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
 
-        /* Form elements within the card */
-        .form-control {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
+.rate-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
 
-        /* Style for predefined comments dropdown */
-        #predefined-comments {
-            background: #fff;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-        }
+/* Form elements within the card */
+.form-control {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px; /* Slightly rounded edges */
+}
+
+/* Style for predefined comments dropdown */
+#predefined-comments {
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -176,6 +193,32 @@
                 padding: 0.5rem 1rem; /* Adjust padding for smaller screens */
             }
         }
+            /* Responsive Navbar */
+    @media (max-width: 768px) {
+        .navbar-collapse {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .navbar .nav-link,
+        .navbar-brand {
+            width: 100%;
+            text-align: center;
+        }
+
+        .form-inline {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            margin-top: 10px;
+            order: 3; /* Ensures the logout button is positioned after the nav links */
+        }
+
+        .btn-outline-success {
+            width: auto; /* Prevents the button from expanding */
+        }
+    }
 
     </style>
 </head>

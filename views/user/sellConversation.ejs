@@ -61,7 +61,7 @@
         }
         
         .navbar-light .navbar-toggler-icon {
-            background-color: white;
+            background-color: 219ebc;
         }
         
         /* Custom Logout Button Style */
@@ -233,7 +233,42 @@
         .btn-more-options {
             margin-top: -10px; /* Adjust this value as needed to move the button upwards */
         }
-        
+        /* Responsive Navbar */
+        @media (max-width: 992px) {
+            .navbar-collapse {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .navbar .nav-link,
+            .form-inline {
+                width: 100%;
+                text-align: center;
+            }
+
+            .form-inline {
+                display: flex;
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .btn-outline-success {
+                width: auto; /* Prevents the button from expanding */
+            }
+        }
+
+               /* Adjustments for the message container */
+    #messages-container {
+        width: 100%; /* Full width on smaller screens */
+        padding-right: 10px; /* Adjust padding */
+        padding-left: 10px;
+    }
+
+    /* Adjustments for message bubbles */
+    .my-message, .their-message {
+        max-width: 70%; /* Increase max-width for better readability */
+    }
+
 
     </style>
 </head>
