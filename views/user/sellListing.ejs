@@ -63,7 +63,7 @@
         }
         
         .navbar-light .navbar-toggler-icon {
-            background-color: white;
+            background-color: #219ebc;
         }
         
         /* Custom Logout Button Style */
@@ -86,47 +86,57 @@
         }
 
 
-        /* Add styles for the page title */
+        /* Page Title Styles */
         .page-title {
             margin-top: 20px;
             font-size: 24px;
             margin-bottom: 20px;
+            color: #333;
+            text-align: center;
         }
 
-        /* Add styles for the listing container */
+        /* Listing Container Styles */
         .listing-container {
             margin-top: 50px;
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            justify-content: center; /* Center the items horizontally */
-            align-items: start; /* Align items to the start of the container vertically */
+            justify-content: center;
+            align-items: start;
         }
 
-        /* Add styles for each listing card */
+        /* Listing Card Styles */
         .listing-card {
             border: none;
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             width: 100%;
             max-width: 300px;
             max-height: 500px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
-        /* Add styles for the card body */
+        .listing-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Card Body Styles */
         .card-body {
             padding: 20px;
-            max-height: 500px; /* Adjust this value as needed */
-            overflow-y: auto; /* This will add a scrollbar if the content exceeds 500px */
+            max-height: 500px;
+            overflow-y: auto;
         }
 
-        /* Add styles for the card title */
+        /* Card Title Styles */
         .card-title {
             font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
         }
 
-        /* Add styles for the edit and delete buttons */
+        /* Edit and Delete Button Styles */
         .edit-button,
         .delete-button {
             background-color: #007bff;
@@ -136,32 +146,25 @@
             margin-top: 10px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        /* Add hover effect to the edit and delete buttons */
         .edit-button:hover,
         .delete-button:hover {
             background-color: #0056b3;
         }
 
-        /* Add styles for the image slider container */
+        /* Image Slider Styles */
         .image-slider {
             max-width: 100%;
         }
 
-        /* Add styles for individual slider images */
         .slider-image {
             max-width: 100%;
             height: auto;
         }
 
-        /* Adding hover effect to listing cards */
-        .listing-card:hover {   
-            transform: scale(1.05);
-            transition: transform 0.2s ease-in-out;
-        }
-
-        /* Styling the Mark as Sold button */
+        /* Mark as Sold Button Styles */
         .mark-sold-button {
             background-color: #28a745;
             color: #fff;
@@ -170,13 +173,14 @@
             margin-top: 10px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .mark-sold-button:hover {
             background-color: #218838;
         }
 
-        /* Adding styles for the loading spinner */
+        /* Loading Spinner Styles */
         .loading-spinner {
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
@@ -187,56 +191,171 @@
             margin: 20px auto;
         }
 
-        .image-edit-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-        }
-
-        .current-images {
-            flex: 1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-right: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .image-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .image-container img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .remove-image-button {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            padding: 2px 6px;
-            font-size: 12px;
-        }
-
-        .add-images {
-            flex-basis: 200px;
-        }
-
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
+
+       /* Image Edit Container Styles */
+.image-edit-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 20px; /* Added gap for spacing */
+}
+
+.current-images {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px; /* Added padding for a better layout */
+    border: 1px solid #ddd; /* Border for visual separation */
+    border-radius: 5px; /* Rounded corners */
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #f8f9fa; /* Light background for the area */
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.image-container img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease-in-out; /* Smooth transform on hover */
+}
+
+.image-container:hover img {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.remove-image-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 2px 6px;
+    font-size: 12px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Shadow for depth */
+}
+
+.remove-image-button:hover {
+    background-color: #c82333;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Darker shadow on hover */
+}
+
+.add-images {
+    flex-basis: 200px;
+    padding: 10px; /* Padding for consistency */
+    border: 1px solid #ddd; /* Border for visual separation */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f8f9fa; /* Light background for the area */
+}
+
+/* Style for the file input */
+.add-images input[type="file"] {
+    width: 100%; /* Full width */
+    margin-bottom: 10px; /* Space below the input */
+}
+
+/* Style for the add image button */
+#add-image-button {
+    width: 100%; /* Full width button */
+    background-color: #28a745; /* Green color */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 8px 16px; /* Padding for the button */
+    cursor: pointer; /* Cursor change to indicate clickable */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+#add-image-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .navbar-collapse {
+            text-align: center;
+        }
+    
+        .navbar .nav-link, .navbar-brand {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+            
+        .navbar-nav {
+            display: inline-block;
+            float: none;
+        }
+            
+        .navbar-nav .nav-item {
+            display: block;
+        }
+        .navbar-nav .nav-link {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    
+        .form-inline {
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+    .btn-outline-success {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .listing-container {
+        gap: 15px; /* Increased gap between cards */
+        justify-content: space-around; /* Adjust alignment for better spacing */
+    }
+
+    .listing-card {
+        max-width: 250px;
+        margin-bottom: 15px; /* Additional bottom margin for each card */
+    }
+
+    .card-title {
+        font-size: 16px;
+    }
+
+    .edit-button, .delete-button, .mark-sold-button {
+        padding: 4px 12px;
+        font-size: 14px;
+    }
+
+    .image-edit-container, .current-images, .add-images {
+        flex-direction: column;
+    }
+
+    .image-container img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .remove-image-button {
+        font-size: 10px;
+    }
+}
+
     </style>
 </head>
 

@@ -60,7 +60,7 @@
     }
     
     .navbar-light .navbar-toggler-icon {
-        background-color: white;
+        background-color: #219ebc;
     }
     
     /* Custom Logout Button Style */
@@ -81,7 +81,7 @@
         color: #fff !important;
         text-decoration: none;
     }
-        /* Base container styles */
+      /* Base container styles */
     .container {
       padding-top: 2rem; /* Add space at the top */
       padding-bottom: 2rem; /* Add space at the bottom for scrolling */
@@ -91,6 +91,7 @@
     h2.mb-4 {
       text-align: center; /* Center the title */
       color: #333; /* Dark color for the title */
+      font-weight: bold; /* Make the title bold */
     }
 
     /* Listing card styles */
@@ -101,11 +102,12 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
       overflow: hidden; /* Hide overflow to respect border-radius */
       margin-bottom: 1rem; /* Space between cards */
-      transition: transform 0.3s ease-in-out; /* Smooth transform on hover */
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transform and shadow on hover */
     }
 
     .listing-card:hover {
       transform: translateY(-5px); /* Lift effect on hover */
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
     }
 
     /* Image styles */
@@ -124,6 +126,7 @@
     .listing-details h5 {
       color: #219ebc; /* Theme color for titles */
       margin-bottom: 0.5rem; /* Space below the title */
+      font-weight: 600; /* Slightly bolder titles */
     }
 
     .listing-details p {
@@ -137,20 +140,24 @@
       padding: 0.375rem 0.75rem; /* Padding inside the button */
       border-radius: 0.25rem; /* Rounded corners */
       font-size: 0.8rem; /* Smaller font size for the buttons */
+      transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and text color */
     }
 
     .btn-view {
       background-color: #28a745; /* Green background for view button */
       color: #fff; /* White text */
+      border: none; /* Remove border */
     }
 
     .btn-remove {
       background-color: #dc3545; /* Red background for remove button */
       color: #fff; /* White text */
+      border: none; /* Remove border */
     }
 
     .btn-view:hover, .btn-remove:hover {
       opacity: 0.9; /* Slight transparency on hover */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
     }
 
     /* Responsive grid adjustments */
@@ -176,6 +183,33 @@
           max-width: 100%;
       }
     }
+    /* Responsive Navbar Adjustments */
+    @media (max-width: 768px) {
+      .navbar-collapse {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+      }
+
+      .navbar .nav-link,
+      .form-inline {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 10px; /* Adds spacing between items */
+      }
+
+      .form-inline {
+          display: flex;
+          justify-content: center; /* Centers the logout button */
+          width: auto; /* Avoids expanding the width */
+      }
+
+      .btn-outline-success {
+          width: auto; /* Prevents the button from expanding */
+          padding: 10px 20px; /* Keeps original padding */
+      }
+    }
+
 
       
     </style>
