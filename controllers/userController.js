@@ -1740,6 +1740,83 @@ module.exports = {
     }
   },
 
+  async getUpdateAccount(req, res) {
+    const userId = req.session.user.id;
+    try {
+      const userWithSalesAndRatings = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          city: true,
+          purchases: {
+            include: {
+              listing: {
+                include: {
+                  user: true, // Include the seller of the listing
+                }
+              },
+              rating: true, // Include the ratings related to the sale
+            }
+          },
+          receivedRatings: {
+            include: {
+              rater: true, // Include the user who gave the rating
+            }
+          },
+        }
+      });
+
+      const averageReceivedRating = await prisma.rating.aggregate({
+        _avg: {
+          value: true,
+        },
+        where: {
+          rateeId: userId,
+        },
+      });
+
+      res.render('user/updateAccount', {
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+  
+  async postUpdateAccountInfo(req, res) {
+    const userId = req.session.user.id;
+    const { contactNumber, city } = req.body;
+
+    try {
+      // Check if the city already exists
+      let cityData = await prisma.city.findUnique({
+        where: { name: city }
+      });
+
+      // If the city doesn't exist, create a new one
+      if (!cityData) {
+        cityData = await prisma.city.create({
+          data: { name: city }
+        });
+      }
+
+      // Update the user's contact number and city
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          contactNumber: contactNumber,
+          cityId: cityData.id
+        }
+      });
+
+      res.redirect('/user/useraccount'); // Redirect to account page or appropriate page
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    } 
+  },
+
   logout(req, res) {
     // Clear the session to log out the user
     req.session.user = null;
