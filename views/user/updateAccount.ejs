@@ -296,6 +296,11 @@
                         <h4>Update Password</h4>
                     </div>
                     <div class="card-body">
+                        <% if (typeof message !== 'undefined' && message) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= message %>
+                            </div>
+                        <% } %>
                         <form action="/user/updatePassword" method="POST">
                             <!-- Old Password -->
                             <div class="form-group">
@@ -305,7 +310,14 @@
                             <!-- New Password -->
                             <div class="form-group">
                                 <label for="newPassword">New Password</label>
-                                <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+                                <small class="form-text text-muted">
+                                    Password must have at least one of the following: 
+                                    (1) 8 characters minimum
+                                    (2) uppercase
+                                    (3) number
+                                    (4) special character
+                                </small>
                             </div>
                             <!-- Confirm New Password -->
                             <div class="form-group">

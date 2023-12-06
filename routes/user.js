@@ -43,6 +43,7 @@ router.get('/savedListings', userController.getSavedListings);
 router.get('/useraccount', userController.getAccount) 
 router.get('/updateAccount', userController.getUpdateAccount) 
 router.post('/updateAccountInfo', userController.postUpdateAccountInfo);
+router.post('/updatePassword', userController.postUpdatePassword);
 router.post('/logout', userController.logout); 
 
 module.exports = router;
