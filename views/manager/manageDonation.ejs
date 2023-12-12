@@ -460,8 +460,7 @@
                     <!-- Filter by Status -->
                     <select id="filterStatus" class="filter-input">
                         <option value="">Select Status</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="ARRIVED">Arrived</option>
+                        <option value="PENDING">Pending</option> 
                         <option value="VERIFIED">Verified</option> 
                         <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
                     </select>
@@ -589,11 +588,7 @@
                             <span class="badge badge-warning">
                                 <%= donation.status %>
                             </span>
-                            <% } else if (donation.status==='ARRIVED' ) { %>
-                                <span class="badge badge-primary">
-                                    <%= donation.status %>
-                                </span>
-                                <% } else if (donation.status==='VERIFIED' ) { %>
+                            <% } else if (donation.status==='VERIFIED' ) { %>
                                     <span class="badge badge-success">
                                         <%= donation.status %>
                                     </span> 
@@ -630,8 +625,7 @@
                                                 <label for="newStatus">Select New Status:</label> 
                                                 <select class="form-control" id="newStatus" name="newStatus" <%= ['VERIFIED', 'ACCEPTEDWITHISSUES'].includes(donation.status) ? 'disabled' : '' %>>
 
-                                                    <option disabled readonly selected>Select Status</option>
-                                                    <option value="ARRIVED">Arrived</option>
+                                                    <option disabled readonly selected>Select Status</option> 
                                                     <option value="VERIFIED">Verified</option> 
                                                     <option value="ACCEPTEDWITHISSUES">Accepted with Issues</option>
                                                 </select>
