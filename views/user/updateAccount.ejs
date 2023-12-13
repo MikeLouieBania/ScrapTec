@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account | Marketplace</title>
+    <title>Update Contact Information</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
 
@@ -210,56 +211,32 @@
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-   <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/user/marketplace">Marketplace</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/user/useraccount">My Account</a>
-            </li>
-        </ul>
-        <form class="form-inline" action="/user/logout" method="POST">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
-        </form>
-    </div>
-</nav>
+    <!-- Navigation Bar --> 
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/marketplace">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/useraccount">My Account</a>
+                </li>
+            </ul>
+            <form class="form-inline" action="/user/logout" method="POST">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+            </form>
+        </div>
+    </nav>
 
     <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
+        <div class="row"> 
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <div class="profile-img">
-                            <% if (user.profilePicture) { %> 
-                                 <img src="data:image/jpeg;base64, <%= user.profilePicture.toString('base64') %>" alt="Profile Picture">
-                            <% } else { %>
-                                <img src="https://via.placeholder.com/150" alt="Profile Picture">
-                            <% } %>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="user-profile">
-                            <h5 class="mb-2 text-primary"><%= user.firstName %> <%= user.lastName %></h5>
-                            <p class="mb-1"><%= user.email %></p>
-                            <p><%= user.city.name %></p>
-                             <!-- New Update Account Button -->
-                            <button class="btn btn-info" onclick="location.href='/user/updateAccount'">Update Account</button>
-                            <button class="btn btn-link" onclick="location.href='/user/savedListings'">View Saved Listings</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Account Information</h4>
+                        <h4>Update Information</h4>
                     </div>
                     
                     <div class="card-body">
@@ -279,25 +256,7 @@
                             <div class="col-sm-9 text-secondary">
                                 <%= user.email %>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row mb-2">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">City</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <%= user.city.name %>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row mb-2">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Contact</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <%= user.contactNumber %>
-                            </div>
-                        </div>
+                        </div> 
                         <hr>
                         <div class="row mb-2">
                             <div class="col-sm-3">
@@ -310,24 +269,64 @@
                         <hr>
                         <!-- Add more fields as necessary -->
                     </div>
-                </div>
-                <!-- For Received Ratings -->
-                <div class="card mt-4">
+                    
+                    <div class="card-body">
+                        <form action="/user/updateAccountInfo" method="POST">
+                            <!-- Contact Number -->
+                            <div class="form-group">
+                                <label for="contactNumber">Contact Number</label>
+                                <input type="text" class="form-control" id="contactNumber" name="contactNumber" value="<%= user.contactNumber %>" required>
+                            </div>
+                            <!-- City -->
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="search" class="form-control" id="cityInput" name="city" value="<%= user.city.name %>" required>
+                                <div id="suggestions" style="margin-top: 10px;"></div>
+                            </div>
+                             
+                            <!-- Update Button -->
+                            <button type="submit" class="btn btn-primary">Update Info</button>
+                        </form>
+                    </div> 
+                </div> 
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
                     <div class="card-header">
-                        <h4>Received Ratings</h4>
+                        <h4>Update Password</h4>
                     </div>
                     <div class="card-body">
-                        <h5 class="mb-3">Average Rating: <%= averageReceivedRating.toFixed(2) %></h5>
-                        <ul class="list-group list-group-flush">
-                            <% user.receivedRatings.forEach(rating=> { %>
-                                <li class="list-group-item">
-                                    <strong>
-                                        <%= rating.rater.firstName %> <%= rating.rater.lastName %>:
-                                    </strong>
-                                    <%= rating.value %> - <%= rating.comment || 'No comment' %>
-                                </li>
-                            <% }) %>
-                        </ul>
+                        <% if (typeof message !== 'undefined' && message) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= message %>
+                            </div>
+                        <% } %>
+                        <form action="/user/updatePassword" method="POST">
+                            <!-- Old Password -->
+                            <div class="form-group">
+                                <label for="newPassword">Old Password</label>
+                                <input type="password" class="form-control" id="oldPassword" name="oldPassword" required>
+                            </div>
+                            <!-- New Password -->
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$" required>
+                                <small class="form-text text-muted">
+                                    Password must have at least one of the following: 
+                                    (1) 8 characters minimum
+                                    (2) uppercase
+                                    (3) number
+                                    (4) special character
+                                </small>
+                            </div>
+                            <!-- Confirm New Password -->
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                            </div>
+                            <!-- Update Button -->
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -337,7 +336,32 @@
     <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script><script src='https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js'></script>
+    <script>
+        const accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw';  // Replace with your Mapbox Access Token
+
+        let input = document.getElementById('cityInput');
+        let suggestionsDiv = document.getElementById('suggestions');
+
+        input.addEventListener('keyup', function() {
+            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${input.value}.json?access_token=${accessToken}&country=PH&types=place`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsDiv.innerHTML = '';
+                    data.features.forEach(feature => {
+                        let cityName = feature.text;  // Only extracting the city name
+                        let cityDiv = document.createElement('div');
+                        cityDiv.innerHTML = cityName;
+                        cityDiv.style.cursor = 'pointer';
+                        cityDiv.onclick = function() {
+                            input.value = cityName;
+                            suggestionsDiv.innerHTML = '';
+                        };
+                        suggestionsDiv.appendChild(cityDiv);
+                    });
+                });
+        });
+    </script>
 </body>
 
 </html>

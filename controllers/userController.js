@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 const sharp = require('sharp');
 const gridfsService = require('./gridfsService');
 
@@ -1734,6 +1735,154 @@ module.exports = {
         user: userWithSalesAndRatings,
         averageReceivedRating: averageReceivedRating._avg.value || 0,
       });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async getUpdateAccount(req, res) {
+    const userId = req.session.user.id;
+    try {
+      const userWithSalesAndRatings = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          city: true,
+          purchases: {
+            include: {
+              listing: {
+                include: {
+                  user: true, // Include the seller of the listing
+                }
+              },
+              rating: true, // Include the ratings related to the sale
+            }
+          },
+          receivedRatings: {
+            include: {
+              rater: true, // Include the user who gave the rating
+            }
+          },
+        }
+      });
+
+      const averageReceivedRating = await prisma.rating.aggregate({
+        _avg: {
+          value: true,
+        },
+        where: {
+          rateeId: userId,
+        },
+      });
+
+      res.render('user/updateAccount', {
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async postUpdateAccountInfo(req, res) {
+    const userId = req.session.user.id;
+    const { contactNumber, city } = req.body;
+
+    try {
+      // Check if the city already exists
+      let cityData = await prisma.city.findUnique({
+        where: { name: city }
+      });
+
+      // If the city doesn't exist, create a new one
+      if (!cityData) {
+        cityData = await prisma.city.create({
+          data: { name: city }
+        });
+      }
+
+      // Update the user's contact number and city
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          contactNumber: contactNumber,
+          cityId: cityData.id
+        }
+      });
+
+      res.redirect('/user/useraccount'); // Redirect to account page or appropriate page
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    } 
+  },
+
+  async postUpdatePassword(req, res) { 
+    try {
+      const userId = req.session.user.id;
+      const { oldPassword, newPassword, confirmPassword } = req.body;
+
+      const userWithSalesAndRatings = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          city: true,
+          purchases: {
+            include: {
+              listing: {
+                include: {
+                  user: true, // Include the seller of the listing
+                }
+              },
+              rating: true, // Include the ratings related to the sale
+            }
+          },
+          receivedRatings: {
+            include: {
+              rater: true, // Include the user who gave the rating
+            }
+          },
+        }
+      });
+
+      const averageReceivedRating = await prisma.rating.aggregate({
+        _avg: {
+          value: true,
+        },
+        where: {
+          rateeId: userId,
+        },
+      });
+  
+      if (newPassword !== confirmPassword) {
+        return res.render('user/updateAccount', { message: 'New passwords do not match.' , 
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0,});
+      }
+      const user = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if old password is correct
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.render('user/updateAccount', { message: 'Old password is incorrect.',
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0, });
+      }
+
+      // Hash the new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+      // Update password in database
+      await prisma.user.update({
+        where: { id: userId },
+        data: { password: hashedNewPassword }
+      });
+ 
+      res.render('user/useraccount', { message: 'Password successfully updated.',
+      user: userWithSalesAndRatings,
+      averageReceivedRating: averageReceivedRating._avg.value || 0, });
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');

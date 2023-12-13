@@ -12,12 +12,15 @@ module.exports = {
   async getIndex(req, res) {  
     res.render('index');
   }, 
+
   async getLogin(req, res) {  
     res.render('login');
   }, 
+
   async getSignup(req, res) {  
     res.render('signup');
   }, 
+
   async registerUser(req, res) {
     try {
       const { firstName, lastName, email, password, city, gender, contactNumber } = req.body;
@@ -73,6 +76,7 @@ module.exports = {
       return res.render('verify-otp',{ message: 'An error occurred' });
     }
   },
+
   async verifyOTP(req, res) {
     const otp1 = req.body.otp1;
     const otp2 = req.body.otp2;
@@ -137,9 +141,11 @@ module.exports = {
       return res.render('login',{ message: 'An error occurred' });
     }
   },
+
   async getVerifyOTP(req, res) {
     res.render('verify-otp', { message: 'Enter the OTP you received in your email.' });
   },
+
   async registerOrganization(req, res) {
     try {
       const {
@@ -234,6 +240,7 @@ module.exports = {
       res.render('login',{ message: 'An error occurred' });
     }
   },
+  
   async login(req, res) {
     try {
         const { email, password } = req.body;
