@@ -1121,133 +1121,130 @@
         
   
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
-<script>
-    window.onload = function() {
-      fetch('/user/ads')
-        .then(response => response.json())
-        .then(data => {
-          const ads = data.ads;
-          const carouselInner = document.querySelector('.carousel-inner');
-          const adCarousel = document.getElementById('adCarousel');
-          carouselInner.innerHTML = ''; // Clear existing items
-  
-          ads.forEach((ad, index) => {
-            const isActive = index === 0 ? 'active' : '';
-            const adHTML = `
-              <div class="carousel-item ${isActive}">
-                  <a href="${ad.link}" target="_blank">
-                      <img src="${ad.imageUrl}" class="d-block w-100" style="max-width: 5000px; max-height: 400px;" alt="${ad.title}">
-                  </a>
-              </div>
-            `;
-            carouselInner.insertAdjacentHTML('beforeend', adHTML);
+    <script>
+        window.onload = function() {
+        fetch('/user/ads')
+            .then(response => response.json())
+            .then(data => {
+            const ads = data.ads;
+            const carouselInner = document.querySelector('.carousel-inner');
+            const adCarousel = document.getElementById('adCarousel');
+            carouselInner.innerHTML = ''; // Clear existing items
+    
+            ads.forEach((ad, index) => {
+                const isActive = index === 0 ? 'active' : '';
+                const adHTML = `
+                <div class="carousel-item ${isActive}">
+                    <a href="${ad.link}" target="_blank">
+                        <img src="${ad.imageUrl}" class="d-block w-100" style="max-width: 5000px; max-height: 400px;" alt="${ad.title}">
+                    </a>
+                </div>
+                `;
+                carouselInner.insertAdjacentHTML('beforeend', adHTML);
 
-            // Add click event listener to record ad clicks
-            const adElement = carouselInner.lastElementChild;
-            adElement.addEventListener('click', () => {
-            fetch('/user/record-click', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ adId: ad.adId }), // Send the ad's unique identifier
+                // Add click event listener to record ad clicks
+                const adElement = carouselInner.lastElementChild;
+                adElement.addEventListener('click', () => {
+                fetch('/user/record-click', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ adId: ad.adId }), // Send the ad's unique identifier
+                });
+                }); 
             });
-            }); 
-          });
-  
-          // Adjust carousel behavior based on the number of ads
-          if (ads.length === 0) {
-            adCarousel.style.display = 'none';
-          } else if (ads.length === 1) {
-            // Disable carousel controls if there's only one ad
-            document.querySelector('.carousel-control-prev').style.display = 'none';
-            document.querySelector('.carousel-control-next').style.display = 'none';
-            adCarousel.removeAttribute('data-bs-ride'); // Stop the automatic sliding
-          }
-        })
-        .catch(error => console.error('Error fetching ads:', error));
-    };
-  </script>
+    
+            // Adjust carousel behavior based on the number of ads
+            if (ads.length === 0) {
+                adCarousel.style.display = 'none';
+            } else if (ads.length === 1) {
+                // Disable carousel controls if there's only one ad
+                document.querySelector('.carousel-control-prev').style.display = 'none';
+                document.querySelector('.carousel-control-next').style.display = 'none';
+                adCarousel.removeAttribute('data-bs-ride'); // Stop the automatic sliding
+            }
+            })
+            .catch(error => console.error('Error fetching ads:', error));
+        };
+    </script>
 
-<script>
-    // Get the modal, button that opens the modal, and the <span> element that closes the modal
-    var modal = document.getElementById("myModal");
-    var btn = document.querySelector(".image-button");
-    var span = document.getElementsByClassName("close")[0];
-    // When the button is clicked, open the modal
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-    // When <span> is clicked, close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-    // When anywhere outside of the modal is clicked, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
+    <script>
+        // Get the modal, button that opens the modal, and the <span> element that closes the modal
+        var modal = document.getElementById("myModal");
+        var btn = document.querySelector(".image-button");
+        var span = document.getElementsByClassName("close")[0];
+        // When the button is clicked, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        // When <span> is clicked, close the modal
+        span.onclick = function() {
             modal.style.display = "none";
         }
-    }
-    function showProductDetails(event, productId) {
-        event.preventDefault(); // Get the product card using the data attribute
-        let productCard = document.querySelector(`[data-product-id="${productId}"]`);
-        // Populate the modal fields
-        document.getElementById('productModalImage').src = productCard.querySelector('img').src;
-        document.getElementById('productModalPrice').textContent = productCard.querySelector('.card-text').textContent;
-        document.getElementById('productModalDescription').textContent = `Description for ${productCard.querySelector('.card-title').textContent}`;
-        // Show the modal without the backdrop
-        let productModal = new bootstrap.Modal(document.getElementById('productModal'), {
-            backdrop: false
-        });
-        productModal.show();
-    }
-    document.addEventListener('click', function(event) {
-        var isClickInsideModal = document.querySelector('.modal-content').contains(event.target);
-        var modalIsOpen = document.querySelector('.modal.show');
-        if (modalIsOpen && !isClickInsideModal) {
-            var modalElement = document.querySelector('.modal');
-            var bootstrapModal = bootstrap.Modal.getInstance(modalElement);
-            bootstrapModal.hide();
+        // When anywhere outside of the modal is clicked, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
-    });
-    document.querySelector('.maps').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('MapModals').style.display = 'block';
-    });
-    document.getElementById('closeModal').addEventListener('click', function() {
-        document.getElementById('MapModals').style.display = 'none';
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-      $('#reportForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        var formData = $(this).serialize();
-        
-        $.ajax({
-          type: 'POST',
-          url: '/user/reportListing', // Your endpoint to process the report
-          data: formData,
-          success: function(response) {
-            // You can add more sophisticated error checking here
-            $('#reportModal').modal('hide');
-            alert('Listing reported successfully.');
-          },
-          error: function(xhr, status, error) {
-            alert('An error occurred. Please try again.');
-          }
+        function showProductDetails(event, productId) {
+            event.preventDefault(); // Get the product card using the data attribute
+            let productCard = document.querySelector(`[data-product-id="${productId}"]`);
+            // Populate the modal fields
+            document.getElementById('productModalImage').src = productCard.querySelector('img').src;
+            document.getElementById('productModalPrice').textContent = productCard.querySelector('.card-text').textContent;
+            document.getElementById('productModalDescription').textContent = `Description for ${productCard.querySelector('.card-title').textContent}`;
+            // Show the modal without the backdrop
+            let productModal = new bootstrap.Modal(document.getElementById('productModal'), {
+                backdrop: false
+            });
+            productModal.show();
+        }
+        document.addEventListener('click', function(event) {
+            var isClickInsideModal = document.querySelector('.modal-content').contains(event.target);
+            var modalIsOpen = document.querySelector('.modal.show');
+            if (modalIsOpen && !isClickInsideModal) {
+                var modalElement = document.querySelector('.modal');
+                var bootstrapModal = bootstrap.Modal.getInstance(modalElement);
+                bootstrapModal.hide();
+            }
         });
-      });
-    });
-  </script>
+        document.querySelector('.maps').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('MapModals').style.display = 'block';
+        });
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('MapModals').style.display = 'none';
+        });
+    </script>
 
+    <script>
+        $(document).ready(function() {
+        $('#reportForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            var formData = $(this).serialize();
+            
+            $.ajax({
+            type: 'POST',
+            url: '/user/reportListing', // Your endpoint to process the report
+            data: formData,
+            success: function(response) {
+                // You can add more sophisticated error checking here
+                $('#reportModal').modal('hide');
+                alert('Listing reported successfully.');
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred. Please try again.');
+            }
+            });
+        });
+        });
+    </script>
  
-  
-
 </html>

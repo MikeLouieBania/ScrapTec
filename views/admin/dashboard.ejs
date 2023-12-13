@@ -35,14 +35,25 @@
         /* Sidebar styles */
         .sidebar {
             height: 100%;
-            width: 60px; /* Initial width just for the icons */
+            width: 60px; /* Initial width */
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #6499E9; /* Main blue */
+            background-color: #13274F;
             padding-top: 20px;
-            transition: 0.5s;
-            z-index: 2; /* Ensure the sidebar is above the main content */
+            transition: width 0.5s;
+            z-index: 2;
+        }
+
+       /* The hover effect should only apply when the sidebar is not pinned */
+        .sidebar:not(.pinned):hover {
+            width: 200px; /* Width when hovered */
+        }
+
+        /* When the sidebar is pinned, it should stay at the expanded width */
+        .sidebar.pinned {
+            width: 200px; /* Fixed width when pinned */
+            overflow-y: auto;
         }
 
         .sidebar:hover {
@@ -57,12 +68,20 @@
             color: #fff;
             text-decoration: none;
             transition: background-color 0.3s;
-            font-weight: bold;
+            font-weight: bold !important;
 
         }
 
         .sidebar a .material-icons {
             margin-right: 10px; /* Space between icon and text */
+            font-weight: bold !important;
+            
+        }
+        
+        /* Show text labels on hover or when pinned */
+        .sidebar:hover a::after,
+        .sidebar.pinned a::after {
+            display: inline;
         }
 
         /* Hide text labels by default */
@@ -77,14 +96,20 @@
         }
 
         .sidebar a:hover {
-            background-color: #4477CE; /* Darker blue on hover */
+            background-color: #B0C4DE; /* Darker blue on hover */
         }
 
-        /* Main content styles */
+      /* Main content styles */
         .main-content {
             padding: 20px;
-            padding-left: 150px; /* Increased left padding to move content away from the sidebar */
+            padding-left: 200px; /* Matches the initial width of the sidebar */
+            transition: padding-left 0.5s;
             background-color: #f4f7fa; /* Light background for the dashboard */
+            
+        }
+           /* When the sidebar is pinned, adjust the left padding of the main content */
+        .sidebar.pinned ~ .main-content {
+        padding-left: 200px; /* Matches the expanded width of the sidebar */
         }
 
         .container-fluid {
@@ -155,6 +180,17 @@
             margin-bottom: 15px; /* Space below title */
             text-align: center; /* Center-align titles */
         }
+        
+        /* This CSS will ensure the sidebar stays fixed on the side when it has the 'pinned' class */
+        .pinned {
+            position: fixed; /* Fixed position to keep the sidebar in place */
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
+            height: 100%; /* Full height of the viewport */
+            z-index: 10; /* Ensure it's above other content */
+            overflow-y: auto; /* Enable scrolling inside the sidebar if content overflows */
+        }
+        
     </style>
 </head>
 
@@ -162,19 +198,26 @@
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
+        <a href="javascript:void(0);" id="toggleSidebar"><span class="material-icons">toggle_on</span></a>
         <a href="/admin/dashboard" data-label="Dashboard"><span class="material-icons">dashboard</span></a>
         <a href="/admin/organizationmanagement" data-label="Organization Management"><span class="material-icons">business_center</span></a>
         <a href="/admin/droppointmanagement" data-label="Drop Point Management"><span class="material-icons">place</span></a>
         <a href="/admin/marketplacemanagement" data-label="Marketplace Management"><span class="material-icons">shopping_cart</span></a>
         <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
-        <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
-        <a><form action="/admin/logout" method="post">
-            <button type="submit" data-label="Logout">
-              <span class="material-icons">logout</span>
-            </button>
-          </form></a> 
-
+        <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a> 
+        <a href="/admin/usermanagement" data-label="Logout" onclick="submitLogoutForm(event)"><span class="material-icons">logout</span></a>
     </div>
+
+    <form id="logoutForm" action="/admin/logout" method="post" style="display: none;">
+        <!-- Add any form fields you need here -->
+        <!-- For example, you might include a CSRF token -->
+    </form> 
+    <script>
+        function submitLogoutForm(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            document.getElementById("logoutForm").submit(); // Submit the form
+        }
+    </script>
 
     
      <!-- Main content -->
@@ -309,6 +352,17 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script> 
 
     <script>
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('pinned');
+        });
+        
+
+
+                
+
+
+
         $(document).ready(function() {
             // Initialize Mapbox
             mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWJhbmlhIiwiYSI6ImNsajg5eTVkazEwcWQzcXF6MWFudW83YW8ifQ.ApPsVPuZUJQI2j4q5nQtkw'; // Replace with your Mapbox access token

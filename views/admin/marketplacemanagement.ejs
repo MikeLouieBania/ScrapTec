@@ -27,7 +27,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #6499E9;
+            background-color: #13274F;
             padding-top: 20px;
             transition: 0.5s;
             z-index: 2;
@@ -62,7 +62,7 @@
         }
 
         .sidebar a:hover {
-            background-color: #4477CE;
+            background-color:  #B0C4DE;
         }
 
        /* Main Content Styling */
@@ -273,13 +273,19 @@
         <a href="/admin/managermanagement" data-label="Manager Management"><span
                 class="material-icons">supervisor_account</span></a>
         <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
-        <a><form action="/admin/logout" method="post">
-            <button type="submit" data-label="Logout">
-              <span class="material-icons">logout</span>
-            </button>
-          </form>
-        </a> 
+        <a href="/admin/usermanagement" data-label="Logout" onclick="submitLogoutForm(event)"><span class="material-icons">logout</span></a>
     </div>
+
+    <form id="logoutForm" action="/admin/logout" method="post" style="display: none;">
+        <!-- Add any form fields you need here -->
+        <!-- For example, you might include a CSRF token -->
+    </form> 
+    <script>
+        function submitLogoutForm(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            document.getElementById("logoutForm").submit(); // Submit the form
+        }
+    </script>
 
     <!-- Main content -->
     <div class="main-content">
