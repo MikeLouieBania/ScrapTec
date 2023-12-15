@@ -254,13 +254,22 @@
   model Category {
     id       String    @id @default(auto()) @map("_id") @db.ObjectId
     name     String    @unique
+    basePoints Float     // Added for points calculation
     listings Listing[]
   }
 
   model Condition {
     id       String    @id @default(auto()) @map("_id") @db.ObjectId
     name     String    @unique
+    conditionPoints Float     // Added for points calculation
     listings Listing[]
+  }
+
+  model PointQuantity {
+    id            String @id @default(auto()) @map("_id") @db.ObjectId
+    minQuantity   Int
+    maxQuantity   Int
+    quantityBonus Float
   }
 
   model Conversation {
