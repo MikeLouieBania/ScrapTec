@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Selling Listings</title>
     <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Include Slick Slider CSS -->
@@ -356,34 +357,42 @@
     }
 }
 
+     /* Target the specific link or text element that has the pseudo-element */
+     .nav-link.dropdown-toggle::after, .dropdown-item::after {
+        content: none !important; /* Removes the pseudo-element */
+    }
+
+
     </style>
 </head>
 
 <body>
     <!-- Header -->
     <header>
-        <!-- Include your header content or navigation menu here -->
+        <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/marketplace">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/inbox">Inbox</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/buyListing">Buying</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/sellListing">Selling</a>
-                    </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0" action="/user/logout" method="POST">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="/user/marketplace">HOME</a>
+                    <a class="nav-item nav-link" href="/user/inbox">Inbox</a>
+                    <a class="nav-item nav-link" href="/user/buyListing">Buying</a>
+                    <a class="nav-item nav-link" href="/user/sellListing">Selling</a>
+                </div>
+                <!-- User Profile Dropdown -->
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarProfileLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user"></i> <%= userDetails.firstName %> <%= userDetails.lastName %>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarProfileLink">
+                        <a class="dropdown-item" href="/user/profile">View Profile</a>
+                        <!-- Additional dropdown items can be added here -->
+                    </div>
+                </div>
+                <form class="form-inline" action="/user/logout" method="POST">
+                    <button class="btn btn-outline-success" type="submit">LOGOUT</button>
                 </form>
             </div>
         </nav>

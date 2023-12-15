@@ -135,6 +135,25 @@ module.exports = {
       const limit = parseInt(req.query.limit) || 10;
       const skip = (page - 1) * limit;
 
+      
+    // Fetch the full details of the currently logged-in user
+    const fullUserDetails = await prisma.user.findUnique({
+      where: { id: currentUserId }
+    });
+
+    // Check if the user details are available
+    if (!fullUserDetails) {
+      throw new Error("User not found");
+    }
+
+    // Create a new object with complete user details
+    const userDetails = {
+      firstName: fullUserDetails.firstName,
+      lastName: fullUserDetails.lastName,
+      email: fullUserDetails.email,
+      // You can include other details if necessary
+    };
+       
       // Fetch IDs of listings reported by the current user
       const reportedListings = await prisma.report.findMany({
         where: { reportedById: currentUserId },
@@ -271,6 +290,7 @@ module.exports = {
       // Render the marketplace page
       res.render('user/marketplace', {
         user: req.session.user,
+        userDetails: userDetails, 
         listings: listings,
         conditions: conditions,
         categories: categories,
@@ -632,6 +652,27 @@ module.exports = {
   async getSellingListings(req, res) {
     try {
       const userId = req.session.user.id;
+           
+      // Fetch the full details of the currently logged-in user
+      const fullUserDetails = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if the user details are available
+      if (!fullUserDetails) {
+        throw new Error("User not found");
+      }
+
+      // Create a new object with complete user details
+      const userDetails = {
+        firstName: fullUserDetails.firstName,
+        lastName: fullUserDetails.lastName,
+        email: fullUserDetails.email,
+        // You can include other details if necessary
+      };
+
+
+
       const sellingListings = await prisma.listing.findMany({
         where: {
           userId: userId,
@@ -669,7 +710,8 @@ module.exports = {
         }
       });
 
-      res.render('user/sellListing', { sellingListings: enhancedListings, getMimeType });
+      res.render('user/sellListing', { sellingListings: enhancedListings, getMimeType, 
+        userDetails: userDetails,  });
     } catch (error) {
       console.error('Error fetching selling listings:', error);
       res.status(500).send('Internal Server Error');
@@ -730,6 +772,24 @@ module.exports = {
     try {
       const userId = req.session.user.id;
 
+      // Fetch the full details of the currently logged-in user
+      const fullUserDetails = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if the user details are available
+      if (!fullUserDetails) {
+        throw new Error("User not found");
+      }
+
+      // Create a new object with complete user details
+      const userDetails = {
+        firstName: fullUserDetails.firstName,
+        lastName: fullUserDetails.lastName,
+        email: fullUserDetails.email,
+        // You can include other details if necessary
+      };
+
       // Fetch listings bought by the user
       const userPurchases = await prisma.user.findUnique({
         where: {
@@ -777,7 +837,7 @@ module.exports = {
         }
       });
 
-      res.render('user/buyListing', { boughtListings, userId });
+      res.render('user/buyListing', { boughtListings, userId, userDetails: userDetails,  });
     } catch (error) {
       console.error('Error fetching bought listings:', error);
       res.status(500).send('Internal Server Error');
@@ -943,6 +1003,24 @@ module.exports = {
     try {
       const userId = req.session.user.id;
 
+      // Fetch the full details of the currently logged-in user
+      const fullUserDetails = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if the user details are available
+      if (!fullUserDetails) {
+        throw new Error("User not found");
+      }
+
+      // Create a new object with complete user details
+      const userDetails = {
+        firstName: fullUserDetails.firstName,
+        lastName: fullUserDetails.lastName,
+        email: fullUserDetails.email,
+        // You can include other details if necessary
+      };
+
       // Fetch conversations where the user is the seller
       const sellingConversations = await prisma.conversation.findMany({
         where: {
@@ -987,6 +1065,7 @@ module.exports = {
 
       res.render('user/inbox', {
         user: req.session.user,
+        userDetails: userDetails, 
         userId,
         sellingConversations,
         buyingConversations

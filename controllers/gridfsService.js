@@ -55,11 +55,55 @@ async function getFileStreamById(id) {
   return downloadStream;
 }
 
+async function fileExists(fileId) {
+  if (!gfs) {
+    console.error('GridFS not initialized');
+    throw new Error('GridFS not initialized');
+  }
+
+  const objectId = new ObjectId(fileId);
+
+  return new Promise((resolve, reject) => {
+    gfs.find({ _id: objectId }).toArray((err, files) => {
+      if (err) {
+        console.error('Error checking file existence in GridFS:', err);
+        return reject(err);
+      }
+      resolve(files.length > 0);
+    });
+  });
+}
+
+async function deleteFile(fileId) {
+  if (!gfs) {
+    console.error('GridFS not initialized');
+    throw new Error('GridFS not initialized');
+  }
+
+  const exists = await fileExists(fileId);
+  if (!exists) {
+    console.warn(`File not found in GridFS for id ${fileId}, skipping deletion.`);
+    return;
+  }
+
+  const objectId = new ObjectId(fileId);
+  return new Promise((resolve, reject) => {
+    gfs.delete(objectId, (err) => {
+      if (err) {
+        console.error('Error deleting file from GridFS:', err);
+        return reject(err);
+      }
+      resolve();
+    });
+  });
+}
+
 // Ensure connection is established at startup
 connectToGridFS().catch(console.error);
 
 module.exports = {
   uploadFile,
   getFileStreamById,
+  deleteFile,
   // export other functions as needed
 };

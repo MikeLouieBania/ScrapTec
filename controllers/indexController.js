@@ -253,6 +253,7 @@ module.exports = {
                     id: true,
                     email: true,
                     password: true,
+                    reportedListingCount: true,
                     //...other fields you need
                 }
             }),
@@ -273,6 +274,12 @@ module.exports = {
         }
 
         if (user) {
+          
+            // Check if the user's account is banned
+            if (user.reportedListingCount >= 3) {
+              return res.render('login', { message: 'Your account has been banned due to policy violations.' });
+            }
+
             // User login
             const passwordMatch = await bcrypt.compare(password, user.password);
 

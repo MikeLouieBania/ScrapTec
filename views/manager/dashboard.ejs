@@ -399,6 +399,15 @@
               <a class="nav-link" href="/manager/managerAccount">Account</a>
           </li>
       </ul>
+      
+    <!-- Profile Dropdown -->
+    <div class="nav-item dropdown">
+      <a class="nav-link" href="#" id="navbarProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-user"></i> <%= managerProfile.firstName %> <%= managerProfile.lastName %>
+      </a> 
+    </div>
+
+
       <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
           <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
       </form>
@@ -413,9 +422,9 @@
         <div class="card operating-hours-card">
           <div class="card-body">
             <h5 class="card-title"><i class="fas fa-clock"></i> Operating Hours</h5>
-            <p class="card-text"><i class="fas fa-sun"></i> Open: <%= openingTime %>
+            <p class="card-text" id="openingTime"><i class="fas fa-sun"></i> Open: <%= openingTime %>
             </p>
-            <p class="card-text"><i class="fas fa-moon"></i> Close: <%= closingTime %>
+            <p class="card-text" id="closingTime"><i class="fas fa-moon"></i> Close: <%= closingTime %>
             </p>
           </div>
         </div>
@@ -782,6 +791,51 @@
 
 
   </script>
+  <script>
+    function highlightOperatingHours() {
+      // Convert 12-hour time to 24-hour format
+      function convertTo24Hour(timeStr) {
+        const [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+  
+        if (hours === 12) {
+          hours = modifier === 'AM' ? 0 : 12;
+        } else if (modifier === 'PM') {
+          hours += 12;
+        }
+  
+        return { hours, minutes };
+      }
+  
+      // Get current local time
+      const now = new Date();
+      const currentHours = now.getHours();
+      const currentMinutes = now.getMinutes();
+  
+      // Parse opening and closing times to 24-hour format
+      const opening = convertTo24Hour("<%= openingTime %>");
+      const closing = convertTo24Hour("<%= closingTime %>");
+  
+      // Function to check if current time is within a time range
+      function isTimeInRange(currentHours, currentMinutes, startHours, startMinutes, endHours, endMinutes) {
+        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHours, startMinutes);
+        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHours, endMinutes);
+        return now >= start && now < end;
+      }
+  
+      // Check if current time is within operating hours and highlight accordingly
+      if (isTimeInRange(currentHours, currentMinutes, opening.hours, opening.minutes, closing.hours, closing.minutes)) {
+        document.getElementById('openingTime').style.fontWeight = 'bold';
+      } else {
+        document.getElementById('closingTime').style.fontWeight = 'bold';
+      }
+    }
+  
+    // Run the function when the page loads
+    document.addEventListener('DOMContentLoaded', highlightOperatingHours);
+  </script>
+  
+  
 
 </body>
 
