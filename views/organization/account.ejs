@@ -3,7 +3,7 @@
   <head>
     <title>My Account</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 
@@ -93,7 +93,7 @@
     
     /* Navigation Bar Styles */
     .navbar.navbar-expand-lg.navbar-light.bg-light {
-      background-color: #219ebc !important;
+      background-color: #333333!important;
       padding: 10px 0;
     }
 
@@ -119,7 +119,7 @@
       left: 0;
       right: 0;
       height: 2px;
-      background-color: #8ecae6;
+      background-color: white;
       transform: scaleX(0);
       transition: transform 0.5s;
     }
@@ -138,12 +138,12 @@
     }
 
     .navbar-light .navbar-toggler-icon {
-      background-color: #219ebc;
+      background-color: #333333;
     }
 
     /* Custom Logout Button Style */
     .btn-outline-success {
-      background-color: #002244 !important;
+      background-color: #5072A7!important;
       border: none;
       padding: 10px 20px;
       border-radius: 5px;
@@ -365,7 +365,7 @@
     
     
     #specific-section {
-      background-image: url('https://i.postimg.cc/BQTWxf6C/vivid-blurred-colorful-wallpaper-background.jpg');
+      background-image: url('https://i.ibb.co/Y0cZ3M3/yep.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -660,6 +660,43 @@
       }
     }
     
+    /* Ensure the .navbar-brand and .nav-item elements are aligned on the same line */
+.navbar-brand, .nav-item, .form-inline {
+  display: flex;
+  align-items: center;
+}
+
+    /* Style for the profile dropdown to ensure vertical alignment */
+    .navbar .nav-item.dropdown {
+      display: flex;
+      align-items: center;
+    }
+
+    /* If the Username is too high or too low, adjust its alignment */
+    .navbar .dropdown-toggle {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Corrects the vertical alignment for toggler icon if needed */
+    .navbar-toggler {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Adjust the position of the profile dropdown */
+    .navbar .nav-item.dropdown {
+      margin-top: -6px; /* Moves the profile slightly up; adjust as needed */
+    }
+    .navbar .dropdown-item {
+      color: #333;
+      padding: 10px 20px;
+    }
+    .navbar .dropdown-item:hover {
+      background-color: #e9ecef; /* Grayish background */
+      color: #5072A7; /* You can adjust the text color if needed */
+    }
+        
 
 
 
@@ -667,31 +704,42 @@
   </head>
   <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/donationsList">Donations</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-                </li>  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/faq">FAQ</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/account">Account</a>
-                </li>
-            </ul> 
-            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
-            </form>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!-- Profile Dropdown -->
+  <div class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-user"></i> <%= organizationDetail.organizationname %>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarProfileDropdown">
+          <a class="dropdown-item" href="/organization/viewProfile">View Profile</a>
+      </div>
+  </div>
+
+  <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">  
+          <li class="nav-item">
+              <a class="nav-link" href="/organization/donationsList">Donations</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+          </li>  
+          <li class="nav-item">
+              <a class="nav-link" href="/organization/faq">FAQ</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/organization/account">Account</a>
+          </li>
+      </ul> 
+      <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+      </form>
+  </div>
+</nav>
+
     
     <div class="container" >
       <!-- Points and Org Name -->

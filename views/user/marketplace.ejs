@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css">
     <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
         /* Custom Styles from previous code */
         .navbar .navbar-brand,
@@ -92,6 +93,30 @@
             /* Adjust this value as needed */
         }
 
+         /* Remove underline from all nav-link items on hover */
+        .nav-link:hover {
+            text-decoration: none;
+        }
+
+  
+
+        /* Override hover styles for dropdown menu items */
+        .nav-item.dropdown .dropdown-menu .dropdown-item:hover {
+            background-color: transparent; /* Removes background color change on hover */
+            color: inherit; /* Keeps the text color the same on hover */
+        }
+
+        /* Remove the underline effect on hover for dropdown menu items */
+        .nav-item.dropdown .dropdown-menu .dropdown-item:hover::after {
+            display: none;
+        }
+
+        /* Target the specific link or text element that has the pseudo-element */
+        .nav-link.dropdown-toggle::after, .dropdown-item::after {
+            content: none !important; /* Removes the pseudo-element */
+        }
+
+
         .jumbotron::before {
             content: "";
             position: absolute;
@@ -165,7 +190,7 @@
         }
         .col-lg-3 {
             position: relative;
-            top: 30px; /* This moves the button downwards by 20 pixels */
+            top: 75px; /* This moves the button downwards by 20 pixels */
         }        
 
         .image-button:hover {
@@ -403,6 +428,7 @@
 
         .untree_co-section {
             padding: 7rem 0;
+            
         }
 
         .form-control {
@@ -598,6 +624,7 @@
           }
       
         .menu-item {
+            position: relative;
             padding: 15px 15px;
             cursor: pointer;
             text-decoration: none;
@@ -749,6 +776,24 @@
             color: rgba(0, 0, 0, .3);
         }
 
+        /* Style for the notification badge */
+        .notification-badge {
+            background-color: #ff4500; /* Bright color for the notification badge */
+            color: white; /* Text color for the badge */
+            padding: 3px 6px; /* Padding inside the badge */
+            border-radius: 50%; /* Rounded corners for the badge, 50% will make it circular */
+            font-size: 0.75em; /* Small font size for the text inside the badge */
+            position: absolute; /* Absolute positioning relative to the parent menu item */
+            top: 0; /* Position the badge towards the top of the parent item */
+            right: 0; /* Position the badge towards the right of the parent item */
+            transform: translate(50%, -50%); /* Adjust the badge's position to float over the corner */
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25); /* Optional: Adds a small shadow to the badge */
+            min-width: 20px; /* Minimum width to ensure the badge is round and not elliptical */
+            height: 20px; /* Set a fixed height for the badge */
+            display: flex; /* Utilizes flexbox for centering content */
+            justify-content: center; /* Horizontally center the content */
+            align-items: center; /* Vertically center the content */
+        }
         /* Style for pagination */
         .pagination {
             display: flex;
@@ -788,63 +833,63 @@
             margin: 5px auto; /* Reduced margin, auto centers the card within the column */
         }
         
-  /* Price Range Selector */
-.price-range-selector {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Align items to the start */
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: -20px; /* Keep top margin */
-    margin-bottom: 30px; /* Keep bottom margin */
-    width: 600px; /* Set a fixed width */
-    margin-left: 200px; /* Center the container */
-    margin-right: auto; /* Center the container */
-}
+        /* Price Range Selector */
+        .price-range-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Align items to the start */
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px; /* Keep top margin */
+            margin-bottom: 30px; /* Keep bottom margin */
+            width: 600px; /* Set a fixed width */
+            margin-left: 200px; /* Center the container */
+            margin-right: auto; /* Center the container */
+        }
 
-.price-range-selector label {
-    margin-right: 5px; /* Right margin for labels */
-    font-weight: bold;
-}
+        .price-range-selector label {
+            margin-right: 5px; /* Right margin for labels */
+            font-weight: bold;
+        }
 
-.price-range-selector input[type="number"] {
-    width: 80px; /* Fixed width for input fields */
-    padding: 1px;
-    margin-right: 10px; /* Right margin for input fields */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+        .price-range-selector input[type="number"] {
+            width: 80px; /* Fixed width for input fields */
+            padding: 1px;
+            margin-right: 10px; /* Right margin for input fields */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-.apply-price-range-btn {
-    padding: 8px 16px;
-    background-color: #4B9CD3;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-left: 10px; /* Adjusted left margin for button */
-}
+        .apply-price-range-btn {
+            padding: 8px 16px;
+            background-color: #4B9CD3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 10px; /* Adjusted left margin for button */
+        }
 
-.apply-price-range-btn:hover {
-    background-color: #0056b3;
-}
+        .apply-price-range-btn:hover {
+            background-color: #0056b3;
+        }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .price-range-selector {
-        /* Take full width on small screens and adjust padding */
-        width: calc(100% - 20px); /* Subtracting padding */
-        padding: 10px;
-    }
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .price-range-selector {
+                /* Take full width on small screens and adjust padding */
+                width: calc(100% - 20px); /* Subtracting padding */
+                padding: 10px;
+            }
 
-    .price-range-selector input[type="number"],
-    .price-range-selector .apply-price-range-btn {
-        margin-right: 5px; /* Reduce the right margin on small screens */
-    }
-}
+            .price-range-selector input[type="number"],
+            .price-range-selector .apply-price-range-btn {
+                margin-right: 5px; /* Reduce the right margin on small screens */
+            }
+        }
 
 
 
@@ -878,29 +923,35 @@
 
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top shift">
-        <a class="navbar-brand" href="/user/marketplace">
-            <img src="https://i.postimg.cc/qqK1pXMX/DALL-E-2023-11-13-17-07-22-An-impactful-and-memorable-logo-for-a-website-about-reusing-old-compute.png" alt="" class="navbar-logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Marketplace</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/useraccount">My Account</a>
-                </li>
-                <li class="nav-item">
-                    <form action="/user/logout" method="POST">
-                        <button type="submit" class="nav-link">LOGOUT</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </nav>
+   <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top shift">
+    <a class="navbar-brand" href="/user/marketplace">
+        <img src="https://i.postimg.cc/qqK1pXMX/DALL-E-2023-11-13-17-07-22-An-impactful-and-memorable-logo-for-a-website-about-reusing-old-compute.png" alt="" class="navbar-logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto"> 
+            <!-- User Profile Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-user"></i> <%= userDetails.firstName %> <%= userDetails.lastName %>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarProfileDropdown">
+                    <li><a class="dropdown-item" href="/user/useraccount">View Profile</a></li>
+                    <!-- Add more dropdown items here if necessary -->
+                </ul>
+            </li>
+            <li class="nav-item">
+                <form action="/user/logout" method="POST">
+                    <button type="submit" class="nav-link btn btn-clear">LOGOUT</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
 
     <!-- Filters -->
     <div class="untree_co-section product-section before-footer-section">
@@ -1121,133 +1172,130 @@
         
   
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
-<script>
-    window.onload = function() {
-      fetch('/user/ads')
-        .then(response => response.json())
-        .then(data => {
-          const ads = data.ads;
-          const carouselInner = document.querySelector('.carousel-inner');
-          const adCarousel = document.getElementById('adCarousel');
-          carouselInner.innerHTML = ''; // Clear existing items
-  
-          ads.forEach((ad, index) => {
-            const isActive = index === 0 ? 'active' : '';
-            const adHTML = `
-              <div class="carousel-item ${isActive}">
-                  <a href="${ad.link}" target="_blank">
-                      <img src="${ad.imageUrl}" class="d-block w-100" style="max-width: 5000px; max-height: 400px;" alt="${ad.title}">
-                  </a>
-              </div>
-            `;
-            carouselInner.insertAdjacentHTML('beforeend', adHTML);
+    <script>
+        window.onload = function() {
+        fetch('/user/ads')
+            .then(response => response.json())
+            .then(data => {
+            const ads = data.ads;
+            const carouselInner = document.querySelector('.carousel-inner');
+            const adCarousel = document.getElementById('adCarousel');
+            carouselInner.innerHTML = ''; // Clear existing items
+    
+            ads.forEach((ad, index) => {
+                const isActive = index === 0 ? 'active' : '';
+                const adHTML = `
+                <div class="carousel-item ${isActive}">
+                    <a href="${ad.link}" target="_blank">
+                        <img src="${ad.imageUrl}" class="d-block w-100" style="max-width: 5000px; max-height: 400px;" alt="${ad.title}">
+                    </a>
+                </div>
+                `;
+                carouselInner.insertAdjacentHTML('beforeend', adHTML);
 
-            // Add click event listener to record ad clicks
-            const adElement = carouselInner.lastElementChild;
-            adElement.addEventListener('click', () => {
-            fetch('/user/record-click', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ adId: ad.adId }), // Send the ad's unique identifier
+                // Add click event listener to record ad clicks
+                const adElement = carouselInner.lastElementChild;
+                adElement.addEventListener('click', () => {
+                fetch('/user/record-click', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ adId: ad.adId }), // Send the ad's unique identifier
+                });
+                }); 
             });
-            }); 
-          });
-  
-          // Adjust carousel behavior based on the number of ads
-          if (ads.length === 0) {
-            adCarousel.style.display = 'none';
-          } else if (ads.length === 1) {
-            // Disable carousel controls if there's only one ad
-            document.querySelector('.carousel-control-prev').style.display = 'none';
-            document.querySelector('.carousel-control-next').style.display = 'none';
-            adCarousel.removeAttribute('data-bs-ride'); // Stop the automatic sliding
-          }
-        })
-        .catch(error => console.error('Error fetching ads:', error));
-    };
-  </script>
+    
+            // Adjust carousel behavior based on the number of ads
+            if (ads.length === 0) {
+                adCarousel.style.display = 'none';
+            } else if (ads.length === 1) {
+                // Disable carousel controls if there's only one ad
+                document.querySelector('.carousel-control-prev').style.display = 'none';
+                document.querySelector('.carousel-control-next').style.display = 'none';
+                adCarousel.removeAttribute('data-bs-ride'); // Stop the automatic sliding
+            }
+            })
+            .catch(error => console.error('Error fetching ads:', error));
+        };
+    </script>
 
-<script>
-    // Get the modal, button that opens the modal, and the <span> element that closes the modal
-    var modal = document.getElementById("myModal");
-    var btn = document.querySelector(".image-button");
-    var span = document.getElementsByClassName("close")[0];
-    // When the button is clicked, open the modal
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-    // When <span> is clicked, close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-    // When anywhere outside of the modal is clicked, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
+    <script>
+        // Get the modal, button that opens the modal, and the <span> element that closes the modal
+        var modal = document.getElementById("myModal");
+        var btn = document.querySelector(".image-button");
+        var span = document.getElementsByClassName("close")[0];
+        // When the button is clicked, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        // When <span> is clicked, close the modal
+        span.onclick = function() {
             modal.style.display = "none";
         }
-    }
-    function showProductDetails(event, productId) {
-        event.preventDefault(); // Get the product card using the data attribute
-        let productCard = document.querySelector(`[data-product-id="${productId}"]`);
-        // Populate the modal fields
-        document.getElementById('productModalImage').src = productCard.querySelector('img').src;
-        document.getElementById('productModalPrice').textContent = productCard.querySelector('.card-text').textContent;
-        document.getElementById('productModalDescription').textContent = `Description for ${productCard.querySelector('.card-title').textContent}`;
-        // Show the modal without the backdrop
-        let productModal = new bootstrap.Modal(document.getElementById('productModal'), {
-            backdrop: false
-        });
-        productModal.show();
-    }
-    document.addEventListener('click', function(event) {
-        var isClickInsideModal = document.querySelector('.modal-content').contains(event.target);
-        var modalIsOpen = document.querySelector('.modal.show');
-        if (modalIsOpen && !isClickInsideModal) {
-            var modalElement = document.querySelector('.modal');
-            var bootstrapModal = bootstrap.Modal.getInstance(modalElement);
-            bootstrapModal.hide();
+        // When anywhere outside of the modal is clicked, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
-    });
-    document.querySelector('.maps').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('MapModals').style.display = 'block';
-    });
-    document.getElementById('closeModal').addEventListener('click', function() {
-        document.getElementById('MapModals').style.display = 'none';
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-      $('#reportForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        var formData = $(this).serialize();
-        
-        $.ajax({
-          type: 'POST',
-          url: '/user/reportListing', // Your endpoint to process the report
-          data: formData,
-          success: function(response) {
-            // You can add more sophisticated error checking here
-            $('#reportModal').modal('hide');
-            alert('Listing reported successfully.');
-          },
-          error: function(xhr, status, error) {
-            alert('An error occurred. Please try again.');
-          }
+        function showProductDetails(event, productId) {
+            event.preventDefault(); // Get the product card using the data attribute
+            let productCard = document.querySelector(`[data-product-id="${productId}"]`);
+            // Populate the modal fields
+            document.getElementById('productModalImage').src = productCard.querySelector('img').src;
+            document.getElementById('productModalPrice').textContent = productCard.querySelector('.card-text').textContent;
+            document.getElementById('productModalDescription').textContent = `Description for ${productCard.querySelector('.card-title').textContent}`;
+            // Show the modal without the backdrop
+            let productModal = new bootstrap.Modal(document.getElementById('productModal'), {
+                backdrop: false
+            });
+            productModal.show();
+        }
+        document.addEventListener('click', function(event) {
+            var isClickInsideModal = document.querySelector('.modal-content').contains(event.target);
+            var modalIsOpen = document.querySelector('.modal.show');
+            if (modalIsOpen && !isClickInsideModal) {
+                var modalElement = document.querySelector('.modal');
+                var bootstrapModal = bootstrap.Modal.getInstance(modalElement);
+                bootstrapModal.hide();
+            }
         });
-      });
-    });
-  </script>
+        document.querySelector('.maps').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('MapModals').style.display = 'block';
+        });
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('MapModals').style.display = 'none';
+        });
+    </script>
 
+    <script>
+        $(document).ready(function() {
+        $('#reportForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            var formData = $(this).serialize();
+            
+            $.ajax({
+            type: 'POST',
+            url: '/user/reportListing', // Your endpoint to process the report
+            data: formData,
+            success: function(response) {
+                // You can add more sophisticated error checking here
+                $('#reportModal').modal('hide');
+                alert('Listing reported successfully.');
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred. Please try again.');
+            }
+            });
+        });
+        });
+    </script>
  
-  
-
 </html>

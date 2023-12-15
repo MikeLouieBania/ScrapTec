@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 const sharp = require('sharp');
 const gridfsService = require('./gridfsService');
 
@@ -134,6 +135,25 @@ module.exports = {
       const limit = parseInt(req.query.limit) || 10;
       const skip = (page - 1) * limit;
 
+      
+    // Fetch the full details of the currently logged-in user
+    const fullUserDetails = await prisma.user.findUnique({
+      where: { id: currentUserId }
+    });
+
+    // Check if the user details are available
+    if (!fullUserDetails) {
+      throw new Error("User not found");
+    }
+
+    // Create a new object with complete user details
+    const userDetails = {
+      firstName: fullUserDetails.firstName,
+      lastName: fullUserDetails.lastName,
+      email: fullUserDetails.email,
+      // You can include other details if necessary
+    };
+       
       // Fetch IDs of listings reported by the current user
       const reportedListings = await prisma.report.findMany({
         where: { reportedById: currentUserId },
@@ -270,6 +290,7 @@ module.exports = {
       // Render the marketplace page
       res.render('user/marketplace', {
         user: req.session.user,
+        userDetails: userDetails, 
         listings: listings,
         conditions: conditions,
         categories: categories,
@@ -631,6 +652,27 @@ module.exports = {
   async getSellingListings(req, res) {
     try {
       const userId = req.session.user.id;
+           
+      // Fetch the full details of the currently logged-in user
+      const fullUserDetails = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if the user details are available
+      if (!fullUserDetails) {
+        throw new Error("User not found");
+      }
+
+      // Create a new object with complete user details
+      const userDetails = {
+        firstName: fullUserDetails.firstName,
+        lastName: fullUserDetails.lastName,
+        email: fullUserDetails.email,
+        // You can include other details if necessary
+      };
+
+
+
       const sellingListings = await prisma.listing.findMany({
         where: {
           userId: userId,
@@ -668,7 +710,8 @@ module.exports = {
         }
       });
 
-      res.render('user/sellListing', { sellingListings: enhancedListings, getMimeType });
+      res.render('user/sellListing', { sellingListings: enhancedListings, getMimeType, 
+        userDetails: userDetails,  });
     } catch (error) {
       console.error('Error fetching selling listings:', error);
       res.status(500).send('Internal Server Error');
@@ -729,6 +772,24 @@ module.exports = {
     try {
       const userId = req.session.user.id;
 
+      // Fetch the full details of the currently logged-in user
+      const fullUserDetails = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if the user details are available
+      if (!fullUserDetails) {
+        throw new Error("User not found");
+      }
+
+      // Create a new object with complete user details
+      const userDetails = {
+        firstName: fullUserDetails.firstName,
+        lastName: fullUserDetails.lastName,
+        email: fullUserDetails.email,
+        // You can include other details if necessary
+      };
+
       // Fetch listings bought by the user
       const userPurchases = await prisma.user.findUnique({
         where: {
@@ -776,7 +837,7 @@ module.exports = {
         }
       });
 
-      res.render('user/buyListing', { boughtListings, userId });
+      res.render('user/buyListing', { boughtListings, userId, userDetails: userDetails,  });
     } catch (error) {
       console.error('Error fetching bought listings:', error);
       res.status(500).send('Internal Server Error');
@@ -942,6 +1003,24 @@ module.exports = {
     try {
       const userId = req.session.user.id;
 
+      // Fetch the full details of the currently logged-in user
+      const fullUserDetails = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if the user details are available
+      if (!fullUserDetails) {
+        throw new Error("User not found");
+      }
+
+      // Create a new object with complete user details
+      const userDetails = {
+        firstName: fullUserDetails.firstName,
+        lastName: fullUserDetails.lastName,
+        email: fullUserDetails.email,
+        // You can include other details if necessary
+      };
+
       // Fetch conversations where the user is the seller
       const sellingConversations = await prisma.conversation.findMany({
         where: {
@@ -986,6 +1065,7 @@ module.exports = {
 
       res.render('user/inbox', {
         user: req.session.user,
+        userDetails: userDetails, 
         userId,
         sellingConversations,
         buyingConversations
@@ -1734,6 +1814,154 @@ module.exports = {
         user: userWithSalesAndRatings,
         averageReceivedRating: averageReceivedRating._avg.value || 0,
       });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async getUpdateAccount(req, res) {
+    const userId = req.session.user.id;
+    try {
+      const userWithSalesAndRatings = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          city: true,
+          purchases: {
+            include: {
+              listing: {
+                include: {
+                  user: true, // Include the seller of the listing
+                }
+              },
+              rating: true, // Include the ratings related to the sale
+            }
+          },
+          receivedRatings: {
+            include: {
+              rater: true, // Include the user who gave the rating
+            }
+          },
+        }
+      });
+
+      const averageReceivedRating = await prisma.rating.aggregate({
+        _avg: {
+          value: true,
+        },
+        where: {
+          rateeId: userId,
+        },
+      });
+
+      res.render('user/updateAccount', {
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async postUpdateAccountInfo(req, res) {
+    const userId = req.session.user.id;
+    const { contactNumber, city } = req.body;
+
+    try {
+      // Check if the city already exists
+      let cityData = await prisma.city.findUnique({
+        where: { name: city }
+      });
+
+      // If the city doesn't exist, create a new one
+      if (!cityData) {
+        cityData = await prisma.city.create({
+          data: { name: city }
+        });
+      }
+
+      // Update the user's contact number and city
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          contactNumber: contactNumber,
+          cityId: cityData.id
+        }
+      });
+
+      res.redirect('/user/useraccount'); // Redirect to account page or appropriate page
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    } 
+  },
+
+  async postUpdatePassword(req, res) { 
+    try {
+      const userId = req.session.user.id;
+      const { oldPassword, newPassword, confirmPassword } = req.body;
+
+      const userWithSalesAndRatings = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          city: true,
+          purchases: {
+            include: {
+              listing: {
+                include: {
+                  user: true, // Include the seller of the listing
+                }
+              },
+              rating: true, // Include the ratings related to the sale
+            }
+          },
+          receivedRatings: {
+            include: {
+              rater: true, // Include the user who gave the rating
+            }
+          },
+        }
+      });
+
+      const averageReceivedRating = await prisma.rating.aggregate({
+        _avg: {
+          value: true,
+        },
+        where: {
+          rateeId: userId,
+        },
+      });
+  
+      if (newPassword !== confirmPassword) {
+        return res.render('user/updateAccount', { message: 'New passwords do not match.' , 
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0,});
+      }
+      const user = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Check if old password is correct
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.render('user/updateAccount', { message: 'Old password is incorrect.',
+        user: userWithSalesAndRatings,
+        averageReceivedRating: averageReceivedRating._avg.value || 0, });
+      }
+
+      // Hash the new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+      // Update password in database
+      await prisma.user.update({
+        where: { id: userId },
+        data: { password: hashedNewPassword }
+      });
+ 
+      res.render('user/useraccount', { message: 'Password successfully updated.',
+      user: userWithSalesAndRatings,
+      averageReceivedRating: averageReceivedRating._avg.value || 0, });
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');

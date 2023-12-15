@@ -3,6 +3,7 @@
 
 <head>
     <title>Pledge Basket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -16,9 +17,9 @@
             padding: 20px;
         }
 
-        /* Navigation Bar Styles */
+    /* Navigation Bar Styles */
     .navbar.navbar-expand-lg.navbar-light.bg-light {
-        background-color: #219ebc !important;
+        background-color: #333333 !important;
         padding: 10px 0;
     }
 
@@ -41,12 +42,12 @@
     }
 
     .navbar-light .navbar-toggler-icon {
-        background-color: #219ebc;
+        background-color: #333333;
     }
 
     /* Custom Logout Button Style */
     .btn-outline-success {
-        background-color: #002244 !important;
+        background-color: #5072A7 !important;
         border: none;
         padding: 10px 20px;
         border-radius: 5px;
@@ -90,7 +91,7 @@
         left: 0;
         right: 0;
         height: 2px;
-        background-color: #8ecae6;
+        background-color: white;
         transform: scaleX(0);
         transition: transform 0.5s;
     }
@@ -99,49 +100,50 @@
         transform: scaleX(1);
     }
 
+     
 
-/* Table Styling */
-.table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #212529;
-    overflow-x: auto; /* Ensures content is accessible even on smaller screens */
-  }
-  
-  .table-responsive .table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #212529;
-  }
-  
-  /* Table Header Styling */
-  .table thead th {
-    vertical-align: middle;
-    border-bottom: 2px solid #dee2e6;
-    background-color: #f8f9fa;
-    padding: 1rem;
-    text-align: center;
-    font-weight: bold;
-    color: #495057;
-  }
-  
-  /* Table Body Styling */
-  .table tbody td {
-    padding: 1rem;
-    vertical-align: middle;
-    text-align: center;
-    border-top: 1px solid #dee2e6;
-  }
-  
-  /* Zebra Striping for rows */
-  .table tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Hover effect for rows */
-  .table tbody tr:hover {
-    background-color: #eef6fc;
-  }
+        /* Table Styling */
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            overflow-x: auto; /* Ensures content is accessible even on smaller screens */
+        }
+        
+        .table-responsive .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+        }
+        
+        /* Table Header Styling */
+        .table thead th {
+            vertical-align: middle;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        /* Table Body Styling */
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            text-align: center;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* Zebra Striping for rows */
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Hover effect for rows */
+        .table tbody tr:hover {
+            background-color: #eef6fc;
+        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -170,38 +172,67 @@
         }
     }
     
+    .navbar .dropdown-menu {
+        border-radius: 0;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .navbar .dropdown-item {
+        color: #333;
+        padding: 10px 20px;
+    }
+    .navbar .dropdown-item:hover {
+        background-color: #e9ecef; /* Grayish background */
+        color: #5072A7; /* You can adjust the text color if needed */
+    }
+    .navbar .nav-item.dropdown .nav-link {
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+    }
+    .navbar .dropdown-menu-right {
+        right: 0;
+        left: auto;
+    }
         
     </style>
 </head>
 
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/donationsList">Donations</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
-                </li>  
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/faq">FAQ</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/organization/account">Account</a>
-                </li>
-            </ul> 
-            <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
-            </form>
+   <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- Profile Dropdown -->
+    <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user"></i> <%= organizationDetail.organizationname %>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarProfileDropdown">
+            <a class="dropdown-item" href="/organization/viewProfile">View Profile</a>
         </div>
-    </nav>
-
+    </div>
+    <a class="navbar-brand" href="/organization/dashboard">DASHBOARD</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">  
+            <li class="nav-item">
+                <a class="nav-link" href="/organization/donationsList">Donations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/organization/pledgeBasket">Pledge Basket</a>
+            </li>  
+            <li class="nav-item">
+                <a class="nav-link" href="/organization/faq">FAQ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/organization/account">Account</a>
+            </li>
+        </ul> 
+        <form class="form-inline my-2 my-lg-0" method="post" action="/organization/logout">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">LOGOUT</button>
+        </form>
+    </div>
+  </nav>
 
     <div class="container">
         <h3>Your Pledge Basket</h3>
@@ -240,6 +271,7 @@
                                 </div>
                             </form>
                             
+                            <br>
                             <!-- Delete Donation -->
                             <form action="/organization/deleteDonation/<%= donation.id %>" method="POST" onsubmit="return confirmDelete()">
                                 <button type="submit" class="btn btn-sm btn-danger">Delete Donation</button>

@@ -268,6 +268,14 @@
                         <a class="nav-link" href="/manager/managerAccount">Account</a>
                     </li>
                 </ul>
+                
+      
+    <!-- Profile Dropdown -->
+    <div class="nav-item dropdown">
+        <a class="nav-link" href="#" id="navbarProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user"></i> <%= managerProfile.firstName %> <%= managerProfile.lastName %>
+        </a> 
+      </div>
             <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
                 <button class="btn btn-logout my-2 my-sm-0" type="submit" 
                 style="font-family: 'Poppins', sans-serif; background-color: #002244; border: none; padding: 10px 20px; border-radius: 5px; color: white; font-weight: bold;" 

@@ -30,7 +30,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #6499E9; /* Main blue */
+            background-color: #13274F; /* Main blue */
             padding-top: 20px;
             transition: 0.5s;
             z-index: 2; /* Ensure the sidebar is above the main content */
@@ -67,7 +67,7 @@
         }
 
         .sidebar a:hover {
-            background-color:  #4477CE; /* Darker blue on hover */
+            background-color:  #B0C4DE; /* Darker blue on hover */
         }
 
         /* Main content styles */
@@ -78,47 +78,79 @@
             padding-bottom: 20px;
             transition: 0.5s; /* Smooth transition */
         }
-          /* Improved Style for the table */
-          .table {
-            display: inline-block;
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-            background-color: #ffffff;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-            margin-left: -20%;
-          }
-
-          .table tr {
-            background-color: #ffffff;  /* Default background color for all rows */
-            height: 50px;  
+        .table-responsive {
+          overflow-x: auto; /* Scroll appears only when table exceeds the screen width */
         }
         
-          .table th, .table td {
-            border: 1px solid #e0e0e0;
-            padding: 10px 15px;
-            vertical-align: middle;
-          }
+            /* General Table Styling */
+    .table {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #212529;
+      background-color: #ffffff;
+      border-collapse: collapse; /* Ensures that borders are collapsed into a single border */
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+    }
 
-          .table th {
-            background-color: #e5e5e5;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: center;        /* Horizontally center-align the text */
-            vertical-align: middle;    /* Vertically center-align the text */
-            padding: 15px;             /* Balanced padding for better appearance */
-            border: 1px solid #e0e0e0; /* Optional border for clearer cell definition */
-            text-indent: 10px;
-          }
+    /* Header Styling */
+    .table thead th {
+      vertical-align: middle;
+      border-bottom: 2px solid #dee2e6; /* Thick line for header bottom */
+      background-color: #f8f9fa;
+      padding: 1rem;
+      text-align: center;
+      font-weight: bold;
+      color: #495057;
+      text-transform: uppercase;
+      border-right: 1px solid #dee2e6; /* Line between columns */
+    }
 
+    /* Last header cell does not need a right border */
+    .table thead th:last-child {
+      border-right: none;
+    }
 
-          .table tr:hover {
-            background-color: #f9f9f9;
-          }
+    /* Body Styling */
+    .table tbody td {
+      padding: 1rem;
+      vertical-align: middle;
+      text-align: center;
+      border-top: 1px solid #dee2e6; /* Line between rows */
+      border-right: 1px solid #dee2e6; /* Line between columns */
+    }
 
-          .table tr:nth-child(odd) {
-            background-color: #f7f7f7;
+    /* Last cell in each row does not need a right border */
+    .table tbody tr td:last-child {
+      border-right: none;
+    }
+
+    /* Zebra Striping for rows */
+    .table tbody tr:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+
+    /* Hover effect for rows */
+    .table tbody tr:hover {
+      background-color: #eef6fc;
+    }
+
+    /* Responsive Table Styling */
+    .table-responsive .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #212529;
+    }
+
+        /* Media Query for smaller screens to adjust font size and padding */
+        @media (max-width: 768px) {
+          .table thead th, .table tbody td {
+            padding: 0.4rem; /* Even smaller padding */
+            font-size: 0.9em; /* Smaller font size */
           }
+        }
+        
 
       /* Nav Style */
 
@@ -252,13 +284,19 @@
         <a href="/admin/marketplacemanagement" data-label="Marketplace Management"><span class="material-icons">shopping_cart</span></a>
         <a href="/admin/managermanagement" data-label="Manager Management"><span class="material-icons">supervisor_account</span></a>
         <a href="/admin/usermanagement" data-label="User Management"><span class="material-icons">group</span></a>
-        <a><form action="/admin/logout" method="post">
-          <button type="submit" data-label="Logout">
-            <span class="material-icons">logout</span>
-          </button>
-        </form></a> 
+        <a href="/admin/usermanagement" data-label="Logout" onclick="submitLogoutForm(event)"><span class="material-icons">logout</span></a>
     </div>
 
+    <form id="logoutForm" action="/admin/logout" method="post" style="display: none;">
+        <!-- Add any form fields you need here -->
+        <!-- For example, you might include a CSRF token -->
+    </form> 
+    <script>
+        function submitLogoutForm(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            document.getElementById("logoutForm").submit(); // Submit the form
+        }
+    </script>
 
 
     <!-- Main content -->

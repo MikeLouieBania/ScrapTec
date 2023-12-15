@@ -7,6 +7,8 @@ const fontkit = require('@pdf-lib/fontkit');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
+
+
 async function sendMilestoneCertificate(organization, numberOfDonations) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -164,9 +166,78 @@ async function aggregateFeedbackByTimePeriod(feedbackTrends) {
   });
 }
 
+async function checkAndDeleteLateDonations() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Set the time to 00:00:00 to include today's date in the comparison
+
+  const lateDonations = await prisma.donation.findMany({
+    where: {
+      expectedDateOfArrival: { lt: today },
+      status: { notIn: ['VERIFIED', 'ACCEPTEDWITHISSUES'] }
+    },
+    include: {
+      organization: true,
+      dropPoint: true
+    }
+  });
+
+  const donationIds = lateDonations.map(donation => donation.id);
+
+  // First, delete peripherals associated with the late donations
+  await prisma.peripheral.deleteMany({
+    where: { donationId: { in: donationIds } }
+  });
+
+  // After deleting peripherals, delete the donations
+  await prisma.donation.deleteMany({
+    where: { id: { in: donationIds } }
+  });
+
+  // Prepare and send email notifications in parallel
+  const emailTasks = lateDonations.map(donation =>
+    sendEmailNotification(donation.organization.email, donation, donation.dropPoint)
+  );
+  await Promise.all(emailTasks);
+}
+
+
+async function sendEmailNotification(email, donation, dropPoint) {
+  const transporter = nodemailer.createTransport({
+    service: process.env.EMAIL_SERVICE,
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+  const htmlContent = `
+  <html>
+    <body>
+      <p>Dear Valued Donor,</p>
+      <p>We regret to inform you that your donation scheduled for arrival at <strong>${dropPoint.name}</strong> on <strong>${donation.expectedDateOfArrival.toDateString()}</strong> has not been received. Accordingly, we have had to cancel this donation in adherence to our operational policies.</p>
+      <p>At CycleUpTech, we meticulously manage our donation schedules to maximize efficiency and impact. While we deeply value every contribution, our process necessitates strict adherence to the agreed timelines.</p>
+      <p>We understand that unforeseen circumstances can affect planned donations. Therefore, we invite you to schedule a new donation at your convenience. Your continued support and contributions are immensely appreciated and play a crucial role in our mission.</p>
+      <p>Thank you for your understanding and for your commitment to our cause.</p>
+      <p>Warm regards,</p>
+      <p><strong>The CycleUpTech Team</strong></p>
+    </body>
+  </html>
+`;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USERNAME,
+    to: email,
+    subject: 'Donation Schedule Update',
+    html: htmlContent
+  };
+
+  await transporter.sendMail(mailOptions);
+}
 
 module.exports = {
   async getLogin(req, res) {
+    // Check and delete late donations
+    await checkAndDeleteLateDonations();
+
     res.render('manager/login');
   },
   
@@ -202,6 +273,16 @@ module.exports = {
   async getDashboard(req, res) {
     try {
 
+      // Assuming req.session.managerId contains only the ID of the manager
+      const managerId = req.session.managerId;
+
+      // Fetch the manager's profile using the ID
+      const managerProfile = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        }
+      });
+
       // Fetch the manager's profile and associated drop point using the ID stored in the session
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: {
@@ -217,13 +298,26 @@ module.exports = {
         return res.render('manager/login', { message: "Manager or associated drop point not found" });
       }
 
+      // Function to convert 24-hour time to 12-hour time
+      function convertTo12Hour(timeString) {
+        if (!timeString) return "Not Available";  // Handle undefined or null
+
+        const [hours, minutes] = timeString.split(':');
+        const hoursInt = parseInt(hours, 10);
+        const isPM = hoursInt >= 12;
+        const finalHours = isPM ? (hoursInt > 12 ? hoursInt - 12 : hoursInt) : (hoursInt === 0 ? 12 : hoursInt);
+        return `${finalHours}:${minutes} ${isPM ? 'PM' : 'AM'}`;
+      }
+
       // Extract the drop point name and operating hours
-      const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
-      const openingTime = managerWithDropPoint.dropPoint[0]?.openingTime || "Not Available";
-      const closingTime = managerWithDropPoint.dropPoint[0]?.closingTime || "Not Available";
+      const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point"; 
+      // Convert operating hours to 12-hour format
+      const openingTime = convertTo12Hour(managerWithDropPoint.dropPoint[0]?.openingTime);
+      const closingTime = convertTo12Hour(managerWithDropPoint.dropPoint[0]?.closingTime);
 
       // Render the dashboard with the manager's profile and drop point name
       res.render('manager/dashboard', {
+        managerProfile: managerProfile,
         manager: managerWithDropPoint,
         dropPointName,
         openingTime,
@@ -746,6 +840,17 @@ module.exports = {
       const filterStatus = req.query.status || '';
       const sortParam = req.query.sort || 'expectedDateOfArrival_asc'; // Default sorting parameter
 
+      // Assuming req.session.managerId contains only the ID of the manager
+      const managerId = req.session.managerId;
+
+      // Fetch the manager's profile using the ID
+      const managerProfile = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        }
+      });
+
+
       let whereClause = {
         isSubmitted: true,
         organization: {
@@ -806,13 +911,15 @@ module.exports = {
 
       // Get the drop point name from the first drop point (if it exists)
       const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
+ 
 
       // Render the manageDonation view, passing in the donations and dropPoint name
       res.render('manager/manageDonation', {
         donations: managerWithDropPoint.dropPoint[0]?.donations || [],
         dropPointName: dropPointName,
         currentPage: page,
-        totalPages: totalPages
+        totalPages: totalPages,
+        managerProfile: managerProfile,
       });
 
     } catch (error) {
@@ -936,6 +1043,17 @@ module.exports = {
 
   async getManagerAccount(req, res) {
     try {
+
+            // Assuming req.session.managerId contains only the ID of the manager
+            const managerId = req.session.managerId;
+
+            // Fetch the manager's profile using the ID
+            const managerProfile = await prisma.manager.findUnique({
+              where: {
+                id: managerId
+              }
+            });
+      
       // Fetch the manager's profile and associated drop point using the ID stored in the session
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: {
@@ -956,6 +1074,7 @@ module.exports = {
 
       // Render the manager account page with the manager's profile and drop point details
       res.render('manager/manageraccount', {
+        managerProfile: managerProfile,
         manager: managerWithDropPoint,
         dropPointName,
         dropPointLocation,
