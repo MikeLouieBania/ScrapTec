@@ -269,6 +269,16 @@ module.exports = {
   async getDashboard(req, res) {
     try {
         const organizationId = req.session.organizationId;  
+        const organizationIdloggedin = req.session.organization.id;   
+
+        const organizationDetails = await prisma.organization.findUnique({
+          where: { id: organizationIdloggedin }
+        });
+  
+        // Check if the organization details are available
+        if (!organizationDetails) {
+          throw new Error("Organization not found");
+        }
 
         // Update ad statuses asynchronously
         updateAdStatuses(organizationId).catch(console.error);
@@ -374,7 +384,7 @@ module.exports = {
         }); 
       
 
-        res.render('organization/dashboard', { dropPoints: dropPoints});
+        res.render('organization/dashboard', { dropPoints: dropPoints, organizationDetail: organizationDetails});
     } catch (error) {
         console.error("Error fetching drop points:", error);
         res.status(500).send("Internal Server Error");
@@ -516,7 +526,16 @@ module.exports = {
 
   async getPledgeBasketPage(req, res) {
     try {
-        const organizationId = req.session.organization.id;
+        const organizationId = req.session.organization.id;  
+
+        const organizationDetails = await prisma.organization.findUnique({
+          where: { id: organizationId }
+        });
+  
+        // Check if the organization details are available
+        if (!organizationDetails) {
+          throw new Error("Organization not found");
+        }
 
         // Fetch the unsubmitted donations of the organization
         const donations = await prisma.donation.findMany({
@@ -530,7 +549,7 @@ module.exports = {
             }
         }); 
 
-        res.render('organization/pledgeBasket', { donations: donations });
+        res.render('organization/pledgeBasket', { donations: donations, organizationDetail: organizationDetails });
     } catch (error) {
         console.error("Error fetching pledge basket items:", error);
         res.status(500).send("Internal Server Error");
@@ -695,7 +714,16 @@ module.exports = {
 
   async getDonationsList(req, res) {
     try {
-      const organizationId = req.session.organization.id;
+      const organizationId = req.session.organization.id;  
+
+      const organizationDetails = await prisma.organization.findUnique({
+        where: { id: organizationId }
+      });
+
+      // Check if the organization details are available
+      if (!organizationDetails) {
+        throw new Error("Organization not found");
+      }
       
       // Fetch the donations for the given organization
       const donations = await prisma.donation.findMany({
@@ -709,7 +737,7 @@ module.exports = {
         }
       });
       
-      res.render('organization/donationsList', { donations: donations });
+      res.render('organization/donationsList', { donations: donations, organizationDetail: organizationDetails });
     } catch (error) {
       console.error("Error fetching donations:", error);
       res.status(500).send("Internal Server Error");
@@ -734,13 +762,36 @@ module.exports = {
   },
 
   async getFAQ(req, res) { 
+
+    
+    const organizationIdloggedin = req.session.organization.id;   
+
+    const organizationDetails = await prisma.organization.findUnique({
+      where: { id: organizationIdloggedin }
+    });
+
+    // Check if the organization details are available
+    if (!organizationDetails) {
+      throw new Error("Organization not found");
+    }
+
      
-    res.render('organization/FAQ'); 
+    res.render('organization/FAQ', {organizationDetail: organizationDetails}); 
   },
 
   async getAccount(req, res) { 
     try {
-      const organizationId = req.session.organization.id;
+      const organizationId = req.session.organization.id;  
+
+        const organizationDetails = await prisma.organization.findUnique({
+          where: { id: organizationId }
+        });
+  
+        // Check if the organization details are available
+        if (!organizationDetails) {
+          throw new Error("Organization not found");
+        }
+
       const organization = await prisma.organization.findUnique({
         where: { id: organizationId },
         include: {
@@ -782,6 +833,7 @@ module.exports = {
         citiesWithCounts,
         activeTab: req.query.tab || 'account',
         totalDonations: organization.donations ? organization.donations.length : 0,
+        organizationDetail: organizationDetails
       }); 
     } catch (error) {
       console.error("Error fetching account data:", error);

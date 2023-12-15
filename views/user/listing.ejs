@@ -481,6 +481,12 @@
                                             <div><input type="checkbox" id="scam" name="reportReason[]" value="scam"> <label for="scam">Scam</label></div>
                                             <div><input type="checkbox" id="counterfeit" name="reportReason[]" value="counterfeit"> <label for="counterfeit">Appears to be Counterfeit</label></div>
                                             <div><input type="checkbox" id="childAbuse" name="reportReason[]" value="noIntentToSell"> <label for="childAbuse">Child Abuse</label></div>
+                                            <div><input type="checkbox" id="other" name="reportReason[]" value="other"> <label for="other">Other</label></div>
+                                            <div id="otherReasonContainer" style="display:none;">
+                                                <label for="otherReason">Please specify:</label>
+                                                <input type="text" id="otherReason" name="otherReason">
+                                            </div>
+
                                         </div>
                                     </div> 
                                     <input type="hidden" name="listingId" value="<%= listing.id %>">
@@ -606,15 +612,22 @@
                 </script>
                 
                 <script>
-                    $(document).ready(function() {
+                    $(document).ready(function() { 
+                        $('#other').change(function() {
+                            // Toggle the visibility of the otherReason input
+                            $('#otherReasonContainer').toggle(this.checked);
+                        });
+
                         $('#reportForm').submit(function(e) {
                             e.preventDefault();
                 
                             const formData = {
                                 reportReasons: $('input[name="reportReason[]"]:checked').map(function() {
+                                    if (this.value === 'other') {
+                                        return 'Other: ' + $('#otherReason').val();
+                                    }
                                     return this.value;
-                                }).get(),
-                                additionalComments: $('#additionalComments').val(),
+                                }).get(), 
                                 listingId: $('input[name="listingId"]').val()
                             };
                 

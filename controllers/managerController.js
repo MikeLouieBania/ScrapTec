@@ -273,6 +273,16 @@ module.exports = {
   async getDashboard(req, res) {
     try {
 
+      // Assuming req.session.managerId contains only the ID of the manager
+      const managerId = req.session.managerId;
+
+      // Fetch the manager's profile using the ID
+      const managerProfile = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        }
+      });
+
       // Fetch the manager's profile and associated drop point using the ID stored in the session
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: {
@@ -288,14 +298,26 @@ module.exports = {
         return res.render('manager/login', { message: "Manager or associated drop point not found" });
       }
 
-      // Extract the drop point name and operating hours
-      const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point";
-      const openingTime = managerWithDropPoint.dropPoint[0]?.openingTime || "Not Available";
-      const closingTime = managerWithDropPoint.dropPoint[0]?.closingTime || "Not Available";
+      // Function to convert 24-hour time to 12-hour time
+      function convertTo12Hour(timeString) {
+        if (!timeString) return "Not Available";  // Handle undefined or null
 
+        const [hours, minutes] = timeString.split(':');
+        const hoursInt = parseInt(hours, 10);
+        const isPM = hoursInt >= 12;
+        const finalHours = isPM ? (hoursInt > 12 ? hoursInt - 12 : hoursInt) : (hoursInt === 0 ? 12 : hoursInt);
+        return `${finalHours}:${minutes} ${isPM ? 'PM' : 'AM'}`;
+      }
+
+      // Extract the drop point name and operating hours
+      const dropPointName = managerWithDropPoint.dropPoint[0]?.name || "Unnamed Drop Point"; 
+      // Convert operating hours to 12-hour format
+      const openingTime = convertTo12Hour(managerWithDropPoint.dropPoint[0]?.openingTime);
+      const closingTime = convertTo12Hour(managerWithDropPoint.dropPoint[0]?.closingTime);
 
       // Render the dashboard with the manager's profile and drop point name
       res.render('manager/dashboard', {
+        managerProfile: managerProfile,
         manager: managerWithDropPoint,
         dropPointName,
         openingTime,
@@ -818,6 +840,17 @@ module.exports = {
       const filterStatus = req.query.status || '';
       const sortParam = req.query.sort || 'expectedDateOfArrival_asc'; // Default sorting parameter
 
+      // Assuming req.session.managerId contains only the ID of the manager
+      const managerId = req.session.managerId;
+
+      // Fetch the manager's profile using the ID
+      const managerProfile = await prisma.manager.findUnique({
+        where: {
+          id: managerId
+        }
+      });
+
+
       let whereClause = {
         isSubmitted: true,
         organization: {
@@ -885,7 +918,8 @@ module.exports = {
         donations: managerWithDropPoint.dropPoint[0]?.donations || [],
         dropPointName: dropPointName,
         currentPage: page,
-        totalPages: totalPages
+        totalPages: totalPages,
+        managerProfile: managerProfile,
       });
 
     } catch (error) {
@@ -1009,6 +1043,17 @@ module.exports = {
 
   async getManagerAccount(req, res) {
     try {
+
+            // Assuming req.session.managerId contains only the ID of the manager
+            const managerId = req.session.managerId;
+
+            // Fetch the manager's profile using the ID
+            const managerProfile = await prisma.manager.findUnique({
+              where: {
+                id: managerId
+              }
+            });
+      
       // Fetch the manager's profile and associated drop point using the ID stored in the session
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: {
@@ -1029,6 +1074,7 @@ module.exports = {
 
       // Render the manager account page with the manager's profile and drop point details
       res.render('manager/manageraccount', {
+        managerProfile: managerProfile,
         manager: managerWithDropPoint,
         dropPointName,
         dropPointLocation,

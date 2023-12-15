@@ -4,6 +4,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const gridfsService = require('./gridfsService');
+
 
 function isPDF(filename) {
   return filename.toLowerCase().endsWith('.pdf');
@@ -1054,33 +1056,7 @@ module.exports = {
     const { listingId } = req.params;
   
     try {
-      // Fetch the listing along with the user details
-      const listing = await prisma.listing.findUnique({
-        where: { id: listingId },
-        include: {
-          user: true,
-          reports: {
-            include: {
-              reportedBy: true // Include the users who made the reports
-            }
-          }
-        }
-      });
-
-      // Delete associated photos and reports
-      await prisma.photo.deleteMany({
-        where: { listingId: listingId }
-      });
-      await prisma.report.deleteMany({
-        where: { listingId: listingId }
-      });
-  
-      // Delete the listing
-      await prisma.listing.delete({
-        where: { id: listingId }
-      });
-  
-      // Create email transporter
+      // Initialize email transporter
       const transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE,
         auth: {
@@ -1088,11 +1064,91 @@ module.exports = {
           pass: process.env.EMAIL_PASSWORD,
         },
       });
-  
+
+      // Fetch the listing along with the user details
+      const listing = await prisma.listing.findUnique({
+        where: { id: listingId },
+        include: {
+          user: true,
+          conversations: {
+            include: {
+              messages: true // Include messages in the conversations
+            }
+          },
+          reports: {
+            include: {
+              reportedBy: true
+            }
+          }
+        }
+      });
+
+      const user = await prisma.user.findUnique({
+        where: { id: listing.user.id }
+      });
+      
+  const newCount = (user.reportedListingCount || 0) + 1;
+
+  const updatedUser = await prisma.user.update({
+    where: { id: user.id },
+    data: { reportedListingCount: newCount }
+  });
+   
+
+// Check if the user has reached the ban threshold
+if (updatedUser.reportedListingCount === 3) {
+  // Send ban notification email to the user
+  const mailOptionsBan = {
+    from: process.env.EMAIL_USERNAME,
+    to: updatedUser.email,
+    subject: 'CycleUpTech: Important Notice Regarding Your Account',
+  html: `
+    <div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
+      <h1>Account Ban Notification</h1>
+      <p>Dear ${updatedUser.firstName} ${updatedUser.lastName},</p>
+      <p>We regret to inform you that your account with CycleUpTech has been banned due to multiple violations of our marketplace policies. This decision was taken after your recent listings were found in violation of our community standards and terms of service, leading to repeated reports from other users.</p>
+      <p><b>Ban Details:</b></p>
+      <ul>
+        <li>Your account will no longer be able to access the CycleUpTech marketplace.</li>
+        <li>You will not be permitted to post new listings or interact with other users on the platform.</li>
+      </ul>
+      <p>We understand that this may be disappointing news. CycleUpTech is committed to maintaining a safe and trustworthy environment for all our users. The integrity of our community is of utmost importance, and we must enforce these standards consistently.</p>
+      <p>If you believe this decision has been made in error, or if you have taken steps to address these issues, you are welcome to appeal this ban. Please contact our support team at scraptec.help@gmail.com with any information you believe is relevant to your case.</p>
+      <p>Thank you for your understanding.</p>
+      <p>Best regards,</p>
+      <p>The CycleUpTech Team</p>
+    </div>`
+};
+
+  await transporter.sendMail(mailOptionsBan);
+
+  // Here you can also update the user's status to 'banned' in your database if required
+}
+      
+
+    // Store necessary information before deleting the listing
+    const listingTitle = listing.title;
+    const listingUserEmail = listing.user.email;
+
+    // Delete messages and conversations
+    await Promise.all(listing.conversations.map(async (conversation) => {
+      await prisma.message.deleteMany({ where: { conversationId: conversation.id } });
+    }));
+    await prisma.conversation.deleteMany({ where: { listingId: listingId } });
+
+    // Delete associated photos, reports, and saved listings
+    await prisma.photo.deleteMany({ where: { listingId: listingId } });
+    await prisma.report.deleteMany({ where: { listingId: listingId } });
+    await prisma.savedListing.deleteMany({ where: { listingId: listingId } });
+
+    // Delete the listing
+    await prisma.listing.delete({ where: { id: listingId } });
+
+
       // Notify the user who posted the listing
       const mailOptionsPoster = {
         from: process.env.EMAIL_USERNAME,
-        to: listing.user.email,
+        to: listingUserEmail,
         subject: 'Listing Rejection Notice',
         html: `<div style="font-family: Arial, sans-serif; border: 1px solid #ccc; padding: 20px; margin: 10px;">
                 <h1>Listing Rejection</h1>
@@ -1106,7 +1162,8 @@ module.exports = {
       transporter.sendMail(mailOptionsPoster);
 
       // Notify users who made the reports
-      listing.reports.forEach(report => {
+    for (const report of listing.reports) {
+      if (report.reportedBy) {
         const mailOptionsReporter = {
           from: process.env.EMAIL_USERNAME,
           to: report.reportedBy.email,
@@ -1119,9 +1176,10 @@ module.exports = {
                   <p>CycleUpTech Team</p>
                 </div>`
         };
+        await transporter.sendMail(mailOptionsReporter);
+      }
+    }
 
-        transporter.sendMail(mailOptionsReporter);
-      });
   
       res.redirect('/admin/marketplacemanagement');
     } catch (error) {
@@ -1255,6 +1313,9 @@ module.exports = {
     try {
       const { managerEmail, password, dropPointId } = req.body;
 
+      
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       // First, fetch the manager based on the email to get its ID
       const manager = await prisma.manager.findUnique({
         where: {
@@ -1283,7 +1344,7 @@ module.exports = {
         where: { id: dropPointId },
         data: {
           managerId: manager.id,
-          password: password
+          password: hashedPassword
         }
       });
 
@@ -1325,7 +1386,7 @@ module.exports = {
                 <td style="border: 1px solid #ccc; padding: 8px; text-align: left;">${updatedDropPoint.openingTime} - ${updatedDropPoint.closingTime}</td>
               </tr>
             </table>
-            <p>Your access password is: <strong>${updatedDropPoint.password}</strong></p>
+            <p>Your access password is: <strong>${password}</strong></p>
             <p>You can update this password in your profile settings for additional security.</p>
             <p>Please reach out to our support team for any further assistance.</p>
             <p>Best regards,</p>

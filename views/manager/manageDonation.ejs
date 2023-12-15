@@ -6,6 +6,8 @@
     <!-- Link to Bootstrap CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -427,6 +429,16 @@
                     <a class="nav-link" href="/manager/managerAccount">Account</a>
                 </li>
             </ul>
+
+            
+      
+    <!-- Profile Dropdown -->
+    <div class="nav-item dropdown">
+        <a class="nav-link" href="#" id="navbarProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user"></i> <%= managerProfile.firstName %> <%= managerProfile.lastName %>
+        </a> 
+      </div>
+
             <form class="form-inline my-2 my-lg-0" method="post" action="/manager/logout">
                 <button class="btn btn-logout my-2 my-sm-0" type="submit">LOGOUT</button>
             </form>
