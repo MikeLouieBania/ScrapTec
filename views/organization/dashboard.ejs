@@ -601,13 +601,9 @@
                                     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#pointsAccordion">
                                     <div class="card-body">
                                         <ul>
-                                        <li><strong>Input Devices:</strong> Includes Mouse and Keyboard. Earn <span class="badge badge-primary">0.5 point per item</span>.</li>
-                                        <li><strong>Storage Devices:</strong> HDD, SSD, and Optical Drives fall under this category. <span class="badge badge-primary">1 point per item</span>.</li>
-                                        <li><strong>Memory and Processing:</strong> Consists of RAM, Processors, and Motherboards. <span class="badge badge-primary">1.5 points per item</span>.</li>
-                                        <li><strong>Graphics and Video:</strong> Graphic Cards, Monitors, and Webcams are part of this category. <span class="badge badge-primary">2 points per item</span>.</li>
-                                        <li><strong>Power and Cooling:</strong> Includes Power Supplies and Cooling Fans. <span class="badge badge-primary">1 point per item</span>.</li>
-                                        <li><strong>Network and Sound:</strong> Covers Network Cards and Sound Cards. <span class="badge badge-primary">1 point per item</span>.</li>
-                                        <li><strong>Whole Systems:</strong> Laptops and Desktops fall under this category. <span class="badge badge-primary">3 points per item</span>.</li>
+                                            <% categories.forEach(function(category) { %>
+                                                <li><strong><%= category.name %>:</strong> <span class="badge badge-primary"><%= category.basePoints %> points per item</span></li>
+                                            <% }); %>
                                         </ul>            
                                     </div>
                                     </div>
@@ -624,9 +620,9 @@
                                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#pointsAccordion">
                                     <div class="card-body">
                                         <ul>
-                                        <li>New: <span class="badge badge-success">2 bonus point</span></li>
-                                        <li>Used but Working: <span class="badge badge-primary">1 bonus points</span></li>
-                                        <li>Not Working: <span class="badge badge-warning">0.5 bonus points</span></li>
+                                            <% conditions.forEach(function(condition) { %>
+                                                <li><%= condition.name %>: <span class="badge badge-primary"><%= condition.conditionPoints %> bonus points</span></li>
+                                            <% }); %>
                                         </ul>
                                     </div>
                                     </div>
@@ -643,8 +639,9 @@
                                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pointsAccordion">
                                     <div class="card-body">
                                         <ul>
-                                        <li>10 to 49 items: <span class="badge badge-info">3 bonus points</span></li>
-                                        <li>50 or more items: <span class="badge badge-info">5 bonus points</span></li>
+                                            <% pointQuantities.forEach(function(quantity) { %>
+                                                <li><%= quantity.minQuantity %> to <%= quantity.maxQuantity %> items: <span class="badge badge-info"><%= quantity.quantityBonus %> bonus points</span></li>
+                                            <% }); %>
                                         </ul>
                                     </div>
                                     </div>

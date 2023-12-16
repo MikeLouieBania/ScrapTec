@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manager Management</title>
+  <title>Pointing System Management</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -560,207 +560,222 @@
             document.getElementById("logoutForm").submit(); // Submit the form
         }
     </script>
-  <div class="main-content ml-200">
-    <div class="container">
-      <!-- Search and Filter Section -->
-      <div class="search-section">
-        <input type="text" id="searchInput" class="form-control search-input" placeholder="Search by Name, Email.">
-        <button id="clearSearch" class="btn btn-secondary">Clear</button>
-      </div>
 
+    <div class="main-content">
+        <div class="container">
+            <!-- Pointing System Management Header -->
+            <div class="my-4">
+                <h1 class="text-center">Pointing System Management</h1>
+                <hr>
+            </div>
+            <!-- Categories Section -->
+            <div class="mb-4">
+                <h2>Categories Management</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Base Points</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody">
+                            <% categories.forEach(function(category) { %>
+                                <tr>
+                                    <td><%= category.name %></td>
+                                    <td><%= category.basePoints || 0 %></td>
+                                    <td> 
+                                        <button class="btn btn-primary" onclick="showCategoryModal('<%= category.id %>', '<%= category.name %>', '<%= category.basePoints || 0 %>')">Edit</button>
+                                    </td>
+                                </tr>
+                            <% }); %>                              
+                        </tbody> 
+                    </table>
+                </div>
+            </div>
 
-      <!-- Manager Management Table -->
-      <table class="table mt-4">
-        <thead>
-          <!-- Row for the Manager Management title and button -->
-          <tr>
-            <th colspan="6" class="w-75 text-left">Manager Management</th>
-            <!-- Increase the width of this cell to 75% of the table width -->
-            <th class="text-right w-25">
-              <button type="button" class="btn btn-primary reg-button" data-toggle="modal"
-                data-target="#registerManagerModal">
-                Register a Manager
-              </button>
-            </th>
-          </tr>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Contact No.</th>
-            <th>Address</th>
-            <th>Assigned Status</th>
-            <th>Details</th>
+            <!-- Conditions Section -->
+            <div class="mb-4">
+                <h2>Conditions Management</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Condition Points</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="conditionsTableBody">
+                            <% conditions.forEach(function(condition) { %>
+                                <tr>
+                                    <td><%= condition.name %></td>
+                                    <td><%= condition.conditionPoints || 0 %></td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="showConditionModal('<%= condition.id %>', '<%= condition.name %>', '<%= condition.conditionPoints || 0 %>')">Edit</button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>                      
+                    </table>
+                </div>
+            </div>
 
-          </tr>
+            <!-- Point Quantity Management -->
+            <div>
+                <h2>Point Quantity Management</h2>
+                <button class="btn btn-primary" onclick="showAddPointQuantityModal()">Add Point Quantity</button>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Min Quantity</th>
+                                <th>Max Quantity</th>
+                                <th>Quantity Bonus</th>
+                                <th colspan="2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pointQuantitiesTableBody">
+                            <% pointQuantities.forEach(function(pointQuantity) { %>
+                                <tr>
+                                    <td><%= pointQuantity.minQuantity %></td>
+                                    <td><%= pointQuantity.maxQuantity %></td>
+                                    <td><%= pointQuantity.quantityBonus %></td>
+                                    <td> 
+                                        <button class="btn btn-primary" onclick="showEditPointQuantityModal('<%= pointQuantity.id %>', '<%= pointQuantity.minQuantity %>', '<%= pointQuantity.maxQuantity %>', '<%= pointQuantity.quantityBonus %>')">Edit</button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" onclick="deletePointQuantity('<%= pointQuantity.id %>')">Delete</button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody> 
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        </thead>
-
-        <tbody>
-          <!-- Populate table rows with drop point data -->
-          <% let counter=1; %>
-            <% managers.forEach(manager=> { %>
-              <tr>
-                <td>
-                  <%= counter++ %>
-                </td>
-                <td>
-                  <%= manager.firstName %>
-                    <%= manager.lastName %>
-                </td>
-                <td>
-                  <%= manager.email %>
-                </td>
-                <td>
-                  <%= manager.phoneNumber %>
-                </td>
-                <td>
-                  <%= manager.address %>
-                </td>
-                <td>
-                  <%= manager.isAssigned ? "Assigned" : "Not Assigned" %>
-                </td>
-                <td>
-                  <button type="button" class="btn details-button" data-toggle="modal"
-                    data-target="#detailsModal-<%= manager.id %>" data-manager-id="<%= manager.id %>">
-                    View Details
-                  </button>
-
-                </td>
-              </tr>
-
-              <!-- Modal for Manager Details -->
-              <div class="modal fade" id="detailsModal-<%= manager.id %>" tabindex="-1" role="dialog"
-                aria-labelledby="detailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="detailsModalLabel">Details for <%= manager.firstName %>
-                          <%= manager.lastName %>
-                      </h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <!-- Modal for Category Points -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalLabel">Edit Category Points</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <ul class="nav nav-tabs" id="detailTabs" role="tablist">
-                        <li class="nav-item">
-                          <a class="nav-link active" id="logs-tab" data-toggle="tab" href="#logs-<%= manager.id %>"
-                            role="tab" aria-controls="logs" aria-selected="true">Logs</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="donations-tab" data-toggle="tab" href="#donations-<%= manager.id %>"
-                            role="tab" aria-controls="donations" aria-selected="false">Donations</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback-<%= manager.id %>"
-                            role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
-                        </li>
-                      </ul>
-                      <div class="tab-content" id="detailTabsContent">
-                        <div class="tab-pane fade show active" id="logs-<%= manager.id %>" role="tabpanel"
-                          aria-labelledby="logs-tab">
-                          <!-- Logs content will be loaded here -->
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="categoryForm" action="/admin/updateCategoryPoints" method="post">
+                        <input type="hidden" id="categoryId" name="categoryId">
+                        <div class="form-group">
+                            <label for="categoryName">Category Name:</label>
+                            <input type="text" class="form-control" id="categoryName" name="name" readonly>
                         </div>
-                        <div class="tab-pane fade" id="donations-<%= manager.id %>" role="tabpanel"
-                          aria-labelledby="donations-tab">
-                          <!-- Donations content will be loaded here -->
+                        <div class="form-group">
+                            <label for="categoryPoints">Points:</label>
+                            <input type="float" class="form-control" id="categoryPoints" name="basePoints">
                         </div>
-                        <div class="tab-pane fade" id="feedback-<%= manager.id %>" role="tabpanel"
-                          aria-labelledby="feedback-tab">
-                          <!-- Feedback content will be loaded here -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
                 </div>
-              </div>
-
-
-              <% }) %>
-        </tbody>
-      </table>
-
-      <div class="clearfix">
-        <ul class="pagination">
-          <% if(currentPage> 1) { %>
-            <li class="page-item">
-              <a href="/admin/managermanagement?page=<%= currentPage - 1 %>" class="page-link">Previous</a>
-            </li>
-            <% } %>
-              <% for(let i=1; i <=totalPages; i++) { %>
-                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                  <a href="/admin/managermanagement?page=<%= i %>" class="page-link">
-                    <%= i %>
-                  </a>
-                </li>
-                <% } %>
-                  <% if(currentPage < totalPages) { %>
-                    <li class="page-item">
-                      <a href="/admin/managermanagement?page=<%= currentPage + 1 %>" class="page-link">Next</a>
-                    </li>
-                    <% } %>
-        </ul>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Modal for creating drop points -->
-  <div class="modal fade" id="registerManagerModal" tabindex="-1" role="dialog"
-    aria-labelledby="registerManagerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg my-modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="registerManagerModalLabel">Register a Manager</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form action="/admin/managermanagement" method="post">
-            <div class="row">
-              <!-- First Column -->
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="managerFirstName">First Name</label>
-                  <input type="text" name="firstName" class="form-control" id="managerFirstName"
-                    placeholder="Enter manager's first name">
-                </div>
-                <div class="form-group">
-                  <label for="managerLastName">Last Name</label>
-                  <input type="text" name="lastName" class="form-control" id="managerLastName"
-                    placeholder="Enter manager's last name">
-                </div>
-                <div class="form-group">
-                  <label for="managerEmail">Email</label>
-                  <input type="email" name="email" class="form-control" id="managerEmail"
-                    placeholder="Enter manager's email">
-                </div>
-              </div>
-              <!-- Second Column -->
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="managerPhone">Phone Number</label>
-                  <input type="tel" name="phoneNumber" class="form-control" id="managerPhone"
-                    placeholder="Enter manager's phone number">
-                </div>
-                <div class="form-group">
-                  <label for="managerAddress">Address</label>
-                  <input type="text" name="address" class="form-control" id="managerAddress"
-                    placeholder="Enter manager's address">
-                </div>
-              </div>
             </div>
-            <div class="modal-footer d-flex justify-content-center"> <!-- Add these classes -->
-              <button type="submit" class="btn btn-primary" id="registerManagerButton">Register Manager</button>
-            </div>
-          </form>
         </div>
+    </div> 
 
-      </div>
+    <!-- Modal for Condition Points -->
+    <div class="modal fade" id="conditionModal" tabindex="-1" role="dialog" aria-labelledby="conditionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="conditionModalLabel">Edit Condition Points</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="conditionForm" action="/admin/updateConditionPoints" method="post">
+                        <input type="hidden" id="conditionId" name="conditionId">
+                        <div class="form-group">
+                            <label for="conditionName">Condition Name:</label>
+                            <input type="text" class="form-control" id="conditionName" name="name" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="conditionPoints">Points:</label>
+                            <input type="float" class="form-control" id="conditionPoints" name="conditionPoints">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <!-- Modal for Adding Point Quantity -->
+    <div class="modal fade" id="addPointQuantityModal" tabindex="-1" role="dialog" aria-labelledby="addPointQuantityModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPointQuantityModalLabel">Add Point Quantity</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPointQuantityForm" action="/admin/addPointQuantity" method="post">
+                        <div class="form-group">
+                            <label for="minQuantity">Minimum Quantity:</label>
+                            <input type="number" class="form-control" id="minQuantity" name="minQuantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxQuantity">Maximum Quantity:</label>
+                            <input type="number" class="form-control" id="maxQuantity" name="maxQuantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantityBonus">Quantity Bonus:</label>
+                            <input type="float" class="form-control" id="quantityBonus" name="quantityBonus" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Modal for Editing Point Quantity -->
+    <div class="modal fade" id="editPointQuantityModal" tabindex="-1" role="dialog" aria-labelledby="editPointQuantityModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPointQuantityModalLabel">Edit Point Quantity</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPointQuantityForm" action="/admin/updatePointQuantity" method="post">
+                        <input type="hidden" id="pointQuantityId" name="pointQuantityId">
+                        <div class="form-group">
+                            <label for="editMinQuantity">Minimum Quantity:</label>
+                            <input type="number" class="form-control" id="editMinQuantity" name="minQuantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMaxQuantity">Maximum Quantity:</label>
+                            <input type="number" class="form-control" id="editMaxQuantity" name="maxQuantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editQuantityBonus">Quantity Bonus:</label>
+                            <input type="float" class="form-control" id="editQuantityBonus" name="quantityBonus" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
   <!-- Load Bootstrap JS (you can also include jQuery for additional functionality) -->
   <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
@@ -768,127 +783,59 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      // Function to get query parameter from URL
-      function getQueryParam(param) {
-        var urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-      }
 
-      // Set the search input value from URL parameter
-      var searchQuery = getQueryParam('search');
-      if (searchQuery) {
-        $('#searchInput').val(searchQuery);
-      }
+  <script> 
+    function showCategoryModal(categoryId, categoryName, currentPoints) {
+        document.getElementById('categoryId').value = categoryId;
+        document.getElementById('categoryName').value = categoryName;
+        document.getElementById('categoryPoints').value = currentPoints || 0;
+        $('#categoryModal').modal('show');
+    }
 
-      // Search function
-      $('#searchInput').on('keyup', function (e) {
-        if (e.key === 'Enter' || e.keyCode === 13) {
-          var searchQuery = $(this).val();
-          window.location.href = '/admin/managermanagement?search=' + encodeURIComponent(searchQuery);
+    function showConditionModal(conditionId, conditionName, currentPoints) {
+        document.getElementById('conditionId').value = conditionId;
+        document.getElementById('conditionName').value = conditionName;
+        document.getElementById('conditionPoints').value = currentPoints || 0;
+        $('#conditionModal').modal('show');
+    }  
+    
+    function showAddPointQuantityModal() {
+        $('#addPointQuantityModal').modal('show');
+    }
+
+    function showEditPointQuantityModal(pointQuantityId, minQuantity, maxQuantity, quantityBonus) {
+        document.getElementById('pointQuantityId').value = pointQuantityId;
+        document.getElementById('editMinQuantity').value = minQuantity;
+        document.getElementById('editMaxQuantity').value = maxQuantity;
+        document.getElementById('editQuantityBonus').value = quantityBonus;
+        $('#editPointQuantityModal').modal('show');
+    }
+
+    function deletePointQuantity(pointQuantityId) {
+        if (confirm("Are you sure you want to delete this point quantity?")) {
+            fetch('/admin/deletePointQuantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ pointQuantityId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload(); // Reload the page to update the table
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert("An error occurred. Please try again.");
+            });
         }
-      });
-
-      $('#clearSearch').on('click', function () {
-        $('#searchInput').val('');
-        window.location.href = '/admin/managermanagement';
-      });
-
-      $('.details-button').on('click', function () {
-        const managerId = $(this).data('manager-id');
-        const logsTab = $('#logs-' + managerId);
-        const donationsTab = $('#donations-' + managerId);
-        const feedbacksTab = $('#feedback-' + managerId);
-
-        $.get('/admin/managermanagement/logs/' + managerId, function (activityLogs) {
-          // Clear existing content
-          logsTab.empty();
-
-          // Check if there are any activities
-          if (activityLogs.length === 0) {
-            logsTab.append('<p>No activities recorded.</p>');
-          } else {
-            // Start the table
-            var tableHtml = '<table class="table"><thead><tr><th>Type</th><th>Donation ID</th><th>Organization</th><th>Drop Point</th><th>Date</th></tr></thead><tbody>';
-
-            // Populate logs tab with activity data
-            activityLogs.forEach(log => {
-              tableHtml += `<tr>
-                              <td>${log.type}</td>
-                              <td>${log.donationId}</td>
-                              <td>${log.organizationName}</td>
-                              <td>${log.dropPointName}</td>
-                              <td>${new Date(log.date).toLocaleString()}</td>
-                            </tr>`;
-            });
-
-            // Close the table
-            tableHtml += '</tbody></table>';
-
-            logsTab.append(tableHtml);
-          }
-        }).fail(function () {
-          logsTab.html('<p>Error loading activities</p>');
-        });
-
-        $.get('/admin/managermanagement/donations/' + managerId, function (donations) {
-          // Clear existing content
-          donationsTab.empty();
-
-          if (donations.length === 0) {
-            donationsTab.append('<p>No donations managed.</p>');
-          } else {
-            var tableHtml = '<table class="table"><thead><tr><th>ID</th><th>Organization</th><th>Drop Point</th><th>Status</th><th>Date</th></tr></thead><tbody>';
-
-            donations.forEach(donation => {
-              tableHtml += `<tr>
-                              <td>${donation.id}</td>
-                              <td>${donation.organization.organizationname}</td>
-                              <td>${donation.dropPoint.name}</td>
-                              <td>${donation.status || 'Not Updated'}</td>
-                              <td>${new Date(donation.createdAt).toLocaleString()}</td>
-                            </tr>`;
-            });
-
-            tableHtml += '</tbody></table>';
-            donationsTab.append(tableHtml);
-          }
-        }).fail(function () {
-          donationsTab.html('<p>Error loading donations</p>');
-        });
-
-        $.get('/admin/managermanagement/feedbacks/' + managerId, function (feedbacks) {
-          // Clear existing content
-          feedbacksTab.empty();
-
-          if (feedbacks.length === 0) {
-            feedbacksTab.append('<p>No feedbacks received.</p>');
-          } else {
-            var tableHtml = '<table class="table"><thead><tr><th>ID</th><th>Organization</th><th>Drop Point</th><th>Rating</th><th>Content</th><th>Date</th></tr></thead><tbody>';
-
-            feedbacks.forEach(feedback => {
-              tableHtml += `<tr>
-                              <td>${feedback.id}</td>
-                              <td>${feedback.organization.organizationname}</td>
-                              <td>${feedback.dropPoint.name}</td>
-                              <td>${feedback.rating}</td>
-                              <td>${feedback.content}</td>
-                              <td>${new Date(feedback.createdAt).toLocaleString()}</td>
-                            </tr>`;
-            });
-
-            tableHtml += '</tbody></table>';
-            feedbacksTab.append(tableHtml);
-          }
-        }).fail(function () {
-          feedbacksTab.html('<p>Error loading feedbacks</p>');
-        });
-
-      });
-    });
-  </script>
-
+    }
+    
+    </script>
 
 </body>
 

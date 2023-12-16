@@ -739,6 +739,111 @@ module.exports = {
     }
   },
 
+  async getPointingSystemManagement(req, res) {
+    try {
+        // Fetching categories, conditions, and point quantities from the database
+        const categories = await prisma.category.findMany();
+        const conditions = await prisma.condition.findMany();
+        const pointQuantities = await prisma.pointQuantity.findMany();
+
+        // Rendering the page with the fetched data
+        res.render('admin/pointingsystemmanagement', { 
+            categories, 
+            conditions, 
+            pointQuantities 
+        });
+    } catch (error) {
+        console.error("Error in Pointing System Management:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postupdateCategoryPoints(req, res) {
+    try {
+        const { categoryId, basePoints } = req.body;
+
+        await prisma.category.update({
+            where: { id: categoryId },
+            data: { basePoints: parseFloat(basePoints) }
+        });
+
+        res.redirect('/admin/pointingsystemmanagement');
+    } catch (error) {
+        console.error("Error updating category points:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  }, 
+
+  async postUpdateConditionPoints(req, res) {
+    try {
+        const { conditionId, conditionPoints } = req.body;
+
+        await prisma.condition.update({
+            where: { id: conditionId },
+            data: { conditionPoints: parseFloat(conditionPoints) }
+        });
+
+        res.redirect('/admin/pointingsystemmanagement');
+    } catch (error) {
+        console.error("Error updating condition points:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postAddPointQuantity(req, res) {
+    try {
+        const { minQuantity, maxQuantity, quantityBonus } = req.body;
+
+        await prisma.pointQuantity.create({
+            data: {
+                minQuantity: parseInt(minQuantity),
+                maxQuantity: parseInt(maxQuantity),
+                quantityBonus: parseFloat(quantityBonus)
+            }
+        });
+
+        res.redirect('/admin/pointingsystemmanagement');
+    } catch (error) {
+        console.error("Error adding point quantity:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async postUpdatePointQuantity(req, res) {
+    try {
+        const { pointQuantityId, minQuantity, maxQuantity, quantityBonus } = req.body;
+
+        await prisma.pointQuantity.update({
+            where: { id: pointQuantityId },
+            data: {
+                minQuantity: parseInt(minQuantity),
+                maxQuantity: parseInt(maxQuantity),
+                quantityBonus: parseFloat(quantityBonus)
+            }
+        });
+
+        res.redirect('/admin/pointingsystemmanagement');
+    } catch (error) {
+        console.error("Error updating point quantity:", error);
+        res.status(500).send("Internal Server Error");
+    }
+  }, 
+
+  async postDeletePointQuantity(req, res) {
+    try {
+        const { pointQuantityId } = req.body;
+
+        await prisma.pointQuantity.delete({
+            where: { id: pointQuantityId },
+        });
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error deleting point quantity:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+  },
+
   async getDropPointManagement(req, res) {
     try {
       // Fetch all managers
