@@ -737,65 +737,49 @@ module.exports = {
   async getUserEngagement(req, res) {
     try {
       const managerId = req.session.managerId;
-
+  
       const managerWithDropPoint = await prisma.manager.findUnique({
         where: { id: managerId },
         include: { dropPoint: true }
       });
-
+  
       if (!managerWithDropPoint || !managerWithDropPoint.dropPoint) {
         return res.status(404).send("Associated drop point not found");
       }
-
+  
       const dropPointId = managerWithDropPoint.dropPoint.id;
-
-      // Fetch frequency of donations by each organization
-      const donationFrequency = await prisma.donation.groupBy({
-        by: ['organizationId'],
-        where: {
-          dropPointId: dropPointId,
-        },
-        _count: {
-          organizationId: true, // Count by organizationId
-        },
-        _sum: {
-          points: true,
-        },
-        _avg: {
-          points: true,
-        },
-        orderBy: {
-          _count: {
-            organizationId: 'desc', // Order by count of organizationId
-          },
-        },
-      }).then(donations => {
-        return Promise.all(donations.map(async donation => {
-          const organization = await prisma.organization.findUnique({
-            where: { id: donation.organizationId },
-            select: { organizationname: true },
-          });
-          return { ...donation, organizationname: organization?.organizationname };
-        }));
-      });
-
-
-
-
-      // Fetch types of items donated
-      const donationTypes = await prisma.peripheral.groupBy({
-        by: ['type'],
-        where: { donation: { dropPointId: dropPointId } },
+      
+      // Fetch donation data grouped by organization and type
+      const donationData = await prisma.donation.groupBy({
+        by: ['organizationId', 'type'],
+        where: { dropPointId: dropPointId },
         _count: true
       });
-
-      res.json({ donationFrequency, donationTypes });
+  
+      // Transform data for the frontend
+      const donationTypes = donationData.reduce((acc, item) => {
+        if (!acc[item.organizationId]) {
+          acc[item.organizationId] = { organizationId: item.organizationId, types: {} };
+        }
+        acc[item.organizationId].types[item.type] = item._count;
+        return acc;
+      }, {});
+  
+      // Combine donation frequency and types data
+      const combinedData = donationFrequency.map(df => {
+        return {
+          ...df,
+          types: donationTypes[df.organizationId]?.types || {}
+        };
+      });
+  
+      res.json({ donationFrequency: combinedData, donationTypes });
     } catch (error) {
       console.error("Error in getUserEngagement:", error);
       res.status(500).send("Internal Server Error");
     }
   },
-
+  
   async getOrganizationProfiles(req, res) {
     try {
       const managerId = req.session.managerId;
