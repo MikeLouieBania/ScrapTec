@@ -452,13 +452,11 @@
     </div>
 
     <div class="dashboard-container">
-      <div class="chart-card" id="donation-overview-chart"></div>
       <div class="chart-card" id="recent-feedback-container" style="grid-column: span 2;"></div>
-      <div class="chart-card" id="recent-donations-chart"></div>
-      <div class="chart-card" id="donation-trends-chart"></div>
       <div class="chart-card" id="feedback-summary-chart"></div>
+      <div class="chart-card" id="donation-trends-chart"></div>
+      <div class="chart-card" id="donation-types-chart"></div>
       <div class="chart-card" id="feedback-trends-chart"></div>
-      <div class="chart-card" id="user-engagement-chart"></div>
       <div class="chart-card" id="organization-profiles-chart"></div>
     </div>
   </div>
@@ -479,99 +477,16 @@
   <script src="https://code.highcharts.com/modules/export-data.js"></script>
   <script src="https://code.highcharts.com/modules/accessibility.js"></script>
   <script>
-    // Fetch and render Donation Overview Chart with Drilldown
-    fetch('/manager/donationOverviewData')
-      .then(response => response.json())
-      .then(data => {
-        Highcharts.chart('donation-overview-chart', {
-          chart: {
-            type: 'pie'
-          },
-          title: {
-            text: 'Donation Overview'
-          },
-          plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
-            }
-          },
-          series: [{
-            name: 'Donations',
-            colorByPoint: true,
-            data: data.mainData
-          }],
-          drilldown: {
-            series: data.drilldownData
-          }
-        });
-      });
-
-    // Fetch and render Recent Donations Chart
-    fetch('/manager/recentDonationsData')
-      .then(response => response.json())
-      .then(data => {
-        Highcharts.chart('recent-donations-chart', {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: 'Recent Donations'
-          },
-          xAxis: {
-            categories: data.map(item => item.organizationName),
-            crosshair: true
-          },
-          yAxis: {
-            min: 0,
-            title: {
-              text: 'Total Quantity of Donations'
-            }
-          },
-          tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-              '<td style="padding:0"><b>{point.y}</b></td></tr>' +
-              '<tr><td style="padding:0">Date: </td><td style="padding:0"><b>{point.date}</b></td></tr>' +
-              '<tr><td style="padding:0">Status: </td><td style="padding:0"><b>{point.status}</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-          },
-          plotOptions: {
-            column: {
-              pointPadding: 0.2,
-              borderWidth: 0
-            }
-          },
-          series: [{
-            name: 'Quantity',
-            data: data.map(item => {
-              return {
-                y: item.quantity,
-                date: item.date,
-                status: item.status
-              };
-            })
-          }]
-        });
-      });
-
     // Fetch and render Donation Trends Chart
     fetch('/manager/donationTrendsData')
       .then(response => response.json())
       .then(data => {
-        console.log("Data received:", data);
         Highcharts.chart('donation-trends-chart', {
           chart: {
             type: 'line'
           },
           title: {
-            text: 'Donation Trends'
+            text: 'Number of Donation per Month'
           },
           xAxis: {
             type: 'datetime',
@@ -628,7 +543,7 @@
             type: 'pie'
           },
           title: {
-            text: 'Feedback Summary'
+            text: 'Total Number of Feedbacks'
           },
           series: [{
             name: 'Ratings',
@@ -652,7 +567,7 @@
             type: 'line'
           },
           title: {
-            text: 'Feedback Trends Over Time'
+            text: 'Number of Feedbacks per Month'
           },
           xAxis: {
             type: 'datetime',
@@ -688,65 +603,33 @@
         document.getElementById('total-donations').textContent = 'Error loading data';
       });
 
-    // Fetch and update Performance Metrics Card
-    fetch('/manager/performanceMetricsData')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('average-feedback-score').textContent = data.averageFeedbackScore.toFixed(2) || 'No data';
-      })
-      .catch(error => {
-        console.error('Error fetching performance metrics:', error);
-        document.getElementById('average-feedback-score').textContent = 'Error loading data';
-      });
-
-    // Fetch and render User Engagement Chart
+    // Fetch donation type data from your API or database
     fetch('/manager/userEngagement')
       .then(response => response.json())
       .then(data => {
-        // Donation Frequency Chart
-        Highcharts.chart('user-engagement-chart', {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: 'User Engagement - Donation Frequency and Types'
-          },
+        console.log(data);
+        // Extract donation types and their counts from donationTypes data
+        const donationTypes = data.donationTypes.map(item => item.type);
+        const donationTypeCounts = data.donationTypes.map(item => item._count);
+
+        // Create the chart using Highcharts
+        Highcharts.chart('donation-types-chart', {
+          chart: { type: 'column' },
+          title: { text: 'Number of Donated Computer Types' },
           xAxis: {
-            categories: data.donationFrequency.map(item => item.organizationName),
-            crosshair: true
+            categories: donationTypes,
           },
-          yAxis: [{
+          yAxis: {
             min: 0,
-            title: {
-              text: 'Number of Donations'
-            }
-          }, {
-            title: {
-              text: 'Donation Types'
-            },
-            opposite: true
-          }],
-          tooltip: {
-            shared: true
+            title: { text: 'Number of Donations' },
           },
           series: [{
-            name: 'Donations',
-            data: data.donationFrequency.map(item => item._count.organizationId)
-          }, {
-            name: 'Donation Types',
-            type: 'spline',
-            yAxis: 1,
-            data: data.donationTypes.map(item => item._count),
-            tooltip: {
-              valueSuffix: ' types'
-            }
-          }]
+            name: 'Count',
+            data: donationTypeCounts,
+          }],
         });
       })
-      .catch(error => {
-        console.error('Error fetching user engagement data:', error);
-      });
-
+      .catch(error => console.error('Error fetching donation type data:', error));
 
     // Fetch and render Organization Profiles Chart
     fetch('/manager/organizationProfiles')
@@ -757,7 +640,7 @@
             type: 'bar'
           },
           title: {
-            text: 'Organization Profiles - Donation Details'
+            text: 'Total Number of Donation/Point per Organization'
           },
           xAxis: {
             categories: data.map(org => org.organizationname),
@@ -786,10 +669,6 @@
       .catch(error => {
         console.error('Error fetching organization profiles data:', error);
       });
-
-
-
-
   </script>
   <script>
     function highlightOperatingHours() {
@@ -834,9 +713,5 @@
     // Run the function when the page loads
     document.addEventListener('DOMContentLoaded', highlightOperatingHours);
   </script>
-  
-  
-
 </body>
-
 </html>
