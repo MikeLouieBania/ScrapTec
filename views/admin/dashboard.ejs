@@ -258,7 +258,7 @@
                             <div id="donations-over-time-chart" class="chart"></div>
                         </div>
                         <div class="col-md-6">
-                            <div id="donation-status-distribution-chart" class="chart"></div>
+                            <div id="activity-sales-correlation-chart" class="chart"></div> 
                         </div>
                     </div>
                 </div>   
@@ -292,35 +292,7 @@
                 </div> 
             </div>  
 
-            <!-- Sales and Listings -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div id="listings-per-category-chart" class="chart"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div id="sales-over-time-chart" class="chart"></div>
-                        </div>
-                    </div>
-                </div>  
-            </div>   
-
             <!-- Message and Conversation Insights Section -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div id="messages-per-user-chart" class="chart"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div id="conversations-over-time-chart" class="chart"></div> 
-                        </div>
-                    </div>
-                </div>  
-            </div>   
-
-            <!-- General Analytics Section -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
@@ -328,11 +300,11 @@
                             <div id="user-activity-heatmap" class="chart"></div>
                         </div>
                         <div class="col-md-6">
-                            <div id="activity-sales-correlation-chart" class="chart"></div> 
+                            <div id="conversations-over-time-chart" class="chart"></div> 
                         </div>
                     </div>
                 </div>  
-            </div>   
+            </div>    
         </div>
     </div>
 
@@ -406,7 +378,7 @@
                         type: 'line'
                     },
                     title: {
-                        text: 'User Sign-ups Over Time'
+                        text: 'Frequency of User Registration'
                     },
                     xAxis: {
                         type: 'datetime',
@@ -464,7 +436,7 @@
                         type: 'column'
                     },
                     title: {
-                        text: 'Organizations by Verification Status'
+                        text: 'Number of Organization Registration by Status'
                     },
                     xAxis: {
                         categories: data.map(item => item.verificationStatus),
@@ -492,7 +464,7 @@
                         type: 'line'
                     },
                     title: {
-                        text: 'Total Points Accumulated by Organizations Over Time'
+                        text: 'Total Accumulated Points by Organizations'
                     },
                     xAxis: {
                         categories: data.map(item => item.date),
@@ -519,7 +491,7 @@
                         type: 'area'
                     },
                     title: {
-                        text: 'Donations Over Time'
+                        text: 'Donation Count Over Time'
                     },
                     xAxis: {
                         categories: data.map(item => item.date)
@@ -536,28 +508,6 @@
                 });
             });
             
-            // Fetch and render donation status distribution chart
-            $.get('/admin/donation-status-distribution', function(data) {
-                    Highcharts.chart('donation-status-distribution-chart', {
-                        chart: {
-                            type: 'pie'
-                        },
-                        title: {
-                            text: 'Donation Status Distribution'
-                        },
-                        series: [{
-                            name: 'Donations',
-                            colorByPoint: true,
-                            data: data.map(item => {
-                                return {
-                                    name: item.status,
-                                    y: item._count.status
-                                };
-                            })
-                        }]
-                    });
-                });
-            
             // Fetch and render average rating per drop point
             $.get('/admin/average-rating-per-drop-point', function(data) { 
             if (Array.isArray(data) && data.length > 0) {
@@ -568,7 +518,7 @@
                         zoomType: 'xy'
                     },
                     title: {
-                        text: 'Average Ratings and Feedback Volume of Drop Points'
+                        text: 'Average Ratings and Feedback Volume for Drop Points'
                     },
                     xAxis: {
                         title: {
@@ -657,7 +607,7 @@
                         type: 'line'
                     },
                     title: {
-                        text: 'Advertisement Interactions Over Time'
+                        text: 'Frequency of User Interaction in Advertisements'
                     },
                     xAxis: {
                         type: 'category',
@@ -685,7 +635,7 @@
                         type: 'bar'
                     },
                     title: {
-                        text: 'Points Spent on Advertisements by Organization'
+                        text: 'Total Points spent by Organizations'
                     },
                     xAxis: {
                         type: 'category',
@@ -789,7 +739,7 @@
                         type: 'line'
                     },
                     title: {
-                        text: 'Conversations Initiated Over Time'
+                        text: 'Conversations Initiated on the Marketplace'
                     },
                     xAxis: {
                         categories: data.map(item => item.date)
@@ -817,7 +767,7 @@
                         // Additional heatmap options
                     },
                     title: {
-                        text: 'User Activity by Time and Day'
+                        text: 'User Activity Heatmap'
                     },
                     xAxis: {
                         categories: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -877,7 +827,7 @@
                         // Additional scatter plot options
                     },
                     title: {
-                        text: 'Correlation between User Messages and Sales'
+                        text: 'User Interaction to Sales Correlation'
                     },
                     xAxis: {
                         title: {
