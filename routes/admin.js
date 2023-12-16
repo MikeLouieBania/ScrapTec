@@ -36,6 +36,14 @@ router.get('/managermanagement/donations/:managerId', authMiddlewareAdmin.requir
 router.get('/managermanagement/feedbacks/:managerId', authMiddlewareAdmin.requireLogin, adminController.getManagerFeedbacks);
 
 
+router.get('/pointingsystemmanagement', authMiddlewareAdmin.requireLogin, adminController.getPointingSystemManagement); 
+router.post('/updateCategoryPoints', authMiddlewareAdmin.requireLogin, adminController.postupdateCategoryPoints);
+router.post('/updateConditionPoints', authMiddlewareAdmin.requireLogin, adminController.postUpdateConditionPoints);
+router.post('/addPointQuantity', authMiddlewareAdmin.requireLogin, adminController.postAddPointQuantity);
+router.post('/updatePointQuantity', authMiddlewareAdmin.requireLogin, adminController.postUpdatePointQuantity);
+router.post('/deletePointQuantity', authMiddlewareAdmin.requireLogin, adminController.postDeletePointQuantity);
+
+
 router.get('/droppointmanagement', authMiddlewareAdmin.requireLogin,  adminController.getDropPointManagement); 
 router.get('/marketplacemanagement', authMiddlewareAdmin.requireLogin,  adminController.getMarketplaceManagement); 
 router.get('/listings/:listingId/photos/:photoIndex', authMiddlewareAdmin.requireLogin, adminController.getListingPhoto);

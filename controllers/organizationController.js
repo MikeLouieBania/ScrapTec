@@ -3,58 +3,52 @@ const prisma = new PrismaClient();
 const sharp = require('sharp');
 
 async function calculatePoints(type, condition, quantity) {
-    let basePoints = 0;
-    let conditionPoints = 0;
-    let quantityBonus = 0;
-    
-    // Criteria for types
-    switch (type) {
-      case 'Input Devices':
-        basePoints += 0.5;
-        break;
-      case 'Storage Devices':
-        basePoints += 1;
-        break;
-      case 'Memory and Processing':
-        basePoints += 1.5;
-        break;
-      case 'Graphics and Video':
-        basePoints += 2;
-        break;
-      case 'Power and Cooling':
-        basePoints += 1;
-        break;
-      case 'Network and Sound':
-        basePoints += 1;
-        break;
-      case 'Whole Systems':
-        basePoints += 3;
-        break;
-      default:
-        break;
-    }
-  
-    // Criteria for condition
-    if (condition === 'New') {
-      conditionPoints += 2;
-    } else if (condition === 'Used but Working') {
-      conditionPoints += 1;
-    } else if (condition === 'Not Working') {
-      conditionPoints += 0.5;
-    }
-  
-    // Criteria for quantity
-    if (quantity >= 10 && quantity <= 49) {
-      quantityBonus += 3;
-    } else if (quantity >= 50) {
-      quantityBonus += 5;
-    }
-  
-    const points = ((basePoints + conditionPoints) * quantity);
-    const totalPoints = points + quantityBonus;
-  
-    return totalPoints;
+  let basePoints = 0;
+  let conditionPoints = 0;
+  let quantityBonus = 0;
+
+  // Fetch base points from the database based on the type
+  const category = await prisma.category.findUnique({
+      where: {
+          name: type,
+      },
+  });
+
+  if (category) {
+      basePoints = category.basePoints || 0;
+  }
+
+  // Fetch condition points from the database based on the condition
+  const conditionData = await prisma.condition.findUnique({
+      where: {
+          name: condition,
+      },
+  });
+
+  if (conditionData) {
+      conditionPoints = conditionData.conditionPoints || 0;
+  }
+
+  // Fetch quantity bonus from the database based on the quantity
+  const pointQuantity = await prisma.pointQuantity.findFirst({
+      where: {
+          AND: [
+              { minQuantity: { lte: quantity } },
+              { maxQuantity: { gte: quantity } },
+          ],
+      },
+  });
+
+  if (pointQuantity) {
+      quantityBonus = pointQuantity.quantityBonus || 0;
+  }
+
+  const points = (basePoints + conditionPoints) * quantity;
+  const totalPoints = points + quantityBonus;
+
+  return totalPoints;
 }
+
 
 // Function to get total points for an organization
 async function getTotalPointsForOrganization(organizationId) {
@@ -383,8 +377,12 @@ module.exports = {
             };
         }); 
       
+        // Fetch points information
+        const categories = await prisma.category.findMany();
+        const conditions = await prisma.condition.findMany();
+        const pointQuantities = await prisma.pointQuantity.findMany();
 
-        res.render('organization/dashboard', { dropPoints: dropPoints, organizationDetail: organizationDetails});
+        res.render('organization/dashboard', { dropPoints: dropPoints, organizationDetail: organizationDetails, categories, conditions, pointQuantities});
     } catch (error) {
         console.error("Error fetching drop points:", error);
         res.status(500).send("Internal Server Error");
@@ -446,12 +444,14 @@ module.exports = {
                 id: dropPointId
             }
         });
+        const categories = await prisma.category.findMany();
+        const conditions = await prisma.condition.findMany();
 
         if (!dropPoint) {
             return res.status(404).send("Drop point not found");
         } 
         // Render the make-donation page with the drop point data
-        res.render('organization/donationForm', { dropPoint });
+        res.render('organization/donationForm', { dropPoint, categories, conditions });
     } catch (error) {
         console.error("Error fetching drop point:", error);
         res.status(500).send("Internal Server Error");
