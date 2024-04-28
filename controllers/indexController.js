@@ -243,7 +243,7 @@ module.exports = {
   
   async login(req, res) {
     try {
-        const { email, password } = req.body;
+        const { email, password } = req.body; 
 
         // Run both queries concurrently
         const [user, organization] = await Promise.all([
@@ -253,8 +253,7 @@ module.exports = {
                     id: true,
                     email: true,
                     password: true,
-                    reportedListingCount: true,
-                    //...other fields you need
+                    reportedListingCount: true, 
                 }
             }),
             prisma.organization.findUnique({
@@ -263,8 +262,7 @@ module.exports = {
                     id: true,
                     email: true,
                     password: true,
-                    verificationStatus: true,
-                    //...other fields you need
+                    verificationStatus: true, 
                 }
             })
         ]);

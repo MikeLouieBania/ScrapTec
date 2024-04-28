@@ -669,9 +669,7 @@ module.exports = {
         lastName: fullUserDetails.lastName,
         email: fullUserDetails.email,
         // You can include other details if necessary
-      };
-
-
+      }; 
 
       const sellingListings = await prisma.listing.findMany({
         where: {
