@@ -27,7 +27,8 @@ model User {
   givenRatings           Rating[]       @relation("RatingRater")
   receivedRatings        Rating[]       @relation("RatingRatee")
   savedListings          SavedListing[] // Relation to saved listings
-  reportsMade            Report[]       @relation("ReportsMadeByUser")
+  reportsMade            Report[]       @relation("ReportsMadeByUser") 
+  reportedListingCount Int @default(0)
 }
 
 model Organization {
