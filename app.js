@@ -6,8 +6,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var { PrismaClient } = require('@prisma/client');
 var http = require('http');
-
-// asd
+ 
 // Initialize Prisma client
 const prisma = new PrismaClient(); 
 
@@ -53,21 +52,17 @@ io.on('connection', function(socket) {
       console.log('Joining room:', room);
       socket.join(room);
   });
-
-  // Handler for marking a message as read
+ 
   socket.on('mark_message_as_read', function(data) {
       prisma.message.update({
           where: { id: data.messageId },
           data: { read: true }
-      }).then(updatedMessage => {
-          // Optionally notify clients or perform additional actions
-          // console.log('Message marked as read:', data.messageId);
+      }).then(updatedMessage => { 
       }).catch(error => {
           console.error('Error marking message as read:', error);
       });
   }); 
-
-  // ... rest of your code
+ 
 });
 
 // Make io accessible in routes via middleware
